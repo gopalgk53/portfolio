@@ -2088,6 +2088,81 @@
       .field-error {
         color: var(--accent-tensor-crimson);
       }
+      .hero-section::after {
+        content: "";
+        position: absolute;
+        inset: 8% 8% 4%;
+        z-index: -1;
+        pointer-events: none;
+        background: radial-gradient(ellipse at 38% 45%, rgba(4, 4, 8, 0.88), rgba(4, 4, 8, 0.36) 48%, transparent 72%);
+      }
+      .terminal { opacity: 0.88; }
+      .hud-frame { opacity: .58; }
+      .diagnostic-strip { opacity: .82; }
+      .controls-toggle,
+      .motion-toggle,
+      .cert-filter {
+        border: 1px solid var(--glass-border);
+        background: var(--glass-bg);
+        color: var(--text-token-white);
+        font: 700 0.66rem "Space Mono";
+      }
+      .controls-toggle {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 101;
+        padding: 12px 15px;
+        border-radius: 9px;
+        box-shadow: var(--glass-glow);
+      }
+      .floating-controls-panel { bottom: 76px; }
+      .floating-controls-panel { transition: opacity .25s, transform .25s; }
+      .floating-controls-panel[hidden] { display: block; opacity: 0; transform: translateY(14px); pointer-events: none; }
+      .motion-toggle { padding: 8px 10px; border-radius: 7px; white-space: nowrap; }
+      .architecture-flow {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin: 14px 0;
+        color: var(--text-quantized-slate);
+        font: 700 0.61rem "Space Mono";
+      }
+      .architecture-flow span {
+        flex: 1;
+        padding: 7px 5px;
+        text-align: center;
+        border: 1px solid var(--glass-border);
+        background: rgba(var(--accent-hyper-cyan-rgb), .025);
+      }
+      .architecture-flow i { color: var(--accent-hyper-cyan); font-style: normal; }
+      .model-card > p::before {
+        content: "CONTRIBUTION // ";
+        color: var(--accent-hyper-cyan);
+        font: 700 .62rem "Space Mono";
+      }
+      .cert-filters { display: flex; flex-wrap: wrap; gap: 9px; margin: 0 0 20px; }
+      .cert-filter { padding: 9px 12px; border-radius: 8px; }
+      .cert-filter.active { color: var(--accent-hyper-cyan); border-color: rgba(var(--accent-hyper-cyan-rgb), .45); }
+      .cert-group.filtered-out { display: none; }
+      .cert-groups.featured-view [data-category="ai"] .cert-row:nth-child(n + 7) { display: none; }
+      body.motion-reduced *, body.motion-reduced *::before, body.motion-reduced *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+      @media (max-width: 720px) {
+        .hud-coord, .crosshair { display: none; }
+        .controls-toggle { right: 16px; bottom: 16px; }
+        .floating-controls-panel {
+          position: fixed;
+          right: 16px;
+          bottom: 68px;
+          width: calc(100vw - 32px);
+        }
+        .terminal { opacity: .78; }
+        .architecture-flow { gap: 4px; font-size: .52rem; }
+      }
       .model-action {
         display: inline-flex;
         align-items: center;
@@ -2156,6 +2231,7 @@
           <li><a href="#certifications">Certifications</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
+        <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">Motion: On</button>
       </div>
     </nav>
     <div class="hud-frame" aria-hidden="true">
@@ -2204,7 +2280,7 @@
                 <b>LLM PIPELINE</b><span class="meter"><i></i></span>
               </div>
             </div>
-            <fieldset class="hyper-controls floating-controls-panel glass">
+            <fieldset class="hyper-controls floating-controls-panel glass" hidden>
               <legend>LIVE HYPERPARAMETERS</legend>
               <label class="parameter-row"
                 >Node size<input
@@ -2237,6 +2313,7 @@
                 /><output>1.0×</output></label
               >
             </fieldset>
+            <button class="controls-toggle" id="controls-toggle" type="button" aria-expanded="false">[ Tune Latent Space ]</button>
             <div class="actions">
               <a class="btn btn-primary" href="#projects">View My Work ↘</a
               ><a class="btn" href="Gopalakrishna_Maddipalli_CV.pdf" download
@@ -2380,6 +2457,7 @@
                 <span>LATENCY<b>42ms</b></span
                 ><span>ACCURACY / MMLU<b>84.3%</b></span>
               </div>
+              <div class="architecture-flow" aria-label="Retrieval architecture"><span>QUERY</span><i>→</i><span>RETRIEVE</span><i>→</i><span>RERANK</span><i>→</i><span>ANSWER</span></div>
               <div class="badges">
                 <span class="badge">LangChain</span
                 ><span class="badge">PyTorch</span
@@ -2433,6 +2511,7 @@
                 <span>INFERENCE SPEED<b>12 t/s</b></span
                 ><span>PARAMETERS<b>7B</b></span>
               </div>
+              <div class="architecture-flow" aria-label="Multimodal architecture"><span>TEXT</span><i>+</i><span>VISION</span><i>→</i><span>LATENT</span><i>→</i><span>OUTPUT</span></div>
               <div class="badges">
                 <span class="badge">PyTorch</span><span class="badge">CUDA</span
                 ><span class="badge">Transformers</span
@@ -2487,6 +2566,7 @@
                 <span>ACTIVE AGENTS<b>12</b></span
                 ><span>TOKEN COST REDUCTION<b>40%</b></span>
               </div>
+              <div class="architecture-flow" aria-label="Agent architecture"><span>PLAN</span><i>→</i><span>AGENTS</span><i>→</i><span>TOOLS</span><i>→</i><span>REVIEW</span></div>
               <div class="badges">
                 <span class="badge">LangGraph</span
                 ><span class="badge">CrewAI</span
@@ -2758,8 +2838,16 @@
               portfolio, preserved in full.
             </p>
           </div>
-          <div class="cert-groups">
-            <details class="cert-group glass reveal" open>
+          <div class="cert-filters" aria-label="Filter certifications">
+            <button class="cert-filter active" type="button" data-filter="featured">Featured</button>
+            <button class="cert-filter" type="button" data-filter="ai">AI &amp; ML</button>
+            <button class="cert-filter" type="button" data-filter="data">Data &amp; SQL</button>
+            <button class="cert-filter" type="button" data-filter="business">Business</button>
+            <button class="cert-filter" type="button" data-filter="foundations">Foundations</button>
+            <button class="cert-filter" type="button" data-filter="all">View all</button>
+          </div>
+          <div class="cert-groups featured-view">
+            <details class="cert-group glass reveal" data-category="ai" open>
               <summary>
                 AI &amp; Machine Learning
                 <span class="mono">9 credentials</span>
@@ -2883,7 +2971,7 @@
                 </div>
               </div>
             </details>
-            <details class="cert-group glass reveal">
+            <details class="cert-group glass reveal filtered-out" data-category="data">
               <summary>
                 Data &amp; SQL <span class="mono">5 credentials</span>
               </summary>
@@ -2950,7 +3038,7 @@
                 </div>
               </div>
             </details>
-            <details class="cert-group glass reveal">
+            <details class="cert-group glass reveal filtered-out" data-category="business">
               <summary>
                 Business &amp; Analytics <span class="mono">5 credentials</span>
               </summary>
@@ -3017,7 +3105,7 @@
                 </div>
               </div>
             </details>
-            <details class="cert-group glass reveal">
+            <details class="cert-group glass reveal filtered-out" data-category="foundations">
               <summary>
                 Foundations <span class="mono">3 credentials</span>
               </summary>
@@ -3193,8 +3281,8 @@
                   id="transmission-success"
                   aria-live="polite"
                 >
-                  System: “Transmission successfully compiled. The engineer has
-                  been alerted.”
+                  System: “Payload compiled. Complete transmission in your email
+                  client.”
                 </div>
               </div>
             </div>
@@ -3252,6 +3340,43 @@
         document
           .getElementById("page-content")
           .append(document.querySelector(".floating-controls-panel"));
+        document
+          .getElementById("page-content")
+          .append(document.getElementById("controls-toggle"));
+        const controlsPanel = document.querySelector(".floating-controls-panel"),
+          controlsToggle = document.getElementById("controls-toggle"),
+          motionToggle = document.getElementById("motion-toggle");
+        if (matchMedia("(prefers-reduced-motion:reduce)").matches) {
+          motionToggle.setAttribute("aria-pressed", "true");
+          motionToggle.textContent = "Motion: Reduced";
+          document.body.classList.add("motion-reduced");
+        }
+        controlsToggle.addEventListener("click", () => {
+          const open = controlsToggle.getAttribute("aria-expanded") !== "true";
+          controlsToggle.setAttribute("aria-expanded", String(open));
+          controlsToggle.textContent = open ? "[ Close Tuning ]" : "[ Tune Latent Space ]";
+          controlsPanel.hidden = !open;
+        });
+        motionToggle.addEventListener("click", () => {
+          const reduced = motionToggle.getAttribute("aria-pressed") !== "true";
+          motionToggle.setAttribute("aria-pressed", String(reduced));
+          motionToggle.textContent = reduced ? "Motion: Reduced" : "Motion: On";
+          document.body.classList.toggle("motion-reduced", reduced);
+          document.dispatchEvent(new CustomEvent("portfolio:motion", { detail: { reduced } }));
+        });
+        const certGroups = document.querySelector(".cert-groups");
+        document.querySelectorAll(".cert-filter").forEach((button) =>
+          button.addEventListener("click", () => {
+            const filter = button.dataset.filter;
+            document.querySelectorAll(".cert-filter").forEach((item) => item.classList.toggle("active", item === button));
+            certGroups.classList.toggle("featured-view", filter === "featured");
+            certGroups.querySelectorAll(".cert-group").forEach((group) => {
+              const visible = filter === "all" || filter === "featured" && group.dataset.category === "ai" || group.dataset.category === filter;
+              group.classList.toggle("filtered-out", !visible);
+              if (visible) group.open = true;
+            });
+          }),
+        );
         if (matchMedia("(prefers-reduced-motion:reduce)").matches) {
           subtitle.textContent = subtitle.dataset.text;
           subtitle.classList.remove("streaming");
@@ -3485,10 +3610,10 @@
     <script type="module">
       import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.185.1/three.module.min.js";
 
-      const PARTICLE_COUNT = 5000;
+      const PARTICLE_COUNT = matchMedia("(max-width: 720px)").matches ? 2600 : 5000;
       const CLUSTER_COUNT = 4;
-      const CONNECTION_COUNT = 1200;
-      const TRAIL_COUNT = 180;
+      const CONNECTION_COUNT = matchMedia("(max-width: 720px)").matches ? 420 : 1200;
+      const TRAIL_COUNT = matchMedia("(max-width: 720px)").matches ? 0 : 180;
       const canvas = document.getElementById("webgl-canvas");
       const heroContent = document.querySelector(".hero-grid");
       const reducedMotion3D = matchMedia(
@@ -3521,12 +3646,11 @@
         lastFrame = 0;
       let activeCluster = -1;
       let tetherTargetElement = null,
-        pointerActive = false;
+        pointerActive = false,
+        motionPaused = reducedMotion3D;
       const tetherPositions = new Float32Array(6),
         tetherTarget = new THREE.Vector3(),
         tetherDesired = new THREE.Vector3(),
-        pointerLocal = new THREE.Vector3(),
-        nearestLocal = new THREE.Vector3(),
         componentNdc = new THREE.Vector3();
       const clusterCenters = [
         new THREE.Vector3(-3.5, 1.8, -0.6),
@@ -3580,6 +3704,12 @@
           document.documentElement.addEventListener("mouseleave", onPointerLeave);
           addEventListener("resize", onWindowResize, { passive: true });
           document.addEventListener("visibilitychange", onVisibilityChange);
+          document.addEventListener("portfolio:motion", ({ detail }) => {
+            motionPaused = detail.reduced;
+            trail.visible = !motionPaused;
+            connections.visible = !motionPaused;
+            if (motionPaused) liveTether.visible = false;
+          });
           document.addEventListener("portfolio:parameters", ({ detail }) => {
             Object.assign(parameters, detail);
             constellation.material.size = parameters.particleSize;
@@ -3589,8 +3719,7 @@
             .forEach((button) =>
               button.addEventListener("click", triggerExplosion),
             );
-          if (reducedMotion3D) renderer.render(scene, camera);
-          else animate(0);
+          animate(0);
         } catch (error) {
           canvas.hidden = true;
           console.info(
@@ -3797,7 +3926,7 @@
         const cards = document.querySelectorAll(".model-card, .project");
         cards.forEach((card) => card.classList.add("ai-project-card"));
         document
-          .querySelectorAll(".ai-project-card, .parameter-row input")
+          .querySelectorAll(".ai-project-card, .parameter-row input, .controls-toggle")
           .forEach((element) => {
             element.addEventListener("pointerenter", () => {
               tetherTargetElement = element;
@@ -3845,7 +3974,7 @@
       }
 
       function updateLiveTether(time, scrollProgress) {
-        if (!pointerActive || scrollProgress >= 0.995) {
+        if (!pointerActive || !tetherTargetElement || motionPaused || scrollProgress >= 0.995) {
           liveTether.visible = false;
           return;
         }
@@ -3867,33 +3996,6 @@
           );
           raycaster.setFromCamera(componentNdc, camera);
           raycaster.ray.intersectPlane(interactionPlane, tetherDesired);
-        } else {
-          // Transform the cursor into the rotating constellation's local frame,
-          // scan the contiguous position buffer, then transform the winning node
-          // back to world space. No objects are allocated during this search.
-          pointerLocal.copy(pointerWorld);
-          constellation.worldToLocal(pointerLocal);
-          const points = constellation.geometry.attributes.position.array;
-          let closestIndex = 0,
-            closestDistance = Infinity;
-          for (let i = 0; i < PARTICLE_COUNT; i++) {
-            const i3 = i * 3,
-              dx = pointerLocal.x - points[i3],
-              dy = pointerLocal.y - points[i3 + 1],
-              dz = pointerLocal.z - points[i3 + 2],
-              distance = dx * dx + dy * dy + dz * dz;
-            if (distance < closestDistance) {
-              closestDistance = distance;
-              closestIndex = i3;
-            }
-          }
-          nearestLocal.set(
-            points[closestIndex],
-            points[closestIndex + 1],
-            points[closestIndex + 2],
-          );
-          tetherDesired.copy(nearestLocal);
-          constellation.localToWorld(tetherDesired);
         }
         tetherTarget.lerp(tetherDesired, tetherTargetElement ? 0.16 : 0.34);
         tetherPositions[3] = tetherTarget.x;
@@ -4022,13 +4124,15 @@
           new CustomEvent("portfolio:frame", { detail: clock }),
         );
         easedPointer.lerp(pointer, 0.045);
-        updateConstellation(delta, time);
-        updateSimilarityConnections();
-        updateTrail(delta);
+        if (!motionPaused) {
+          updateConstellation(delta, time);
+          updateSimilarityConnections();
+          updateTrail(delta);
+        }
 
-        constellation.rotation.x += delta * 0.012 * parameters.rotationSpeed;
-        constellation.rotation.y += delta * 0.045 * parameters.rotationSpeed;
-        constellation.rotation.z += delta * 0.008 * parameters.rotationSpeed;
+        constellation.rotation.x += motionPaused ? 0 : delta * 0.012 * parameters.rotationSpeed;
+        constellation.rotation.y += motionPaused ? 0 : delta * 0.045 * parameters.rotationSpeed;
+        constellation.rotation.z += motionPaused ? 0 : delta * 0.008 * parameters.rotationSpeed;
         constellation.position.x +=
           (easedPointer.x * 0.42 - constellation.position.x) * 0.024;
         constellation.position.y +=
@@ -4065,7 +4169,7 @@
           cancelAnimationFrame(animationId);
           if (liveTether) liveTether.visible = false;
         }
-        else if (!reducedMotion3D) {
+        else {
           lastFrame = performance.now();
           animate(lastFrame);
         }
