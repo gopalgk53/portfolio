@@ -3505,6 +3505,7 @@
         renderer,
         constellation,
         connections,
+        liveTether,
         trail,
         animationId;
       let basePositions,
@@ -3519,6 +3520,14 @@
         explosionEndsAt = 0,
         lastFrame = 0;
       let activeCluster = -1;
+      let tetherTargetElement = null,
+        pointerActive = false;
+      const tetherPositions = new Float32Array(6),
+        tetherTarget = new THREE.Vector3(),
+        tetherDesired = new THREE.Vector3(),
+        pointerLocal = new THREE.Vector3(),
+        nearestLocal = new THREE.Vector3(),
+        componentNdc = new THREE.Vector3();
       const clusterCenters = [
         new THREE.Vector3(-3.5, 1.8, -0.6),
         new THREE.Vector3(3.25, 1.55, -1.25),
@@ -3565,7 +3574,10 @@
           createConstellation();
           createSimilarityConnections();
           createCursorTrail();
+          createLiveTether();
+          registerTetherTargets();
           addEventListener("pointermove", onPointerMove, { passive: true });
+          document.documentElement.addEventListener("mouseleave", onPointerLeave);
           addEventListener("resize", onWindowResize, { passive: true });
           document.addEventListener("visibilitychange", onVisibilityChange);
           document.addEventListener("portfolio:parameters", ({ detail }) => {
@@ -3757,7 +3769,53 @@
         scene.add(trail);
       }
 
+      function createLiveTether() {
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(tetherPositions, 3).setUsage(THREE.DynamicDrawUsage),
+        );
+        const accent = getComputedStyle(document.documentElement)
+          .getPropertyValue("--accent-hyper-cyan")
+          .trim() || "#00f2fe";
+        liveTether = new THREE.Line(
+          geometry,
+          new THREE.LineBasicMaterial({
+            color: accent,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        liveTether.frustumCulled = false;
+        liveTether.visible = false;
+        scene.add(liveTether);
+      }
+
+      function registerTetherTargets() {
+        const cards = document.querySelectorAll(".model-card, .project");
+        cards.forEach((card) => card.classList.add("ai-project-card"));
+        document
+          .querySelectorAll(".ai-project-card, .parameter-row input")
+          .forEach((element) => {
+            element.addEventListener("pointerenter", () => {
+              tetherTargetElement = element;
+            });
+            element.addEventListener("pointerleave", () => {
+              if (tetherTargetElement === element) tetherTargetElement = null;
+            });
+          });
+      }
+
+      function onPointerLeave() {
+        pointerActive = false;
+        tetherTargetElement = null;
+        if (liveTether) liveTether.visible = false;
+      }
+
       function onPointerMove(event) {
+        pointerActive = true;
         pointer.set(
           (event.clientX / innerWidth) * 2 - 1,
           -(event.clientY / innerHeight) * 2 + 1,
@@ -3784,6 +3842,68 @@
           diagnosticLabel.textContent =
             activeCluster < 0 ? "VECTOR SEARCH: IDLE" : labels[activeCluster];
         if (!compactDevice && !reducedMotion3D) spawnTrail(pointerWorld);
+      }
+
+      function updateLiveTether(time, scrollProgress) {
+        if (!pointerActive || scrollProgress >= 0.995) {
+          liveTether.visible = false;
+          return;
+        }
+        // Anchor 1 is written directly from the ray/plane intersection calculated
+        // by the latest pointer event, so the visual cursor end has no damping.
+        tetherPositions[0] = pointerWorld.x;
+        tetherPositions[1] = pointerWorld.y;
+        tetherPositions[2] = pointerWorld.z;
+
+        if (tetherTargetElement) {
+          // Convert the HTML component's screen-space center to normalized device
+          // coordinates, unproject through the camera, then intersect the same
+          // world plane used by the cursor.
+          const rect = tetherTargetElement.getBoundingClientRect();
+          componentNdc.set(
+            ((rect.left + rect.width * 0.5) / innerWidth) * 2 - 1,
+            -((rect.top + rect.height * 0.5) / innerHeight) * 2 + 1,
+            0.5,
+          );
+          raycaster.setFromCamera(componentNdc, camera);
+          raycaster.ray.intersectPlane(interactionPlane, tetherDesired);
+        } else {
+          // Transform the cursor into the rotating constellation's local frame,
+          // scan the contiguous position buffer, then transform the winning node
+          // back to world space. No objects are allocated during this search.
+          pointerLocal.copy(pointerWorld);
+          constellation.worldToLocal(pointerLocal);
+          const points = constellation.geometry.attributes.position.array;
+          let closestIndex = 0,
+            closestDistance = Infinity;
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const i3 = i * 3,
+              dx = pointerLocal.x - points[i3],
+              dy = pointerLocal.y - points[i3 + 1],
+              dz = pointerLocal.z - points[i3 + 2],
+              distance = dx * dx + dy * dy + dz * dz;
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestIndex = i3;
+            }
+          }
+          nearestLocal.set(
+            points[closestIndex],
+            points[closestIndex + 1],
+            points[closestIndex + 2],
+          );
+          tetherDesired.copy(nearestLocal);
+          constellation.localToWorld(tetherDesired);
+        }
+        tetherTarget.lerp(tetherDesired, tetherTargetElement ? 0.16 : 0.34);
+        tetherPositions[3] = tetherTarget.x;
+        tetherPositions[4] = tetherTarget.y;
+        tetherPositions[5] = tetherTarget.z;
+        liveTether.geometry.attributes.position.needsUpdate = true;
+        liveTether.material.opacity =
+          (0.48 + (Math.cos(time * 0.005) + 1) * 0.09) *
+          (1 - scrollProgress);
+        liveTether.visible = true;
       }
 
       function spawnTrail(origin) {
@@ -3918,6 +4038,7 @@
 
         // Scroll progress drives both WebGL and DOM parallax without extra scroll handlers.
         const scrollProgress = Math.min(scrollY / Math.max(innerHeight, 1), 1);
+        updateLiveTether(time, scrollProgress);
         constellation.material.opacity = 0.8 * (1 - scrollProgress * 0.86);
         connections.material.opacity *= 1 - scrollProgress;
         camera.position.z +=
@@ -3940,7 +4061,10 @@
       }
 
       function onVisibilityChange() {
-        if (document.hidden) cancelAnimationFrame(animationId);
+        if (document.hidden) {
+          cancelAnimationFrame(animationId);
+          if (liveTether) liveTether.visible = false;
+        }
         else if (!reducedMotion3D) {
           lastFrame = performance.now();
           animate(lastFrame);
