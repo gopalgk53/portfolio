@@ -17,7 +17,12 @@
       content="Production-minded Generative AI systems, from retrieval to autonomous multi-agent workflows."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gopalgk53.github.io/portfolio/" />
+    <link rel="canonical" href="https://gopalgk53.github.io/portfolio/" />
     <title>Gopalakrishna Maddipalli | Generative AI Engineer</title>
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"Person","name":"Gopalakrishna Maddipalli","url":"https://gopalgk53.github.io/portfolio/","sameAs":["https://github.com/gopalgk53","https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b"],"jobTitle":"Generative AI Engineer","knowsAbout":["Retrieval-Augmented Generation","Autonomous Agents","Machine Learning","Document AI","LLMOps"]}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -1745,6 +1750,55 @@
           margin-top: 8px;
         }
       }
+      .credibility-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        margin-top: -28px;
+        position: relative;
+        z-index: 20;
+        overflow: hidden;
+        border: 1px solid var(--glass-border);
+        border-radius: 14px;
+      }
+      .credibility-strip div { padding: 18px; text-align: center; background: var(--glass-bg); }
+      .credibility-strip strong { display: block; color: var(--accent-hyper-cyan); font-size: 1.3rem; }
+      .credibility-strip span { color: var(--muted); font: .66rem "Space Mono"; }
+      .career-panels { display: grid; grid-template-columns: 1.4fr .8fr; gap: 20px; margin-top: 20px; }
+      .career-timeline, .building-panel { padding: 24px; }
+      .timeline-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 15px; }
+      .timeline-steps div { border-left: 2px solid var(--accent-hyper-cyan); padding-left: 12px; }
+      .timeline-steps b, .timeline-steps span { display: block; }
+      .timeline-steps span { color: var(--muted); font-size: .75rem; }
+      .building-list { display: grid; gap: 8px; margin-top: 14px; }
+      .building-list span { padding: 8px 10px; border: 1px solid var(--glass-border); font: .67rem "Space Mono"; }
+      .project-filters { display: flex; flex-wrap: wrap; gap: 9px; margin: 0 0 24px; }
+      .project-filter, .inspect-system, .modal-close {
+        border: 1px solid var(--glass-border);
+        background: var(--glass-bg);
+        color: var(--text-token-white);
+        font: 700 .65rem "Space Mono";
+      }
+      .project-filter { padding: 9px 12px; border-radius: 8px; }
+      .project-filter.active { color: var(--accent-hyper-cyan); border-color: rgba(var(--accent-hyper-cyan-rgb),.45); }
+      .project.filtered-out { display: none; }
+      .project-visual { height: 86px; display: grid; grid-template-columns: repeat(4,1fr); align-items: center; gap: 7px; margin: 14px 0; padding: 12px; border: 1px solid var(--glass-border); background: radial-gradient(circle at 50%,rgba(var(--accent-hyper-cyan-rgb),.08),transparent 70%); }
+      .project-visual i { height: 8px; border-radius: 99px; background: linear-gradient(90deg,var(--accent-hyper-cyan),var(--accent-amethyst)); box-shadow: 0 0 12px rgba(var(--accent-hyper-cyan-rgb),.2); }
+      .project-visual i:nth-child(2) { transform: translateY(-14px); }
+      .project-visual i:nth-child(3) { transform: translateY(12px); }
+      .inspect-system { margin-top: auto; padding: 9px 11px; border-radius: 7px; }
+      .system-modal { width: min(720px,calc(100vw - 32px)); color: var(--text); border: 1px solid rgba(var(--accent-hyper-cyan-rgb),.3); border-radius: 16px; background: rgba(4,4,8,.96); box-shadow: 0 30px 100px #000; }
+      .system-modal::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(6px); }
+      .modal-inner { padding: 26px; }
+      .modal-head { display: flex; justify-content: space-between; gap: 20px; align-items: start; }
+      .modal-close { width: 34px; height: 34px; border-radius: 50%; }
+      .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+      .modal-grid div { padding: 14px; border: 1px solid var(--glass-border); }
+      .modal-grid b { display:block; color:var(--accent-hyper-cyan); font:.65rem "Space Mono"; margin-bottom:7px; }
+      @media (max-width:720px) {
+        .credibility-strip, .career-panels, .timeline-steps, .modal-grid { grid-template-columns:1fr; }
+        .credibility-strip { margin-top: 0; }
+      }
       @media (pointer: coarse), (max-width: 720px) {
         .mouse-cursor {
           display: none;
@@ -2317,7 +2371,7 @@
             <div class="actions">
               <a class="btn btn-primary" href="#projects">View My Work ↘</a
               ><a class="btn" href="Gopalakrishna_Maddipalli_CV.pdf" download
-                >Resume ↓</a
+                >Download CV ↓</a
               >
             </div>
           </div>
@@ -2348,6 +2402,11 @@
           </div>
         </div>
       </section>
+      <div class="container credibility-strip glass" aria-label="Professional highlights">
+        <div><strong>7+ years</strong><span>DOMAIN EXPERIENCE</span></div>
+        <div><strong>9 projects</strong><span>PRODUCTION-FOCUSED AI SYSTEMS</span></div>
+        <div><strong>22+ verified</strong><span>CREDENTIALS &amp; CERTIFICATIONS</span></div>
+      </div>
       <section class="section" id="about">
         <div class="container">
           <div class="section-head">
@@ -2426,6 +2485,20 @@
               workflows into data products.</span
             >
           </div>
+          <div class="career-panels">
+            <div class="career-timeline glass reveal">
+              <p class="eyebrow">Career trajectory</p>
+              <div class="timeline-steps">
+                <div><b>Operations</b><span>Construction research and workflow expertise</span></div>
+                <div><b>Data Science</b><span>Predictive ML, OCR, analytics, and explainability</span></div>
+                <div><b>Generative AI</b><span>RAG, agent orchestration, evaluation, and LLMOps</span></div>
+              </div>
+            </div>
+            <aside class="building-panel glass reveal">
+              <p class="eyebrow">Currently building</p>
+              <div class="building-list"><span>Graph RAG topologies</span><span>Agent evaluation harnesses</span><span>LLMOps observability</span></div>
+            </aside>
+          </div>
         </div>
       </section>
       <section class="section" id="projects">
@@ -2471,7 +2544,7 @@
               <footer class="model-actions">
                 <a
                   class="model-action"
-                  href="https://github.com/gopalgk53"
+                  href="https://github.com/gopalgk53/construction-legal-ai-suite"
                   target="_blank"
                   rel="noopener"
                   aria-label="Inspect Latent-Search code on GitHub"
@@ -2524,7 +2597,7 @@
               <footer class="model-actions">
                 <a
                   class="model-action"
-                  href="https://github.com/gopalgk53"
+                  href="https://github.com/gopalgk53/construction-legal-ai-suite"
                   target="_blank"
                   rel="noopener"
                   aria-label="Inspect Cognitive Diffusion code on GitHub"
@@ -2580,7 +2653,7 @@
               <footer class="model-actions">
                 <a
                   class="model-action"
-                  href="https://github.com/gopalgk53"
+                  href="https://github.com/gopalgk53/construction-legal-ai-suite"
                   target="_blank"
                   rel="noopener"
                   aria-label="Inspect Agentic Mesh code on GitHub"
@@ -2614,6 +2687,14 @@
               The complete 90-day blueprint, with each project’s actual business
               goal and stack.
             </p>
+          </div>
+          <div class="project-filters" aria-label="Filter projects">
+            <button class="project-filter active" type="button" data-project-filter="all">All</button>
+            <button class="project-filter" type="button" data-project-filter="genai">Generative AI</button>
+            <button class="project-filter" type="button" data-project-filter="agents">Agentic AI</button>
+            <button class="project-filter" type="button" data-project-filter="ml">Machine Learning</button>
+            <button class="project-filter" type="button" data-project-filter="data">Data Engineering</button>
+            <button class="project-filter" type="button" data-project-filter="document">Document AI</button>
           </div>
           <div class="projects projects-grid">
             <article class="project glass reveal">
@@ -3289,6 +3370,20 @@
           </div>
         </div>
       </section>
+      <dialog class="system-modal" id="system-modal" aria-labelledby="modal-title">
+        <div class="modal-inner">
+          <div class="modal-head"><div><p class="eyebrow">System inspection</p><h2 id="modal-title"></h2></div><button class="modal-close" type="button" aria-label="Close system inspection">×</button></div>
+          <p id="modal-summary"></p>
+          <div class="modal-grid">
+            <div><b>BUSINESS PROBLEM</b><span id="modal-problem"></span></div>
+            <div><b>ARCHITECTURE</b><span id="modal-architecture"></span></div>
+            <div><b>ENGINEERING CONTRIBUTION</b><span id="modal-contribution"></span></div>
+            <div><b>EVALUATION APPROACH</b><span id="modal-evaluation"></span></div>
+          </div>
+          <div class="badges" id="modal-stack"></div>
+          <a class="btn btn-primary" href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noopener">View verified repository ↗</a>
+        </div>
+      </dialog>
     </main>
     <footer class="footer">
       <div class="container footer-inner">
@@ -3377,6 +3472,57 @@
             });
           }),
         );
+        const projectCategories = ["ml", "document", "ml", "data", "genai", "agents", "document", "ml", "agents"],
+          projectCards = [...document.querySelectorAll(".projects .project")],
+          systemModal = document.getElementById("system-modal"),
+          evaluationCopy = {
+            ml: "Holdout validation, precision/recall, calibration, and explainability review.",
+            document: "Field-level extraction accuracy, OCR confidence, and human exception review.",
+            data: "Pipeline freshness, schema validation, lineage checks, and dashboard reconciliation.",
+            genai: "Retrieval relevance, groundedness, citation coverage, latency, and safety evaluation.",
+            agents: "Task completion, tool-call accuracy, token cost, failure recovery, and human approval rates.",
+          };
+        projectCards.forEach((card, index) => {
+          card.dataset.projectCategory = projectCategories[index];
+          const visual = document.createElement("div");
+          visual.className = "project-visual";
+          visual.setAttribute("aria-hidden", "true");
+          visual.innerHTML = "<i></i><i></i><i></i><i></i>";
+          card.querySelector(".badges").before(visual);
+        });
+        document.querySelectorAll(".model-card, .projects .project").forEach((card) => {
+          const inspect = document.createElement("button");
+          inspect.className = "inspect-system";
+          inspect.type = "button";
+          inspect.textContent = "[ Inspect System ]";
+          inspect.addEventListener("click", () => {
+            const category = card.dataset.projectCategory || (card.textContent.includes("Agent") ? "agents" : "genai"),
+              title = card.querySelector("h3").textContent.trim(),
+              summary = card.querySelector("p").textContent.trim(),
+              problem = card.querySelector(".goal")?.textContent.trim() || card.querySelector(".impact strong")?.textContent.trim(),
+              architecture = card.querySelector(".project-flow")?.textContent.trim() || [...card.querySelectorAll(".architecture-flow span")].map((node) => node.textContent.trim()).join(" → ");
+            document.getElementById("modal-title").textContent = title;
+            document.getElementById("modal-summary").textContent = summary;
+            document.getElementById("modal-problem").textContent = problem;
+            document.getElementById("modal-architecture").textContent = architecture;
+            document.getElementById("modal-contribution").textContent = summary;
+            document.getElementById("modal-evaluation").textContent = evaluationCopy[category];
+            document.getElementById("modal-stack").innerHTML = [...card.querySelectorAll(".badge")].map((badge) => `<span class="badge">${badge.textContent}</span>`).join("");
+            systemModal.showModal();
+          });
+          card.append(inspect);
+        });
+        document.querySelectorAll(".project-filter").forEach((button) =>
+          button.addEventListener("click", () => {
+            const filter = button.dataset.projectFilter;
+            document.querySelectorAll(".project-filter").forEach((item) => item.classList.toggle("active", item === button));
+            projectCards.forEach((card) => card.classList.toggle("filtered-out", filter !== "all" && card.dataset.projectCategory !== filter));
+          }),
+        );
+        systemModal.querySelector(".modal-close").addEventListener("click", () => systemModal.close());
+        systemModal.addEventListener("click", (event) => {
+          if (event.target === systemModal) systemModal.close();
+        });
         if (matchMedia("(prefers-reduced-motion:reduce)").matches) {
           subtitle.textContent = subtitle.dataset.text;
           subtitle.classList.remove("streaming");
