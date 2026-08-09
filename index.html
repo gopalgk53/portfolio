@@ -148,26 +148,47 @@
 
     function createConstellation() {
       const positions = new Float32Array(PARTICLE_COUNT * 3);
+      const colors = new Float32Array(PARTICLE_COUNT * 3);
       basePositions = new Float32Array(PARTICLE_COUNT * 3);
       velocities = new Float32Array(PARTICLE_COUNT * 3);
       for (let i = 0; i < PARTICLE_COUNT; i++) {
-        // Option A: two phase-offset helices twist around a vertical Y-axis.
-        // Alternating particles belong to opposite DNA strands; a small harmonic
-        // ripple prevents the geometry from looking mechanically perfect.
-        const progress = i / (PARTICLE_COUNT - 1);
-        const strand = i % 2;
-        const t = (progress - 0.5) * Math.PI * 7;
-        const phase = strand * Math.PI;
-        const shell = 1.35 + Math.sin(t * 2.3) * 0.28 + (Math.random() - 0.5) * 0.18;
-        const x = Math.cos(t + phase) * shell + Math.sin(t * 0.7) * 0.12;
-        const y = (progress - 0.5) * 8.4;
-        const z = Math.sin(t + phase) * shell + Math.cos(t * 0.55) * 0.22;
+        let x, y, z, r, g, b;
+        if (i < 1100) {
+          // DATA SCIENCE: samples sit on a measured analytical grid. A combined
+          // sine/cosine surface turns the flat matrix into a live data landscape.
+          const index = i, columns = 44, row = Math.floor(index / columns), column = index % columns;
+          x = -5.4 + (column / (columns - 1)) * 3.1;
+          y = -2.8 + (row / 24) * 5.6;
+          z = Math.sin(column * 0.42) * 0.28 + Math.cos(row * 0.5) * 0.22;
+          r = 0.0; g = 0.95; b = 0.996;
+        } else if (i < 2200) {
+          // MACHINE LEARNING: a Fibonacci sphere distributes neural nodes evenly
+          // without latitude clustering, suggesting a dense learned latent space.
+          const index = i - 1100, count = 1100, normalized = (index + 0.5) / count;
+          const phi = Math.acos(1 - 2 * normalized), theta = Math.PI * (1 + Math.sqrt(5)) * index;
+          const radius = 1.62 + Math.sin(index * 0.31) * 0.08;
+          x = 0.15 + Math.cos(theta) * Math.sin(phi) * radius;
+          y = Math.cos(phi) * radius;
+          z = Math.sin(theta) * Math.sin(phi) * radius;
+          r = 0.67; g = 0.49; b = 1.0;
+        } else {
+          // AGENTIC AI: five differently tilted orbital paths represent specialist
+          // agents coordinating around a shared goal and context center.
+          const index = i - 2200, ring = index % 5, angle = (index / 1000) * Math.PI * 12 + ring * 0.7;
+          const radius = 1.05 + ring * 0.18;
+          x = 3.75 + Math.cos(angle) * radius * 0.72;
+          y = Math.sin(angle) * radius * Math.cos(ring * 0.36);
+          z = Math.sin(angle) * radius * Math.sin(ring * 0.52) + Math.cos(angle) * 0.38;
+          r = 0.49; g = 0.96; b = 0.77;
+        }
         positions.set([x, y, z], i * 3);
         basePositions.set([x, y, z], i * 3);
+        colors.set([r, g, b], i * 3);
       }
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
-      const material = new THREE.PointsMaterial({ color: 0x00f2fe, size: 0.04, transparent: true, opacity: 0.8, depthWrite: false, vertexColors: false, blending: THREE.AdditiveBlending });
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      const material = new THREE.PointsMaterial({ size: 0.042, transparent: true, opacity: 0.82, depthWrite: false, vertexColors: true, blending: THREE.AdditiveBlending });
       constellation = new THREE.Points(geometry, material);
       constellation.rotation.set(-0.08, -0.12, 0.08);
       scene.add(constellation);
