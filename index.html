@@ -37,6 +37,16 @@
     body::before{z-index:0}
     body::after{z-index:2}
     @media(pointer:fine){html,body,a,button,summary,input,textarea{cursor:none}}
+    .featured{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+    .model-card{min-height:460px;background:rgba(10,10,15,.64);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,242,254,.18);padding:29px;clip-path:none!important;border-radius:12px!important}
+    .model-card::before{display:none}.model-card .data-accent{position:absolute;left:18px;right:18px;top:0;height:2px;background:linear-gradient(90deg,#00f2fe,#7f00ff);box-shadow:0 0 14px rgba(0,242,254,.55)}
+    .model-id{color:#6b899d;font:700 .64rem "Space Mono";letter-spacing:.1em}.model-state{float:right;color:var(--green)}
+    .model-card h3{font-size:1.42rem;margin:20px 0 4px}.model-subtitle{display:block;color:var(--cyan);font:700 .67rem "Space Mono";margin-bottom:16px}
+    .model-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0;padding:13px;border:1px solid rgba(0,242,254,.1);background:rgba(0,242,254,.025);font:700 .65rem "Space Mono";color:#7693a6;transition:color .25s,background .25s}
+    .model-meta b{display:block;color:#d5f9ff;font-size:.78rem;margin-top:3px}.model-card:hover{box-shadow:0 0 25px rgba(0,242,254,.25),0 32px 85px rgba(0,0,0,.4)}.model-card:hover .model-meta{color:#9eddea;background:rgba(0,242,254,.045)}
+    .model-card .badge{font-family:monospace;background:rgba(255,255,255,.05);border-radius:4px}.model-actions{display:flex;gap:10px;margin-top:auto;padding-top:20px;border-top:1px solid rgba(0,242,254,.1)}
+    .model-action{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;text-decoration:none;color:#8ba7b9;border:1px solid rgba(255,255,255,.08);font:700 .65rem "Space Mono";transition:color .18s,border-color .18s,text-shadow .18s}.model-action svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7}.model-action:hover{color:#dffcff;border-color:rgba(0,242,254,.4);text-shadow:2px 0 #7f00ff,-2px 0 #00f2fe;animation:microGlitch .24s steps(2) 1}@keyframes microGlitch{50%{transform:translateX(2px)}}
+    @media(max-width:720px){.featured{grid-template-columns:1fr}.model-card{min-height:auto}.model-meta{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -46,9 +56,9 @@
     <section class="hero" id="top"><canvas class="particle-canvas" id="particle-canvas" aria-hidden="true"></canvas><div class="depth-scene" aria-hidden="true"><i class="depth-orb one"></i><i class="depth-orb two"></i><i class="orbit-ring"></i></div><div class="container hero-grid"><div><div class="status"><span class="system-pulse"></span>Open to Generative AI opportunities</div><p class="eyebrow">Gopalakrishna Maddipalli · Generative AI Engineer</p><h1>Building the Future of <span class="gradient">Autonomous Systems &amp; Intelligent Agents</span></h1><p class="hero-copy">I engineer production-minded AI systems that reason across complex documents, retrieve trusted context, and coordinate tools and agents to turn repetitive work into reliable outcomes.</p><div class="diagnostic-strip" aria-label="System diagnostics"><div class="diag"><b>RAG ACCURACY</b><span class="meter"><i style="width:95%"></i></span></div><div class="diag"><b>AGENT STATUS</b><span class="meter"><i></i></span></div><div class="diag"><b>LLM PIPELINE</b><span class="meter"><i></i></span></div></div><div class="actions"><a class="btn btn-primary" href="#projects">View My Work ↘</a><a class="btn" href="Gopalakrishna_Maddipalli_CV.pdf" download>Resume ↓</a></div></div><div class="terminal glass" aria-label="Animated Generative AI skill terminal"><div class="terminal-bar"><i></i><i></i><i></i></div><div class="terminal-body"><div><span class="prompt">gopal@genai</span>:<span class="command">~ $</span> initialize --profile</div><div style="margin-top:16px">✓ production systems<br>✓ domain-aware intelligence<br>✓ human-centered automation</div><div class="type-line">Building with <span id="typewriter">Python</span><i class="cursor" aria-hidden="true"></i></div><div class="terminal-note">SYSTEM STATUS: LEARNING · BUILDING · SHIPPING</div></div></div></div></section>
     <section class="section" id="about"><div class="container"><div class="section-head"><div><p class="eyebrow">01 / About Me</p><h2>Domain depth meets agentic engineering.</h2></div><p class="section-lede">Seven years in construction operations and data science shape how I build: start with the workflow, ground the intelligence, and measure the outcome.</p></div><div class="about-grid"><div class="portrait-card glass reveal"><div class="portrait-frame"><img src="https://avatars.githubusercontent.com/u/60279201?v=4" alt="Professional portrait of Gopalakrishna Maddipalli" width="460" height="560" loading="lazy"></div><div class="portrait-meta"><strong>Gopalakrishna Maddipalli</strong><span>GENERATIVE AI ENGINEER · DATA SCIENTIST</span></div></div><div class="about-copy glass reveal"><p>I specialize in prompt engineering, advanced RAG topologies, and autonomous multi-agent workflows—designing systems where retrieval quality, orchestration, evaluation, and observability are first-class engineering concerns.</p><p>My foundation spans research analysis, machine learning, OCR automation, and BI. That experience helps me translate messy documents, fragmented data, and compliance-heavy processes into dependable AI products that people can actually use.</p><div class="values" aria-label="Core values"><span class="value">Curiosity</span><span class="value">Clarity</span><span class="value">Reliability</span><span class="value">Human impact</span></div><p class="eyebrow" style="margin-top:26px">Top skills</p><div class="top-skills"><div class="top-skill"><b>Advanced RAG</b><span>Retrieval · reranking</span></div><div class="top-skill"><b>AI Agents</b><span>Tools · orchestration</span></div><div class="top-skill"><b>Prompt Engineering</b><span>Design · evaluation</span></div><div class="top-skill"><b>Python</b><span>APIs · automation</span></div><div class="top-skill"><b>LLMOps</b><span>Deploy · observe</span></div><div class="top-skill"><b>Data Science</b><span>ML · explainability</span></div></div></div></div><div class="experience-strip glass reveal"><strong>7+ years at Sunray Construction Solutions</strong><span>Research Analyst → Data Scientist · Turning legal and operational workflows into data products.</span></div></div></section>
     <section class="section" id="projects"><div class="container"><div class="section-head"><div><p class="eyebrow">02 / Featured case studies</p><h2>AI systems designed around business outcomes.</h2></div><p class="section-lede">Three flagship GenAI patterns, applied to construction and legal operations.</p></div><div class="featured">
-      <article class="case glass reveal"><span class="number">CASE STUDY 01</span><h3>Multi-Agent Autonomous Workflow</h3><p>A LangGraph and CrewAI system coordinates compliance, risk, notice, and communication agents across a shared workflow. Stateful orchestration and Redis-backed context keep decisions traceable while automating repetitive legal operations.</p><div class="badges"><span class="badge">LangGraph</span><span class="badge">CrewAI</span><span class="badge">AWS Bedrock</span><span class="badge">Redis</span></div><div class="impact"><span class="impact-label">Business impact</span><strong>40% task automation</strong></div></article>
-      <article class="case glass reveal"><span class="number">CASE STUDY 02</span><h3>Enterprise-Grade Advanced RAG System</h3><p>A legal assistant transforms construction documents into grounded, searchable intelligence using embeddings, vector retrieval, and LLM synthesis. Evaluation-led retrieval and source-aware responses accelerate legal research and customer self-service.</p><div class="badges"><span class="badge">LangChain</span><span class="badge">AWS Bedrock</span><span class="badge">FAISS</span><span class="badge">FastAPI</span></div><div class="impact"><span class="impact-label">Business impact</span><strong>95% retrieval accuracy</strong></div></article>
-      <article class="case glass reveal"><span class="number">CASE STUDY 03</span><h3>Domain-Specific LLM Fine-Tuning</h3><p>A domain-adapted language model converts construction and lien terminology into concise, action-ready recommendations. Efficient serving and targeted adaptation reduce inference overhead while preserving the vocabulary and reasoning patterns the domain demands.</p><div class="badges"><span class="badge">Transformers</span><span class="badge">PEFT</span><span class="badge">Python</span><span class="badge">FastAPI</span></div><div class="impact"><span class="impact-label">Business impact</span><strong>3× lower latency</strong></div></article>
+      <article class="case model-card glass reveal"><i class="data-accent"></i><div class="model-id">RUN-ID: #A79X-2026 <span class="model-state">● STABLE</span></div><h3>Latent-Search v2</h3><span class="model-subtitle">LLM VECTOR RAG PIPELINE</span><p>Enterprise retrieval pipeline that grounds construction and legal answers in source-aware vector context, with evaluation-led reranking and traceable responses.</p><div class="model-meta"><span>LATENCY<b>42ms</b></span><span>ACCURACY / MMLU<b>84.3%</b></span></div><div class="badges"><span class="badge">LangChain</span><span class="badge">PyTorch</span><span class="badge">FAISS</span><span class="badge">FastAPI</span></div><div class="impact"><span class="impact-label">Business impact</span><strong>95% retrieval accuracy</strong></div><footer class="model-actions"><a class="model-action" href="https://github.com/gopalgk53" target="_blank" rel="noopener" aria-label="Inspect Latent-Search code on GitHub"><svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>[ Inspect Code ]</a><a class="model-action" href="#contact"><svg viewBox="0 0 24 24"><path d="m8 5 11 7L8 19Z"/></svg>[ Live Demo ]</a></footer></article>
+      <article class="case model-card glass reveal"><i class="data-accent"></i><div class="model-id">RUN-ID: #V31N-7B <span class="model-state">● ONLINE</span></div><h3>Cognitive Diffusion</h3><span class="model-subtitle">MULTI-MODAL LATENT MODEL</span><p>Multi-modal inference architecture that aligns text and visual representations in a shared latent space for domain-aware generation and analysis.</p><div class="model-meta"><span>INFERENCE SPEED<b>12 t/s</b></span><span>PARAMETERS<b>7B</b></span></div><div class="badges"><span class="badge">PyTorch</span><span class="badge">CUDA</span><span class="badge">Transformers</span><span class="badge">Next.js</span></div><div class="impact"><span class="impact-label">Business impact</span><strong>3× lower latency</strong></div><footer class="model-actions"><a class="model-action" href="https://github.com/gopalgk53" target="_blank" rel="noopener" aria-label="Inspect Cognitive Diffusion code on GitHub"><svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>[ Inspect Code ]</a><a class="model-action" href="#contact"><svg viewBox="0 0 24 24"><path d="m8 5 11 7L8 19Z"/></svg>[ Live Demo ]</a></footer></article>
+      <article class="case model-card glass reveal"><i class="data-accent"></i><div class="model-id">RUN-ID: #AG12-MESH <span class="model-state">● ACTIVE</span></div><h3>Agentic Mesh</h3><span class="model-subtitle">AUTONOMOUS MULTI-AGENT FRAMEWORK</span><p>Stateful orchestration mesh coordinating compliance, risk, notice, and communication agents with shared context and human checkpoints.</p><div class="model-meta"><span>ACTIVE AGENTS<b>12</b></span><span>TOKEN COST REDUCTION<b>40%</b></span></div><div class="badges"><span class="badge">LangGraph</span><span class="badge">CrewAI</span><span class="badge">LangChain</span><span class="badge">Redis</span></div><div class="impact"><span class="impact-label">Business impact</span><strong>40% task automation</strong></div><footer class="model-actions"><a class="model-action" href="https://github.com/gopalgk53" target="_blank" rel="noopener" aria-label="Inspect Agentic Mesh code on GitHub"><svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>[ Inspect Code ]</a><a class="model-action" href="#contact"><svg viewBox="0 0 24 24"><path d="m8 5 11 7L8 19Z"/></svg>[ Live Demo ]</a></footer></article>
     </div><div class="section-head" style="margin-top:90px"><div><p class="eyebrow">Blueprint portfolio</p><h2>Nine production-focused projects.</h2></div><p class="section-lede">The complete 90-day blueprint, with each project’s actual business goal and stack.</p></div><div class="projects">
       <article class="project glass reveal"><span class="goal">Predict delayed payments &amp; lien probability</span><h3>01 · Construction Payment Risk Prediction</h3><p>Prioritize collections and enable proactive customer engagement with explainable risk scoring.</p><div class="badges"><span class="badge">Python</span><span class="badge">SQL</span><span class="badge">XGBoost</span><span class="badge">FastAPI</span><span class="badge">AWS</span><span class="badge">Power BI</span></div><div class="project-flow">Data → Features → Training → SHAP → API → Dashboard</div></article>
       <article class="project glass reveal"><span class="goal">Extract structured data from legal PDFs</span><h3>02 · Document AI</h3><p>Reduce manual document processing while improving the accuracy of legal-data capture.</p><div class="badges"><span class="badge">Textract / PaddleOCR</span><span class="badge">spaCy</span><span class="badge">PostgreSQL</span><span class="badge">FastAPI</span></div><div class="project-flow">PDF → OCR → NER → JSON → DB</div></article>
@@ -107,7 +117,8 @@
   <script type="module">
     import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.185.1/three.module.min.js';
 
-    const PARTICLE_COUNT = 3200;
+    const PARTICLE_COUNT = 2500;
+    const MODALITY_DURATION = 7000;
     const TRAIL_COUNT = 180;
     const canvas = document.getElementById('webgl-canvas');
     const heroContent = document.querySelector('.hero-grid');
@@ -119,8 +130,9 @@
     const raycaster = new THREE.Raycaster();
     const interactionPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
     let scene, camera, renderer, constellation, trail, animationId;
-    let basePositions, velocities, trailPositions, trailVelocities, trailLife, trailColors;
+    let basePositions, velocities, modalityTargets, trailPositions, trailVelocities, trailLife, trailColors;
     let trailCursor = 0, explosionEndsAt = 0, lastFrame = 0;
+    let activeModality = -1;
 
     function init() {
       try {
@@ -151,39 +163,39 @@
       const colors = new Float32Array(PARTICLE_COUNT * 3);
       basePositions = new Float32Array(PARTICLE_COUNT * 3);
       velocities = new Float32Array(PARTICLE_COUNT * 3);
+      modalityTargets = [new Float32Array(PARTICLE_COUNT * 3), new Float32Array(PARTICLE_COUNT * 3), new Float32Array(PARTICLE_COUNT * 3)];
       for (let i = 0; i < PARTICLE_COUNT; i++) {
-        let x, y, z, r, g, b;
-        if (i < 1100) {
-          // DATA SCIENCE: samples sit on a measured analytical grid. A combined
-          // sine/cosine surface turns the flat matrix into a live data landscape.
-          const index = i, columns = 44, row = Math.floor(index / columns), column = index % columns;
-          x = -5.4 + (column / (columns - 1)) * 3.1;
-          y = -2.8 + (row / 24) * 5.6;
-          z = Math.sin(column * 0.42) * 0.28 + Math.cos(row * 0.5) * 0.22;
-          r = 0.0; g = 0.95; b = 0.996;
-        } else if (i < 2200) {
-          // MACHINE LEARNING: a Fibonacci sphere distributes neural nodes evenly
-          // without latitude clustering, suggesting a dense learned latent space.
-          const index = i - 1100, count = 1100, normalized = (index + 0.5) / count;
-          const phi = Math.acos(1 - 2 * normalized), theta = Math.PI * (1 + Math.sqrt(5)) * index;
-          const radius = 1.62 + Math.sin(index * 0.31) * 0.08;
-          x = 0.15 + Math.cos(theta) * Math.sin(phi) * radius;
-          y = Math.cos(phi) * radius;
-          z = Math.sin(theta) * Math.sin(phi) * radius;
-          r = 0.67; g = 0.49; b = 1.0;
-        } else {
-          // AGENTIC AI: five differently tilted orbital paths represent specialist
-          // agents coordinating around a shared goal and context center.
-          const index = i - 2200, ring = index % 5, angle = (index / 1000) * Math.PI * 12 + ring * 0.7;
-          const radius = 1.05 + ring * 0.18;
-          x = 3.75 + Math.cos(angle) * radius * 0.72;
-          y = Math.sin(angle) * radius * Math.cos(ring * 0.36);
-          z = Math.sin(angle) * radius * Math.sin(ring * 0.52) + Math.cos(angle) * 0.38;
-          r = 0.49; g = 0.96; b = 0.77;
-        }
-        positions.set([x, y, z], i * 3);
-        basePositions.set([x, y, z], i * 3);
-        colors.set([r, g, b], i * 3);
+        const i3 = i * 3, column = i % 50, row = Math.floor(i / 50);
+
+        // TEXT MATRIX: exactly 50 x 50 nodes form strict horizontal code/data rows.
+        modalityTargets[0][i3] = -5.3 + column / 49 * 10.6;
+        modalityTargets[0][i3 + 1] = 3 - row / 49 * 6;
+        modalityTargets[0][i3 + 2] = (row % 4) * 0.035 - 0.05;
+
+        // COMPUTER VISION: distribute nodes across six faces of a sharp 3D box.
+        // Each face receives its own 21 x 20-ish convolutional sampling lattice.
+        const face = i % 6, local = Math.floor(i / 6), u = (local % 21) / 20 * 2 - 1;
+        const v = (Math.floor(local / 21) % 20) / 19 * 2 - 1;
+        const sx = 4.2, sy = 2.65, sz = 1.75;
+        let vx, vy, vz;
+        if (face === 0) [vx, vy, vz] = [sx, v * sy, u * sz];
+        else if (face === 1) [vx, vy, vz] = [-sx, v * sy, u * sz];
+        else if (face === 2) [vx, vy, vz] = [u * sx, sy, v * sz];
+        else if (face === 3) [vx, vy, vz] = [u * sx, -sy, v * sz];
+        else if (face === 4) [vx, vy, vz] = [u * sx, v * sy, sz];
+        else [vx, vy, vz] = [u * sx, v * sy, -sz];
+        modalityTargets[1].set([vx, vy, vz], i3);
+
+        // AUDIO/DIFFUSION stores an X/Z sampling grid. Its Y frequency amplitude
+        // is recalculated from time-offset sine/cosine waves inside the main loop.
+        modalityTargets[2][i3] = -5.2 + column / 49 * 10.4;
+        modalityTargets[2][i3 + 1] = 0;
+        modalityTargets[2][i3 + 2] = -3.2 + row / 49 * 6.4;
+
+        positions.set([modalityTargets[0][i3], modalityTargets[0][i3 + 1], modalityTargets[0][i3 + 2]], i3);
+        basePositions.set([modalityTargets[0][i3], modalityTargets[0][i3 + 1], modalityTargets[0][i3 + 2]], i3);
+        const colorMix = column / 49;
+        colors.set([0.08 + colorMix * 0.55, 0.94 - colorMix * 0.28, 1.0], i3);
       }
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
@@ -192,6 +204,33 @@
       constellation = new THREE.Points(geometry, material);
       constellation.rotation.set(-0.08, -0.12, 0.08);
       scene.add(constellation);
+    }
+
+    function updateModalityTargets(time) {
+      const phase = Math.floor(time / MODALITY_DURATION) % 3;
+      const nextPhase = (phase + 1) % 3;
+      const phaseProgress = (time % MODALITY_DURATION) / MODALITY_DURATION;
+      // Hold each modality clearly, then use cubic smoothstep for a soft 2.1s morph.
+      const rawMix = Math.max(0, Math.min(1, (phaseProgress - 0.7) / 0.3));
+      const mix = rawMix * rawMix * (3 - 2 * rawMix);
+      const seconds = time * 0.001;
+      if (phase !== activeModality) {
+        activeModality = phase;
+        const labels = ['MODE: TEXT MATRIX', 'MODE: COMPUTER VISION', 'MODE: AUDIO / DIFFUSION'];
+        const diagnosticLabel = document.querySelectorAll('.diag b')[1];
+        if (diagnosticLabel) diagnosticLabel.textContent = labels[phase];
+      }
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const i3 = i * 3;
+        let ax = modalityTargets[phase][i3], ay = modalityTargets[phase][i3 + 1], az = modalityTargets[phase][i3 + 2];
+        let bx = modalityTargets[nextPhase][i3], by = modalityTargets[nextPhase][i3 + 1], bz = modalityTargets[nextPhase][i3 + 2];
+        // Audio nodes form a continuous frequency spectrum with opposing time offsets.
+        if (phase === 2) ay = Math.sin(ax * 1.35 + seconds * 1.8) * 0.72 + Math.cos(az * 1.6 - seconds * 1.25) * 0.48;
+        if (nextPhase === 2) by = Math.sin(bx * 1.35 + seconds * 1.8) * 0.72 + Math.cos(bz * 1.6 - seconds * 1.25) * 0.48;
+        basePositions[i3] = ax + (bx - ax) * mix;
+        basePositions[i3 + 1] = ay + (by - ay) * mix;
+        basePositions[i3 + 2] = az + (bz - az) * mix;
+      }
     }
 
     function createCursorTrail() {
@@ -287,6 +326,7 @@
       const delta = Math.min((time - lastFrame) / 1000 || 0, 0.034);
       lastFrame = time;
       easedPointer.lerp(pointer, 0.045);
+      updateModalityTargets(time);
       updateConstellation(delta, time);
       updateTrail(delta);
 
