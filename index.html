@@ -36,6 +36,7 @@
     main,.footer{position:relative;z-index:10}
     body::before{z-index:0}
     body::after{z-index:2}
+    @media(pointer:fine){html,body,a,button,summary,input,textarea{cursor:none}}
   </style>
 </head>
 <body>
@@ -106,102 +107,189 @@
   <script type="module">
     import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.185.1/three.module.min.js';
 
-    // Three.js scene state lives in this module so it never pollutes window globals.
-    let scene, camera, renderer, constellation, animationId;
+    const PARTICLE_COUNT = 3200;
+    const TRAIL_COUNT = 180;
     const canvas = document.getElementById('webgl-canvas');
-    const pointer = { x: 0, y: 0 };
-    const easedPointer = { x: 0, y: 0 };
+    const heroContent = document.querySelector('.hero-grid');
     const reducedMotion3D = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isCompactDevice = matchMedia('(max-width: 720px)').matches;
-    let lastFrame = 0;
+    const compactDevice = matchMedia('(max-width: 720px)').matches;
+    const pointer = new THREE.Vector2();
+    const easedPointer = new THREE.Vector2();
+    const pointerWorld = new THREE.Vector3();
+    const raycaster = new THREE.Raycaster();
+    const interactionPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    let scene, camera, renderer, constellation, trail, animationId;
+    let basePositions, velocities, trailPositions, trailVelocities, trailLife, trailColors;
+    let trailCursor = 0, explosionEndsAt = 0, lastFrame = 0;
 
     function init() {
       try {
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(54, innerWidth / innerHeight, 0.1, 100);
-        camera.position.set(0, 0, 7.4);
-
+        camera.position.set(0, 0, 7.5);
         renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-        renderer.setPixelRatio(Math.min(devicePixelRatio, isCompactDevice ? 1.25 : 1.7));
+        renderer.setClearColor(0x050508, 0);
+        renderer.setPixelRatio(Math.min(devicePixelRatio, compactDevice ? 1.2 : 1.65));
         renderer.setSize(innerWidth, innerHeight, false);
         renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-        // Parametric constellation: layered spiral arms are displaced by two sine waves.
-        // The square-root radius keeps the 2,400 points evenly distributed instead of
-        // clustering them at the center, while z creates a soft three-dimensional wave.
-        const count = isCompactDevice ? 2000 : 2400;
-        const positions = new Float32Array(count * 3);
-        for (let i = 0; i < count; i++) {
-          const progress = i / count;
-          const arm = i % 5;
-          const radius = Math.sqrt(progress) * 4.4;
-          const angle = progress * Math.PI * 13 + arm * (Math.PI * 2 / 5);
-          const wave = Math.sin(angle * 1.7) * 0.34 + Math.cos(radius * 2.4) * 0.22;
-          positions[i * 3] = Math.cos(angle) * radius * 1.2;
-          positions[i * 3 + 1] = Math.sin(angle) * radius * 0.64 + wave;
-          positions[i * 3 + 2] = Math.sin(angle * 0.72) * 1.15 + (Math.random() - 0.5) * 0.35;
-        }
-
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.computeBoundingSphere();
-        const material = new THREE.PointsMaterial({
-          color: 0x59e1ff,
-          size: 0.05,
-          sizeAttenuation: true,
-          transparent: true,
-          opacity: 0.78,
-          depthWrite: false,
-          vertexColors: false,
-          blending: THREE.AdditiveBlending
-        });
-        constellation = new THREE.Points(geometry, material);
-        constellation.rotation.x = -0.12;
-        scene.add(constellation);
-
+        createConstellation();
+        createCursorTrail();
         addEventListener('pointermove', onPointerMove, { passive: true });
         addEventListener('resize', onWindowResize, { passive: true });
         document.addEventListener('visibilitychange', onVisibilityChange);
-        if (reducedMotion3D) renderer.render(scene, camera);
-        else animate(0);
+        document.querySelectorAll('.hero .actions .btn').forEach(button => button.addEventListener('click', triggerExplosion));
+        if (reducedMotion3D) renderer.render(scene, camera); else animate(0);
       } catch (error) {
         canvas.hidden = true;
         console.info('WebGL enhancement unavailable; semantic portfolio remains active.');
       }
     }
 
+    function createConstellation() {
+      const positions = new Float32Array(PARTICLE_COUNT * 3);
+      basePositions = new Float32Array(PARTICLE_COUNT * 3);
+      velocities = new Float32Array(PARTICLE_COUNT * 3);
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        // Two intertwined helices form the spine; radial sine displacement creates
+        // a wave-like shell around it. The progress range centers the form at x=0.
+        const progress = i / (PARTICLE_COUNT - 1);
+        const strand = i % 2;
+        const t = (progress - 0.5) * Math.PI * 7;
+        const phase = strand * Math.PI;
+        const shell = 1.35 + Math.sin(t * 2.3) * 0.28 + (Math.random() - 0.5) * 0.18;
+        const x = (progress - 0.5) * 9.2;
+        const y = Math.sin(t + phase) * shell;
+        const z = Math.cos(t + phase) * shell + Math.sin(t * 0.55) * 0.45;
+        positions.set([x, y, z], i * 3);
+        basePositions.set([x, y, z], i * 3);
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
+      const material = new THREE.PointsMaterial({ color: 0x00f2fe, size: 0.04, transparent: true, opacity: 0.8, depthWrite: false, vertexColors: false, blending: THREE.AdditiveBlending });
+      constellation = new THREE.Points(geometry, material);
+      constellation.rotation.set(-0.08, -0.12, 0.08);
+      scene.add(constellation);
+    }
+
+    function createCursorTrail() {
+      trailPositions = new Float32Array(TRAIL_COUNT * 3);
+      trailVelocities = new Float32Array(TRAIL_COUNT * 3);
+      trailLife = new Float32Array(TRAIL_COUNT);
+      trailColors = new Float32Array(TRAIL_COUNT * 3);
+      trailPositions.fill(999);
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3).setUsage(THREE.DynamicDrawUsage));
+      geometry.setAttribute('color', new THREE.BufferAttribute(trailColors, 3).setUsage(THREE.DynamicDrawUsage));
+      const material = new THREE.PointsMaterial({ size: 0.065, transparent: true, opacity: 0.95, depthWrite: false, vertexColors: true, blending: THREE.AdditiveBlending });
+      trail = new THREE.Points(geometry, material);
+      scene.add(trail);
+    }
+
     function onPointerMove(event) {
-      pointer.x = (event.clientX / innerWidth) * 2 - 1;
-      pointer.y = (event.clientY / innerHeight) * 2 - 1;
+      pointer.set((event.clientX / innerWidth) * 2 - 1, -(event.clientY / innerHeight) * 2 + 1);
+      raycaster.setFromCamera(pointer, camera);
+      raycaster.ray.intersectPlane(interactionPlane, pointerWorld);
+      if (!compactDevice && !reducedMotion3D) spawnTrail(pointerWorld);
+    }
+
+    function spawnTrail(origin) {
+      // A fixed-size circular buffer avoids allocations during pointer movement.
+      for (let n = 0; n < 5; n++) {
+        const index = trailCursor++ % TRAIL_COUNT, i3 = index * 3;
+        trailPositions[i3] = origin.x + (Math.random() - 0.5) * 0.08;
+        trailPositions[i3 + 1] = origin.y + (Math.random() - 0.5) * 0.08;
+        trailPositions[i3 + 2] = (Math.random() - 0.5) * 0.18;
+        trailVelocities[i3] = (Math.random() - 0.5) * 1.5;
+        trailVelocities[i3 + 1] = (Math.random() - 0.5) * 1.5;
+        trailVelocities[i3 + 2] = (Math.random() - 0.5) * 0.8;
+        trailLife[index] = 1;
+      }
+    }
+
+    function triggerExplosion() {
+      explosionEndsAt = performance.now() + 1500;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const i3 = i * 3;
+        // Normalize each particle's center-to-point vector, then vary its magnitude.
+        let x = basePositions[i3], y = basePositions[i3 + 1], z = basePositions[i3 + 2];
+        const inverseLength = 1 / (Math.hypot(x, y, z) || 1), force = 3.2 + Math.random() * 4.8;
+        velocities[i3] = x * inverseLength * force + (Math.random() - 0.5) * 1.5;
+        velocities[i3 + 1] = y * inverseLength * force + (Math.random() - 0.5) * 1.5;
+        velocities[i3 + 2] = z * inverseLength * force + (Math.random() - 0.5) * 1.5;
+      }
+    }
+
+    function updateConstellation(delta, time) {
+      const positions = constellation.geometry.attributes.position.array;
+      const exploding = time < explosionEndsAt;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const i3 = i * 3;
+        if (exploding) {
+          positions[i3] += velocities[i3] * delta;
+          positions[i3 + 1] += velocities[i3 + 1] * delta;
+          positions[i3 + 2] += velocities[i3 + 2] * delta;
+          velocities[i3] *= 0.992; velocities[i3 + 1] *= 0.992; velocities[i3 + 2] *= 0.992;
+        } else {
+          // Spring attraction plus velocity damping eases every point back home.
+          velocities[i3] = (velocities[i3] + (basePositions[i3] - positions[i3]) * delta * 5.5) * 0.91;
+          velocities[i3 + 1] = (velocities[i3 + 1] + (basePositions[i3 + 1] - positions[i3 + 1]) * delta * 5.5) * 0.91;
+          velocities[i3 + 2] = (velocities[i3 + 2] + (basePositions[i3 + 2] - positions[i3 + 2]) * delta * 5.5) * 0.91;
+          positions[i3] += velocities[i3] * delta;
+          positions[i3 + 1] += velocities[i3 + 1] * delta;
+          positions[i3 + 2] += velocities[i3 + 2] * delta;
+        }
+      }
+      constellation.geometry.attributes.position.needsUpdate = true;
+    }
+
+    function updateTrail(delta) {
+      for (let i = 0; i < TRAIL_COUNT; i++) {
+        const i3 = i * 3;
+        if (trailLife[i] <= 0) continue;
+        trailLife[i] = Math.max(0, trailLife[i] - delta * 1.8);
+        trailPositions[i3] += trailVelocities[i3] * delta;
+        trailPositions[i3 + 1] += trailVelocities[i3 + 1] * delta;
+        trailPositions[i3 + 2] += trailVelocities[i3 + 2] * delta;
+        trailVelocities[i3] *= 0.965; trailVelocities[i3 + 1] *= 0.965; trailVelocities[i3 + 2] *= 0.965;
+        const life = trailLife[i];
+        trailColors[i3] = life * 0.2; trailColors[i3 + 1] = life * 0.95; trailColors[i3 + 2] = life;
+        if (!life) trailPositions[i3] = trailPositions[i3 + 1] = trailPositions[i3 + 2] = 999;
+      }
+      trail.geometry.attributes.position.needsUpdate = true;
+      trail.geometry.attributes.color.needsUpdate = true;
     }
 
     function animate(time) {
       animationId = requestAnimationFrame(animate);
-      // Avoid rendering more often than the display needs while retaining smooth 60 FPS.
-      if (time - lastFrame < 1000 / 60) return;
-      const delta = Math.min((time - lastFrame) / 1000, 0.05);
+      const delta = Math.min((time - lastFrame) / 1000 || 0, 0.034);
       lastFrame = time;
+      easedPointer.lerp(pointer, 0.045);
+      updateConstellation(delta, time);
+      updateTrail(delta);
 
-      // Linear interpolation adds physical damping instead of snapping to the pointer.
-      easedPointer.x += (pointer.x - easedPointer.x) * 0.045;
-      easedPointer.y += (pointer.y - easedPointer.y) * 0.045;
-      constellation.rotation.y += delta * 0.055;
-      constellation.rotation.z += delta * 0.018;
-      constellation.rotation.x += (easedPointer.y * 0.16 - constellation.rotation.x) * 0.025;
-      constellation.position.x += (easedPointer.x * 0.5 - constellation.position.x) * 0.025;
-      constellation.position.y += (-easedPointer.y * 0.25 - constellation.position.y) * 0.025;
+      constellation.rotation.y += delta * 0.045;
+      constellation.rotation.z += delta * 0.012;
+      constellation.position.x += (easedPointer.x * 0.42 - constellation.position.x) * 0.024;
+      constellation.position.y += (easedPointer.y * 0.22 - constellation.position.y) * 0.024;
+
+      // Scroll progress drives both WebGL and DOM parallax without extra scroll handlers.
+      const scrollProgress = Math.min(scrollY / Math.max(innerHeight, 1), 1);
+      constellation.material.opacity = 0.8 * (1 - scrollProgress * 0.86);
+      camera.rotation.x += (scrollProgress * 0.24 - camera.rotation.x) * 0.045;
+      heroContent.style.transform = `translate3d(0,${-scrollProgress * 120}px,0)`;
+      heroContent.style.opacity = String(1 - scrollProgress);
       renderer.render(scene, camera);
     }
 
     function onWindowResize() {
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 720 ? 1.25 : 1.7));
+      renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 720 ? 1.2 : 1.65));
       renderer.setSize(innerWidth, innerHeight, false);
       if (reducedMotion3D) renderer.render(scene, camera);
     }
 
-    // Stop GPU work in background tabs, then resume only when the page is visible.
     function onVisibilityChange() {
       if (document.hidden) cancelAnimationFrame(animationId);
       else if (!reducedMotion3D) { lastFrame = performance.now(); animate(lastFrame); }
