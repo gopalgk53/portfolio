@@ -4,13 +4,13 @@ import type { ReactNode } from "react";
 import { JsonLd } from "../components/json-ld";
 
 export const metadata: Metadata = {
-  title: "Gopalakrishnan — Generative AI Engineer",
+  title: "Gopalakrishna — Generative AI Engineer",
   description:
     "Generative AI Engineer building production RAG systems, autonomous agents, and intelligent workflows.",
   metadataBase: new URL("https://gopalakrishnagenai.in"),
   alternates: { canonical: "/" },
-  openGraph: { title: "Gopalakrishnan — Generative AI Engineer", description: "Production-minded RAG, agentic systems, and LLM inference engineering.", url: "/", siteName: "Gopalakrishnan GenAI", type: "profile", images:[{url:"/og-image.svg",width:1200,height:630,alt:"Gopalakrishnan — Generative AI Engineer"}] },
-  twitter: { card: "summary_large_image", title: "Gopalakrishnan — Generative AI Engineer", description: "RAG, autonomous agents, and optimized LLM systems.", images:["/og-image.svg"] },
+  openGraph: { title: "Gopalakrishna — Generative AI Engineer", description: "Production-minded RAG, agentic systems, and LLM inference engineering.", url: "/", siteName: "Gopalakrishna GenAI", type: "profile", images:[{url:"/og-image.svg",width:1200,height:630,alt:"Gopalakrishna — Generative AI Engineer"}] },
+  twitter: { card: "summary_large_image", title: "Gopalakrishna — Generative AI Engineer", description: "RAG, autonomous agents, and optimized LLM systems.", images:["/og-image.svg"] },
   robots: { index: true, follow: true },
 };
 

@@ -7,16 +7,17 @@ export function JsonLd() {
         "@type": "ProfilePage",
         "@id": "https://gopalakrishnagenai.in/#webpage",
         url: "https://gopalakrishnagenai.in",
-        name: "Gopalakrishnan — Generative AI Engineer Portfolio",
+        name: "Gopalakrishna — Generative AI Engineer Portfolio",
         description:
-          "Official portfolio of Gopalakrishnan, a Generative AI Engineer specialized in LLMs, RAG architecture, agent frameworks, and inference optimization.",
+          "Official portfolio of Gopalakrishna, a Generative AI Engineer specialized in LLMs, RAG architecture, agent frameworks, and inference optimization.",
         mainEntity: { "@id": "https://gopalakrishnagenai.in/#person" },
       },
       {
         "@type": "Person",
         "@id": "https://gopalakrishnagenai.in/#person",
         name: "Gopalakrishna Maddipalli",
-        alternateName: "Gopalakrishnan GenAI",
+        alternateName: "Gopalakrishna GenAI",
+        email: "mailto:gopalgk53@yahoo.com",
         jobTitle: "Generative AI Engineer",
         url: "https://gopalakrishnagenai.in",
         sameAs: [
