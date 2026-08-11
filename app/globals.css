@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050507;
+  --background: #0a0d12;
   --surface: rgba(255, 255, 255, 0.045);
   --border: rgba(255, 255, 255, 0.1);
   --foreground: #f7f7f8;
@@ -16,11 +16,18 @@ body {
   margin: 0;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, Geist, ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 button, a { -webkit-tap-highlight-color: transparent; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
 ::selection { color: #050507; background: var(--cyan); }
+
+.glass-card { border: 1px solid rgba(255,255,255,.085); border-radius: 1.5rem; background: rgba(15,23,42,.38); box-shadow: 0 20px 70px rgba(0,0,0,.22); backdrop-filter: blur(18px); }
+.metric { border: 1px solid rgba(59,130,246,.18); border-radius: .6rem; background: rgba(59,130,246,.06); padding: .45rem .65rem; font-family: ui-monospace, monospace; font-size: .62rem; color: #93c5fd; }
+.field { width: 100%; border: 1px solid rgba(255,255,255,.1); border-radius: .8rem; background: rgba(0,0,0,.22); padding: .85rem; color: #f8fafc; outline: none; font-family: ui-monospace, monospace; font-size: .78rem; }
+.field:focus { border-color: rgba(139,92,246,.65); box-shadow: 0 0 0 3px rgba(139,92,246,.08); }
 
 .noise {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");

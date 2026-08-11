@@ -11,9 +11,11 @@ export const projects = [
 ];
 
 export const skills = [
-  { group: "AI frameworks", items: ["LangChain", "LlamaIndex", "CrewAI", "AutoGen", "LangGraph"] },
-  { group: "Vector systems", items: ["Pinecone", "Milvus", "Qdrant", "Chroma", "FAISS"] },
-  { group: "Models & infrastructure", items: ["GPT-4", "Claude 3", "Llama 3", "Docker", "FastAPI", "AWS"] },
+  { group: "Models & Fine-Tuning", items: ["Llama 3", "Qwen", "DeepSeek", "LoRA / QLoRA", "Axolotl", "Unsloth", "Hugging Face"] },
+  { group: "Inference & Optimization", items: ["vLLM", "TensorRT-LLM", "Ollama", "AWQ", "GGUF", "GPTQ", "FlashAttention"] },
+  { group: "Orchestration & Agents", items: ["LangChain", "LangGraph", "AutoGen", "CrewAI", "LlamaIndex", "DSPy"] },
+  { group: "Vector Databases & RAG", items: ["Qdrant", "Pinecone", "Milvus", "Chroma", "Hybrid Search", "RRF"] },
+  { group: "Engineering & Infrastructure", items: ["PyTorch", "Python", "FastAPI", "Docker", "Ray", "Triton", "CUDA", "AWS / GCP"] },
 ];
 
 export const certifications = [
