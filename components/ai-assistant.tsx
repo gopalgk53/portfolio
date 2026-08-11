@@ -9,6 +9,7 @@ const spring = { type: "spring" as const, stiffness: 200, damping: 25 };
 const STORE = "gopal-bot-session-v1";
 const welcome = "System initialized. I can help you explore Gopal's GenAI stack, project architectures, experience, and availability.";
 const quick = ["⚡ View AI Stack", "📂 Latest RAG Project", "💼 Hire Gopal"];
+const destinations:Record<string,string>={"⚡ View AI Stack":"#skills","📂 Latest RAG Project":"#projects","💼 Hire Gopal":"#contact"};
 const answers: Record<string,string> = {
   "⚡ View AI Stack":"Gopal's stack spans Llama 3, Qwen, LoRA/QLoRA, vLLM, LangGraph, CrewAI, Qdrant, hybrid retrieval, FastAPI, Docker, PyTorch, AWS and GCP.",
   "📂 Latest RAG Project":"The AI Legal Assistant is designed around document ingestion, embeddings, hybrid retrieval, reranking and grounded generation. Open the Projects section to inspect its system flow.",
@@ -23,6 +24,7 @@ export function AIAssistant() {
 
   useEffect(()=>{try{const saved=sessionStorage.getItem(STORE);if(saved)setMessages(JSON.parse(saved));}catch{}const timer=setTimeout(()=>{if(!sessionStorage.getItem("gopal-bot-tooltip"))setTooltip(true)},7000);return()=>clearTimeout(timer)},[]);
   useEffect(()=>{if(messages.length)sessionStorage.setItem(STORE,JSON.stringify(messages));},[messages]);
+  useEffect(()=>{const last=messages.at(-1);if(last?.role==="user"&&destinations[last.text])setTimeout(()=>document.querySelector(destinations[last.text])?.scrollIntoView({behavior:"smooth"}),180)},[messages]);
   useEffect(()=>{if(open){setTooltip(false);sessionStorage.setItem("gopal-bot-tooltip","seen");setTimeout(()=>inputRef.current?.focus(),260);if(!messages.length)setMessages([{role:"assistant",text:welcome}]);}},[open,messages.length]);
   useEffect(()=>{feed.current?.scrollTo({top:feed.current.scrollHeight,behavior:"smooth"});},[messages,thinking]);
   useEffect(()=>{const close=(event:PointerEvent)=>{if(open&&panel.current&&!panel.current.contains(event.target as Node))setOpen(false)};const key=(event:KeyboardEvent)=>{if(event.key==="Escape")setOpen(false)};document.addEventListener("pointerdown",close);document.addEventListener("keydown",key);return()=>{document.removeEventListener("pointerdown",close);document.removeEventListener("keydown",key)}},[open]);
