@@ -2,54 +2,84 @@
 
 import { useEffect, useRef } from "react";
 
-type Node = { x: number; y: number; vx: number; vy: number; r: number };
+type Point3D = { x: number; y: number; z: number; cluster: number; phase: number };
+type Projected = Point3D & { sx: number; sy: number; scale: number; depth: number };
+
+const COLORS = [[82,214,255],[164,104,255],[28,232,177],[255,74,177]] as const;
+const CENTERS = [[-2.4,-.8,0],[2.1,-1.1,-1.2],[-1,1.7,-2],[2.5,1.4,.4]] as const;
 
 export function NeuralBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext("2d");
-    if (!context) return;
+    const ctx = canvas?.getContext("2d")!;
+    if (!canvas || !ctx) return;
+    const activeCanvas = canvas;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let width = 0;
-    let height = 0;
-    let frame = 0;
-    let nodes: Node[] = [];
+    let width = innerWidth, height = innerHeight, raf = 0, last = 0, elapsed = 0;
+    let points: Point3D[] = [];
+    let pointerX = 0, pointerY = 0, targetX = 0, targetY = 0;
 
-    const resize = () => {
-      const ratio = Math.min(devicePixelRatio, 1.5);
-      width = innerWidth;
-      height = innerHeight;
-      canvas.width = width * ratio;
-      canvas.height = height * ratio;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      const count = width < 720 ? 34 : 72;
-      nodes = Array.from({ length: count }, () => ({ x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - .5) * .12, vy: (Math.random() - .5) * .12, r: Math.random() * 1.2 + .5 }));
-    };
-    const draw = () => {
-      context.clearRect(0, 0, width, height);
-      for (let i = 0; i < nodes.length; i++) {
-        const node = nodes[i];
-        if (!reduced) { node.x += node.vx; node.y += node.vy; }
-        if (node.x < 0 || node.x > width) node.vx *= -1;
-        if (node.y < 0 || node.y > height) node.vy *= -1;
-        context.fillStyle = i % 4 === 0 ? "rgba(139,92,246,.55)" : i % 3 === 0 ? "rgba(16,185,129,.5)" : "rgba(59,130,246,.5)";
-        context.beginPath(); context.arc(node.x, node.y, node.r, 0, Math.PI * 2); context.fill();
-        for (let j = i + 1; j < nodes.length; j++) {
-          const target = nodes[j], distance = Math.hypot(node.x - target.x, node.y - target.y);
-          if (distance < 125) { context.strokeStyle = `rgba(99,102,241,${(1 - distance / 125) * .09})`; context.beginPath(); context.moveTo(node.x, node.y); context.lineTo(target.x, target.y); context.stroke(); }
-        }
-      }
-      if (!reduced) frame = requestAnimationFrame(draw);
-    };
-    resize(); draw();
-    addEventListener("resize", resize, { passive: true });
-    return () => { cancelAnimationFrame(frame); removeEventListener("resize", resize); };
+    function seed() {
+      const count = width < 700 ? 150 : 380;
+      points = Array.from({length: count}, (_, i) => {
+        const cluster = i % 4, center = CENTERS[cluster];
+        // Box-Muller produces dense Gaussian neighborhoods, like a projected embedding space.
+        const u = Math.max(Math.random(), .001), v = Math.random();
+        const radius = Math.sqrt(-2 * Math.log(u)) * .62;
+        const angle = Math.PI * 2 * v;
+        return {x:center[0]+Math.cos(angle)*radius,y:center[1]+Math.sin(angle)*radius,z:center[2]+(Math.random()-.5)*1.8,cluster,phase:Math.random()*Math.PI*2};
+      });
+    }
+
+    function resize() {
+      const dpr = Math.min(devicePixelRatio, 1.5);
+      width = innerWidth; height = innerHeight;
+      activeCanvas.width = width*dpr; activeCanvas.height = height*dpr;
+      activeCanvas.style.width = `${width}px`; activeCanvas.style.height = `${height}px`;
+      ctx.setTransform(dpr,0,0,dpr,0,0); seed();
+    }
+
+    function project(point: Point3D, time: number): Projected {
+      const ax = reduced ? .18 : time*.055 + pointerX*.18;
+      const ay = reduced ? -.18 : time*.035 + pointerY*.12;
+      const ca=Math.cos(ax),sa=Math.sin(ax),cb=Math.cos(ay),sb=Math.sin(ay);
+      const x1=point.x*ca-point.z*sa, z1=point.x*sa+point.z*ca;
+      const y1=point.y*cb-z1*sb, z2=point.y*sb+z1*cb;
+      const camera=9, scale=Math.min(width,height)*.095*(camera/(camera+z2));
+      return {...point,sx:width*.5+x1*scale,sy:height*.5+y1*scale,scale:camera/(camera+z2),depth:z2};
+    }
+
+    function grid(time: number) {
+      ctx.save(); ctx.translate(width*.5,height*.73); ctx.strokeStyle="rgba(104,175,255,.055)"; ctx.lineWidth=.7;
+      const horizon=Math.min(width*.55,520);
+      for(let i=-8;i<=8;i++){ctx.beginPath();ctx.moveTo(i*14,0);ctx.lineTo(i*horizon/8,height*.32);ctx.stroke();}
+      for(let i=0;i<9;i++){const p=i/8;ctx.beginPath();ctx.moveTo(-horizon*p,height*.32*p);ctx.lineTo(horizon*p,height*.32*p);ctx.stroke();}
+      ctx.restore();
+      if(!reduced){const scan=(time*.08)%1;const g=ctx.createLinearGradient(0,height*scan-30,0,height*scan+30);g.addColorStop(0,"transparent");g.addColorStop(.5,"rgba(89,190,255,.045)");g.addColorStop(1,"transparent");ctx.fillStyle=g;ctx.fillRect(0,height*scan-30,width,60);}
+    }
+
+    function draw(now: number) {
+      const dt=Math.min((now-last)/1000,.04); last=now; elapsed+=reduced?0:dt;
+      pointerX+=(targetX-pointerX)*.035; pointerY+=(targetY-pointerY)*.035;
+      ctx.clearRect(0,0,width,height); grid(elapsed);
+      const projected=points.map(p=>project(p,elapsed)).sort((a,b)=>b.depth-a.depth);
+      // Sparse same-cluster edges suggest high-similarity relationships without visual noise.
+      ctx.globalCompositeOperation="lighter";
+      for(let i=0;i<projected.length;i+=3){const a=projected[i];for(let j=i+1;j<Math.min(i+22,projected.length);j++){const b=projected[j];if(a.cluster!==b.cluster)continue;const d=Math.hypot(a.sx-b.sx,a.sy-b.sy);if(d<72){const c=COLORS[a.cluster];ctx.strokeStyle=`rgba(${c[0]},${c[1]},${c[2]},${(1-d/72)*.075})`;ctx.beginPath();ctx.moveTo(a.sx,a.sy);ctx.lineTo(b.sx,b.sy);ctx.stroke();}}}
+      projected.forEach((p,i)=>{const c=COLORS[p.cluster];const pulse=reduced?1:.75+Math.sin(elapsed*1.7+p.phase)*.25;const r=Math.max(.45,(i%17===0?2.1:1)*p.scale*pulse);ctx.shadowBlur=i%17===0?12:5;ctx.shadowColor=`rgb(${c[0]},${c[1]},${c[2]})`;ctx.fillStyle=`rgba(${c[0]},${c[1]},${c[2]},${Math.min(.72,.28+p.scale*.2)})`;ctx.beginPath();ctx.arc(p.sx,p.sy,r,0,Math.PI*2);ctx.fill();});
+      // Animated inference path travels across cluster centroids.
+      if(!reduced){const path=CENTERS.map((c,i)=>project({x:c[0],y:c[1],z:c[2],cluster:i,phase:0},elapsed));const progress=(elapsed*.12)%1,segment=progress*3,index=Math.min(2,Math.floor(segment)),mix=segment-index,a=path[index],b=path[index+1],x=a.sx+(b.sx-a.sx)*mix,y=a.sy+(b.sy-a.sy)*mix;ctx.shadowBlur=18;ctx.shadowColor="#ffffff";ctx.fillStyle="rgba(255,255,255,.8)";ctx.beginPath();ctx.arc(x,y,2.2,0,Math.PI*2);ctx.fill();}
+      ctx.shadowBlur=0;ctx.globalCompositeOperation="source-over";
+      if(!reduced) raf=requestAnimationFrame(draw);
+    }
+
+    const move=(event:PointerEvent)=>{targetX=event.clientX/width-.5;targetY=event.clientY/height-.5;};
+    resize(); addEventListener("resize",resize,{passive:true}); addEventListener("pointermove",move,{passive:true});
+    if(reduced) draw(0); else raf=requestAnimationFrame(draw);
+    return()=>{cancelAnimationFrame(raf);removeEventListener("resize",resize);removeEventListener("pointermove",move);};
   }, []);
 
-  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-0 opacity-70" aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-0 opacity-80" aria-hidden="true" />;
 }
