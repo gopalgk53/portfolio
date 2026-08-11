@@ -19,6 +19,7 @@ export const skills = [
 ];
 
 export const certifications = [
+  ["Statistical Methods for Decision Making", "Great Learning · May 2020", "https://olympus1.greatlearning.in/course_certificate/GWSUYGPZ"],
   ["Machine Learning Engineering for Production (MLOps) Specialization", "Coursera · Nov 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/JM8WZRKMAZJW"],
   ["Practical Data Science Specialization", "Coursera · Sep 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/7HAFEBY7E6S6"],
   ["Neural Networks and Deep Learning", "Coursera · Sep 2020", "https://www.coursera.org/account/accomplishments/certificate/88PLY2RRMEHM"],
@@ -33,7 +34,6 @@ export const certifications = [
   ["SQL: Data Reporting and Analysis", "LinkedIn Learning · Sep 2020", "https://www.linkedin.com/learning/certificates/275b02b4f850d35d040e5ccb94ae2b14a339ea58e14f03082a233cf94fe3c580/?trk=backfilled_certificate"],
   ["Learning SQL Programming", "LinkedIn Learning · Aug 2020", "https://www.linkedin.com/learning/certificates/1e29a61a380e3cfbba9292e4100ed982bbeb9e45e602b0972ee8ee82f8449e22/?trk=backfilled_certificate"],
   ["SQL Essential Training", "LinkedIn Learning · Aug 2020", "https://www.linkedin.com/learning/certificates/0f2be91dd84616e96c2bfbd0d9efb3197af5e29394651f96f245893ff0b3c90a/?trk=backfilled_certificate"],
-  ["Statistical Methods for Decision Making", "Great Learning · May 2020", "https://olympus1.greatlearning.in/course_certificate/GWSUYGPZ"],
   ["Financial Risk Analytics", "Great Learning · Apr 2020", "https://olympus1.greatlearning.in/course_certificate/GQICJVMU"],
   ["Introduction to R", "Great Learning · Apr 2020", "https://olympus1.greatlearning.in/course_certificate/WGNGFBLP"],
   ["Marketing and Retail Analytics", "Great Learning · Apr 2020", "https://olympus1.greatlearning.in/course_certificate/OKECFULR"],
