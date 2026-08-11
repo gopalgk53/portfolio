@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background:#000; --foreground:#f4fff9; --muted:#b2c3ba;
-  --matrix:#00ff66; --cyan:#00f2fe; --signal:#00f5b2;
-  --glass-edge:linear-gradient(135deg,rgba(0,255,102,.52),rgba(0,242,254,.18) 42%,rgba(255,255,255,.035) 74%);
-  --glass-shadow:0 24px 72px rgba(0,0,0,.52),0 8px 30px rgba(0,242,254,.07),inset 0 1px 0 rgba(255,255,255,.09);
+  --background:#020308; --foreground:#f7f9ff; --muted:#c8d0e0;
+  --cyan:#35d9ff; --violet:#8b7cff; --mint:#5ee6c4;
+  --glass-edge:linear-gradient(135deg,rgba(53,217,255,.48),rgba(139,124,255,.2) 48%,rgba(255,255,255,.035) 76%);
+  --glass-shadow:0 24px 70px rgba(0,0,0,.48),0 8px 28px rgba(34,58,130,.08),inset 0 1px 0 rgba(255,255,255,.07);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#000}
-body{margin:0;color:var(--foreground);background:radial-gradient(circle at 12% 8%,rgba(0,255,102,.09),transparent 30rem),radial-gradient(circle at 88% 20%,rgba(0,242,254,.08),transparent 32rem),#000;background-attachment:fixed;font-family:Inter,Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
-button,a{-webkit-tap-highlight-color:transparent}button,input,textarea{font:inherit}button{cursor:pointer}::selection{color:#000;background:var(--matrix)}
+html{scroll-behavior:smooth;background:#020308}
+body{margin:0;color:var(--foreground);background:radial-gradient(circle at 12% 8%,rgba(53,217,255,.09),transparent 30rem),radial-gradient(circle at 88% 20%,rgba(139,124,255,.1),transparent 32rem),#020308;background-attachment:fixed;font-family:Inter,Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+button,a{-webkit-tap-highlight-color:transparent}button,input,textarea{font:inherit}button{cursor:pointer}::selection{color:#020308;background:var(--cyan)}
 h1,h2,h3{text-wrap:balance}p{text-wrap:pretty}
 
 .liquid-nav{margin:12px auto 0;width:min(calc(100% - 24px),1240px);border:1px solid rgba(0,242,254,.14);border-radius:1.3rem;background:rgba(0,7,5,.8);box-shadow:0 14px 38px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);backdrop-filter:blur(16px) saturate(125%);-webkit-backdrop-filter:blur(16px) saturate(125%)}

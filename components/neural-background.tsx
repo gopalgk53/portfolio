@@ -41,7 +41,7 @@ export function NeuralBackground() {
       scene.add(network);
       const count = 1500, positions = new Float32Array(count * 3), colors = new Float32Array(count * 3);
       const centers = [[-3,-1,0],[2.8,-1,-1],[-1,2,-2],[3,2,1],[0,0,2]];
-      const cyan = new THREE.Color(0x00f2fe), green = new THREE.Color(0x00ff66);
+      const cyan = new THREE.Color(0x35d9ff), green = new THREE.Color(0x8b7cff);
       for (let i=0;i<count;i++) {
         const center=centers[i%centers.length], radius=Math.pow(Math.random(),.55)*2.7, a=Math.random()*Math.PI*2, b=Math.acos(2*Math.random()-1);
         positions[i*3]=center[0]+radius*Math.sin(b)*Math.cos(a);
@@ -59,11 +59,11 @@ export function NeuralBackground() {
       const linePoints:number[]=[]; let connections=0;
       for(let i=0;i<count&&connections<1900;i+=2){for(let offset=5;offset<65&&connections<1900;offset+=5){const j=(i+offset)%count,dx=positions[i*3]-positions[j*3],dy=positions[i*3+1]-positions[j*3+1],dz=positions[i*3+2]-positions[j*3+2];if(dx*dx+dy*dy+dz*dz<2.1){linePoints.push(positions[i*3],positions[i*3+1],positions[i*3+2],positions[j*3],positions[j*3+1],positions[j*3+2]);connections++;}}}
       const lineGeometry=new THREE.BufferGeometry();lineGeometry.setAttribute("position",new THREE.Float32BufferAttribute(linePoints,3));
-      const lines=new THREE.LineSegments(lineGeometry,new THREE.LineBasicMaterial({color:0x00f2fe,transparent:true,opacity:.075,depthWrite:false,blending:THREE.AdditiveBlending}));network.add(lines);
+      const lines=new THREE.LineSegments(lineGeometry,new THREE.LineBasicMaterial({color:0x4f7cff,transparent:true,opacity:.075,depthWrite:false,blending:THREE.AdditiveBlending}));network.add(lines);
 
       // A small glyph texture is reused by all sprites to keep matrix streams inexpensive.
       const textureCanvas=document.createElement("canvas");textureCanvas.width=64;textureCanvas.height=64;
-      const textureContext=textureCanvas.getContext("2d")!;textureContext.fillStyle="#00ff66";textureContext.font="bold 36px monospace";textureContext.textAlign="center";textureContext.fillText("01",32,43);
+      const textureContext=textureCanvas.getContext("2d")!;textureContext.fillStyle="#8b7cff";textureContext.font="bold 36px monospace";textureContext.textAlign="center";textureContext.fillText("01",32,43);
       const glyphTexture=new THREE.CanvasTexture(textureCanvas), glyphMaterial=new THREE.SpriteMaterial({map:glyphTexture,transparent:true,opacity:.22,depthWrite:false,blending:THREE.AdditiveBlending});
       const glyphs: any[]=[];
       for(let i=0;i<42;i++){const sprite=new THREE.Sprite(glyphMaterial);sprite.position.set((Math.random()-.5)*14,(Math.random()-.5)*10,(Math.random()-.5)*9);sprite.scale.set(.18,.34,1);sprite.userData.speed=.18+Math.random()*.32;glyphs.push(sprite);network.add(sprite);}
