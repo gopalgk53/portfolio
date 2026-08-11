@@ -25,7 +25,7 @@ export function AIPromptBar() {
   function ask(value: string) {
     if (!value.trim() || loading) return;
     setQuery(value); setStream(""); setLoading(true);
-    setAnswer(responses[value] || `Gopalakrishnan focuses on production RAG, agentic systems, and high-throughput inference. Ask about a specific architecture or open a project case study below.`);
+    setAnswer(responses[value] || `Gopalakrishna focuses on production RAG, agentic systems, and high-throughput inference. Ask about a specific architecture or open a project case study below.`);
   }
   function submit(event: FormEvent) { event.preventDefault(); ask(query); }
   useEffect(() => {
