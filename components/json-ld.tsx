@@ -1,3 +1,4 @@
+import { projects } from "../lib/data";
 export function JsonLd() {
   const schema = {
     "@context": "https://schema.org",
@@ -37,6 +38,12 @@ export function JsonLd() {
         ],
         description:
           "Generative AI Engineer designing high-throughput LLM pipelines, stateful agentic workflows, and low-latency enterprise RAG solutions.",
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://gopalakrishnagenai.in/#projects",
+        name: "Generative AI Engineering Projects",
+        itemListElement: projects.map((project,index)=>({"@type":"ListItem",position:index+1,item:{"@type":"CreativeWork",name:project.title,description:project.goal,url:`https://gopalakrishnagenai.in/#projects`}})),
       },
     ],
   };
