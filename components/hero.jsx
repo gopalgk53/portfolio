@@ -55,7 +55,7 @@ function SkillTicker() {
 
 export function Hero() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden">
       <Background />
       <motion.nav
         initial={{ y: -24, opacity: 0 }}
@@ -93,6 +93,6 @@ export function Hero() {
           </motion.div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
