@@ -1,21 +1,24 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowDown, Download } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowDown, Download, Menu, X } from "lucide-react";
+import { useState } from "react";
 import { AIPromptBar } from "./ai-prompt-bar";
 import { NeuralBackground } from "./neural-background";
 
 const spring = { type: "spring" as const, stiffness: 200, damping: 25 };
 
 export function Hero() {
+  const [menuOpen,setMenuOpen]=useState(false);
   return <div className="relative min-h-screen overflow-hidden">
     <NeuralBackground />
     <nav className="liquid-nav fixed inset-x-0 top-0 z-50">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <a href="#top" className="font-semibold tracking-tight">Gopalakrishnan<span className="text-cyan-300">.AI</span></a>
         <div className="hidden gap-6 text-sm text-slate-400 md:flex">{[["About","about"],["Projects","projects"],["Labs","playground"],["Experience","experience"]].map(([item,id]) => <motion.a key={item} href={`#${id}`} whileHover={{y:-2,color:"#fff"}} transition={spring}>{item}</motion.a>)}</div>
-        <motion.a href="#contact" whileHover={{scale:1.04}} whileTap={{scale:.96}} transition={spring} className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-xs text-cyan-100">Let&apos;s talk</motion.a>
+        <motion.a href="#contact" whileHover={{scale:1.04}} whileTap={{scale:.96}} transition={spring} className="hidden rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-xs text-cyan-100 md:block">Let&apos;s talk</motion.a><button onClick={()=>setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation" className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 text-slate-300 md:hidden">{menuOpen?<X className="h-5 w-5"/>:<Menu className="h-5 w-5"/>}</button>
       </div>
+      <AnimatePresence>{menuOpen&&<motion.div initial={{opacity:0,y:-12}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-12}} transition={spring} className="mx-3 mb-3 grid gap-1 rounded-2xl border border-white/10 bg-[#050711]/95 p-3 md:hidden">{[["About","about"],["Projects","projects"],["Labs","playground"],["Experience","experience"],["Certifications","certifications"],["Contact","contact"]].map(([item,id])=><a key={item} href={`#${id}`} onClick={()=>setMenuOpen(false)} className="rounded-xl px-4 py-3 text-sm text-slate-300 hover:bg-white/[.05]">{item}</a>)}</motion.div>}</AnimatePresence>
     </nav>
     <section id="top" className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-5 pb-20 pt-28 sm:px-8">
       <motion.div className="liquid-orb liquid-orb-a" animate={{y:[0,-18,0],x:[0,-9,0],scale:[1,1.04,1]}} transition={{...spring,repeat:Infinity}} aria-hidden="true" />
