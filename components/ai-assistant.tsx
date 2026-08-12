@@ -29,7 +29,34 @@ export function AIAssistant() {
   useEffect(()=>{feed.current?.scrollTo({top:feed.current.scrollHeight,behavior:"smooth"});},[messages,thinking]);
   useEffect(()=>{const close=(event:PointerEvent)=>{if(open&&panel.current&&!panel.current.contains(event.target as Node))setOpen(false)};const key=(event:KeyboardEvent)=>{if(event.key==="Escape")setOpen(false)};document.addEventListener("pointerdown",close);document.addEventListener("keydown",key);return()=>{document.removeEventListener("pointerdown",close);document.removeEventListener("keydown",key)}},[open]);
 
-  function respond(question:string){if(!question.trim()||thinking)return;const unsafe=blocked.test(question);setMessages(current=>[...current,{role:"user",text:question}]);setInput("");setThinking(true);setWarning(unsafe);const full=unsafe?"[GUARDRAIL EXCEPTION]: Request unauthorized. My system architecture is strictly optimized to discuss Gopal's professional engineering profile. Resetting context layer...":answers[question]||"Gopal focuses on production-minded RAG, agent orchestration, model optimization and document intelligence. Try asking about his stack, projects, experience, or availability.";let index=0;setTimeout(()=>{setMessages(current=>[...current,{role:"assistant",text:"",warning:unsafe}]);const timer=setInterval(()=>{index+=3;setMessages(current=>current.map((message,i)=>i===current.length-1?{...message,text:full.slice(0,index)}:message));if(index>=full.length){clearInterval(timer);setThinking(false)}},24)},420)}
+  async function respond(question:string){
+    if(!question.trim()||thinking)return;
+    const unsafe=blocked.test(question);
+    setMessages(current=>[...current,{role:"user",text:question}]);
+    setInput("");setThinking(true);setWarning(unsafe);
+
+    let full="";
+    if(unsafe){
+      full="[GUARDRAIL EXCEPTION]: I can only discuss Gopalakrishna's professional engineering profile. Try asking about his stack, projects, certifications, or availability.";
+    }else{
+      try{
+        const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:question.trim()})});
+        const data=await response.json() as {answer?:string;error?:string};
+        if(!response.ok||!data.answer)throw new Error(data.error||"No answer returned");
+        full=data.answer;
+      }catch{
+        full=answers[question]||"Gopalakrishna focuses on production-minded RAG, agent orchestration, model optimization and document intelligence. The live assistant is temporarily unavailable; try the project and skills sections instead.";
+      }
+    }
+
+    let index=0;
+    setMessages(current=>[...current,{role:"assistant",text:"",warning:unsafe}]);
+    const timer=setInterval(()=>{
+      index+=3;
+      setMessages(current=>current.map((message,i)=>i===current.length-1?{...message,text:full.slice(0,index)}:message));
+      if(index>=full.length){clearInterval(timer);setThinking(false)}
+    },18)
+  }
   function submit(event:FormEvent){event.preventDefault();respond(input)}
   function reset(){sessionStorage.removeItem(STORE);setMessages([{role:"assistant",text:welcome}]);setWarning(false);setThinking(false);setInput("")}
 

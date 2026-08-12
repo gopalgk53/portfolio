@@ -22,10 +22,25 @@ export function AIPromptBar() {
   const [stream, setStream] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function ask(value: string) {
+  async function ask(value: string) {
     if (!value.trim() || loading) return;
-    setQuery(value); setStream(""); setLoading(true);
-    setAnswer(responses[value] || `Gopalakrishna focuses on production RAG, agentic systems, and high-throughput inference. Ask about a specific architecture or open a project case study below.`);
+    setQuery(value); setStream(""); setAnswer(""); setLoading(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: value.trim() }),
+      });
+      const data = (await response.json()) as { answer?: string; error?: string };
+      if (!response.ok || !data.answer) throw new Error(data.error || "No answer returned");
+      setAnswer(data.answer);
+    } catch {
+      setAnswer(
+        responses[value] ||
+          "Gopalakrishna focuses on production RAG, agentic systems, and high-throughput inference. The live assistant is temporarily unavailable, but you can inspect the project case studies below.",
+      );
+    }
   }
   function submit(event: FormEvent) { event.preventDefault(); ask(query); }
   useEffect(() => {
