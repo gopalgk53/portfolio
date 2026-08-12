@@ -8,9 +8,8 @@ const MAX_REQUESTS = 10;
 const MAX_INPUT_LENGTH = 500;
 
 type RateEntry = { count: number; resetAt: number };
-type OpenAIResponse = {
-  output_text?: string;
-  output?: Array<{ content?: Array<{ type?: string; text?: string }> }>;
+type GroqResponse = {
+  choices?: Array<{ message?: { content?: string } }>;
   error?: { message?: string };
 };
 
@@ -43,19 +42,8 @@ function isRateLimited(identifier: string) {
   return current.count > MAX_REQUESTS;
 }
 
-function extractText(response: OpenAIResponse) {
-  if (response.output_text?.trim()) return response.output_text.trim();
-
-  return (response.output ?? [])
-    .flatMap((item) => item.content ?? [])
-    .filter((item) => item.type === "output_text" && item.text)
-    .map((item) => item.text)
-    .join("\n")
-    .trim();
-}
-
 export async function POST(request: NextRequest) {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
     return NextResponse.json(
@@ -87,31 +75,37 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const openAIResponse = await fetch("https://api.openai.com/v1/responses", {
+    const groqResponse = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || "gpt-5-mini",
-        instructions: portfolioAssistantInstructions,
-        input: message,
-        max_output_tokens: 240,
+        model: process.env.GROQ_MODEL || "llama-3.1-8b-instant",
+        messages: [
+          { role: "system", content: portfolioAssistantInstructions },
+          { role: "user", content: message },
+        ],
+        temperature: 0.2,
+        max_completion_tokens: 240,
       }),
       signal: AbortSignal.timeout(20_000),
-    });
+      },
+    );
 
-    const data = (await openAIResponse.json()) as OpenAIResponse;
-    if (!openAIResponse.ok) {
-      console.error("OpenAI response error", openAIResponse.status, data.error?.message);
+    const data = (await groqResponse.json()) as GroqResponse;
+    if (!groqResponse.ok) {
+      console.error("Groq response error", groqResponse.status, data.error?.message);
       return NextResponse.json(
         { error: "The portfolio assistant could not answer right now." },
         { status: 502 },
       );
     }
 
-    const answer = extractText(data);
+    const answer = data.choices?.[0]?.message?.content?.trim();
     if (!answer) {
       return NextResponse.json(
         { error: "The portfolio assistant returned an empty answer." },
