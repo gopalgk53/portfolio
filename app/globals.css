@@ -35,22 +35,27 @@ a{transition:color .22s ease,border-color .22s ease,background-color .22s ease}
 .lab-disclosure>summary{cursor:pointer;list-style:none;margin:0 auto;max-width:80rem;padding:1.25rem 2rem;font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.06em;color:#9CA3AF}.lab-disclosure>summary::-webkit-details-marker{display:none}.lab-disclosure>summary::before{content:"+";margin-right:.75rem;color:#68B8FF}.lab-disclosure[open]>summary::before{content:"−"}.lab-disclosure>section{border-top:1px solid rgba(255,255,255,.08)}
 
 #webgl-canvas{opacity:.11!important;filter:saturate(1.15);mix-blend-mode:multiply;mask-image:linear-gradient(to bottom,black 0%,rgba(0,0,0,.42) 62%,transparent 95%)}
-@media(hover:hover){.glass-card,.theme-glass-card,.spatial-panel{transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s ease,background .35s ease,box-shadow .35s ease}.glass-card:hover,.theme-glass-card:hover,.spatial-panel:hover{border-color:rgba(0,164,180,.36);background:rgba(37,43,54,.7);box-shadow:0 18px 54px rgba(0,0,0,.42),0 0 30px rgba(16,102,214,.1),inset 0 1px 0 rgba(255,255,255,.09)}a:hover{color:#fff}}
-@media(max-width:760px){body::before{background-size:5rem 5rem}.liquid-nav{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.glass-card,.theme-glass-card,.spatial-panel{background:rgba(30,34,43,.78)}#webgl-canvas{opacity:.14!important}}
+@media(hover:hover){.glass-card,.theme-glass-card,.spatial-panel{transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s ease,background .35s ease,box-shadow .35s ease}.glass-card:hover,.theme-glass-card:hover,.spatial-panel:hover{border-color:rgba(37,99,235,.22);background:rgba(255,255,255,.82);box-shadow:0 20px 54px rgba(15,23,42,.13),inset 0 1px 0 rgba(255,255,255,.9)}a:hover{color:#2563EB}}
+@media(max-width:760px){body::before{background-size:5rem 5rem}body::after{width:20rem;height:20rem;right:-9rem;top:10rem}.liquid-nav{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.glass-card,.theme-glass-card,.spatial-panel{background:rgba(255,255,255,.8)}#webgl-canvas{opacity:.08!important}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 .reduced-effects #webgl-canvas{display:none}.reduced-effects *{scroll-behavior:auto!important}
 
 /* Spatial-glass treatment applied without changing the established layout. */
 #projects article,#projects header+div>div:first-child,#contact header+div>div,#contact form{
-  border:1px solid rgba(255,255,255,.08)!important;border-radius:16px!important;
-  background:rgba(30,34,43,.65)!important;box-shadow:0 8px 32px rgba(0,0,0,.37)!important;
+  color:#0F172A;border:1px solid rgba(15,23,42,.1)!important;border-radius:16px!important;
+  background:rgba(255,255,255,.68)!important;box-shadow:0 12px 38px rgba(15,23,42,.1),inset 0 1px 0 rgba(255,255,255,.95)!important;
   backdrop-filter:blur(25px)!important;-webkit-backdrop-filter:blur(25px)!important;
 }
-#projects article{border-top-color:rgba(255,255,255,.14)!important}
-#projects article button[aria-selected="true"],#contact button[type="submit"]{background:#00A4B4;color:#fff}
-#projects a,#contact a{border-color:rgba(16,102,214,.45)}
-#projects article span[class*="bg-[#5e7cff]"]{background:#00A4B4!important}
-#certifications a:first-child{border-color:rgba(255,176,0,.32)!important;box-shadow:0 8px 32px rgba(0,0,0,.37),0 0 28px rgba(255,176,0,.06)}
+#projects article{border-top-color:rgba(15,23,42,.12)!important}
+#projects article button[aria-selected="true"],#contact button[type="submit"]{background:#2563EB;color:#fff}
+#projects a,#contact a{border-color:rgba(37,99,235,.35)}
+#projects article span[class*="bg-[#5e7cff]"]{background:#2563EB!important}
+#certifications a:first-child{border-color:rgba(217,119,6,.3)!important;box-shadow:0 12px 38px rgba(15,23,42,.1),0 0 24px rgba(217,119,6,.05)}
+main section{color:#0F172A}main section p{color:#64748B}main section h1,main section h2,main section h3{color:#0F172A}
+main section .font-mono{color:#64748B}main section a{color:#1E3A5F}
+#projects article p,#contact p{color:#64748B!important}#projects article h3{color:#0F172A}
+#projects article button{color:#64748B}#projects article button:focus-visible{outline:2px solid #2563EB;outline-offset:3px}
+.lab-disclosure{color:#0F172A;background:rgba(255,255,255,.68)}.lab-disclosure>summary{color:#475569}
 
 .agent-thinking{border-color:#2563EB!important}
 .agent-thinking::after{content:"";position:absolute;z-index:3;left:0;bottom:0;width:38%;height:2px;background:#2563EB;animation:thinking-track 1.4s ease-in-out infinite}
@@ -67,14 +72,3 @@ a{transition:color .22s ease,border-color .22s ease,background-color .22s ease}
 }
 @keyframes spatial-rise{from{opacity:.25;transform:translate3d(0,54px,-90px) rotateX(8deg)}to{opacity:1;transform:translate3d(0,0,0) rotateX(0)}}
 @keyframes pipeline-draw{to{stroke-dashoffset:0}}
-
-@media(prefers-color-scheme:light){
-  :root{--ink:#111827;--paper:#F4F7FA;--surface:rgba(255,255,255,.7);--surface-2:rgba(248,250,252,.78);--muted:#5F6B7A;--dim:#7C8795;--rule:rgba(15,23,42,.1)}
-  html{background:#F4F7FA}body{color:#111827;background:radial-gradient(circle at 82% 4%,rgba(37,99,235,.1),transparent 34rem),radial-gradient(circle at 8% 44%,rgba(0,164,180,.08),transparent 30rem),#F4F7FA}
-  body::before{background-image:linear-gradient(90deg,rgba(15,23,42,.025) 1px,transparent 1px),linear-gradient(rgba(15,23,42,.02) 1px,transparent 1px)}
-  .liquid-nav{background:rgba(255,255,255,.7);border-color:rgba(15,23,42,.09);box-shadow:0 8px 30px rgba(15,23,42,.08)}
-  .theme-glass-card,.glass-card,.spatial-panel,#projects article,#projects header+div>div:first-child,#contact header+div>div,#contact form,.lab-disclosure{color:#111827;background:rgba(255,255,255,.7)!important;border-color:rgba(15,23,42,.1)!important;box-shadow:0 8px 28px rgba(15,23,42,.09)!important}
-  .field{color:#111827;background:rgba(255,255,255,.58);border-color:rgba(15,23,42,.12)}.field::placeholder{color:#7C8795}
-  #webgl-canvas{opacity:.08!important;mix-blend-mode:multiply}
-  .agent-thinking{border-color:#2563EB!important;box-shadow:0 10px 30px rgba(15,23,42,.1)!important}
-}
