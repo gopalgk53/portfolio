@@ -38,7 +38,7 @@ export function Hero(){
 
         <div className="mt-16 grid gap-7 border-t border-white/[.14] pt-7 lg:grid-cols-[1fr_19rem]">
           <AIPromptBar/>
-          <div className="flex items-start gap-3 lg:justify-end"><a href="/Gopalakrishna_Maddipalli_CV.pdf" className="inline-flex items-center gap-2 border border-white/[.18] px-4 py-3 text-xs text-[#d4d2cc] hover:border-white/40"><Download className="h-3.5 w-3.5"/>Download résumé</a></div>
+          <div className="flex items-start gap-3 lg:justify-end"><a href="/Gopalakrishna_Maddipalli_CV.pdf" className="inline-flex items-center gap-2 rounded-xl border border-white/[.08] bg-[#1066D6] px-4 py-3 text-xs text-white shadow-[0_8px_28px_rgba(16,102,214,.24)]"><Download className="h-3.5 w-3.5"/>Download résumé</a></div>
         </div>
       </div>
     </section>
