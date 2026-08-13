@@ -1,36 +1,46 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, Download, Menu, X } from "lucide-react";
+import { ArrowDownRight, Download, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { AIPromptBar } from "./ai-prompt-bar";
 import { NeuralBackground } from "./neural-background";
 
 const spring = { type: "spring" as const, stiffness: 200, damping: 25 };
+const nav = [["Profile","about"],["Selected work","projects"],["Capabilities","skills"],["Experience","experience"],["Contact","contact"]];
 
-export function Hero() {
+export function Hero(){
   const [menuOpen,setMenuOpen]=useState(false);
-  return <div className="relative min-h-screen overflow-hidden">
-    <NeuralBackground />
+  return <div className="relative min-h-screen overflow-hidden border-b border-white/[.13]">
+    <NeuralBackground/>
     <nav className="liquid-nav fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
-        <a href="#top" className="font-semibold tracking-tight">Gopalakrishna<span className="text-cyan-300">.AI</span></a>
-        <div className="hidden gap-6 text-sm text-slate-400 md:flex">{[["About","about"],["Projects","projects"],["Labs","playground"],["Experience","experience"]].map(([item,id]) => <motion.a key={item} href={`#${id}`} whileHover={{y:-2,color:"#fff"}} transition={spring}>{item}</motion.a>)}</div>
-        <motion.a href="#contact" whileHover={{scale:1.04}} whileTap={{scale:.96}} transition={spring} className="hidden rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-xs text-cyan-100 md:block">Let&apos;s talk</motion.a><button onClick={()=>setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation" className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 text-slate-300 md:hidden">{menuOpen?<X className="h-5 w-5"/>:<Menu className="h-5 w-5"/>}</button>
+      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
+        <a href="#top" className="text-sm font-semibold tracking-[-.02em]">Gopalakrishna <span className="ml-1 font-normal text-[#777b80]">/ AI Engineer</span></a>
+        <div className="hidden items-center gap-7 text-[13px] text-[#999da1] md:flex">{nav.slice(0,4).map(([label,id])=><a key={id} href={`#${id}`}>{label}</a>)}<a href="#contact" className="border-b border-[#5e7cff] pb-1 text-white">Start a conversation</a></div>
+        <button onClick={()=>setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation" className="grid h-10 w-10 place-items-center border border-white/15 md:hidden">{menuOpen?<X className="h-4 w-4"/>:<Menu className="h-4 w-4"/>}</button>
       </div>
-      <AnimatePresence>{menuOpen&&<motion.div initial={{opacity:0,y:-12}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-12}} transition={spring} className="mx-3 mb-3 grid gap-1 rounded-2xl border border-white/10 bg-[#050711]/95 p-3 md:hidden">{[["About","about"],["Projects","projects"],["Labs","playground"],["Experience","experience"],["Certifications","certifications"],["Contact","contact"]].map(([item,id])=><a key={item} href={`#${id}`} onClick={()=>setMenuOpen(false)} className="rounded-xl px-4 py-3 text-sm text-slate-300 hover:bg-white/[.05]">{item}</a>)}</motion.div>}</AnimatePresence>
+      <AnimatePresence>{menuOpen&&<motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} transition={spring} className="border-t border-white/[.1] bg-[#0c0d0e] px-5 py-4 md:hidden">{nav.map(([label,id])=><a key={id} href={`#${id}`} onClick={()=>setMenuOpen(false)} className="block border-b border-white/[.08] py-3 text-sm text-[#b1b4b7]">{label}</a>)}</motion.div>}</AnimatePresence>
     </nav>
-    <section id="top" className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-5 pb-20 pt-28 sm:px-8">
-      <motion.div className="liquid-orb liquid-orb-a" animate={{y:[0,-18,0],x:[0,-9,0],scale:[1,1.04,1]}} transition={{...spring,repeat:Infinity}} aria-hidden="true" />
-      <motion.div className="liquid-orb liquid-orb-b" animate={{y:[0,15,0],x:[0,12,0],scale:[1,1.06,1]}} transition={{...spring,repeat:Infinity}} aria-hidden="true" />
+
+    <section id="top" className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-5 pb-16 pt-32 sm:px-8 sm:pt-36">
       <div className="w-full">
-        <motion.div layoutId="availability" initial={{opacity:0,y:18}} animate={{opacity:1,y:0}} transition={spring} className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[.06] px-3 py-1.5 font-mono text-[10px] text-emerald-300"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_12px_#10b981]" />STATUS: FINE-TUNING MODELS · AVAILABLE FOR SELECT AI ROLES</motion.div>
-        <motion.p initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={spring} className="mb-4 font-mono text-[10px] uppercase tracking-[.22em] text-cyan-300">MODEL_PROFILE / GOPAL-AI / v1.0</motion.p>
-        <motion.h1 initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} transition={spring} className="max-w-5xl text-balance text-5xl font-black leading-[.94] tracking-[-.055em] sm:text-7xl lg:text-[6rem]">Gopalakrishna — <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">Generative AI Engineer</span></motion.h1>
-        <motion.p initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{...spring,delay:.06}} className="mt-7 max-w-3xl text-lg leading-8 text-slate-400">Building autonomous agents, high-throughput LLM inference pipelines, and enterprise RAG systems.</motion.p><a href="#projects" className="mt-4 inline-flex rounded-full border border-violet-400/20 bg-violet-400/[.06] px-3 py-1.5 font-mono text-[10px] text-violet-200">FEATURED: AI Legal Assistant · grounded retrieval architecture ↗</a>
-        <AIPromptBar />
-        <div className="mt-6 flex flex-wrap gap-3"><motion.a href="#projects" whileHover={{y:-3,scale:1.02}} whileTap={{scale:.97}} transition={spring} className="inline-flex items-center gap-2 rounded-full border border-white/60 bg-gradient-to-b from-white to-blue-50 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_35px_rgba(105,175,255,.22),inset_0_1px_0_white]">View my work <ArrowDown className="h-4 w-4" /></motion.a><motion.a href="/Gopalakrishna_Maddipalli_CV.pdf" whileHover={{y:-3,scale:1.02}} whileTap={{scale:.97}} transition={spring} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-5 py-3 text-sm shadow-[inset_0_1px_0_rgba(255,255,255,.15)] backdrop-blur-xl"><Download className="h-4 w-4" />Resume</motion.a></div>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-end">
+          <div>
+            <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={spring} className="mb-10 flex items-center gap-3 text-[11px] uppercase tracking-[.18em] text-[#93979b]"><span className="h-2 w-2 rounded-full bg-[#9ac5a5]"/>Available for select roles · India</motion.div>
+            <motion.h1 initial={{opacity:0,y:28}} animate={{opacity:1,y:0}} transition={spring} className="max-w-5xl text-[clamp(3.8rem,8.5vw,8.8rem)] font-semibold leading-[.82] tracking-[-.075em]">Gopalakrishna</motion.h1>
+            <motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{...spring,delay:.05}} className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-6"><p className="text-[clamp(1.65rem,4vw,4rem)] leading-none tracking-[-.05em] text-[#aebaff]">Generative AI Engineer</p><span className="font-mono text-[10px] text-[#6e7277]">RAG / AGENTS / INFERENCE</span></motion.div>
+          </div>
+          <motion.aside initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{...spring,delay:.08}} className="border-l border-white/[.18] pl-6 lg:mb-2">
+            <p className="text-[15px] leading-7 text-[#b3b5b7]">Building autonomous agents, high-throughput LLM inference pipelines, and enterprise RAG systems.</p>
+            <a href="#projects" className="mt-7 inline-flex items-center gap-2 text-sm text-white">Explore selected work <ArrowDownRight className="h-4 w-4 text-[#5e7cff]"/></a>
+          </motion.aside>
+        </div>
+
+        <div className="mt-16 grid gap-7 border-t border-white/[.14] pt-7 lg:grid-cols-[1fr_19rem]">
+          <AIPromptBar/>
+          <div className="flex items-start gap-3 lg:justify-end"><a href="/Gopalakrishna_Maddipalli_CV.pdf" className="inline-flex items-center gap-2 border border-white/[.18] px-4 py-3 text-xs text-[#d4d2cc] hover:border-white/40"><Download className="h-3.5 w-3.5"/>Download résumé</a></div>
+        </div>
       </div>
     </section>
-  </div>;
+  </div>
 }

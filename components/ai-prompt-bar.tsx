@@ -21,6 +21,7 @@ export function AIPromptBar() {
   const [answer, setAnswer] = useState("");
   const [stream, setStream] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"live" | "cache" | "fallback">("live");
 
   async function ask(value: string) {
     if (!value.trim() || loading) return;
@@ -32,10 +33,12 @@ export function AIPromptBar() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: value.trim() }),
       });
-      const data = (await response.json()) as { answer?: string; error?: string };
+      const data = (await response.json()) as { answer?: string; error?: string; mode?: "live" | "cache" };
       if (!response.ok || !data.answer) throw new Error(data.error || "No answer returned");
+      setMode(data.mode || "live");
       setAnswer(data.answer);
     } catch {
+      setMode("fallback");
       setAnswer(
         responses[value] ||
           "Gopalakrishna focuses on production RAG, agentic systems, and high-throughput inference. The live assistant is temporarily unavailable, but you can inspect the project case studies below.",
@@ -50,12 +53,12 @@ export function AIPromptBar() {
     return () => clearInterval(timer);
   }, [answer, loading]);
 
-  return <div className="mt-10 w-full max-w-3xl">
-    <motion.div layout className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/80 p-4 shadow-2xl shadow-blue-500/5 backdrop-blur-xl" transition={spring}>
-      <div className="mb-3 flex items-center justify-between border-b border-slate-800/70 pb-3 font-mono text-[11px] text-slate-500"><span className="flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-red-400" /><i className="h-2 w-2 rounded-full bg-amber-300" /><i className="h-2 w-2 rounded-full bg-emerald-400" /><Terminal className="ml-2 h-3.5 w-3.5 text-violet-400" />gopal-ai-v1.0</span><span className="text-emerald-400">● active_node</span></div>
-      <form onSubmit={submit} className="relative"><Sparkles className="absolute left-3 top-3.5 h-4 w-4 text-violet-400" /><input aria-label="Ask Gopal AI assistant" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask Gopal's AI assistant about his stack, experience, or system architecture..." className="w-full rounded-xl border border-slate-800 bg-slate-900/70 py-3 pl-10 pr-12 font-mono text-xs text-slate-100 outline-none focus:border-violet-500/60" /><motion.button aria-label={loading ? "Generating response" : "Submit question"} whileHover={{ scale: 1.06 }} whileTap={{ scale: .94 }} transition={spring} disabled={loading} className="absolute right-2 top-2 rounded-lg border border-violet-500/30 bg-violet-600/20 p-2 text-violet-300">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CornerDownLeft className="h-4 w-4" />}</motion.button></form>
-      <div className="mt-3 flex flex-wrap gap-2">{prompts.map(([label, prompt]) => <motion.button key={label} whileHover={{ y: -2 }} whileTap={{ scale: .97 }} transition={spring} onClick={() => ask(prompt)} className="rounded-lg border border-slate-800 bg-slate-900/70 px-2.5 py-1.5 font-mono text-[10px] text-slate-400">{label}</motion.button>)}</div>
-      <AnimatePresence>{(stream || loading) && <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={spring} className="mt-4 overflow-hidden rounded-xl border border-violet-900/40 bg-slate-900/80 p-3.5 font-mono text-xs leading-6 text-slate-300"><p className="mb-1 text-[9px] uppercase tracking-widest text-violet-400">agent_output {loading && "● streaming"}</p>{stream}<span className="ml-1 inline-block h-3 w-1 bg-violet-400" /></motion.div>}</AnimatePresence>
+  return <div className="w-full max-w-3xl">
+    <motion.div layout className="overflow-hidden border-l border-white/[.18] pl-5" transition={spring}>
+      <div className="mb-4 flex items-center justify-between font-mono text-[9px] uppercase tracking-[.12em] text-[#74787d]"><span className="flex items-center gap-2"><Terminal className="h-3 w-3 text-[#aebaff]"/>Ask the portfolio</span><span className={mode === "fallback" ? "text-[#d8c6aa]" : "text-[#9ac5a5]"}>{mode === "fallback" ? "Local index" : mode === "cache" ? "Cached" : "Live"}</span></div>
+      <form onSubmit={submit} className="relative"><Sparkles className="absolute left-0 top-3.5 h-4 w-4 text-[#5e7cff]"/><input aria-label="Ask Gopal AI assistant" value={query} onChange={(event)=>setQuery(event.target.value)} placeholder="Ask about experience, systems, or technical decisions…" className="w-full border-0 border-b border-white/[.18] bg-transparent py-3 pl-7 pr-12 text-sm text-white outline-none placeholder:text-[#5f6368] focus:border-[#5e7cff]"/><motion.button aria-label={loading?"Generating response":"Submit question"} whileHover={{scale:1.06}} whileTap={{scale:.94}} transition={spring} disabled={loading} className="absolute right-0 top-2 p-2 text-[#aebaff]">{loading?<Loader2 className="h-4 w-4 animate-spin"/>:<CornerDownLeft className="h-4 w-4"/>}</motion.button></form>
+      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">{prompts.map(([label,prompt])=><button key={label} onClick={()=>ask(prompt)} className="border-b border-transparent py-1 text-[11px] text-[#888c90] hover:border-[#5e7cff] hover:text-white">{label}</button>)}</div>
+      <AnimatePresence>{(stream || loading) && <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={spring} className="mt-5 overflow-hidden border-l border-[#5e7cff] bg-white/[.025] px-4 py-3 text-sm leading-6 text-[#b8babd]"><p className="mb-1 font-mono text-[9px] uppercase tracking-widest text-[#74787d]">Response {loading && "· composing"}</p>{stream}<span className="ml-1 inline-block h-3 w-px bg-[#aebaff]" /></motion.div>}</AnimatePresence>
     </motion.div>
   </div>;
 }
