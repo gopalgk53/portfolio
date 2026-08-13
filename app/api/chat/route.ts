@@ -4,10 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 const WINDOW_MS = 10 * 60 * 1000;
-const MAX_REQUESTS = 10;
+const MAX_REQUESTS = 30;
 const MAX_INPUT_LENGTH = 500;
+const MAX_HISTORY_MESSAGES = 8;
+const CACHE_TTL_MS = 15 * 60 * 1000;
 
 type RateEntry = { count: number; resetAt: number };
+type ChatMessage = { role: "user" | "assistant"; content: string };
+type CacheEntry = { answer: string; expiresAt: number };
 type GroqResponse = {
   choices?: Array<{ message?: { content?: string } }>;
   error?: { message?: string };
@@ -15,11 +19,15 @@ type GroqResponse = {
 
 const globalRateStore = globalThis as typeof globalThis & {
   portfolioRateLimits?: Map<string, RateEntry>;
+  portfolioAnswerCache?: Map<string, CacheEntry>;
 };
 
 const rateLimits =
   globalRateStore.portfolioRateLimits ??
   (globalRateStore.portfolioRateLimits = new Map<string, RateEntry>());
+const answerCache =
+  globalRateStore.portfolioAnswerCache ??
+  (globalRateStore.portfolioAnswerCache = new Map<string, CacheEntry>());
 
 function clientIdentifier(request: NextRequest) {
   return (
@@ -60,9 +68,23 @@ export async function POST(request: NextRequest) {
   }
 
   let message = "";
+  let history: ChatMessage[] = [];
   try {
-    const body = (await request.json()) as { message?: unknown };
+    const body = (await request.json()) as { message?: unknown; history?: unknown };
     message = typeof body.message === "string" ? body.message.trim() : "";
+    if (Array.isArray(body.history)) {
+      history = body.history
+        .filter(
+          (item): item is ChatMessage =>
+            typeof item === "object" &&
+            item !== null &&
+            (item as ChatMessage).role !== undefined &&
+            ["user", "assistant"].includes((item as ChatMessage).role) &&
+            typeof (item as ChatMessage).content === "string",
+        )
+        .slice(-MAX_HISTORY_MESSAGES)
+        .map((item) => ({ role: item.role, content: item.content.slice(0, MAX_INPUT_LENGTH) }));
+    }
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
@@ -74,34 +96,47 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const cacheContext = history.map((item) => `${item.role}:${item.content}`).join("|");
+  const cacheKey = `${cacheContext}|user:${message}`.toLocaleLowerCase().replace(/\s+/g, " ");
+  const cached = answerCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return NextResponse.json({ answer: cached.answer, mode: "cache" });
+  }
+
   try {
-    const groqResponse = await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: process.env.GROQ_MODEL || "llama-3.1-8b-instant",
-        messages: [
-          { role: "system", content: portfolioAssistantInstructions },
-          { role: "user", content: message },
-        ],
-        temperature: 0.2,
-        max_completion_tokens: 240,
-      }),
-      signal: AbortSignal.timeout(20_000),
-      },
-    );
+    let groqResponse: Response | undefined;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: process.env.GROQ_MODEL || "llama-3.1-8b-instant",
+          messages: [
+            { role: "system", content: portfolioAssistantInstructions },
+            ...history,
+            { role: "user", content: message },
+          ],
+          temperature: 0.35,
+          max_completion_tokens: 420,
+        }),
+        signal: AbortSignal.timeout(20_000),
+      });
+      if (groqResponse.ok || ![429, 500, 502, 503, 504].includes(groqResponse.status) || attempt === 1) break;
+      const retryAfter = Number(groqResponse.headers.get("retry-after") || "1");
+      await new Promise((resolve) => setTimeout(resolve, Math.min(Math.max(retryAfter, 1), 2) * 1000));
+    }
+
+    if (!groqResponse) throw new Error("Groq request did not start");
 
     const data = (await groqResponse.json()) as GroqResponse;
     if (!groqResponse.ok) {
       console.error("Groq response error", groqResponse.status, data.error?.message);
       return NextResponse.json(
-        { error: "The portfolio assistant could not answer right now." },
-        { status: 502 },
+        { error: "The live model is temporarily unavailable.", mode: "fallback" },
+        { status: groqResponse.status === 429 ? 429 : 502 },
       );
     }
 
@@ -113,7 +148,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ answer });
+    answerCache.set(cacheKey, { answer, expiresAt: Date.now() + CACHE_TTL_MS });
+    return NextResponse.json({ answer, mode: "live" });
   } catch (error) {
     console.error("Portfolio assistant request failed", error);
     return NextResponse.json(
