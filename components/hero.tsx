@@ -19,7 +19,7 @@ export function Hero(){
         <div className="hidden items-center gap-7 text-[13px] text-[#999da1] md:flex">{nav.slice(0,4).map(([label,id])=><a key={id} href={`#${id}`}>{label}</a>)}<a href="#contact" className="border-b border-[#5e7cff] pb-1 text-white">Start a conversation</a></div>
         <button onClick={()=>setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation" className="grid h-10 w-10 place-items-center border border-white/15 md:hidden">{menuOpen?<X className="h-4 w-4"/>:<Menu className="h-4 w-4"/>}</button>
       </div>
-      <AnimatePresence>{menuOpen&&<motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} transition={spring} className="border-t border-white/[.1] bg-[#0c0d0e] px-5 py-4 md:hidden">{nav.map(([label,id])=><a key={id} href={`#${id}`} onClick={()=>setMenuOpen(false)} className="block border-b border-white/[.08] py-3 text-sm text-[#b1b4b7]">{label}</a>)}</motion.div>}</AnimatePresence>
+      <AnimatePresence>{menuOpen&&<motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} transition={spring} className="border-t border-slate-900/10 bg-white/85 px-5 py-4 text-slate-900 backdrop-blur-2xl md:hidden">{nav.map(([label,id])=><a key={id} href={`#${id}`} onClick={()=>setMenuOpen(false)} className="block border-b border-slate-900/10 py-3 text-sm text-slate-700">{label}</a>)}</motion.div>}</AnimatePresence>
     </nav>
 
     <section id="top" className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-5 pb-16 pt-32 sm:px-8 sm:pt-36">
