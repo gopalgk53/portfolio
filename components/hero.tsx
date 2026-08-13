@@ -7,7 +7,7 @@ import { AIPromptBar } from "./ai-prompt-bar";
 import { NeuralBackground } from "./neural-background";
 
 const spring = { type: "spring" as const, stiffness: 200, damping: 25 };
-const nav = [["Profile","about"],["Selected work","projects"],["Capabilities","skills"],["Experience","experience"],["Contact","contact"]];
+const nav = [["About","about"],["Work","projects"],["Skills","skills"],["Experience","experience"],["Contact","contact"]];
 
 export function Hero(){
   const [menuOpen,setMenuOpen]=useState(false);
@@ -15,7 +15,7 @@ export function Hero(){
     <NeuralBackground/>
     <nav className="liquid-nav fixed inset-x-0 top-0 z-50">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
-        <a href="#top" className="text-sm font-semibold tracking-[-.02em]">Gopalakrishna <span className="ml-1 font-normal text-[#777b80]">/ AI Engineer</span></a>
+        <a href="#top" className="text-sm font-semibold tracking-[-.02em]">Gopalakrishna <span className="ml-1 font-normal text-[#777b80]">Generative AI Engineer</span></a>
         <div className="hidden items-center gap-7 text-[13px] text-[#999da1] md:flex">{nav.slice(0,4).map(([label,id])=><a key={id} href={`#${id}`}>{label}</a>)}<a href="#contact" className="border-b border-[#5e7cff] pb-1 text-white">Start a conversation</a></div>
         <button onClick={()=>setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation" className="grid h-10 w-10 place-items-center border border-white/15 md:hidden">{menuOpen?<X className="h-4 w-4"/>:<Menu className="h-4 w-4"/>}</button>
       </div>
@@ -26,13 +26,13 @@ export function Hero(){
       <div className="w-full">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-end">
           <div>
-            <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={spring} className="mb-10 flex items-center gap-3 text-[11px] uppercase tracking-[.18em] text-[#93979b]"><span className="h-2 w-2 rounded-full bg-[#9ac5a5]"/>Available for select roles · India</motion.div>
+            <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={spring} className="mb-10 flex items-center gap-3 text-sm text-[#64748B]"><span className="h-2 w-2 rounded-full bg-[#059669]"/>Based in India · Open to the right opportunity</motion.div>
             <motion.h1 initial={{opacity:0,y:28}} animate={{opacity:1,y:0}} transition={spring} className="max-w-5xl text-[clamp(3.8rem,8.5vw,8.8rem)] font-semibold leading-[.82] tracking-[-.075em]">Gopalakrishna</motion.h1>
-            <motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{...spring,delay:.05}} className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-6"><p className="text-[clamp(1.65rem,4vw,4rem)] leading-none tracking-[-.05em] text-[#aebaff]">Generative AI Engineer</p><span className="font-mono text-[10px] text-[#6e7277]">RAG / AGENTS / INFERENCE</span></motion.div>
+            <motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{...spring,delay:.05}} className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-6"><p className="text-[clamp(1.65rem,4vw,4rem)] leading-none tracking-[-.05em] text-[#2563EB]">Generative AI Engineer</p><span className="text-xs text-[#64748B]">RAG systems · AI agents · model serving</span></motion.div>
           </div>
           <motion.aside initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{...spring,delay:.08}} className="border-l border-white/[.18] pl-6 lg:mb-2">
-            <p className="text-[15px] leading-7 text-[#b3b5b7]">Building autonomous agents, high-throughput LLM inference pipelines, and enterprise RAG systems.</p>
-            <a href="#projects" className="mt-7 inline-flex items-center gap-2 text-sm text-white">Explore selected work <ArrowDownRight className="h-4 w-4 text-[#5e7cff]"/></a>
+            <p className="text-[15px] leading-7 text-[#475569]">I design AI products that retrieve the right information, take useful actions, and remain understandable to the people who rely on them.</p>
+            <a href="#projects" className="mt-7 inline-flex items-center gap-2 text-sm text-[#0F172A]">See my work <ArrowDownRight className="h-4 w-4 text-[#2563EB]"/></a>
           </motion.aside>
         </div>
 
