@@ -71,7 +71,30 @@ function pointsLayer(domain: SceneDomain, count: number, layout: (i: number) => 
 
 function semanticLayer(count: number) {
   const centers = [new THREE.Vector3(-3, 1.6, 0), new THREE.Vector3(2.8, 1, -1), new THREE.Vector3(-1.2, -2, 1), new THREE.Vector3(3, -2, .5)];
-  return pointsLayer("nlp", count, i => randomSphere(1.6).add(centers[i % centers.length]));
+  const layer = pointsLayer("nlp", count, i => randomSphere(1.6).add(centers[i % centers.length]));
+  const ringGeometry = new THREE.RingGeometry(1.48, 1.5, 64);
+  const ringMaterial = new THREE.MeshBasicMaterial({ color: palette.nlp, transparent: true, opacity: 0, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true });
+  const rings = centers.map((center, index) => {
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    ring.position.copy(center);
+    ring.rotation.set(index % 2 ? Math.PI / 2.7 : Math.PI / 2, index * .35, index * .5);
+    ring.renderOrder = 1;
+    layer.group.add(ring);
+    return ring;
+  });
+  layer.materials.push(ringMaterial);
+  const baseUpdate = layer.update;
+  layer.update = (time, pointer, burst) => {
+    baseUpdate(time * .72, pointer, burst);
+    rings.forEach((ring, index) => {
+      ring.rotation.z = time * (.08 + index * .018) * (index % 2 ? -1 : 1);
+      ring.scale.setScalar(1 + Math.sin(time * .7 + index) * .08 + burst * .2);
+    });
+    layer.group.rotation.z = Math.sin(time * .12) * .08;
+  };
+  const baseDispose = layer.dispose;
+  layer.dispose = () => { baseDispose(); ringGeometry.dispose(); ringMaterial.dispose(); };
+  return layer;
 }
 
 function mlLayer(count: number): Layer {
@@ -81,15 +104,23 @@ function mlLayer(count: number): Layer {
     const classOffset = i % 3 - 1;
     return new THREE.Vector3(x, Math.sin(x * .65) + classOffset * .9 + (Math.random() - .5) * .7, z);
   });
-  const planeGeometry = new THREE.BufferGeometry().setFromPoints([
-    new THREE.Vector3(-5, -1.4, 0), new THREE.Vector3(5, 1.4, 0),
-    new THREE.Vector3(-5, -1.4, -2), new THREE.Vector3(5, 1.4, -2),
-  ]);
+  const planePoints: THREE.Vector3[] = [];
+  for (let z = -3; z <= 3; z += .75) planePoints.push(new THREE.Vector3(-5, -1.4, z), new THREE.Vector3(5, 1.4, z));
+  for (let x = -5; x <= 5; x += 1) planePoints.push(new THREE.Vector3(x, x * .28 - 1.4, -3), new THREE.Vector3(x, x * .28 - 1.4, 3));
+  const planeGeometry = new THREE.BufferGeometry().setFromPoints(planePoints);
   const planeMaterial = new THREE.LineBasicMaterial({ color: palette.ml, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true });
   const regression = new THREE.LineSegments(planeGeometry, planeMaterial);
   regression.renderOrder = 1;
   layer.group.add(regression);
   layer.materials.push(planeMaterial);
+  const baseUpdate = layer.update;
+  layer.update = (time, pointer, burst) => {
+    baseUpdate(time * 1.25, pointer, burst * .45);
+    regression.rotation.y = Math.sin(time * .32) * .22 + pointer.x * .08;
+    regression.rotation.z = Math.sin(time * .22) * .06;
+    regression.position.y = Math.sin(time * .85) * .16;
+    layer.group.rotation.y = Math.sin(time * .18) * .12 + pointer.x * .1;
+  };
   const baseDispose = layer.dispose;
   layer.dispose = () => { baseDispose(); planeGeometry.dispose(); planeMaterial.dispose(); };
   return layer;
@@ -116,10 +147,35 @@ function deepLearningLayer(): Layer {
   lines.renderOrder = 1;
   result.group.add(lines);
   result.materials.push(material);
+  const pulseCount = 28;
+  const pulseGeometry = new THREE.SphereGeometry(.075, 6, 6);
+  const pulseMaterial = new THREE.MeshBasicMaterial({ color: 0x9fa8ff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true });
+  const pulses = new THREE.InstancedMesh(pulseGeometry, pulseMaterial, pulseCount);
+  const pulseDummy = new THREE.Object3D();
+  pulses.renderOrder = 3;
+  result.group.add(pulses);
+  result.materials.push(pulseMaterial);
   const baseUpdate = result.update;
-  result.update = (time, pointer, burst) => { baseUpdate(time * .45, pointer, burst); material.opacity *= .8 + Math.sin(time * 3) * .16; };
+  result.update = (time, pointer, burst) => {
+    baseUpdate(time * .28, pointer, burst * .4);
+    material.opacity *= .78 + Math.sin(time * 3) * .16;
+    for (let i = 0; i < pulseCount; i++) {
+      const layerIndex = i % (nodes.length - 1);
+      const fromLayer = nodes[layerIndex];
+      const toLayer = nodes[layerIndex + 1];
+      const from = fromLayer[i % fromLayer.length];
+      const to = toLayer[(i * 3 + layerIndex) % toLayer.length];
+      const progress = (time * .48 + i / pulseCount) % 1;
+      pulseDummy.position.lerpVectors(from, to, progress);
+      pulseDummy.scale.setScalar(.72 + Math.sin(progress * Math.PI) * .9 + burst);
+      pulseDummy.updateMatrix();
+      pulses.setMatrixAt(i, pulseDummy.matrix);
+    }
+    pulses.instanceMatrix.needsUpdate = true;
+    result.group.rotation.y = Math.sin(time * .13) * .1 + pointer.x * .06;
+  };
   const baseDispose = result.dispose;
-  result.dispose = () => { baseDispose(); geometry.dispose(); material.dispose(); };
+  result.dispose = () => { baseDispose(); geometry.dispose(); material.dispose(); pulseGeometry.dispose(); pulseMaterial.dispose(); };
   return result;
 }
 
@@ -145,8 +201,13 @@ function agentLayer(count: number): Layer {
       let connection = 0;
       agents.forEach((agent, i) => {
         agent.position.add(agent.velocity);
-        agent.position.x += (pointer.x * 4.2 - agent.position.x) * Math.max(0, 1.6 - agent.position.length()) * .0025;
-        agent.position.y += (pointer.y * 2.8 - agent.position.y) * Math.max(0, 1.6 - agent.position.length()) * .0025;
+        const cursorX = pointer.x * 4.2;
+        const cursorY = pointer.y * 2.8;
+        const cursorDistance = Math.hypot(cursorX - agent.position.x, cursorY - agent.position.y);
+        const cursorInfluence = Math.max(0, 1 - cursorDistance / 3.2);
+        agent.position.x += (cursorX - agent.position.x) * cursorInfluence * .007;
+        agent.position.y += (cursorY - agent.position.y) * cursorInfluence * .007;
+        agent.position.z += Math.sin(time * 1.4 + agent.seed) * .0025;
         agent.position.x += Math.sin(time + agent.seed) * .0015;
         if (agent.position.length() > 4.8) agent.velocity.multiplyScalar(-1);
         dummy.position.copy(agent.position).multiplyScalar(1 + burst * .9); dummy.scale.setScalar(.8 + Math.sin(time * 2 + agent.seed) * .22 + burst * .5); dummy.updateMatrix(); mesh.setMatrixAt(i, dummy.matrix);
