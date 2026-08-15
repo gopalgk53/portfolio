@@ -245,9 +245,17 @@ export function ThreeCanvas() {
     if (!canvas) return;
     const mobile = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !mobile, powerPreference: "high-performance" });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !mobile, powerPreference: "high-performance" });
+      canvas.dataset.webgl = "ready";
+    } catch {
+      canvas.dataset.webgl = "unavailable";
+      return;
+    }
     const basePixelRatio = Math.min(window.devicePixelRatio, mobile ? 1 : 1.35);
     let qualityScale = 1;
+    let contextLost = false;
     renderer.setPixelRatio(basePixelRatio);
     renderer.setClearColor(0x030307, 1);
     renderer.sortObjects = true;
@@ -284,11 +292,25 @@ export function ThreeCanvas() {
       renderer.setSize(width, height, false);
     };
     const onVisibilityChange = () => { previous = performance.now(); };
+    const onContextLost = (event: Event) => {
+      event.preventDefault();
+      contextLost = true;
+      canvas.dataset.webgl = "recovering";
+    };
+    const onContextRestored = () => {
+      contextLost = false;
+      qualityScale = Math.min(qualityScale, .8);
+      canvas.dataset.webgl = "ready";
+      previous = performance.now();
+      resize();
+    };
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
     window.addEventListener("gopal-effects", onEffects);
     window.addEventListener("resize", resize, { passive: true });
     document.addEventListener("visibilitychange", onVisibilityChange);
+    canvas.addEventListener("webglcontextlost", onContextLost);
+    canvas.addEventListener("webglcontextrestored", onContextRestored);
     resize();
     let animationFrame = 0;
     let previous = performance.now();
@@ -296,7 +318,7 @@ export function ThreeCanvas() {
     let sampledTime = 0;
     const animate = (now: number) => {
       animationFrame = requestAnimationFrame(animate);
-      if (document.hidden) return;
+      if (document.hidden || contextLost) return;
       const delta = Math.min((now - previous) / 1000, .05); previous = now;
       sampledFrames++;
       sampledTime += delta;
@@ -347,7 +369,7 @@ export function ThreeCanvas() {
     };
     animationFrame = requestAnimationFrame(animate);
     return () => {
-      cancelAnimationFrame(animationFrame); window.removeEventListener("pointermove", onPointerMove); window.removeEventListener("pointerdown", onPointerDown); window.removeEventListener("gopal-effects", onEffects); window.removeEventListener("resize", resize); document.removeEventListener("visibilitychange", onVisibilityChange);
+      cancelAnimationFrame(animationFrame); window.removeEventListener("pointermove", onPointerMove); window.removeEventListener("pointerdown", onPointerDown); window.removeEventListener("gopal-effects", onEffects); window.removeEventListener("resize", resize); document.removeEventListener("visibilitychange", onVisibilityChange); canvas.removeEventListener("webglcontextlost", onContextLost); canvas.removeEventListener("webglcontextrestored", onContextRestored);
       Object.values(layers).forEach(layer => { scene.remove(layer.group); layer.dispose(); }); scene.remove(cursorCore); cursorGeometry.dispose(); cursorMaterial.dispose(); renderer.dispose(); renderer.forceContextLoss();
     };
   }, []);
