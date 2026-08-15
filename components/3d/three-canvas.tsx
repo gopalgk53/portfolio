@@ -18,6 +18,13 @@ const palette: Record<SceneDomain, number> = {
   agents: 0x10b981,
 };
 
+const sceneFraming: Record<SceneDomain, { scale: number; depth: number; tilt: number }> = {
+  nlp: { scale: 1, depth: 0, tilt: -0.035 },
+  ml: { scale: .94, depth: -.35, tilt: 0.025 },
+  dl: { scale: 1.08, depth: .15, tilt: 0 },
+  agents: { scale: 1.02, depth: -.1, tilt: 0.04 },
+};
+
 const randomSphere = (radius: number) => {
   const v = new THREE.Vector3(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1).normalize();
   return v.multiplyScalar(radius * Math.cbrt(Math.random()));
@@ -249,6 +256,7 @@ export function ThreeCanvas() {
     const layers: Record<SceneDomain, Layer> = {
       nlp: semanticLayer(Math.round(1800 * density)), ml: mlLayer(Math.round(1350 * density)), dl: deepLearningLayer(), agents: agentLayer(Math.round(80 * density)),
     };
+    const sceneBlend: Record<SceneDomain, number> = { nlp: activeRef.current === "nlp" ? 1 : 0, ml: activeRef.current === "ml" ? 1 : 0, dl: activeRef.current === "dl" ? 1 : 0, agents: activeRef.current === "agents" ? 1 : 0 };
     Object.values(layers).forEach(layer => scene.add(layer.group));
     const cursorGeometry = new THREE.TorusGeometry(.19, .018, 8, 32);
     const cursorMaterial = new THREE.MeshBasicMaterial({ color: palette.nlp, transparent: true, opacity: .72, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false });
@@ -283,15 +291,28 @@ export function ThreeCanvas() {
       const time = now / 1000;
       for (const [domain, layer] of Object.entries(layers) as [SceneDomain, Layer][]) {
         const target = domain === activeRef.current ? 1 : 0;
+        const blendAlpha = reduceMotion ? 1 : 1 - Math.pow(.003, delta);
+        sceneBlend[domain] = THREE.MathUtils.lerp(sceneBlend[domain], target, blendAlpha);
+        const framing = sceneFraming[domain];
+        const entrance = THREE.MathUtils.smootherstep(sceneBlend[domain], 0, 1);
         let opacity = 0;
-        for (const material of layer.materials) { material.opacity = THREE.MathUtils.lerp(material.opacity, target * intensity * (material instanceof THREE.LineBasicMaterial ? .25 : .94), 1 - Math.pow(.0005, delta)); opacity = Math.max(opacity, material.opacity); }
+        for (const material of layer.materials) {
+          const desiredOpacity = target * intensity * (material instanceof THREE.LineBasicMaterial ? .25 : .94);
+          material.opacity = reduceMotion ? desiredOpacity : THREE.MathUtils.lerp(material.opacity, desiredOpacity, 1 - Math.pow(.0005, delta));
+          opacity = Math.max(opacity, material.opacity);
+        }
         layer.group.visible = opacity > .004;
         if (layer.group.visible && !reduceMotion) layer.update(time, pointer, burst * intensity);
+        const sceneScale = framing.scale * (.9 + entrance * .1);
+        layer.group.scale.setScalar(sceneScale);
+        layer.group.position.z = THREE.MathUtils.lerp(layer.group.position.z, framing.depth - (1 - entrance) * 1.4, blendAlpha);
+        layer.group.rotation.z = THREE.MathUtils.lerp(layer.group.rotation.z, framing.tilt * entrance, blendAlpha * .45);
       }
       const scrollDepth = Math.min(window.scrollY / Math.max(window.innerHeight * 5, 1), 1);
       camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * .7 * intensity, .045);
       camera.position.y = THREE.MathUtils.lerp(camera.position.y, pointer.y * .42 * intensity + scrollDepth * .35 * intensity, .045);
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, 10.5 - scrollDepth * 1.7 * intensity - burst * .45 * intensity, .04);
+      const activeDepth = sceneFraming[activeRef.current].depth;
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, 10.5 - activeDepth * .22 - scrollDepth * 1.7 * intensity - burst * .45 * intensity, reduceMotion ? 1 : .04);
       cursorCore.position.set(pointer.x * 5.15, pointer.y * 2.9, 1.2);
       cursorCore.scale.setScalar(1 + Math.sin(time * 4) * .12 + burst * 1.4);
       cursorCore.rotation.z = time * .7;
