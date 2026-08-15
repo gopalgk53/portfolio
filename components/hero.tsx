@@ -4,15 +4,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowDownRight, Download, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { AIPromptBar } from "./ai-prompt-bar";
-import { NeuralBackground } from "./neural-background";
 
 const spring = { type: "spring" as const, stiffness: 200, damping: 25 };
 const nav = [["About","about"],["Work","projects"],["Skills","skills"],["Experience","experience"],["Contact","contact"]];
 
 export function Hero(){
   const [menuOpen,setMenuOpen]=useState(false);
-  return <div className="relative min-h-screen overflow-hidden border-b border-white/[.13]">
-    <NeuralBackground/>
+  return <div data-scene="nlp" className="relative min-h-screen overflow-hidden border-b border-white/[.13]">
     <nav className="liquid-nav fixed inset-x-0 top-0 z-50">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
         <a href="#top" className="text-sm font-semibold tracking-[-.02em]">Gopalakrishna <span className="ml-1 font-normal text-[#777b80]">Generative AI Engineer</span></a>
@@ -22,7 +20,7 @@ export function Hero(){
       <AnimatePresence>{menuOpen&&<motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} transition={spring} className="border-t border-slate-900/10 bg-white/85 px-5 py-4 text-slate-900 backdrop-blur-2xl md:hidden">{nav.map(([label,id])=><a key={id} href={`#${id}`} onClick={()=>setMenuOpen(false)} className="block border-b border-slate-900/10 py-3 text-sm text-slate-700">{label}</a>)}</motion.div>}</AnimatePresence>
     </nav>
 
-    <section id="top" className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-5 pb-16 pt-32 sm:px-8 sm:pt-36">
+    <section id="top" className="typography-shield relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-5 pb-16 pt-32 sm:px-8 sm:pt-36">
       <div className="w-full">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-end">
           <div>
