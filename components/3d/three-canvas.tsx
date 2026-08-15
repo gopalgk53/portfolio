@@ -243,10 +243,12 @@ export function ThreeCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const mobile = window.matchMedia("(max-width: 767px)").matches;
+    const mobile = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !mobile, powerPreference: "high-performance" });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1 : 1.35));
+    const basePixelRatio = Math.min(window.devicePixelRatio, mobile ? 1 : 1.35);
+    let qualityScale = 1;
+    renderer.setPixelRatio(basePixelRatio);
     renderer.setClearColor(0x030307, 1);
     renderer.sortObjects = true;
     const scene = new THREE.Scene();
@@ -274,18 +276,41 @@ export function ThreeCanvas() {
       const mode = (event as CustomEvent<{ mode?: keyof typeof intensityByMode }>).detail?.mode || "balanced";
       intensity = intensityByMode[mode];
     };
-    const resize = () => { const width = window.innerWidth, height = window.innerHeight; camera.aspect = width / height; camera.updateProjectionMatrix(); renderer.setSize(width, height, false); };
+    const resize = () => {
+      const width = window.innerWidth, height = window.innerHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setPixelRatio(basePixelRatio * qualityScale);
+      renderer.setSize(width, height, false);
+    };
+    const onVisibilityChange = () => { previous = performance.now(); };
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
     window.addEventListener("gopal-effects", onEffects);
     window.addEventListener("resize", resize, { passive: true });
+    document.addEventListener("visibilitychange", onVisibilityChange);
     resize();
     let animationFrame = 0;
     let previous = performance.now();
+    let sampledFrames = 0;
+    let sampledTime = 0;
     const animate = (now: number) => {
       animationFrame = requestAnimationFrame(animate);
       if (document.hidden) return;
       const delta = Math.min((now - previous) / 1000, .05); previous = now;
+      sampledFrames++;
+      sampledTime += delta;
+      if (!reduceMotion && sampledTime >= 2.5) {
+        const fps = sampledFrames / sampledTime;
+        const nextQuality = fps < 43 ? Math.max(.68, qualityScale - .12) : fps > 57 ? Math.min(1, qualityScale + .08) : qualityScale;
+        if (Math.abs(nextQuality - qualityScale) > .01) {
+          qualityScale = nextQuality;
+          renderer.setPixelRatio(basePixelRatio * qualityScale);
+          renderer.setSize(window.innerWidth, window.innerHeight, false);
+        }
+        sampledFrames = 0;
+        sampledTime = 0;
+      }
       pointer.lerp(targetPointer, 1 - Math.pow(.001, delta));
       burst = THREE.MathUtils.lerp(burst, 0, 1 - Math.pow(.025, delta));
       const time = now / 1000;
@@ -322,7 +347,7 @@ export function ThreeCanvas() {
     };
     animationFrame = requestAnimationFrame(animate);
     return () => {
-      cancelAnimationFrame(animationFrame); window.removeEventListener("pointermove", onPointerMove); window.removeEventListener("pointerdown", onPointerDown); window.removeEventListener("gopal-effects", onEffects); window.removeEventListener("resize", resize);
+      cancelAnimationFrame(animationFrame); window.removeEventListener("pointermove", onPointerMove); window.removeEventListener("pointerdown", onPointerDown); window.removeEventListener("gopal-effects", onEffects); window.removeEventListener("resize", resize); document.removeEventListener("visibilitychange", onVisibilityChange);
       Object.values(layers).forEach(layer => { scene.remove(layer.group); layer.dispose(); }); scene.remove(cursorCore); cursorGeometry.dispose(); cursorMaterial.dispose(); renderer.dispose(); renderer.forceContextLoss();
     };
   }, []);
