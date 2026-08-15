@@ -196,12 +196,19 @@ export function ThreeCanvas() {
     scene.add(cursorCore);
     const pointer = new THREE.Vector2();
     const targetPointer = new THREE.Vector2();
+    const intensityByMode = { low: .28, balanced: .65, immersive: 1 } as const;
+    let intensity = intensityByMode[(localStorage.getItem("gopal-effects-mode") as keyof typeof intensityByMode) || "balanced"] || intensityByMode.balanced;
     let burst = 0;
     const onPointerMove = (event: PointerEvent) => targetPointer.set(event.clientX / window.innerWidth * 2 - 1, -(event.clientY / window.innerHeight * 2 - 1));
     const onPointerDown = () => { if (!reduceMotion) burst = 1; };
+    const onEffects = (event: Event) => {
+      const mode = (event as CustomEvent<{ mode?: keyof typeof intensityByMode }>).detail?.mode || "balanced";
+      intensity = intensityByMode[mode];
+    };
     const resize = () => { const width = window.innerWidth, height = window.innerHeight; camera.aspect = width / height; camera.updateProjectionMatrix(); renderer.setSize(width, height, false); };
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
+    window.addEventListener("gopal-effects", onEffects);
     window.addEventListener("resize", resize, { passive: true });
     resize();
     let animationFrame = 0;
@@ -216,24 +223,24 @@ export function ThreeCanvas() {
       for (const [domain, layer] of Object.entries(layers) as [SceneDomain, Layer][]) {
         const target = domain === activeRef.current ? 1 : 0;
         let opacity = 0;
-        for (const material of layer.materials) { material.opacity = THREE.MathUtils.lerp(material.opacity, target * (material instanceof THREE.LineBasicMaterial ? .25 : .94), 1 - Math.pow(.0005, delta)); opacity = Math.max(opacity, material.opacity); }
+        for (const material of layer.materials) { material.opacity = THREE.MathUtils.lerp(material.opacity, target * intensity * (material instanceof THREE.LineBasicMaterial ? .25 : .94), 1 - Math.pow(.0005, delta)); opacity = Math.max(opacity, material.opacity); }
         layer.group.visible = opacity > .004;
-        if (layer.group.visible && !reduceMotion) layer.update(time, pointer, burst);
+        if (layer.group.visible && !reduceMotion) layer.update(time, pointer, burst * intensity);
       }
       const scrollDepth = Math.min(window.scrollY / Math.max(window.innerHeight * 5, 1), 1);
-      camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * .7, .045);
-      camera.position.y = THREE.MathUtils.lerp(camera.position.y, pointer.y * .42 + scrollDepth * .35, .045);
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, 10.5 - scrollDepth * 1.7 - burst * .45, .04);
+      camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * .7 * intensity, .045);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, pointer.y * .42 * intensity + scrollDepth * .35 * intensity, .045);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, 10.5 - scrollDepth * 1.7 * intensity - burst * .45 * intensity, .04);
       cursorCore.position.set(pointer.x * 5.15, pointer.y * 2.9, 1.2);
       cursorCore.scale.setScalar(1 + Math.sin(time * 4) * .12 + burst * 1.4);
       cursorCore.rotation.z = time * .7;
       cursorMaterial.color.lerp(new THREE.Color(palette[activeRef.current]), .08);
-      cursorMaterial.opacity = .56 + Math.sin(time * 4) * .14;
+      cursorMaterial.opacity = intensity * (.56 + Math.sin(time * 4) * .14);
       renderer.render(scene, camera);
     };
     animationFrame = requestAnimationFrame(animate);
     return () => {
-      cancelAnimationFrame(animationFrame); window.removeEventListener("pointermove", onPointerMove); window.removeEventListener("pointerdown", onPointerDown); window.removeEventListener("resize", resize);
+      cancelAnimationFrame(animationFrame); window.removeEventListener("pointermove", onPointerMove); window.removeEventListener("pointerdown", onPointerDown); window.removeEventListener("gopal-effects", onEffects); window.removeEventListener("resize", resize);
       Object.values(layers).forEach(layer => { scene.remove(layer.group); layer.dispose(); }); scene.remove(cursorCore); cursorGeometry.dispose(); cursorMaterial.dispose(); renderer.dispose(); renderer.forceContextLoss();
     };
   }, []);

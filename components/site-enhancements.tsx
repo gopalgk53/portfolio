@@ -1,11 +1,63 @@
 "use client";
-import { Gauge, Sparkles } from "lucide-react";
+
+import { Gauge, Sparkles, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const KEY="gopal-reduced-effects";
-export function SiteEnhancements(){
- const [reduced,setReduced]=useState(false);
- useEffect(()=>{const saved=localStorage.getItem(KEY)==="true";setReduced(saved);document.documentElement.classList.toggle("reduced-effects",saved);const click=(event:MouseEvent)=>{const target=(event.target as HTMLElement).closest("a,button");if(!target)return;const label=(target.textContent||target.getAttribute("aria-label")||"").trim().slice(0,80);const history=JSON.parse(sessionStorage.getItem("gopal-private-events")||"[]");history.push({event:"interaction",label,path:location.hash||"#top",at:Date.now()});sessionStorage.setItem("gopal-private-events",JSON.stringify(history.slice(-50)));};document.addEventListener("click",click);return()=>document.removeEventListener("click",click)},[]);
- function toggle(){const next=!reduced;setReduced(next);localStorage.setItem(KEY,String(next));document.documentElement.classList.toggle("reduced-effects",next);window.dispatchEvent(new CustomEvent("gopal-effects",{detail:{reduced:next}}));}
- return <button onClick={toggle} aria-pressed={reduced} className="fixed bottom-5 left-4 z-[90] flex h-11 items-center gap-2 rounded-full border border-cyan-400/15 bg-[#050711]/85 px-3 font-mono text-[9px] text-slate-400 shadow-xl backdrop-blur-xl sm:left-6"><span className="sr-only">Toggle reduced visual effects</span>{reduced?<Gauge className="h-4 w-4 text-[#5ee6c4]"/>:<Sparkles className="h-4 w-4 text-violet-300"/>}<span className="hidden sm:inline">{reduced?"EFFECTS: LOW":"EFFECTS: FULL"}</span></button>
+export type EffectsMode = "low" | "balanced" | "immersive";
+
+const KEY = "gopal-effects-mode";
+const modes: Array<{ id: EffectsMode; label: string; icon: typeof Gauge }> = [
+  { id: "low", label: "Low", icon: Gauge },
+  { id: "balanced", label: "Balanced", icon: Sparkles },
+  { id: "immersive", label: "Immersive", icon: Zap },
+];
+
+export function SiteEnhancements() {
+  const [mode, setMode] = useState<EffectsMode>("balanced");
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const legacyLow = localStorage.getItem("gopal-reduced-effects") === "true";
+    const saved = localStorage.getItem(KEY) as EffectsMode | null;
+    const initial = saved && modes.some(item => item.id === saved) ? saved : legacyLow ? "low" : "balanced";
+    setMode(initial);
+    document.documentElement.dataset.effects = initial;
+
+    const track = (event: MouseEvent) => {
+      const target = (event.target as HTMLElement).closest("a,button");
+      if (!target) return;
+      const label = (target.textContent || target.getAttribute("aria-label") || "").trim().slice(0, 80);
+      const history = JSON.parse(sessionStorage.getItem("gopal-private-events") || "[]");
+      history.push({ event: "interaction", label, path: location.hash || "#top", at: Date.now() });
+      sessionStorage.setItem("gopal-private-events", JSON.stringify(history.slice(-50)));
+    };
+    document.addEventListener("click", track);
+    return () => document.removeEventListener("click", track);
+  }, []);
+
+  function choose(next: EffectsMode) {
+    setMode(next);
+    setOpen(false);
+    localStorage.setItem(KEY, next);
+    localStorage.removeItem("gopal-reduced-effects");
+    document.documentElement.dataset.effects = next;
+    window.dispatchEvent(new CustomEvent("gopal-effects", { detail: { mode: next } }));
+  }
+
+  const active = modes.find(item => item.id === mode) || modes[1];
+  const ActiveIcon = active.icon;
+
+  return <div className="fixed bottom-5 left-4 z-[90] sm:left-6">
+    {open && <div role="menu" aria-label="3D intensity" className="mb-2 w-40 rounded-2xl border border-white/10 bg-[#070812]/92 p-1.5 shadow-2xl backdrop-blur-2xl">
+      {modes.map(item => {
+        const Icon = item.icon;
+        return <button key={item.id} role="menuitemradio" aria-checked={mode === item.id} onClick={() => choose(item.id)} className={`flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left font-mono text-[10px] transition ${mode === item.id ? "bg-white/10 text-white" : "text-slate-400 hover:bg-white/[.06] hover:text-white"}`}>
+          <Icon className="h-3.5 w-3.5"/><span>{item.label}</span>{mode === item.id && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)]"/>}
+        </button>;
+      })}
+    </div>}
+    <button onClick={() => setOpen(value => !value)} aria-expanded={open} aria-haspopup="menu" className="flex h-11 items-center gap-2 rounded-full border border-white/10 bg-[#050711]/88 px-3 font-mono text-[9px] text-slate-300 shadow-xl backdrop-blur-xl">
+      <ActiveIcon className="h-4 w-4 text-[var(--accent-primary)]"/><span className="hidden sm:inline">3D: {active.label.toUpperCase()}</span><span className="sr-only">Choose 3D animation intensity. Current setting: {active.label}</span>
+    </button>
+  </div>;
 }
