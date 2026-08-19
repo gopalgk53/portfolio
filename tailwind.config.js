@@ -1,2 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports={content:["./app/**/*.{js,ts,jsx,tsx,mdx}","./components/**/*.{js,ts,jsx,tsx,mdx}"],theme:{extend:{colors:{cosmos:"var(--bg-cosmos)","ai-surface":"var(--surface-ai)","ai-text":"var(--text-base)","ai-muted":"var(--text-muted)","ai-accent":"var(--accent-primary)","ai-nlp":"var(--accent-nlp)","ai-ml":"var(--accent-ml)","ai-agent":"var(--accent-agent)"},boxShadow:{"ai-glow":"0 0 30px var(--accent-glow)","glass-2xl":"var(--glass-shadow)"},backdropBlur:{glass:"24px"}}},plugins:[]};
+module.exports = {
+  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}"],
+  theme: { extend: {} },
+  plugins: [],
+};

@@ -1,12 +1,62 @@
 "use client";
-import { motion } from "framer-motion";import { useState } from "react";
-const stages=[
- {name:"Document Intake",kind:"boundary",detail:"OCR, format validation, metadata normalization and source identity."},
- {name:"Chunking",kind:"preprocess",detail:"Semantic boundaries, overlap strategy and metadata preservation."},
- {name:"Embeddings",kind:"model",detail:"Vector generation, dimensional normalization and batched inference."},
- {name:"Hybrid Retrieval",kind:"retrieval",detail:"Dense + sparse search, metadata filtering and Reciprocal Rank Fusion."},
- {name:"Rerank + Guardrails",kind:"safety",detail:"Evidence thresholds, deduplication, refusal rules and context compression."},
- {name:"Grounded Stream",kind:"generation",detail:"Source-aware prompt policy, citations, schema validation and streaming."},
+import { motion } from "framer-motion";
+import { useState } from "react";
+
+const stages = [
+  { name: "Document Intake", detail: "OCR, format validation, metadata normalization and source identity." },
+  { name: "Chunking", detail: "Semantic boundaries, overlap strategy and metadata preservation." },
+  { name: "Embeddings", detail: "Vector generation, dimensional normalization and batched inference." },
+  { name: "Hybrid Retrieval", detail: "Dense + sparse search, metadata filtering and Reciprocal Rank Fusion." },
+  { name: "Rerank + Guardrails", detail: "Evidence thresholds, deduplication, refusal rules and context compression." },
+  { name: "Grounded Stream", detail: "Source-aware prompt policy, citations, schema validation and streaming." },
 ];
-const colors:Record<string,string>={boundary:"#c8d0e0",preprocess:"#4f7cff",model:"#8b7cff",retrieval:"#35d9ff",safety:"#5ee6c4",generation:"#b68cff"};
-export function PipelineDeepDive(){const [selected,setSelected]=useState(3);return <section id="pipeline" className="relative z-10 scroll-mt-20 border-t border-white/[.07] px-5 py-24 sm:px-8 sm:py-32"><div className="mx-auto max-w-7xl"><header className="mb-12"><p className="font-mono text-[10px] tracking-[.22em] text-violet-300">06 / PIPELINE DEEP-DIVE</p><h2 className="mt-3 text-4xl font-bold tracking-[-.045em] sm:text-6xl">Inside a production RAG loop.</h2><p className="mt-5 max-w-2xl text-slate-400">Select a stage to isolate its responsibilities and inspect the architecture.</p></header><div className="glass-card grid gap-6 p-6 lg:grid-cols-[1.65fr_.85fr] lg:p-8"><div className="relative overflow-x-auto rounded-2xl border border-white/[.06] bg-[linear-gradient(rgba(53,217,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(139,124,255,.035)_1px,transparent_1px)] bg-[size:32px_32px] p-6"><div className="flex min-w-[850px] items-center gap-3">{stages.map((stage,i)=><div className="contents" key={stage.name}><motion.button onClick={()=>setSelected(i)} animate={{opacity:selected===i?1:.32,scale:selected===i?1.035:1}} className="relative h-28 w-32 shrink-0 rounded-xl border bg-black/75 p-3 text-left" style={{borderColor:`${colors[stage.kind]}66`,boxShadow:selected===i?`0 0 28px ${colors[stage.kind]}22`:"none"}}><span className="font-mono text-[8px] text-slate-600">STAGE_0{i+1}</span><b className="mt-3 block text-xs" style={{color:colors[stage.kind]}}>{stage.name}</b></motion.button>{i<stages.length-1&&<div className="relative h-px w-7 bg-cyan-400/20"><motion.i animate={{x:[0,28,0]}} transition={{duration:2,repeat:Infinity}} className="absolute -top-1 h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_8px_#35d9ff]"/></div>}</div>)}</div></div><aside className="rounded-2xl border border-violet-400/15 bg-black/55 p-6"><p className="font-mono text-[9px] text-violet-300">ACTIVE_COORDINATE / 0{selected+1}</p><h3 className="mt-5 text-2xl font-semibold" style={{color:colors[stages[selected].kind]}}>{stages[selected].name}</h3><p className="mt-4 text-sm leading-7 text-slate-400">{stages[selected].detail}</p><div className="mt-7 space-y-3 font-mono text-[9px] text-slate-500"><p>TOPOLOGY: {selected===3?"HYBRID + RRF":"CONFIGURABLE"}</p><p>OBSERVABILITY: TRACE ENABLED</p><p>HUMAN REVIEW: REQUIRED</p><p className="text-slate-700">Example architecture configuration—not a production benchmark.</p></div></aside></div></div></section>}
+
+export function PipelineDeepDive() {
+  const [selected, setSelected] = useState(3);
+  return (
+    <section id="pipeline" className="relative z-10 scroll-mt-20 border-t border-white/[.1] px-5 py-24 sm:px-8 sm:py-32">
+      <div className="mx-auto max-w-7xl">
+        <header className="mb-12">
+          <p className="eyebrow">Pipeline deep-dive</p>
+          <h2 className="mt-3 text-4xl font-bold tracking-[-.03em] sm:text-6xl">Inside a production RAG loop.</h2>
+          <p className="mt-5 max-w-2xl text-[#83878c]">Select a stage to isolate its responsibilities and inspect the architecture.</p>
+        </header>
+        <div className="grid gap-6 border border-white/[.12] bg-white/[.015] p-6 lg:grid-cols-[1.65fr_.85fr] lg:p-8">
+          <div className="relative overflow-x-auto border border-white/[.08] bg-[linear-gradient(rgba(79,107,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(79,107,255,.035)_1px,transparent_1px)] bg-[size:32px_32px] p-6">
+            <div className="flex min-w-[850px] items-center gap-3">
+              {stages.map((stage, i) => (
+                <div className="contents" key={stage.name}>
+                  <motion.button
+                    onClick={() => setSelected(i)}
+                    animate={{ opacity: selected === i ? 1 : 0.32, scale: selected === i ? 1.035 : 1 }}
+                    className="relative h-28 w-32 shrink-0 border bg-black/60 p-3 text-left"
+                    style={{ borderColor: selected === i ? "var(--accent)" : "rgba(255,255,255,.12)" }}
+                  >
+                    <span className="font-mono text-[8px] text-[#6c7075]">STAGE_0{i + 1}</span>
+                    <b className="mt-3 block text-xs text-[#ece9e2]">{stage.name}</b>
+                  </motion.button>
+                  {i < stages.length - 1 && (
+                    <div className="relative h-px w-7 bg-white/[.14]">
+                      <motion.i animate={{ x: [0, 28, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute -top-1 h-2 w-2 rounded-full bg-[var(--accent)]" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <aside className="border border-white/[.12] bg-black/40 p-6">
+            <p className="font-mono text-[9px] text-[#83878c]">ACTIVE_COORDINATE / 0{selected + 1}</p>
+            <h3 className="mt-5 text-2xl font-semibold text-[#ece9e2]">{stages[selected].name}</h3>
+            <p className="mt-4 text-sm leading-7 text-[#83878c]">{stages[selected].detail}</p>
+            <div className="mt-7 space-y-3 font-mono text-[9px] text-[#6c7075]">
+              <p>TOPOLOGY: {selected === 3 ? "HYBRID + RRF" : "CONFIGURABLE"}</p>
+              <p>OBSERVABILITY: TRACE ENABLED</p>
+              <p>HUMAN REVIEW: REQUIRED</p>
+              <p className="text-[#4b4e52]">Example architecture configuration—not a production benchmark.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
