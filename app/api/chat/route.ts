@@ -12,7 +12,7 @@ const CACHE_TTL_MS = 15 * 60 * 1000;
 type RateEntry = { count: number; resetAt: number };
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type CacheEntry = { answer: string; expiresAt: number };
-type GroqResponse = {
+type APIResponse = {
   choices?: Array<{ message?: { content?: string } }>;
   error?: { message?: string };
 };
@@ -104,39 +104,39 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    let groqResponse: Response | undefined;
+    let modelResponse: Response | undefined;
     for (let attempt = 0; attempt < 2; attempt += 1) {
-      groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      modelResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: process.env.GROQ_MODEL || "llama-3.1-8b-instant",
+          model: "nvidia/nemotron-3-8b",
           messages: [
             { role: "system", content: portfolioAssistantInstructions },
             ...history,
             { role: "user", content: message },
           ],
           temperature: 0.35,
-          max_completion_tokens: 420,
+          max_tokens: 420,
         }),
         signal: AbortSignal.timeout(20_000),
       });
-      if (groqResponse.ok || ![429, 500, 502, 503, 504].includes(groqResponse.status) || attempt === 1) break;
-      const retryAfter = Number(groqResponse.headers.get("retry-after") || "1");
+      if (modelResponse.ok || ![429, 500, 502, 503, 504].includes(modelResponse.status) || attempt === 1) break;
+      const retryAfter = Number(modelResponse.headers.get("retry-after") || "1");
       await new Promise((resolve) => setTimeout(resolve, Math.min(Math.max(retryAfter, 1), 2) * 1000));
     }
 
-    if (!groqResponse) throw new Error("Groq request did not start");
+    if (!modelResponse) throw new Error("OpenRouter request did not start");
 
-    const data = (await groqResponse.json()) as GroqResponse;
-    if (!groqResponse.ok) {
-      console.error("Groq response error", groqResponse.status, data.error?.message);
+    const data = (await modelResponse.json()) as APIResponse;
+    if (!modelResponse.ok) {
+      console.error("OpenRouter response error", modelResponse.status, data.error?.message);
       return NextResponse.json(
         { error: "The live model is temporarily unavailable.", mode: "fallback" },
-        { status: groqResponse.status === 429 ? 429 : 502 },
+        { status: modelResponse.status === 429 ? 429 : 502 },
       );
     }
 
