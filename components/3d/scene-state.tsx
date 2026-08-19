@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { playTone } from "../../lib/sound";
+import { playSceneChord } from "../../lib/sound";
 
 // Which cluster of the AI Knowledge Network should read as "active" while a
 // given section is in view. The palette stays a single accent throughout —
@@ -55,16 +55,18 @@ export function SceneProvider({ children }: { children: ReactNode }) {
     document.documentElement.dataset.aiDomain = activeDomain;
   }, [activeDomain]);
 
-  // A soft tick marks each scroll-driven scene change — silent unless the
-  // visitor has turned interface sound on. Skips the very first mount so
-  // it only plays on actual transitions, not on page load.
+  // A short chord marks each scroll-driven scene change, built from a
+  // scale shared across every domain so a full scroll session reads as one
+  // small, deliberate piece of music rather than a repeated UI beep —
+  // silent unless the visitor has turned interface sound on. Skips the
+  // very first mount so it only plays on actual transitions.
   const mounted = useRef(false);
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
       return;
     }
-    playTone("tick");
+    playSceneChord(activeDomain);
   }, [activeDomain]);
 
   const value = useMemo(() => activeDomain, [activeDomain]);
