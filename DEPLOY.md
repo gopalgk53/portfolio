@@ -4,6 +4,16 @@ The site now needs a Node runtime for `app/api/chat` and `app/api/contact`
 (Groq + Resend), which the previous GitHub Pages static export could not run.
 The `.github/workflows/pages.yml` GitHub Pages workflow has been removed.
 
+**Update: this repo already has Vercel's GitHub integration connected** —
+opening PR #42 triggered an automatic preview deployment
+(`gopalakrishna-maddipalli/portfolio` on Vercel), so steps 1–2 below are
+already done. That project currently has Vercel Authentication enabled on
+previews, so the preview URL redirects to a Vercel login rather than showing
+the site to anyone not on that team — that's a project setting (**Settings →
+Deployment Protection**), turn it off there if you want previews to be
+publicly viewable. Steps 3–5 (env vars, confirming the deploy, and pointing
+the domain) still need you.
+
 These steps need your own accounts/credentials, so they're written for you to
 run yourself — I can't create accounts or touch your domain's DNS.
 
