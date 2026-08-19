@@ -116,7 +116,7 @@ export function ThreeCanvas() {
       const material = new THREE.SpriteMaterial({ map: texture, color: DOT_BASE, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
       const sprite = new THREE.Sprite(material);
       sprite.position.copy(node.position);
-      sprite.scale.setScalar(node.primary ? 0.42 : 0.28);
+      sprite.scale.setScalar(node.primary ? 0.56 : 0.36);
       graph.add(sprite);
       return { node, sprite, material, boost: 0, seed: Math.random() * 10 };
     });
@@ -251,7 +251,10 @@ export function ThreeCanvas() {
       const domain = activeRef.current;
       const closing = domain === "close";
       const emphasis = domainEmphasis[domain];
-      const ambient = closing ? 0 : 0.32;
+      // In the hero ("identity") the whole network reads as the scene's
+      // primary visual — much brighter than the ambient glow it settles
+      // into once section-specific emphasis takes over.
+      const ambient = closing ? 0 : domain === "identity" ? 0.6 : 0.32;
 
       for (const group of GROUPS) {
         const target = closing ? 0 : ambient + (emphasis[group] ?? 0) * (1 - ambient);
@@ -262,7 +265,7 @@ export function ThreeCanvas() {
         const boost = groupBoost[dot.node.group];
         dot.material.opacity = reduceMotion ? boost : THREE.MathUtils.lerp(dot.material.opacity, boost, 1 - Math.pow(0.0008, delta));
         const pulse = 1 + Math.sin(time * 1.4 + dot.seed) * 0.08 * intensity;
-        dot.sprite.scale.setScalar((dot.node.primary ? 0.42 : 0.28) * pulse * (0.7 + boost * 0.5));
+        dot.sprite.scale.setScalar((dot.node.primary ? 0.56 : 0.36) * pulse * (0.7 + boost * 0.5));
         if (!reduceMotion) {
           dot.sprite.position.y = dot.node.position.y + Math.sin(time * 0.6 + dot.seed) * 0.05;
         }
@@ -277,7 +280,7 @@ export function ThreeCanvas() {
       });
 
       edgeState.forEach((edge) => {
-        const target = closing ? 0 : ambient * 0.35 + (emphasis[edge.group] ?? 0) * 0.5;
+        const target = closing ? 0 : ambient * 0.5 + (emphasis[edge.group] ?? 0) * 0.5;
         edge.boost = reduceMotion ? target : THREE.MathUtils.lerp(edge.boost, target, 1 - Math.pow(0.0008, delta));
         edge.material.opacity = edge.boost * intensity;
         edge.pulseMaterial.opacity = edge.boost * intensity * 1.4;
@@ -300,7 +303,7 @@ export function ThreeCanvas() {
 
       dustMaterial.opacity = closing ? 0 : 0.35 * intensity;
 
-      graph.rotation.y = reduceMotion ? 0.05 : Math.sin(time * 0.05) * 0.08 + pointer.x * 0.09;
+      graph.rotation.y = reduceMotion ? 0.05 : Math.sin(time * 0.05) * 0.13 + pointer.x * 0.09;
       graph.rotation.x = reduceMotion ? 0 : pointer.y * 0.05;
       graph.position.x = THREE.MathUtils.lerp(graph.position.x, pointer.x * 0.35, 0.03);
       graph.position.y = THREE.MathUtils.lerp(graph.position.y, pointer.y * 0.2, 0.03);

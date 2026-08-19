@@ -70,20 +70,29 @@ export function Hero() {
       </nav>
 
       <section id="top" className="typography-shield relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-5 pb-20 pt-32 sm:px-8 sm:pt-36">
-        <p className="eyebrow mb-9">Generative AI Engineer · India</p>
+        <p className="eyebrow mb-9">01 / Identity · India</p>
 
-        <h1 className="max-w-6xl text-[clamp(2.2rem,11.5vw,10.5rem)] font-semibold leading-[.86] tracking-[-.045em]">
+        <h1 className="max-w-6xl text-[clamp(2.5rem,9.2vw,8.6rem)] font-semibold uppercase leading-[.88] tracking-[-.03em]">
           <RevealText as="span" immediate>
             Gopalakrishna
           </RevealText>
-          <span className="mt-1 block text-[clamp(1.8rem,4.6vw,4.4rem)] font-medium tracking-[-.03em] text-[#83878c]">
-            <RevealText as="span" immediate delay={0.08}>
-              Generative AI Engineer
+          <span className="block text-[#5f636a]">
+            <RevealText as="span" immediate delay={0.1}>
+              Generative
+            </RevealText>
+          </span>
+          <span className="block text-[#5f636a]">
+            <RevealText as="span" immediate delay={0.18}>
+              AI Engineer
             </RevealText>
           </span>
         </h1>
 
-        <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.22 }} className="mt-10 max-w-xl text-[15px] leading-7 text-[#a9adb1]">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...spring, delay: 0.32 }} className="mt-8 font-mono text-[10px] uppercase tracking-[.24em] text-[#6c7075]">
+          LLMs · RAG · Agents · Python · AWS
+        </motion.div>
+
+        <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.4 }} className="mt-6 max-w-xl text-[15px] leading-7 text-[#a9adb1]">
           Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.
         </motion.p>
 
