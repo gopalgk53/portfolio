@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play } from "lucide-react";
 
 // lucide-react@1.31.0 (pinned in package.json) doesn't ship brand marks, so
@@ -8,7 +8,7 @@ import { ArrowUpRight, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play } fr
 // workaround the pre-redesign code used (Code2 for GitHub).
 const Github = Code2;
 const Linkedin = Link2;
-import { FormEvent, ReactNode, useState } from "react";
+import { FormEvent, ReactNode, useRef, useState } from "react";
 import { certifications, projects, skills } from "../lib/data";
 import { spring, staggerChild } from "../lib/motion";
 import { RevealText } from "./motion/reveal-text";
@@ -35,13 +35,32 @@ const naturalCopy: Record<string, { eyebrow: string; title: string; description?
   contact: { eyebrow: "07 / Contact", title: "Let's build intelligent systems." },
 };
 
+// Each section "arrives" with a slow scale/opacity settle as it scrolls
+// into view — the scene-to-scene morph the brief asks for, rather than a
+// hard cut between stacked blocks. The eyebrow label drifts at a slightly
+// different rate than the rest of the header for a touch of spatial depth.
 function Section({ id, scene, children }: { id: string; scene: SceneId; children: ReactNode }) {
   const copy = naturalCopy[id];
+  const ref = useRef<HTMLElement>(null);
+  const reducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.92", "start 0.4"] });
+  const scale = useTransform(scrollYProgress, [0, 1], [0.965, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
+  const eyebrowY = useTransform(scrollYProgress, [0, 1], [18, 0]);
+
   return (
-    <section id={id} data-scene={scene} className="relative z-10 scroll-mt-20 border-t border-white/[.1] px-5 py-24 sm:px-8 sm:py-36">
+    <motion.section
+      ref={ref}
+      id={id}
+      data-scene={scene}
+      style={reducedMotion ? undefined : { scale, opacity }}
+      className="relative z-10 scroll-mt-20 border-t border-white/[.1] px-5 py-24 sm:px-8 sm:py-36"
+    >
       <div className="mx-auto max-w-7xl">
         <header className="typography-shield mb-16 grid gap-7 lg:grid-cols-[10rem_1fr_.65fr] lg:items-start">
-          <p className="eyebrow pt-2">{copy.eyebrow}</p>
+          <motion.p style={reducedMotion ? undefined : { y: eyebrowY }} className="eyebrow pt-2">
+            {copy.eyebrow}
+          </motion.p>
           <h2 className="max-w-4xl overflow-hidden text-4xl font-semibold tracking-[-.04em] sm:text-6xl">
             <RevealText as="span">{copy.title}</RevealText>
           </h2>
@@ -49,7 +68,7 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
         </header>
         {children}
       </div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -92,13 +111,12 @@ function About() {
   );
 }
 
-function ProjectCard({ project, index, flagship }: { project: Project; index: number; flagship?: "rag" | "agents" }) {
+function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [tab, setTab] = useState<"overview" | "architecture">("overview");
-  const big = index < 2 || Boolean(flagship);
+  const big = index < 2;
   return (
     <motion.article
       layout
-      data-scene={flagship === "rag" ? "retrieval" : flagship === "agents" ? "agents" : undefined}
       whileHover={{ y: -4 }}
       transition={spring}
       className={`group flex min-h-[410px] flex-col border-t border-white/[.14] bg-white/[.012] p-6 sm:p-8 ${big ? "lg:min-h-[470px] md:col-span-2" : ""}`}
@@ -134,17 +152,6 @@ function ProjectCard({ project, index, flagship }: { project: Project; index: nu
         </motion.div>
       </AnimatePresence>
 
-      {flagship === "rag" && (
-        <div className="mt-7">
-          <RagFlow flow={project.flow} />
-        </div>
-      )}
-      {flagship === "agents" && (
-        <div className="mt-7">
-          <AgentFlow flow={project.flow} domains={AGENT_DOMAINS} />
-        </div>
-      )}
-
       <div className="mt-auto flex flex-wrap gap-x-4 gap-y-2 pt-6">
         {project.stack.map((x) => (
           <span key={x} className="font-mono text-[9px] text-[#6c7075]">
@@ -164,7 +171,67 @@ function ProjectCard({ project, index, flagship }: { project: Project; index: nu
   );
 }
 
+// The two flagship systems (the RAG and multi-agent projects) get a full
+// cinematic treatment of their own — Problem → Architecture → Engineering →
+// Impact — instead of living inside the same card grid as the rest, per the
+// brief's "each flagship project receives its own cinematic section."
+function FlagshipProject({ project, index, scene, viz }: { project: Project; index: number; scene: "retrieval" | "agents"; viz: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.95", "start 0.3"] });
+  const numberX = useTransform(scrollYProgress, [0, 1], [40, 0]);
+  const numberOpacity = useTransform(scrollYProgress, [0, 1], [0, 0.16]);
+
+  return (
+    <div ref={ref} data-scene={scene} className="relative border-t border-white/[.14] py-20 sm:py-28">
+      <motion.span
+        aria-hidden="true"
+        style={reducedMotion ? { opacity: 0.16 } : { x: numberX, opacity: numberOpacity }}
+        className="pointer-events-none absolute -top-4 right-0 text-[clamp(6rem,16vw,13rem)] font-semibold leading-none tracking-[-.04em] text-white"
+      >
+        {String(index + 1).padStart(2, "0")}
+      </motion.span>
+
+      <p className="eyebrow relative">Flagship system · Case {String(index + 1).padStart(2, "0")}</p>
+      <h3 className="relative mt-5 max-w-4xl text-[clamp(2rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-[-.035em]">{project.title}</h3>
+
+      <div className="relative mt-10 grid gap-8 border-y border-white/[.12] py-8 sm:grid-cols-3">
+        <div>
+          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#6c7075]">Problem</p>
+          <p className="mt-3 text-sm leading-6 text-[#c9cbce]">{project.goal}</p>
+        </div>
+        <div>
+          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#6c7075]">Engineering</p>
+          <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm leading-6 text-[#c9cbce]">{project.stack.join(" · ")}</p>
+        </div>
+        <div>
+          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#6c7075]">Impact</p>
+          <p className="mt-3 text-sm leading-6 text-[#c9cbce]">{project.impact}</p>
+        </div>
+      </div>
+
+      <div className="relative mt-10">{viz}</div>
+
+      <div className="relative mt-8 flex gap-5 text-xs">
+        <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#c9cbce]">
+          Inspect code <Code2 className="h-3 w-3" />
+        </a>
+        <a href="#playground" className="flex items-center gap-1 text-[#6c7075]">
+          Live simulator <Play className="h-3 w-3" />
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function Projects() {
+  const flagshipIds = new Set(["legal-rag", "multi-agent"]);
+  const rest = projects.filter((p) => !flagshipIds.has(p.id));
+  const legalRag = projects.find((p) => p.id === "legal-rag")!;
+  const multiAgent = projects.find((p) => p.id === "multi-agent")!;
+  const legalRagIndex = projects.findIndex((p) => p.id === "legal-rag");
+  const multiAgentIndex = projects.findIndex((p) => p.id === "multi-agent");
+
   return (
     <Section id="projects" scene="retrieval">
       <div className="mb-10 grid border-y border-white/[.1] py-4 text-xs text-[#83878c] sm:grid-cols-3">
@@ -172,9 +239,13 @@ function Projects() {
         <span>Orchestration · LangGraph</span>
         <span>Vector stores · Qdrant / FAISS</span>
       </div>
-      <div className="grid gap-px bg-white/[.08] md:grid-cols-2">
-        {projects.map((p, i) => (
-          <ProjectCard key={p.id} project={p} index={i} flagship={p.id === "legal-rag" ? "rag" : p.id === "multi-agent" ? "agents" : undefined} />
+
+      <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
+      <FlagshipProject project={multiAgent} index={multiAgentIndex} scene="agents" viz={<AgentFlow flow={multiAgent.flow} domains={AGENT_DOMAINS} />} />
+
+      <div className="mt-4 grid gap-px bg-white/[.08] md:grid-cols-2">
+        {rest.map((p) => (
+          <ProjectCard key={p.id} project={p} index={projects.indexOf(p)} />
         ))}
       </div>
     </Section>

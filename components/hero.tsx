@@ -7,6 +7,7 @@ import { spring } from "../lib/motion";
 import { RevealText } from "./motion/reveal-text";
 import { Magnetic } from "./motion/magnetic";
 import { AIPromptBar } from "./ai-prompt-bar";
+import { SoundToggle } from "./sound-toggle";
 
 const nav = [
   ["Work", "projects"],
@@ -43,10 +44,14 @@ export function Hero() {
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="flex items-center gap-1 border-b border-[var(--accent)] pb-0.5 text-[#ece9e2]">
               Résumé <ArrowUpRight className="h-3 w-3" />
             </a>
+            <SoundToggle className="text-[#a9adb1]" />
           </div>
-          <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation" className="grid h-10 w-10 place-items-center border border-white/15 md:hidden">
-            {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
+          <div className="flex items-center gap-3 md:hidden">
+            <SoundToggle className="text-[#a9adb1]" />
+            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation" className="grid h-10 w-10 place-items-center border border-white/15">
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
         <AnimatePresence>
           {menuOpen && (

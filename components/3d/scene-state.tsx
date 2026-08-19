@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { playTone } from "../../lib/sound";
 
 // Which cluster of the AI Knowledge Network should read as "active" while a
 // given section is in view. The palette stays a single accent throughout —
@@ -52,6 +53,18 @@ export function SceneProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.dataset.aiDomain = activeDomain;
+  }, [activeDomain]);
+
+  // A soft tick marks each scroll-driven scene change — silent unless the
+  // visitor has turned interface sound on. Skips the very first mount so
+  // it only plays on actual transitions, not on page load.
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    playTone("tick");
   }, [activeDomain]);
 
   const value = useMemo(() => activeDomain, [activeDomain]);
