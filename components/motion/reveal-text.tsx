@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, MotionProps } from "framer-motion";
+import { motion, MotionProps, useReducedMotion } from "framer-motion";
 import { ReactNode } from "react";
 import { springSlow } from "../../lib/motion";
 
@@ -29,6 +29,18 @@ export function RevealText({
   immediate?: boolean;
 }) {
   const Tag = tags[as];
+  const reducedMotion = useReducedMotion();
+
+  // Motion-sensitive visitors get the final state immediately — no slide,
+  // no delay — instead of the large spring-driven translate.
+  if (reducedMotion) {
+    return (
+      <span className="block overflow-hidden">
+        <Tag className={className}>{children}</Tag>
+      </span>
+    );
+  }
+
   const reveal: MotionProps = immediate ? { animate: { y: "0%", opacity: 1 } } : { whileInView: { y: "0%", opacity: 1 }, viewport: { once, amount } };
   return (
     <span className="block overflow-hidden">
