@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark">
       <head><JsonLd /></head>
-      <body className="bg-[#0A0D12] text-slate-100 antialiased font-sans">{children}</body>
+      <body className="bg-[#0A0A0B] text-[#ece9e2] antialiased font-sans">{children}</body>
     </html>
   );
 }

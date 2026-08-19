@@ -2,19 +2,15 @@
 
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
-export type SceneDomain = "nlp" | "ml" | "dl" | "agents";
+// Which cluster of the AI Knowledge Network should read as "active" while a
+// given section is in view. The palette stays a single accent throughout —
+// only which nodes light up (and how much) changes between domains.
+export type SceneDomain = "identity" | "retrieval" | "agents" | "infra" | "close";
 
-const domainTokens: Record<SceneDomain, { accent: string; glow: string }> = {
-  nlp: { accent: "#a855f7", glow: "rgba(168,85,247,.28)" },
-  ml: { accent: "#6366f1", glow: "rgba(99,102,241,.28)" },
-  dl: { accent: "#6366f1", glow: "rgba(99,102,241,.28)" },
-  agents: { accent: "#10b981", glow: "rgba(16,185,129,.28)" },
-};
-
-const SceneContext = createContext<SceneDomain>("nlp");
+const SceneContext = createContext<SceneDomain>("identity");
 
 export function SceneProvider({ children }: { children: ReactNode }) {
-  const [activeDomain, setActiveDomain] = useState<SceneDomain>("nlp");
+  const [activeDomain, setActiveDomain] = useState<SceneDomain>("identity");
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-scene]"));
@@ -28,12 +24,15 @@ export function SceneProvider({ children }: { children: ReactNode }) {
         const rect = section.getBoundingClientRect();
         const inside = rect.top <= focusLine && rect.bottom >= focusLine;
         const candidateDistance = inside ? 0 : Math.min(Math.abs(rect.top - focusLine), Math.abs(rect.bottom - focusLine));
-        if (candidateDistance < distance) {
+        // <= (not <) so that among ties — e.g. a flagship project block
+        // nested inside the projects section — the more specific, later
+        // element in document order wins.
+        if (candidateDistance <= distance) {
           closest = section;
           distance = candidateDistance;
         }
       }
-      setActiveDomain((closest.dataset.scene as SceneDomain) || "nlp");
+      setActiveDomain((closest.dataset.scene as SceneDomain) || "identity");
     };
 
     let frame = 0;
@@ -52,10 +51,7 @@ export function SceneProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const token = domainTokens[activeDomain];
     document.documentElement.dataset.aiDomain = activeDomain;
-    document.documentElement.style.setProperty("--accent-primary", token.accent);
-    document.documentElement.style.setProperty("--accent-glow", token.glow);
   }, [activeDomain]);
 
   const value = useMemo(() => activeDomain, [activeDomain]);
