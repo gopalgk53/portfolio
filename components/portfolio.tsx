@@ -59,7 +59,7 @@ function About() {
       <div className="grid gap-10 lg:grid-cols-[.72fr_1.28fr]">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.35 }} transition={spring} className="relative">
           <div className="aspect-[4/5] overflow-hidden bg-[#111214]">
-            <img src="https://avatars.githubusercontent.com/u/60279201?v=4" alt="Gopalakrishna, Generative AI Engineer" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover grayscale" />
+            <img src="https://avatars.githubusercontent.com/u/60279201?v=4" alt="Gopalakrishna, Generative AI Engineer" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
           </div>
           <div className="mt-4 flex justify-between border-t border-white/[.14] pt-3 text-xs">
             <span>Gopalakrishna</span>
