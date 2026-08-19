@@ -7,15 +7,11 @@
 @import "@fontsource/jetbrains-mono/500.css";
 @import "@fontsource/jetbrains-mono/600.css";
 
-/* ---------------------------------------------------------------------
-   Design tokens — one restrained system, one accent. No per-section hue
-   cycling, no glassmorphism, no neon glow. Near-black ground, hairline
-   borders, editorial type.
-   --------------------------------------------------------------------- */
+/* Premium modern design system with vibrant accents and smooth interactions */
 @theme {
   --color-ground: #0a0a0b;
   --color-surface: #111214;
-  --color-accent: #4f6bff;
+  --color-accent: #00d9ff;
   --color-text: #ece9e2;
   --color-muted: #83878c;
 }
@@ -27,10 +23,16 @@
   --text: #ece9e2;
   --muted: #8b8f95;
   --faint: #55585d;
-  --accent: #4f6bff;
-  --accent-soft: rgba(79, 107, 255, 0.16);
-  --border: rgba(255, 255, 255, 0.12);
-  --border-strong: rgba(255, 255, 255, 0.22);
+  /* Vibrant primary accent — cyan/turquoise */
+  --accent: #00d9ff;
+  --accent-soft: rgba(0, 217, 255, 0.12);
+  /* Secondary gradient accents for visual richness */
+  --accent-purple: #a855f7;
+  --accent-pink: #ec4899;
+  --accent-blue: #3b82f6;
+  --accent-green: #10b981;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
 }
 
 *{box-sizing:border-box}
@@ -48,8 +50,8 @@ p{text-wrap:pretty}
 /* Layered stage: fixed 3D network behind, scroll content above it. */
 #page-content{position:relative;z-index:10;width:100%;min-height:100vh;overflow-x:clip}
 .three-stage{position:fixed;inset:0;z-index:1;width:100vw;height:100vh;pointer-events:none;overflow:hidden;isolation:isolate}
-/* Soft atmospheric aura around the knowledge network — the "air" of the scene. */
-.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 72% 58% at 60% 42%,rgba(79,107,255,.11),transparent 62%)}
+/* Vibrant atmospheric aura with gradient blend of accent colors */
+.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 72% 58% at 60% 42%,rgba(0,217,255,.08),rgba(168,85,247,.04),transparent 62%)}
 /* Filmic grain over the whole experience: barely-there, but it removes the
    flat digital-black feel and ties type, network, and surfaces together. */
 body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")}
@@ -81,7 +83,10 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 .lab-disclosure>section{border-top:1px solid var(--border)}
 
 @media(hover:hover){
-  a:hover{color:var(--accent)}
+  a:hover{color:var(--accent);text-shadow:0 0 8px rgba(0,217,255,.3)}
+  a{transition:color .3s cubic-bezier(.4,0,.2,1),text-shadow .3s cubic-bezier(.4,0,.2,1)}
+  button:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,217,255,.15)}
+  button{transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s cubic-bezier(.4,0,.2,1)}
 }
 
 @media(max-width:760px){

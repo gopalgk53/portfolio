@@ -117,11 +117,18 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <motion.article
       layout
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0, 217, 255, 0.1)" }}
       transition={spring}
-      className={`group flex min-h-[410px] flex-col border-t border-white/[.14] bg-white/[.012] p-6 sm:p-8 ${big ? "lg:min-h-[470px] md:col-span-2" : ""}`}
+      className={`group relative flex min-h-[410px] flex-col rounded-lg border border-[var(--accent)] border-opacity-20 bg-gradient-to-br from-white/[.016] to-white/[.008] p-6 sm:p-8 backdrop-blur-sm overflow-hidden ${big ? "lg:min-h-[470px] md:col-span-2" : ""}`}
     >
-      <div className="flex justify-between text-[11px] text-[#6c7075]">
+      {/* Gradient accent glow on hover */}
+      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{
+          background: 'linear-gradient(135deg, rgba(0,217,255,0.08), rgba(168,85,247,0.04))'
+        }}
+      ></div>
+      <div className="relative z-10">
+        <div className="flex justify-between text-[11px] text-[#6c7075]">
         <span>Case study</span>
         <span>{String(index + 1).padStart(2, "0")}</span>
       </div>
@@ -143,7 +150,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <div className="flex flex-wrap items-center gap-2">
               {project.flow.split(" → ").map((node, i, arr) => (
                 <span key={node} className="contents">
-                  <span className="border border-white/[.12] px-2.5 py-2 font-mono text-[9px] text-[#c9cbce]">{node}</span>
+                  <span className="relative group/node">
+                    <span className="absolute inset-0 rounded bg-gradient-to-r from-[var(--accent)] to-[var(--accent-purple)] opacity-0 group-hover/node:opacity-20 blur transition-opacity"></span>
+                    <span className="relative border border-[var(--accent)] border-opacity-30 px-2.5 py-2 font-mono text-[9px] text-[var(--accent)] backdrop-blur-sm bg-[var(--accent)] bg-opacity-5 rounded transition-all group-hover/node:border-opacity-50 group-hover/node:bg-opacity-10">
+                      {node}
+                    </span>
+                  </span>
                   {i < arr.length - 1 && <span className="text-[#515459]">→</span>}
                 </span>
               ))}
@@ -159,13 +171,14 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </span>
         ))}
       </div>
-      <div className="mt-6 flex gap-5 border-t border-white/[.12] pt-5 text-xs">
-        <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#c9cbce]">
-          Inspect code <Code2 className="h-3 w-3" />
-        </a>
-        <a href="#playground" className="flex items-center gap-1 text-[#6c7075]">
-          Live simulator <Play className="h-3 w-3" />
-        </a>
+        <div className="mt-6 flex gap-5 border-t border-white/[.12] pt-5 text-xs">
+          <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#c9cbce]">
+            Inspect code <Code2 className="h-3 w-3" />
+          </a>
+          <a href="#playground" className="flex items-center gap-1 text-[#6c7075]">
+            Live simulator <Play className="h-3 w-3" />
+          </a>
+        </div>
       </div>
     </motion.article>
   );

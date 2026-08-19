@@ -70,25 +70,35 @@ export function Hero() {
       </nav>
 
       <section id="top" className="typography-shield relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-5 pb-20 pt-32 sm:px-8 sm:pt-36">
-        <p className="eyebrow mb-9">01 / Identity · India</p>
+        <motion.p initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.05 }} className="eyebrow mb-9 text-[var(--accent)]">
+          01 / Identity · India
+        </motion.p>
 
         <h1 className="max-w-6xl text-[clamp(2.5rem,9.2vw,8.6rem)] font-semibold uppercase leading-[.88] tracking-[-.03em]">
           <RevealText as="span" immediate>
-            Gopalakrishna
+            <span className="bg-gradient-to-r from-[#ece9e2] via-[#00d9ff] to-[#a855f7] bg-clip-text text-transparent">
+              Gopalakrishna
+            </span>
           </RevealText>
-          <span className="block text-[#5f636a]">
+          <span className="block bg-gradient-to-r from-[#00d9ff] to-[#a855f7] bg-clip-text text-transparent">
             <RevealText as="span" immediate delay={0.1}>
               Generative
             </RevealText>
           </span>
-          <span className="block text-[#5f636a]">
+          <span className="block bg-gradient-to-r from-[#a855f7] to-[#ec4899] bg-clip-text text-transparent">
             <RevealText as="span" immediate delay={0.18}>
               AI Engineer
             </RevealText>
           </span>
         </h1>
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...spring, delay: 0.32 }} className="mt-8 font-mono text-[10px] uppercase tracking-[.24em] text-[#6c7075]">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ ...spring, delay: 0.32 }}
+          className="mt-8 inline-flex items-center gap-2 rounded-full border border-[var(--accent)] border-opacity-30 px-4 py-2 font-mono text-[10px] uppercase tracking-[.24em] text-[var(--accent)] backdrop-blur-sm bg-[var(--accent)] bg-opacity-5"
+        >
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--accent)] animate-pulse"></span>
           LLMs · RAG · Agents · Python · AWS
         </motion.div>
 
