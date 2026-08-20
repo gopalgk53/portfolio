@@ -43,7 +43,7 @@ Base URL: https://portfolio-redesign-2th3i7s6u-gopalakrishna-maddipalli.vercel.a
 ==================================
 
 TEST 1.1: Chat - Valid Question
-✅ PASSED - Got answer from Groq/Cache
+✅ PASSED - Got answer from OpenRouter/Cache
 Response: Gopalakrishna has 9 blueprint AI systems spanning retrieval augmen...
 
 TEST 1.2: Chat - Empty Message
@@ -280,14 +280,14 @@ After sending contact form requests, verify emails at **gopalgk53@yahoo.com**:
 ```
 
 **Causes**:
-1. Groq API key not set: Check Vercel Environment Variables
-2. Groq API rate limited: Try again in a few minutes
+1. OpenRouter API key not set: Check Vercel Environment Variables
+2. OpenRouter API rate limited: Try again in a few minutes
 3. Network timeout: Check Vercel logs
 
 **Fix**: 
-1. Verify `GROQ_API_KEY` is set in Vercel Settings → Environment Variables
+1. Verify `OPENROUTER_API_KEY` is set in Vercel Settings → Environment Variables
 2. Test with small, simple question
-3. Check [Groq status page](https://status.groq.com)
+3. Check the OpenRouter service status
 
 ---
 

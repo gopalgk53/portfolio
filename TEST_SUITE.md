@@ -217,7 +217,7 @@ done
 ## 🧪 TEST 4: Error Handling & Fallback
 
 ### Test Case 4.1: Missing API Keys
-**Setup**: Temporarily remove GROQ_API_KEY from Vercel
+**Setup**: Temporarily remove OPENROUTER_API_KEY from Vercel
 ```bash
 curl -X POST https://portfolio-redesign-2th3i7s6u-gopalakrishna-maddipalli.vercel.app/api/chat \
   -H "Content-Type: application/json" \
@@ -227,7 +227,7 @@ curl -X POST https://portfolio-redesign-2th3i7s6u-gopalakrishna-maddipalli.verce
 - Status: `503 Service Unavailable`
 - Error: "The portfolio assistant is temporarily unavailable."
 
-### Test Case 4.2: Groq API Timeout
+### Test Case 4.2: OpenRouter API Timeout
 **Setup**: Simulate timeout by network delay
 ```bash
 # This is harder to test without mocking, but check logs for timeout handling
@@ -288,7 +288,7 @@ curl -X POST https://portfolio-redesign-2th3i7s6u-gopalakrishna-maddipalli.verce
 ```
 **Expected Behavior**: 
 - Invalid history items filtered out
-- Only valid messages passed to Groq
+- Only valid messages passed to OpenRouter
 - No crashes or errors
 
 ### Test Case 5.4: Input Limit Enforcement
