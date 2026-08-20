@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <SceneProvider>
       <Preloader />
-      <main id="page-content">
+      <main id="main-content" tabIndex={-1}>
         <Hero />
         <Portfolio />
         <ClientExtras />
