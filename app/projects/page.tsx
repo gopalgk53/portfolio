@@ -1,28 +1,46 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { projects } from "../../lib/data";
 
-export const metadata = { title: "Generative AI Project Case Studies" };
+export const metadata: Metadata = {
+  title: "Generative AI Project Case Studies",
+  description: "Nine Generative AI, agentic AI, machine learning, document intelligence, and data engineering architecture blueprints.",
+  alternates: { canonical: "/projects/" },
+};
 
 export default function ProjectsIndex() {
   return (
-    <main className="min-h-screen bg-[#0a0a0b] px-5 py-20 text-[#ece9e2]">
-      <div className="mx-auto max-w-6xl">
-        <Link href="/" className="font-mono text-xs text-[#83878c]">
-          ← Portfolio
-        </Link>
-        <h1 className="mt-10 text-5xl font-bold tracking-[-.03em]">Engineering case studies.</h1>
-        <p className="mt-5 max-w-2xl text-[#83878c]">Blueprint architectures with explicit goals, system flows, technology decisions, and evidence status.</p>
-        <div className="mt-12 grid gap-px bg-white/[.08] md:grid-cols-2">
-          {projects.map((p, i) => (
-            <Link key={p.id} href={`/projects/${p.id}/`} className="border-t border-white/[.14] bg-white/[.015] p-6">
-              <p className="font-mono text-[9px] uppercase tracking-[.1em] text-[#6c7075]">CASE_{String(i + 1).padStart(2, "0")} · Blueprint</p>
-              <h2 className="mt-4 text-xl font-semibold">{p.title}</h2>
-              <p className="mt-3 text-sm leading-6 text-[#83878c]">{p.goal}</p>
-              <span className="mt-6 inline-block text-xs text-[var(--accent)]">Read case study ↗</span>
-            </Link>
-          ))}
+    <main className="case-archive min-h-screen bg-[#080909] text-[#ece9e2]">
+      <nav className="case-nav" aria-label="Case study navigation">
+        <Link href="/">GK / AI systems</Link>
+        <span>Archive · 09 systems</span>
+      </nav>
+      <header className="case-index-hero">
+        <p className="eyebrow">Architecture archive · 2026</p>
+        <h1>Systems<br /><span>in context.</span></h1>
+        <div className="case-index-intro">
+          <p>Nine engineering blueprints spanning retrieval, agents, document intelligence, predictive systems, and data infrastructure.</p>
+          <p>Goals and target outcomes are labelled explicitly. No target is presented as a verified production result.</p>
         </div>
-      </div>
+      </header>
+      <section className="case-index-list" aria-label="Project case studies">
+        {projects.map((project, index) => (
+          <Link key={project.id} href={`/projects/${project.id}/`} className="case-index-row">
+            <span className="case-index-number">{String(index + 1).padStart(2, "0")}</span>
+            <span className="case-index-copy">
+              <span className="case-index-category">{project.category}</span>
+              <strong>{project.title}</strong>
+              <small>{project.goal}</small>
+            </span>
+            <span className="case-index-impact">{project.impact}</span>
+            <span className="case-index-arrow" aria-hidden="true">↗</span>
+          </Link>
+        ))}
+      </section>
+      <footer className="case-footer">
+        <p>End of archive / nine systems</p>
+        <Link href="/#contact">Discuss a system ↗</Link>
+      </footer>
     </main>
   );
 }
