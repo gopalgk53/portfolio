@@ -87,6 +87,28 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 .lab-disclosure[open]>summary::before{content:"\2212"}
 .lab-disclosure>section{border-top:1px solid var(--border)}
 
+/* Editorial archive and spatial case-study narratives. */
+.case-nav{display:flex;align-items:center;justify-content:space-between;min-height:72px;padding:0 clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);font:500 10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.case-index-hero{min-height:82svh;padding:clamp(8rem,16vw,13rem) clamp(1.25rem,4vw,4rem) 5rem}
+.case-index-hero h1{max-width:11ch;margin-top:2rem;font-size:clamp(4.5rem,12vw,12rem);font-weight:500;line-height:.75;letter-spacing:-.075em;text-transform:uppercase}.case-index-hero h1 span{color:var(--accent)}
+.case-index-intro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem;max-width:54rem;margin:clamp(3rem,8vw,7rem) 0 0 auto;color:var(--muted);font-size:clamp(.95rem,1.4vw,1.15rem);line-height:1.7}
+.case-index-list{border-top:1px solid var(--border)}
+.case-index-row{display:grid;grid-template-columns:5rem minmax(0,1.5fr) minmax(10rem,.75fr) 2rem;align-items:center;gap:2rem;min-height:11rem;padding:2rem clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);color:inherit}
+.case-index-number,.case-index-category{font:10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.case-index-copy{display:flex;flex-direction:column;gap:.65rem}.case-index-copy strong{font-size:clamp(1.45rem,3vw,3rem);font-weight:500;line-height:1.05;letter-spacing:-.035em}.case-index-copy small,.case-index-impact{max-width:34rem;color:var(--muted);font-size:.85rem;line-height:1.6}
+.case-index-arrow{font-size:1.5rem;color:var(--accent);transition:transform .3s ease}.case-index-row:hover .case-index-arrow{transform:translate(5px,-5px)}
+.case-footer{display:flex;justify-content:space-between;padding:5rem clamp(1.25rem,4vw,4rem);font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.case-footer a{color:var(--accent)}
+.case-study-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(18rem,3fr);column-gap:clamp(2rem,7vw,8rem);min-height:calc(100svh - 72px);padding:clamp(6rem,12vw,10rem) clamp(1.25rem,4vw,4rem) 4rem}
+.case-study-meta{font:10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.case-study-meta p+p{margin-top:.6rem;color:var(--faint)}
+.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:500;line-height:.82;letter-spacing:-.07em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:#c9cbce}.case-repository{grid-column:2;justify-self:start;margin-top:3rem;border-bottom:1px solid var(--accent);padding-bottom:.45rem;font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.case-signal{display:grid;grid-template-columns:minmax(10rem,1fr) minmax(18rem,3fr);gap:clamp(2rem,7vw,8rem);padding:4rem clamp(1.25rem,4vw,4rem);background:var(--accent);color:#10110d}.case-signal .eyebrow{color:#39420f}.case-signal>p:last-child{max-width:56rem;font-size:clamp(1.15rem,2.3vw,2rem);line-height:1.45}
+.case-architecture,.case-engineering{display:grid;grid-template-columns:minmax(15rem,1fr) minmax(18rem,2fr);gap:clamp(3rem,8vw,10rem);padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}
+.case-section-heading h2,.case-engineering h2{margin-top:1.5rem;font-size:clamp(2.5rem,5vw,5.5rem);font-weight:500;line-height:.95;letter-spacing:-.055em}.case-flow{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.case-flow li{display:grid;grid-template-columns:4rem 1fr;align-items:center;min-height:6.5rem;border-bottom:1px solid var(--border)}.case-flow span,.case-engineering li span{font:10px "JetBrains Mono",monospace;color:var(--faint)}.case-flow strong{font-size:clamp(1.15rem,2vw,1.65rem);font-weight:500}
+.case-outcome{min-height:70svh;padding:clamp(7rem,14vw,14rem) clamp(1.25rem,4vw,4rem);background:#e9e7df;color:#11120f}.case-outcome .eyebrow{color:#57584f}.case-outcome>p:last-child{max-width:14ch;margin-top:3rem;font-size:clamp(4rem,10vw,10rem);font-weight:500;line-height:.84;letter-spacing:-.07em;text-transform:uppercase}
+.case-engineering{background:#0c0d0c}.case-engineering ul{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.case-engineering li{display:grid;grid-template-columns:4rem 1fr;padding:1.4rem 0;border-bottom:1px solid var(--border);font-size:clamp(1.1rem,2vw,1.5rem)}
+.case-evidence{padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}.case-evidence h2{max-width:18ch;margin-top:2rem;font-size:clamp(2.5rem,6vw,6.5rem);font-weight:500;line-height:.94;letter-spacing:-.055em}.case-evidence ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 4rem;max-width:64rem;margin:5rem 0 0 auto;padding:0;list-style:none;counter-reset:evidence}.case-evidence li{counter-increment:evidence;padding:2rem 0;border-top:1px solid var(--border);color:var(--muted);line-height:1.65}.case-evidence li::before{content:"0" counter(evidence);display:block;margin-bottom:1rem;font:10px "JetBrains Mono",monospace;color:var(--accent)}
+.case-next{padding:5rem clamp(1.25rem,4vw,4rem);border-top:1px solid var(--border)}.case-next p{font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}.case-next a{display:flex;justify-content:space-between;gap:2rem;margin-top:1.5rem;font-size:clamp(2.2rem,6vw,6rem);font-weight:500;line-height:1;letter-spacing:-.055em}.case-next a span{color:var(--accent)}
+
 @media(hover:hover){
   a:hover{color:var(--accent)}
   a{transition:color .3s cubic-bezier(.4,0,.2,1),text-shadow .3s cubic-bezier(.4,0,.2,1)}
@@ -102,6 +124,8 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
   .flagship-chapter{min-height:auto}
   .flagship-chapter>.sticky{position:relative;top:auto}
   .manifesto::before{width:110vw;height:110vw}
+  .case-index-hero{min-height:72svh}.case-index-intro{grid-template-columns:1fr;margin-top:4rem}.case-index-row{grid-template-columns:2.5rem 1fr 1.5rem;gap:1rem;min-height:9rem}.case-index-impact{display:none}.case-index-copy small{font-size:.78rem}.case-footer{gap:2rem}
+  .case-study-hero{display:block;min-height:auto;padding-top:6rem;padding-bottom:6rem}.case-study-hero h1{margin-top:4rem}.case-study-goal,.case-repository{margin-top:2.5rem}.case-signal,.case-architecture,.case-engineering{grid-template-columns:1fr}.case-architecture,.case-engineering{gap:4rem}.case-outcome{min-height:55svh}.case-evidence ol{grid-template-columns:1fr;margin-top:3rem}
 }
 
 html[data-effects="low"] #webgl-canvas{opacity:.45}
