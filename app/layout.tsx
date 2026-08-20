@@ -6,13 +6,13 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
-  title: "Gopalakrishna — Generative AI Engineer",
+  title: { default: "Gopalakrishna — Generative AI Engineer", template: "%s | Gopalakrishna" },
   description:
     "Generative AI Engineer building production RAG systems, autonomous agents, and intelligent workflows.",
   metadataBase: new URL("https://gopalakrishnagenai.in"),
   alternates: { canonical: "/" },
-  openGraph: { title: "Gopalakrishna — Generative AI Engineer", description: "Production-minded RAG, agentic systems, and LLM inference engineering.", url: "/", siteName: "Gopalakrishna GenAI", type: "profile", images:[{url:"/og-image.svg",width:1200,height:630,alt:"Gopalakrishna — Generative AI Engineer"}] },
-  twitter: { card: "summary_large_image", title: "Gopalakrishna — Generative AI Engineer", description: "RAG, autonomous agents, and optimized LLM systems.", images:["/og-image.svg"] },
+  openGraph: { title: "Gopalakrishna — Generative AI Engineer", description: "Production-minded RAG, agentic systems, and LLM inference engineering.", url: "/", siteName: "Gopalakrishna GenAI", type: "profile", images:[{url:"/opengraph-image",width:1200,height:630,alt:"Gopalakrishna — Generative AI Engineer"}] },
+  twitter: { card: "summary_large_image", title: "Gopalakrishna — Generative AI Engineer", description: "RAG, autonomous agents, and optimized LLM systems.", images:["/opengraph-image"] },
   robots: { index: true, follow: true },
 };
 
