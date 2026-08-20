@@ -1,25 +1,22 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { spring } from "../lib/motion";
-import { RevealText } from "./motion/reveal-text";
-import { Magnetic } from "./motion/magnetic";
-import { AIPromptBar } from "./ai-prompt-bar";
+import { useEffect, useRef, useState } from "react";
 import { SoundToggle } from "./sound-toggle";
 
-const nav = [
-  ["Work", "projects"],
-  ["Experience", "experience"],
-  ["Stack", "skills"],
-  ["About", "about"],
-  ["Contact", "contact"],
-] as const;
+const nav = [["Systems", "projects"], ["Model lab", "playground"], ["Experience", "experience"], ["Stack", "skills"], ["Contact", "contact"]] as const;
 
 export function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -180]);
+  const titleScale = useTransform(scrollYProgress, [0, .72], [1, .72]);
+  const titleOpacity = useTransform(scrollYProgress, [0, .72, 1], [1, .8, 0]);
+  const metaY = useTransform(scrollYProgress, [0, 1], [0, 90]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -29,103 +26,47 @@ export function Hero() {
   }, []);
 
   return (
-    <div data-scene="identity" className="relative min-h-screen overflow-hidden border-b border-white/[.1]">
+    <div ref={sectionRef} data-scene="identity" className="cinematic-hero relative min-h-[145svh] overflow-clip">
       <nav className="site-nav" data-scrolled={scrolled}>
-        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
-          <a href="#top" className="font-mono text-sm tracking-[.06em]">
-            GK
-          </a>
-          <div className="hidden items-center gap-8 text-[13px] text-[#a9adb1] md:flex">
-            {nav.map(([label, id]) => (
-              <a key={id} href={`#${id}`}>
-                {label}
-              </a>
-            ))}
-            <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="flex items-center gap-1 border-b border-[var(--accent)] pb-0.5 text-[#ece9e2]">
-              Résumé <ArrowUpRight className="h-3 w-3" />
-            </a>
-            <SoundToggle className="text-[#a9adb1]" />
+        <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 sm:px-8">
+          <a href="#top" className="font-mono text-[10px] uppercase tracking-[.28em]">GK / AI systems</a>
+          <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[.12em] text-[#9b9b96] md:flex">
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`}>{label}</a>)}
+            <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="flex items-center gap-1 text-[#f0eee7]">Résumé <ArrowUpRight className="h-3 w-3" /></a>
+            <SoundToggle className="text-[#9b9b96]" />
           </div>
           <div className="flex items-center gap-3 md:hidden">
-            <SoundToggle className="text-[#a9adb1]" />
+            <SoundToggle className="text-[#9b9b96]" />
             <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation" className="grid h-10 w-10 place-items-center border border-white/15">
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
         </div>
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={spring} className="border-t border-white/[.1] bg-[#0a0a0b] px-5 py-4 md:hidden">
-              {nav.map(([label, id]) => (
-                <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)} className="block border-b border-white/[.08] py-3 text-sm text-[#c9cbce]">
-                  {label}
-                </a>
-              ))}
-              <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="mt-3 flex items-center gap-1 text-sm text-[#ece9e2]">
-                Résumé <ArrowUpRight className="h-3 w-3" />
-              </a>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <AnimatePresence>{menuOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="border-t border-white/10 bg-[#080909] px-5 py-5 md:hidden">
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)} className="block border-b border-white/10 py-4 text-sm uppercase tracking-wider">{label}</a>)}
+          </motion.div>
+        )}</AnimatePresence>
       </nav>
 
-      <section id="top" className="typography-shield relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-5 pb-20 pt-32 sm:px-8 sm:pt-36">
-        <motion.p initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.05 }} className="eyebrow mb-9 text-[var(--accent)]">
-          01 / Identity · India
-        </motion.p>
-
-        <h1 className="max-w-6xl text-[clamp(2.5rem,9.2vw,8.6rem)] font-semibold uppercase leading-[.88] tracking-[-.03em]">
-          <RevealText as="span" immediate>
-            <span className="bg-gradient-to-r from-[#ece9e2] via-[#00d9ff] to-[#a855f7] bg-clip-text text-transparent">
-              Gopalakrishna
-            </span>
-          </RevealText>
-          <span className="block bg-gradient-to-r from-[#00d9ff] to-[#a855f7] bg-clip-text text-transparent">
-            <RevealText as="span" immediate delay={0.1}>
-              Generative
-            </RevealText>
-          </span>
-          <span className="block bg-gradient-to-r from-[#a855f7] to-[#ec4899] bg-clip-text text-transparent">
-            <RevealText as="span" immediate delay={0.18}>
-              AI Engineer
-            </RevealText>
-          </span>
-        </h1>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ ...spring, delay: 0.32 }}
-          className="mt-8 inline-flex items-center gap-2 rounded-full border border-[var(--accent)] border-opacity-30 px-4 py-2 font-mono text-[10px] uppercase tracking-[.24em] text-[var(--accent)] backdrop-blur-sm bg-[var(--accent)] bg-opacity-5"
-        >
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--accent)] animate-pulse"></span>
-          LLMs · RAG · Agents · Python · AWS
+      <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
+        <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[#777873] sm:left-8">
+          <p>Gopalakrishna Maddipalli</p><p>Generative AI engineer</p><p>India · 2026</p>
         </motion.div>
-
-        <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.4 }} className="mt-6 max-w-xl text-[15px] leading-7 text-[#a9adb1]">
-          Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.
-        </motion.p>
-
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.3 }} className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-4">
-          <Magnetic>
-            <a href="#projects" className="flex items-center gap-2 text-sm text-[#ece9e2]">
-              Explore my work
-              <motion.span animate={{ y: [0, 4, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}>
-                <ArrowDown className="h-4 w-4 text-[var(--accent)]" />
-              </motion.span>
-            </a>
-          </Magnetic>
-          <a href="https://github.com/gopalgk53" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-xs text-[#83878c]">
-            GitHub <ArrowUpRight className="h-3 w-3" />
-          </a>
-          <a href="https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-xs text-[#83878c]">
-            LinkedIn <ArrowUpRight className="h-3 w-3" />
-          </a>
+        <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
+          <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--signal)]">Systems that reason with context</p>
+          <h1 className="hero-title" aria-label="Generative intelligence">
+            <motion.span initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Generative</motion.span>
+            <motion.span initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="block text-right">Intelligence</motion.span>
+          </h1>
+          <div className="mt-8 grid gap-8 border-t border-white/15 pt-5 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
+            <p className="max-w-md text-sm leading-6 text-[#aaa9a3]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
+            <p className="max-w-sm text-sm leading-6 text-[#777873]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
+            <a href="#projects" className="flex items-center gap-3 text-xs uppercase tracking-[.16em]">Enter systems <ArrowDown className="h-4 w-4" /></a>
+          </div>
         </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring, delay: 0.38 }} className="mt-16 border-t border-white/[.1] pt-8">
-          <AIPromptBar />
-        </motion.div>
+        <div className="absolute bottom-7 left-5 font-mono text-[9px] uppercase tracking-[.18em] text-[#666762] sm:left-8">Scroll / camera enabled</div>
+        <div className="absolute bottom-7 right-5 font-mono text-[9px] uppercase tracking-[.18em] text-[#666762] sm:right-8">LLMs · RAG · Agents · AWS</div>
       </section>
     </div>
   );

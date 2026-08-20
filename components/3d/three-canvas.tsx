@@ -53,7 +53,7 @@ const domainEmphasis: Record<SceneDomain, Partial<Record<NodeGroup, number>>> = 
   close: {},
 };
 
-const ACCENT = 0x4f6bff;
+const ACCENT = 0xd9ff43;
 const DOT_BASE = 0xd7d8dc;
 
 function circleTexture() {
@@ -308,10 +308,21 @@ export function ThreeCanvas() {
       graph.position.x = THREE.MathUtils.lerp(graph.position.x, pointer.x * 0.35, 0.03);
       graph.position.y = THREE.MathUtils.lerp(graph.position.y, pointer.y * 0.2, 0.03);
 
-      const scrollDepth = Math.min(window.scrollY / Math.max(window.innerHeight * 6, 1), 1);
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, 11 - scrollDepth * 3.4 * intensity, reduceMotion ? 1 : 0.035);
-      camera.position.x = THREE.MathUtils.lerp(camera.position.x, 0.4 + pointer.x * 0.4 * intensity, 0.03);
-      camera.lookAt(1.3, 0, 0);
+      // SceneProvider remains the director: each editorial chapter shifts the
+      // same knowledge graph and camera toward the corresponding subsystem.
+      const cameraTarget: Record<SceneDomain, { x: number; y: number; z: number; look: number }> = {
+        identity: { x: -1.2, y: .1, z: 11.5, look: 1.2 },
+        retrieval: { x: -2.4, y: .45, z: 8.2, look: -1.4 },
+        agents: { x: 3.1, y: -.15, z: 7.2, look: 4.7 },
+        infra: { x: 5.2, y: -.8, z: 8.5, look: 6.7 },
+        close: { x: 7.8, y: -1.4, z: 12.5, look: 8.1 },
+      };
+      const destination = cameraTarget[domain];
+      const cameraEase = reduceMotion ? 1 : 1 - Math.pow(0.002, delta);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, destination.z, cameraEase);
+      camera.position.x = THREE.MathUtils.lerp(camera.position.x, destination.x + pointer.x * .35 * intensity, cameraEase);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, destination.y + pointer.y * .18 * intensity, cameraEase);
+      camera.lookAt(destination.look, 0, 0);
 
       projected.set(pointer.x * 5.2, pointer.y * 3, 1.2);
       cursorRing.position.copy(projected);
