@@ -1,1 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><defs><radialGradient id="a"><stop stop-color="#243b8a"/><stop offset="1" stop-color="#020308"/></radialGradient><linearGradient id="b"><stop stop-color="#35d9ff"/><stop offset="1" stop-color="#8b7cff"/></linearGradient></defs><rect width="1200" height="630" fill="#020308"/><circle cx="980" cy="120" r="430" fill="url(#a)" opacity=".52"/><g stroke="#35d9ff" opacity=".14"> <path d="M0 90h1200M0 180h1200M0 270h1200M0 360h1200M0 450h1200M0 540h1200"/><path d="M100 0v630M250 0v630M400 0v630M550 0v630M700 0v630M850 0v630M1000 0v630"/></g><text x="90" y="120" fill="#8b7cff" font-family="monospace" font-size="20">MODEL_PROFILE / GOPAL-AI</text><text x="90" y="250" fill="#f7f9ff" font-family="Arial,sans-serif" font-size="72" font-weight="700">Gopalakrishna</text><text x="90" y="340" fill="url(#b)" font-family="Arial,sans-serif" font-size="68" font-weight="700">Generative AI Engineer</text><text x="90" y="430" fill="#c8d0e0" font-family="Arial,sans-serif" font-size="27">RAG · Autonomous Agents · LLM Inference</text><text x="90" y="540" fill="#35d9ff" font-family="monospace" font-size="22">gopalakrishnagenai.in</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="72%" cy="42%" r="52%"><stop stop-color="#d9ff43" stop-opacity=".13"/><stop offset="1" stop-color="#080909" stop-opacity="0"/></radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1200" height="630" fill="#080909"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g fill="none" stroke="#d9ff43" stroke-opacity=".24">
+    <path d="M744 94 865 181 815 311 966 408 1080 304"/>
+    <path d="M815 311 682 398 747 530M966 408 1052 542"/>
+  </g>
+  <g fill="#d9ff43">
+    <circle cx="744" cy="94" r="7"/><circle cx="865" cy="181" r="11"/><circle cx="815" cy="311" r="7"/><circle cx="966" cy="408" r="12"/><circle cx="1080" cy="304" r="6"/><circle cx="682" cy="398" r="5"/><circle cx="747" cy="530" r="7"/><circle cx="1052" cy="542" r="5"/>
+  </g>
+  <circle cx="865" cy="181" r="48" fill="#d9ff43" opacity=".07" filter="url(#soft)"/>
+  <text x="64" y="64" fill="#8b8f86" font-family="monospace" font-size="14" letter-spacing="3">GOPALAKRISHNA MADDIPALLI / INDIA</text>
+  <text x="64" y="242" fill="#f0eee7" font-family="Arial,sans-serif" font-size="100" font-weight="600" letter-spacing="-6">GENERATIVE</text>
+  <text x="64" y="342" fill="#f0eee7" font-family="Arial,sans-serif" font-size="100" font-weight="600" letter-spacing="-6">INTELLIGENCE</text>
+  <line x1="64" y1="418" x2="1136" y2="418" stroke="#f0eee7" stroke-opacity=".18"/>
+  <text x="64" y="466" fill="#d9ff43" font-family="monospace" font-size="15" letter-spacing="3">RAG · AGENTS · EVALUATION · LLMOPS</text>
+  <text x="64" y="562" fill="#85867f" font-family="monospace" font-size="14" letter-spacing="2">SYSTEMS THAT REASON WITH CONTEXT</text>
+  <text x="1136" y="562" text-anchor="end" fill="#f0eee7" font-family="monospace" font-size="14">gopalakrishnagenai.in</text>
+</svg>
