@@ -51,7 +51,10 @@ function isRateLimited(identifier: string) {
 }
 
 export async function POST(request: NextRequest) {
-  const apiKey = process.env.GROQ_API_KEY;
+  // OpenRouter is the active provider. The legacy variable remains a
+  // temporary fallback so existing deployments continue working during the
+  // environment-variable migration.
+  const apiKey = process.env.OPENROUTER_API_KEY || process.env.GROQ_API_KEY;
 
   if (!apiKey) {
     return NextResponse.json(
@@ -113,7 +116,9 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "nvidia/nemotron-3-8b",
+          // Use OpenRouter's maintained free-model router instead of pinning
+          // the assistant to a provider model that may be retired or renamed.
+          model: "openrouter/free",
           messages: [
             { role: "system", content: portfolioAssistantInstructions },
             ...history,

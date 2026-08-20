@@ -1,7 +1,7 @@
 # Deploying to Vercel
 
 The site now needs a Node runtime for `app/api/chat` and `app/api/contact`
-(Groq + Resend), which the previous GitHub Pages static export could not run.
+(OpenRouter + Resend), which the previous GitHub Pages static export could not run.
 The `.github/workflows/pages.yml` GitHub Pages workflow has been removed.
 
 **Update: this repo already has Vercel's GitHub integration connected** —
@@ -43,10 +43,10 @@ In the Vercel dashboard for the new project → **Settings → Environment
 Variables**, add for Production (and Preview, if you want the assistant/form
 working on preview deploys too):
 
-- `GROQ_API_KEY` — used by `app/api/chat/route.ts`
+- `OPENROUTER_API_KEY` — used by `app/api/chat/route.ts`
 - `RESEND_API_KEY` — used by `app/api/contact/route.ts`
 
-(Or via CLI: `vercel env add GROQ_API_KEY production`, same for
+(Or via CLI: `vercel env add OPENROUTER_API_KEY production`, same for
 `RESEND_API_KEY`.)
 
 ## 4. Deploy
