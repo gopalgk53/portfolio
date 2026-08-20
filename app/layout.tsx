@@ -20,7 +20,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark">
       <head><JsonLd /></head>
-      <body className="bg-[#0A0A0B] text-[#ece9e2] antialiased font-sans">{children}<Analytics/><SpeedInsights/></body>
+      <body className="bg-[#0A0A0B] text-[#ece9e2] antialiased font-sans">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
+        {children}<Analytics/><SpeedInsights/>
+      </body>
     </html>
   );
 }

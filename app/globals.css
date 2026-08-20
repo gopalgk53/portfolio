@@ -36,13 +36,16 @@ button,a{-webkit-tap-highlight-color:transparent}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 a{transition:color .25s ease,border-color .25s ease,opacity .25s ease}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.skip-link{position:fixed;left:1rem;top:1rem;z-index:300;transform:translateY(-200%);background:var(--accent);padding:.8rem 1rem;color:#080909;font:600 11px "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.08em}
+.skip-link:focus{transform:translateY(0);color:#080909}
 ::selection{color:#080909;background:var(--accent)}
 h1,h2,h3{margin:0;text-wrap:balance}
 p{text-wrap:pretty}
 .font-mono,code,pre{font-family:"JetBrains Mono",ui-monospace,monospace}
 
 /* Layered stage: fixed 3D network behind, scroll content above it. */
-#page-content{position:relative;z-index:10;width:100%;min-height:100vh;overflow-x:clip}
+#main-content{position:relative;z-index:10;width:100%;min-height:100vh;overflow-x:clip;outline:none}
 .three-stage{position:fixed;inset:0;z-index:1;width:100vw;height:100vh;pointer-events:none;overflow:hidden;isolation:isolate}
 .three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 62% 54% at 62% 42%,rgba(217,255,67,.045),transparent 68%)}
 /* Filmic grain over the whole experience: barely-there, but it removes the
