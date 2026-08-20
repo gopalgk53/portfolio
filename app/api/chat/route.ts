@@ -116,9 +116,9 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // Use OpenRouter's maintained free-model router instead of pinning
-          // the assistant to a provider model that may be retired or renamed.
-          model: "openrouter/free",
+          // Pin a current conversational model so the generic free router
+          // cannot select a classifier or another non-chat-specialized model.
+          model: "nvidia/nemotron-3-super-120b-a12b:free",
           messages: [
             { role: "system", content: portfolioAssistantInstructions },
             ...history,
