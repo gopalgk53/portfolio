@@ -54,14 +54,14 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
       id={id}
       data-scene={scene}
       style={reducedMotion ? undefined : { scale, opacity }}
-      className="relative z-10 scroll-mt-20 border-t border-white/[.1] px-5 py-24 sm:px-8 sm:py-36"
+      className="chapter relative z-10 scroll-mt-20 border-t border-white/[.1] px-5 py-28 sm:px-8 sm:py-44"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1600px]">
         <header className="typography-shield mb-16 grid gap-7 lg:grid-cols-[10rem_1fr_.65fr] lg:items-start">
           <motion.p style={reducedMotion ? undefined : { y: eyebrowY }} className="eyebrow pt-2">
             {copy.eyebrow}
           </motion.p>
-          <h2 className="max-w-4xl overflow-hidden text-4xl font-semibold tracking-[-.04em] sm:text-6xl">
+          <h2 className="max-w-5xl overflow-hidden text-[clamp(2.8rem,6.5vw,7rem)] font-medium leading-[.92] tracking-[-.055em]">
             <RevealText as="span">{copy.title}</RevealText>
           </h2>
           {copy.description && <p className="max-w-xl leading-7 text-[#83878c]">{copy.description}</p>}
@@ -113,28 +113,19 @@ function About() {
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [tab, setTab] = useState<"overview" | "architecture">("overview");
-  const big = index < 2;
   return (
     <motion.article
       layout
       whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0, 217, 255, 0.1)" }}
       transition={spring}
-      className={`group relative flex min-h-[410px] flex-col rounded-lg border border-[var(--accent)] border-opacity-20 bg-gradient-to-br from-white/[.016] to-white/[.008] p-6 sm:p-8 backdrop-blur-sm overflow-hidden ${big ? "lg:min-h-[470px] md:col-span-2" : ""}`}
+      className="group relative grid min-h-[360px] overflow-hidden border-t border-white/15 py-10 md:grid-cols-[7rem_1fr_1fr] md:gap-10 md:py-14"
     >
-      {/* Gradient accent glow on hover */}
-      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{
-          background: 'linear-gradient(135deg, rgba(0,217,255,0.08), rgba(168,85,247,0.04))'
-        }}
-      ></div>
+      <div className="text-[11px] text-[#6c7075]">{String(index + 1).padStart(2, "0")} / 09</div>
       <div className="relative z-10">
-        <div className="flex justify-between text-[11px] text-[#6c7075]">
-        <span>Case study</span>
-        <span>{String(index + 1).padStart(2, "0")}</span>
-      </div>
-      <h3 className={`${big ? "text-3xl" : "text-xl"} mt-9 max-w-xl font-medium tracking-[-.03em]`}>{project.title}</h3>
+      <p className="font-mono text-[9px] uppercase tracking-[.18em] text-[var(--signal)]">{project.category}</p>
+      <h3 className="mt-5 max-w-2xl text-[clamp(1.8rem,4vw,4.5rem)] font-medium leading-[.98] tracking-[-.045em]">{project.title}</h3>
       <p className="mt-3 text-sm leading-6 text-[#9a9ea3]">{project.impact}</p>
-      <div className="mt-7 flex gap-6 border-b border-white/[.12]">
+      <div className="mt-7 flex gap-6 border-b border-white/[.12] md:hidden">
         {(["overview", "architecture"] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`relative pb-3 text-xs capitalize ${tab === t ? "text-[#ece9e2]" : "text-[#6c7075]"}`}>
             {tab === t && <motion.span layoutId={`tab-${project.id}`} transition={spring} className="absolute inset-x-0 bottom-[-1px] h-px bg-[var(--accent)]" />}
@@ -164,13 +155,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-auto flex flex-wrap gap-x-4 gap-y-2 pt-6">
+      <div className="mt-auto flex flex-wrap gap-x-4 gap-y-2 pt-10">
         {project.stack.map((x) => (
           <span key={x} className="font-mono text-[9px] text-[#6c7075]">
             {x}
           </span>
         ))}
-      </div>
+      </div></div>
+      <div className="relative z-10 flex flex-col justify-between border-l border-white/10 pl-6">
+        <div><p className="font-mono text-[9px] uppercase tracking-[.18em] text-[#6c7075]">System flow</p><p className="mt-4 text-sm leading-7 text-[#aaa9a3]">{project.flow}</p></div>
         <div className="mt-6 flex gap-5 border-t border-white/[.12] pt-5 text-xs">
           <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#c9cbce]">
             Inspect code <Code2 className="h-3 w-3" />
@@ -178,8 +171,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <a href="#playground" className="flex items-center gap-1 text-[#6c7075]">
             Live simulator <Play className="h-3 w-3" />
           </a>
-        </div>
-      </div>
+        </div></div>
     </motion.article>
   );
 }
@@ -196,7 +188,7 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
   const numberOpacity = useTransform(scrollYProgress, [0, 1], [0, 0.16]);
 
   return (
-    <div ref={ref} data-scene={scene} className="relative border-t border-white/[.14] py-20 sm:py-28">
+    <div ref={ref} data-scene={scene} className="flagship-chapter relative min-h-[130svh] border-t border-white/[.14] py-20 sm:py-28">
       <motion.span
         aria-hidden="true"
         style={reducedMotion ? { opacity: 0.16 } : { x: numberX, opacity: numberOpacity }}
@@ -205,8 +197,9 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
         {String(index + 1).padStart(2, "0")}
       </motion.span>
 
+      <div className="sticky top-24">
       <p className="eyebrow relative">Flagship system · Case {String(index + 1).padStart(2, "0")}</p>
-      <h3 className="relative mt-5 max-w-4xl text-[clamp(2rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-[-.035em]">{project.title}</h3>
+      <h3 className="relative mt-5 max-w-5xl text-[clamp(3rem,7vw,8rem)] font-medium leading-[.9] tracking-[-.055em]">{project.title}</h3>
 
       <div className="relative mt-10 grid gap-8 border-y border-white/[.12] py-8 sm:grid-cols-3">
         <div>
@@ -221,7 +214,7 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
           <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[#6c7075]">Impact</p>
           <p className="mt-3 text-sm leading-6 text-[#c9cbce]">{project.impact}</p>
         </div>
-      </div>
+      </div></div>
 
       <div className="relative mt-10">{viz}</div>
 
@@ -256,7 +249,7 @@ function Projects() {
       <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
       <FlagshipProject project={multiAgent} index={multiAgentIndex} scene="agents" viz={<AgentFlow flow={multiAgent.flow} domains={AGENT_DOMAINS} />} />
 
-      <div className="mt-4 grid gap-px bg-white/[.08] md:grid-cols-2">
+      <div className="mt-24">
         {rest.map((p) => (
           <ProjectCard key={p.id} project={p} index={projects.indexOf(p)} />
         ))}
@@ -289,9 +282,26 @@ function Skills() {
 
 function Playground() {
   return (
-    <Section id="playground" scene="infra">
-      <PromptPlayground />
-    </Section>
+    <div className="model-lab" data-scene="infra">
+      <Section id="playground" scene="infra">
+        <div className="mb-16 grid gap-6 border-y border-black/20 py-5 font-mono text-[9px] uppercase tracking-[.16em] md:grid-cols-3">
+          <span>Outputs · simulated</span><span>Timing · simulated</span><span>Purpose · interaction study</span>
+        </div>
+        <PromptPlayground />
+      </Section>
+    </div>
+  );
+}
+
+function Manifesto() {
+  return (
+    <section data-scene="agents" className="manifesto relative z-10 flex min-h-svh items-center overflow-hidden px-5 py-28 sm:px-8">
+      <div className="mx-auto w-full max-w-[1600px]">
+        <p className="eyebrow mb-10">System principle / 01</p>
+        <p className="text-[clamp(3.4rem,10vw,10rem)] font-medium uppercase leading-[.82] tracking-[-.065em]">I build systems that think with context.</p>
+        <div className="mt-12 h-px w-full bg-white/15" />
+      </div>
+    </section>
   );
 }
 
@@ -443,8 +453,8 @@ export function Portfolio() {
   return (
     <>
       <About />
+      <Manifesto />
       <Projects />
-      <Skills />
       <Playground />
       <details className="lab-disclosure">
         <summary>Technical lab · Infrastructure observability</summary>
@@ -455,6 +465,7 @@ export function Portfolio() {
         <PipelineDeepDive />
       </details>
       <Experience />
+      <Skills />
       <Certifications />
       <HiringEvidence />
       <Contact />
