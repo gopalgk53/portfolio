@@ -2,6 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { JsonLd } from "../components/json-ld";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Gopalakrishna — Generative AI Engineer",
@@ -18,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark">
       <head><JsonLd /></head>
-      <body className="bg-[#0A0A0B] text-[#ece9e2] antialiased font-sans">{children}</body>
+      <body className="bg-[#0A0A0B] text-[#ece9e2] antialiased font-sans">{children}<Analytics/><SpeedInsights/></body>
     </html>
   );
 }

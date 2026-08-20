@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
             { role: "user", content: message },
           ],
           temperature: 0.35,
-          max_tokens: 420,
+          max_tokens: 650,
         }),
         signal: AbortSignal.timeout(20_000),
       });

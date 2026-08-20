@@ -9,16 +9,19 @@ import { ArrowUpRight, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play } fr
 const Github = Code2;
 const Linkedin = Link2;
 import { FormEvent, ReactNode, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { certifications, projects, skills } from "../lib/data";
 import { spring, staggerChild } from "../lib/motion";
 import { RevealText } from "./motion/reveal-text";
 import { Magnetic } from "./motion/magnetic";
 import { RagFlow } from "./visualizations/rag-flow";
 import { AgentFlow } from "./visualizations/agent-flow";
-import { PromptPlayground } from "./prompt-playground";
-import { InfrastructureDashboard } from "./infrastructure-dashboard";
-import { PipelineDeepDive } from "./pipeline-deep-dive";
 import { HiringEvidence } from "./hiring-evidence";
+
+const LabLoading = () => <div className="px-8 py-16 font-mono text-[10px] uppercase tracking-[.16em] text-[#6c7075]">Loading technical module…</div>;
+const PromptPlayground = dynamic(() => import("./prompt-playground").then(module => module.PromptPlayground), { loading: LabLoading });
+const InfrastructureDashboard = dynamic(() => import("./infrastructure-dashboard").then(module => module.InfrastructureDashboard), { loading: LabLoading });
+const PipelineDeepDive = dynamic(() => import("./pipeline-deep-dive").then(module => module.PipelineDeepDive), { loading: LabLoading });
 
 type Project = (typeof projects)[number];
 type SceneId = "identity" | "retrieval" | "agents" | "infra" | "close";

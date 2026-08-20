@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Bot, Minimize2, RotateCcw, Send, X } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { spring } from "../lib/motion";
 
 type Message = { role: "user" | "assistant"; text: string; warning?: boolean };
@@ -16,6 +16,25 @@ const answers: Record<string, string> = {
   "Hire Gopal": "Gopal is available for select Generative AI engineering and AI architecture roles. Use the Contact section for GitHub, LinkedIn, email and resume access.",
 };
 const blocked = /ignore previous|system prompt|write a poem|cats|jailbreak|developer message|hidden instruction/i;
+
+function inlineFormat(text: string): ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, index) =>
+    part.startsWith("**") && part.endsWith("**")
+      ? <strong key={index} className="font-semibold text-[#f0eee7]">{part.slice(2, -2)}</strong>
+      : <span key={index}>{part}</span>,
+  );
+}
+
+function FormattedMessage({ text }: { text: string }) {
+  const lines = text.split(/\n|(?=\s- \*\*)/).map(line => line.trim()).filter(Boolean);
+  return <div className="space-y-2">{lines.map((line, index) => {
+    const bullet = line.startsWith("- ");
+    const content = bullet ? line.slice(2) : line;
+    return bullet
+      ? <div key={index} className="grid grid-cols-[8px_1fr] gap-2"><span className="mt-[.65rem] h-1 w-1 bg-[var(--accent)]"/><span>{inlineFormat(content)}</span></div>
+      : <p key={index}>{inlineFormat(content)}</p>;
+  })}</div>;
+}
 
 export function AIAssistant() {
   const [open, setOpen] = useState(false);
@@ -84,7 +103,8 @@ export function AIAssistant() {
       full = "[Guardrail exception]: I can only discuss Gopalakrishna's professional engineering profile. Try asking about his stack, projects, certifications, or availability.";
     } else {
       try {
-        const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: question.trim() }) });
+        const history = messages.slice(-8).map(message => ({ role: message.role, content: message.text }));
+        const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: question.trim(), history }) });
         const data = (await response.json()) as { answer?: string; error?: string };
         if (!response.ok || !data.answer) throw new Error(data.error || "No answer returned");
         full = data.answer;
@@ -183,7 +203,7 @@ export function AIAssistant() {
                   transition={spring}
                   className={`max-w-[90%] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-white/[.14] bg-transparent text-[#c9cbce]" : "border-l-2 border-[var(--accent)] bg-white/[.02] text-[#c9cbce]"}`}
                 >
-                  {message.text}
+                  {message.role === "assistant" ? <FormattedMessage text={message.text} /> : message.text}
                   {message.role === "assistant" && index === messages.length - 1 && thinking && <span className="ml-1 animate-pulse text-[var(--accent)]">▮</span>}
                   {message.warning && (
                     <button onClick={reset} className="mt-3 flex items-center gap-2 border border-[#c9a25a]/30 px-3 py-2 font-mono text-[10px] text-[#c9a25a]">
@@ -193,7 +213,7 @@ export function AIAssistant() {
                   )}
                 </motion.div>
               ))}
-              {thinking && messages[messages.length - 1]?.role !== "assistant" && <div className="font-mono text-[10px] text-[#83878c]">Calculating semantic vector distances…</div>}
+              {thinking && messages[messages.length - 1]?.role !== "assistant" && <div className="font-mono text-[10px] text-[#83878c]">Retrieving portfolio context and generating an answer…</div>}
               {messages.length <= 1 && !thinking && (
                 <div className="flex flex-wrap gap-2">
                   {quick.map((item) => (
@@ -211,7 +231,7 @@ export function AIAssistant() {
                 onChange={(e) => setInput(e.target.value)}
                 disabled={thinking}
                 aria-label="Ask Gopal AI assistant"
-                placeholder={thinking ? "Calculating vector distances…" : "Ask about stack, projects, or experience…"}
+                placeholder={thinking ? "Generating grounded answer…" : "Ask about stack, projects, or experience…"}
                 className="min-w-0 flex-1 border border-white/[.14] bg-white/[.02] px-3 py-3 font-mono text-[11px] text-[#ece9e2] outline-none focus:border-[var(--accent)]"
               />
               <button disabled={thinking || !input.trim()} aria-label="Send message" className="grid w-11 place-items-center border border-white/[.14] bg-[var(--accent-soft)] text-[var(--accent)] disabled:opacity-30">
