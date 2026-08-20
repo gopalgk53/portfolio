@@ -167,7 +167,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </div></div>
       <div className="relative z-10 flex flex-col justify-between border-l border-white/10 pl-6">
         <div><p className="font-mono text-[9px] uppercase tracking-[.18em] text-[#6c7075]">System flow</p><p className="mt-4 text-sm leading-7 text-[#aaa9a3]">{project.flow}</p></div>
-        <div className="mt-6 flex gap-5 border-t border-white/[.12] pt-5 text-xs">
+        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-white/[.12] pt-5 text-xs">
+          <a href={`/projects/${project.id}/`} className="flex items-center gap-1 text-[var(--accent)]">
+            Read case study <ArrowUpRight className="h-3 w-3" />
+          </a>
           <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#c9cbce]">
             Inspect code <Code2 className="h-3 w-3" />
           </a>
@@ -221,7 +224,10 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
 
       <div className="relative mt-10">{viz}</div>
 
-      <div className="relative mt-8 flex gap-5 text-xs">
+      <div className="relative mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs">
+        <a href={`/projects/${project.id}/`} className="flex items-center gap-1 text-[var(--accent)]">
+          Read case study <ArrowUpRight className="h-3 w-3" />
+        </a>
         <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#c9cbce]">
           Inspect code <Code2 className="h-3 w-3" />
         </a>
@@ -256,6 +262,12 @@ function Projects() {
         {rest.map((p) => (
           <ProjectCard key={p.id} project={p} index={projects.indexOf(p)} />
         ))}
+      </div>
+      <div className="mt-16 flex justify-end border-t border-white/[.14] pt-8">
+        <a href="/projects/" className="group flex items-center gap-4 text-sm text-[#c9cbce]">
+          Explore all nine case studies
+          <ArrowUpRight className="h-4 w-4 text-[var(--accent)] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </a>
       </div>
     </Section>
   );
