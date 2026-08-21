@@ -5,7 +5,7 @@ import { projects } from "../../lib/data";
 export const metadata: Metadata = {
   title: "Generative AI Project Case Studies",
   description: "Nine Generative AI, agentic AI, machine learning, document intelligence, and data engineering architecture blueprints.",
-  alternates: { canonical: "/projects/" },
+  alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsIndex() {
@@ -25,7 +25,7 @@ export default function ProjectsIndex() {
       </header>
       <section className="case-index-list" aria-label="Project case studies">
         {projects.map((project, index) => (
-          <Link key={project.id} href={`/projects/${project.id}/`} className="case-index-row">
+          <Link key={project.id} href={`/projects/${project.id}`} className="case-index-row">
             <span className="case-index-number">{String(index + 1).padStart(2, "0")}</span>
             <span className="case-index-copy">
               <span className="case-index-category">{project.category}</span>

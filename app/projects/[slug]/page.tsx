@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const project = projects.find((item) => item.id === slug);
   if (!project) return { title: "Project Case Study" };
-  return { title: `${project.title} — Case Study`, description: project.goal, alternates: { canonical: `/projects/${project.id}/` }, openGraph: { title: `${project.title} — Case Study`, description: project.goal, url: `/projects/${project.id}/` } };
+  return { title: `${project.title} — Case Study`, description: project.goal, alternates: { canonical: `/projects/${project.id}` }, openGraph: { title: `${project.title} — Case Study`, description: project.goal, url: `/projects/${project.id}` } };
 }
 
 export default async function CaseStudy({ params }: { params: Promise<{ slug: string }> }) {
@@ -23,7 +23,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
 
   return (
     <main id="main-content" tabIndex={-1} className="case-study min-h-screen bg-[#080909] text-[#ece9e2]">
-      <nav className="case-nav" aria-label="Case study navigation"><Link href="/projects/">← Architecture archive</Link><span>Case {String(projectIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></nav>
+      <nav className="case-nav" aria-label="Case study navigation"><Link href="/projects">← Architecture archive</Link><span>Case {String(projectIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></nav>
       <article>
         <header className="case-study-hero">
           <div className="case-study-meta"><p>{project.category}</p><p>Architecture blueprint</p></div>
@@ -46,7 +46,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
           <ol><li>Repository-specific implementation screenshots and exact folder links</li><li>Evaluation dataset and reproducible benchmark procedure</li><li>Failure-case analysis and architecture trade-offs</li><li>Deployment notes, tests, and observed runtime measurements</li></ol>
         </section>
       </article>
-      <footer className="case-next"><p>Next system · {String(((projectIndex + 1) % projects.length) + 1).padStart(2, "0")}</p><Link href={`/projects/${nextProject.id}/`}>{nextProject.title}<span aria-hidden="true">→</span></Link></footer>
+      <footer className="case-next"><p>Next system · {String(((projectIndex + 1) % projects.length) + 1).padStart(2, "0")}</p><Link href={`/projects/${nextProject.id}`}>{nextProject.title}<span aria-hidden="true">→</span></Link></footer>
     </main>
   );
 }

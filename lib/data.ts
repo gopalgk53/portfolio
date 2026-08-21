@@ -24,7 +24,7 @@ export const certifications = [
   ["Machine Learning Engineering for Production (MLOps) Specialization", "Coursera · Nov 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/JM8WZRKMAZJW"],
   ["Practical Data Science Specialization", "Coursera · Sep 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/7HAFEBY7E6S6"],
   ["Neural Networks and Deep Learning", "Coursera · Sep 2020", "https://www.coursera.org/account/accomplishments/certificate/88PLY2RRMEHM"],
-  ["Facial Expression Recognition with Keras", "Coursera · Sep 2020", "http://coursera.org/verify/4NWV6JTMPL7P"],
+  ["Facial Expression Recognition with Keras", "Coursera · Sep 2020", "https://coursera.org/verify/4NWV6JTMPL7P"],
   ["Introduction to Explainable AI using LIME", "Analyttica Datalab · Jul 2020", "https://leapsdata.analyttica.com//certificates/00e2a76f-76e9-4059-9416-7a1c1c2b256f/certificate_LEAPS60MS00000721.png"],
   ["Reinforcement Learning Explained", "Microsoft · Jun 2020", "https://courses.edx.org/certificates/9cd9ef86a71d471f995ef84efb6cc4c1"],
   ["Building Conversational Experiences with Dialogflow", "Coursera · Jun 2020", "https://www.coursera.org/account/accomplishments/certificate/SNHUREAKNUR7"],
