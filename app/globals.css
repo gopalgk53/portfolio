@@ -144,3 +144,56 @@ html[data-effects="immersive"] #webgl-canvas{opacity:1}
   .flagship-chapter{min-height:auto!important}
   .flagship-chapter>.sticky{position:relative!important;top:auto!important}
 }
+
+/* ---------------------------------------------------------------------- */
+/* /story — the GSAP + R3F scroll-bound cinematic chapter sequence.        */
+/* ---------------------------------------------------------------------- */
+
+.story-page{position:relative;background:var(--bg)}
+.story-stage{position:fixed;inset:0;z-index:0;width:100vw;height:100vh;overflow:hidden}
+.story-stage canvas{display:block;width:100%;height:100%}
+
+.story-overlay{position:relative;z-index:10;pointer-events:none}
+.story-overlay--static{background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(217,255,67,.05),transparent 70%),var(--bg)}
+
+.story-panel{position:relative;min-height:150vh;display:flex;align-items:center;justify-content:flex-start;padding-inline:clamp(1.5rem,7vw,7rem)}
+.story-panel:nth-child(even) .story-panel-inner{justify-self:flex-end;text-align:right;margin-left:auto}
+.story-panel--cta{min-height:100vh;align-items:center;justify-content:center;text-align:center}
+
+.story-panel-inner{max-width:34rem;visibility:hidden}
+.story-panel-inner--static{visibility:visible}
+.story-panel--cta .story-panel-inner{visibility:visible;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+
+.story-eyebrow{display:block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:1.1rem}
+.story-title{font-size:clamp(2.4rem,6vw,4.6rem);font-weight:500;line-height:.94;letter-spacing:-.03em;text-transform:uppercase;color:var(--text)}
+.story-title--small{font-size:clamp(1.8rem,4vw,2.8rem)}
+.story-body{margin-top:1.4rem;max-width:28rem;font-size:1rem;line-height:1.6;color:var(--muted)}
+
+.story-cta{pointer-events:auto;display:inline-flex;align-items:center;gap:.6rem;padding:1rem 1.8rem;border:1px solid var(--border-strong);color:var(--text);text-decoration:none;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;transition:border-color .3s ease,background-color .3s ease,color .3s ease}
+.story-cta:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+
+.story-rail{position:fixed;right:clamp(1rem,3vw,2.5rem);top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:.9rem;pointer-events:none}
+.story-rail [data-rail-dot]{width:6px;height:6px;border-radius:50%;background:var(--faint);transition:background-color .4s ease,transform .4s ease}
+.story-rail [data-rail-dot][data-active="true"]{background:var(--accent);transform:scale(1.6)}
+.story-home-link{position:fixed;top:1.25rem;left:clamp(1rem,3vw,2.5rem);z-index:30;pointer-events:auto;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .25s ease}
+.story-home-link:hover,.story-home-link:focus-visible{color:var(--accent)}
+
+.story-preloader{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .6s ease;opacity:1}
+.story-preloader--hidden{opacity:0;pointer-events:none}
+.story-preloader-inner{display:flex;flex-direction:column;align-items:center;gap:1.1rem;width:min(20rem,80vw)}
+.story-preloader-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.story-preloader-count{font-size:2.4rem;letter-spacing:-.01em;color:var(--text)}
+.story-preloader-bar{width:100%;height:1px;background:var(--border);overflow:hidden}
+.story-preloader-bar-fill{height:100%;background:var(--accent);transition:width .25s ease}
+
+@media(prefers-reduced-motion:reduce){
+  .story-panel-inner{visibility:visible!important;opacity:1!important;transform:none!important}
+}
+
+@media(max-width:767px){
+  .story-panel:nth-child(even) .story-panel-inner{text-align:left;margin-left:0}
+  .story-rail{display:none}
+  .story-panel{min-height:120vh}
+}
+
+.story-overlay--static .story-panel{min-height:100svh}
