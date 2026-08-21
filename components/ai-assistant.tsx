@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Minimize2, RotateCcw, Send, X } from "lucide-react";
+import { Bot, Minimize2, RotateCcw, Send } from "lucide-react";
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { spring } from "../lib/motion";
 
@@ -46,6 +46,12 @@ export function AIAssistant() {
   const panel = useRef<HTMLDivElement>(null);
   const feed = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  function closeAssistant(restoreFocus = true) {
+    setOpen(false);
+    if (restoreFocus) window.setTimeout(() => triggerRef.current?.focus(), 500);
+  }
 
   useEffect(() => {
     try {
@@ -77,10 +83,10 @@ export function AIAssistant() {
   }, [messages, thinking]);
   useEffect(() => {
     const close = (event: PointerEvent) => {
-      if (open && panel.current && !panel.current.contains(event.target as Node)) setOpen(false);
+      if (open && panel.current && !panel.current.contains(event.target as Node)) closeAssistant(false);
     };
     const key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape" && open) closeAssistant();
     };
     document.addEventListener("pointerdown", close);
     document.addEventListener("keydown", key);
@@ -156,6 +162,7 @@ export function AIAssistant() {
         {!open ? (
           <motion.button
             key="orb"
+            ref={triggerRef}
             aria-label="Open Gopal AI assistant"
             onClick={() => setOpen(true)}
             initial={{ scale: 0.8, opacity: 0 }}
@@ -171,7 +178,8 @@ export function AIAssistant() {
           <motion.section
             key="panel"
             role="dialog"
-            aria-label="Gopal AI assistant"
+            aria-labelledby="gopal-assistant-title"
+            aria-describedby="gopal-assistant-description"
             initial={{ opacity: 0, scale: 0.72, y: 40, x: 28 }}
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
             exit={{ opacity: 0, scale: 0.72, y: 38, x: 24 }}
@@ -180,21 +188,18 @@ export function AIAssistant() {
           >
             <header className={`flex h-16 shrink-0 items-center justify-between border-b px-4 ${warning ? "border-[#c9a25a]/35" : "border-white/[.12]"}`}>
               <div>
-                <p className="font-mono text-xs text-[#ece9e2]">
+                <h2 id="gopal-assistant-title" className="font-mono text-xs text-[#ece9e2]">
                   Gopal-Bot v1.0 <span className="text-[#8fae90]">[online]</span>
-                </p>
-                <p className="mt-1 font-mono text-[9px] text-[#6c7075]">portfolio_context_node</p>
+                </h2>
+                <p id="gopal-assistant-description" className="mt-1 font-mono text-[9px] text-[#6c7075]">Portfolio context assistant</p>
               </div>
               <div className="flex">
-                <button onClick={() => setOpen(false)} aria-label="Minimize assistant" className="grid h-10 w-10 place-items-center text-[#83878c] hover:text-[var(--accent)]">
+                <button onClick={() => closeAssistant()} aria-label="Minimize assistant" className="grid h-10 w-10 place-items-center text-[#83878c] hover:text-[var(--accent)]">
                   <Minimize2 className="h-4 w-4" />
-                </button>
-                <button onClick={() => setOpen(false)} aria-label="Close assistant" className="grid h-10 w-10 place-items-center text-[#83878c] hover:text-[var(--accent)]">
-                  <X className="h-4 w-4" />
                 </button>
               </div>
             </header>
-            <div ref={feed} className="flex-1 space-y-4 overflow-y-auto p-4" aria-live="polite">
+            <div ref={feed} role="log" aria-live="polite" aria-relevant="additions text" aria-busy={thinking} className="flex-1 space-y-4 overflow-y-auto p-4">
               {messages.map((message, index) => (
                 <motion.div
                   key={index}
