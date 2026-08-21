@@ -168,7 +168,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <div className="relative z-10 flex flex-col justify-between border-l border-white/10 pl-6">
         <div><p className="font-mono text-[9px] uppercase tracking-[.18em] text-[#6c7075]">System flow</p><p className="mt-4 text-sm leading-7 text-[#aaa9a3]">{project.flow}</p></div>
         <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-white/[.12] pt-5 text-xs">
-          <a href={`/projects/${project.id}/`} className="flex items-center gap-1 text-[var(--accent)]">
+          <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
             Read case study <ArrowUpRight className="h-3 w-3" />
           </a>
           <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#c9cbce]">
@@ -225,7 +225,7 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
       <div className="relative mt-10">{viz}</div>
 
       <div className="relative mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs">
-        <a href={`/projects/${project.id}/`} className="flex items-center gap-1 text-[var(--accent)]">
+        <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
           Read case study <ArrowUpRight className="h-3 w-3" />
         </a>
         <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#c9cbce]">
@@ -264,7 +264,7 @@ function Projects() {
         ))}
       </div>
       <div className="mt-16 flex justify-end border-t border-white/[.14] pt-8">
-        <a href="/projects/" className="group flex items-center gap-4 text-sm text-[#c9cbce]">
+        <a href="/projects" className="group flex items-center gap-4 text-sm text-[#c9cbce]">
           Explore all nine case studies
           <ArrowUpRight className="h-4 w-4 text-[var(--accent)] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
         </a>
@@ -349,16 +349,22 @@ function Certifications() {
   return (
     <Section id="certifications" scene="identity">
       <div className="border-t border-white/[.14]">
-        {visible.map(([name, meta, url], index) => (
-          <motion.a key={name} href={url} target="_blank" rel="noreferrer" whileHover={{ x: 5 }} transition={spring} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">
+        {visible.map(([name, meta, url], index) => {
+          const unavailable = url.includes("leapsdata.analyttica.com");
+          const content = <>
             <span className="font-mono text-[9px] uppercase tracking-[.14em] text-[#6c7075]">{index === 0 ? "Primary · Great Learning" : `Credential ${String(index + 1).padStart(2, "0")}`}</span>
             <div>
               <h3 className={index === 0 ? "text-xl font-medium" : "text-sm font-medium"}>{name}</h3>
               <p className="mt-1 text-xs text-[#6c7075]">{meta}</p>
             </div>
-            <ExternalLink className="h-4 w-4 shrink-0 text-[var(--accent)]" />
-          </motion.a>
-        ))}
+            {unavailable ? <span className="font-mono text-[9px] uppercase tracking-[.12em] text-[#6c7075]">Verification host unavailable</span> : <ExternalLink className="h-4 w-4 shrink-0 text-[var(--accent)]" />}
+          </>;
+          return unavailable ? (
+            <div key={name} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</div>
+          ) : (
+            <motion.a key={name} href={url} target="_blank" rel="noreferrer" whileHover={{ x: 5 }} transition={spring} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.a>
+          );
+        })}
       </div>
       <motion.button onClick={() => setAll(!all)} whileTap={{ scale: 0.97 }} transition={spring} className="mt-7 border-b border-[var(--accent)] pb-1 text-sm">
         {all ? "Show featured" : `View all ${certifications.length} credentials`}
@@ -420,7 +426,7 @@ function Contact() {
               const IconComp = Icon as typeof Github;
               return (
                 <Magnetic key={label as string} className="block w-full">
-                  <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} className="flex items-center justify-between border-b border-white/[.12] py-4 text-sm text-[#9a9ea3]">
+                  <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} rel={String(url).startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between border-b border-white/[.12] py-4 text-sm text-[#9a9ea3]">
                     <span className="flex items-center gap-2 break-all">
                       <IconComp className="h-4 w-4 shrink-0" />
                       {label as string}

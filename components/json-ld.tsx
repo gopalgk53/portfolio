@@ -44,7 +44,7 @@ export function JsonLd() {
         "@type": "ItemList",
         "@id": "https://gopalakrishnagenai.in/#projects",
         name: "Generative AI Engineering Projects",
-        itemListElement: projects.map((project,index)=>({"@type":"ListItem",position:index+1,item:{"@type":"CreativeWork",name:project.title,description:project.goal,url:`https://gopalakrishnagenai.in/projects/${project.id}/`}})),
+        itemListElement: projects.map((project,index)=>({"@type":"ListItem",position:index+1,item:{"@type":"CreativeWork",name:project.title,description:project.goal,url:`https://gopalakrishnagenai.in/projects/${project.id}`}})),
       },
     ],
   };
