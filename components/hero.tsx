@@ -10,19 +10,40 @@ const nav = [["Systems", "projects"], ["Model lab", "playground"], ["Experience"
 export function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeId, setActiveId] = useState("top");
   const sectionRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const { scrollYProgress: pageProgress } = useScroll();
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const titleScale = useTransform(scrollYProgress, [0, .72], [1, .72]);
   const titleOpacity = useTransform(scrollYProgress, [0, .72, 1], [1, .8, 0]);
   const metaY = useTransform(scrollYProgress, [0, 1], [0, 90]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    let frame = 0;
+    const update = () => {
+      setScrolled(window.scrollY > 24);
+      const focusLine = window.innerHeight * 0.42;
+      let current = "top";
+      for (const [, id] of nav) {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= focusLine) current = id;
+      }
+      setActiveId(current);
+    };
+    const schedule = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
   }, []);
 
   useEffect(() => {
@@ -41,11 +62,11 @@ export function Hero() {
 
   return (
     <div ref={sectionRef} data-scene="identity" className="cinematic-hero relative min-h-[145svh] overflow-clip">
-      <nav className="site-nav" data-scrolled={scrolled}>
+      <nav className="site-nav" data-scrolled={scrolled} aria-label="Primary navigation">
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 sm:px-8">
-          <a href="#top" className="font-mono text-[10px] uppercase tracking-[.28em]">GK / AI systems</a>
+          <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`font-mono text-[10px] uppercase tracking-[.28em] ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>GK / AI systems</a>
           <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[.12em] text-[#9b9b96] md:flex">
-            {nav.map(([label, id]) => <a key={id} href={`#${id}`}>{label}</a>)}
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} className={activeId === id ? "text-[var(--accent)]" : undefined}>{label}</a>)}
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="flex items-center gap-1 text-[#f0eee7]">Résumé <ArrowUpRight className="h-3 w-3" /></a>
             <SoundToggle className="text-[#9b9b96]" />
           </div>
@@ -58,10 +79,11 @@ export function Hero() {
         </div>
         <AnimatePresence>{menuOpen && (
           <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-white/10 bg-[#080909] px-5 py-5 md:hidden">
-            {nav.map(([label, id]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)} className="block border-b border-white/10 py-4 text-sm uppercase tracking-wider">{label}</a>)}
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-white/10 py-4 text-sm uppercase tracking-wider ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 py-4 text-sm uppercase tracking-wider">Résumé <ArrowUpRight className="h-4 w-4" /></a>
           </motion.div>
         )}</AnimatePresence>
+        <motion.div aria-hidden="true" style={{ scaleX: pageProgress }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left bg-[var(--accent)]" />
       </nav>
 
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
