@@ -88,10 +88,12 @@ export function ThreeCanvas() {
 
     const mobile = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const savedMode = localStorage.getItem("gopal-effects-mode");
+    let effectsMode: "low" | "balanced" | "immersive" = savedMode === "low" || savedMode === "immersive" ? savedMode : "balanced";
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !mobile, powerPreference: "high-performance" });
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !mobile && effectsMode !== "low" && !reduceMotion, powerPreference: effectsMode === "immersive" && !reduceMotion ? "high-performance" : "low-power" });
       canvas.dataset.webgl = "ready";
     } catch {
       canvas.dataset.webgl = "unavailable";
@@ -99,7 +101,7 @@ export function ThreeCanvas() {
     }
 
     const basePixelRatio = Math.min(window.devicePixelRatio, mobile ? 1 : 1.35);
-    let qualityScale = 1;
+    let qualityScale = reduceMotion ? 0.62 : effectsMode === "low" ? 0.72 : 1;
     let contextLost = false;
     renderer.setPixelRatio(basePixelRatio);
     renderer.setClearColor(0x000000, 0);
@@ -137,7 +139,7 @@ export function ThreeCanvas() {
       graph.add(lines);
 
       // A handful of pulses travel each active edge group to suggest data flow.
-      const pulseCount = Math.min(pairs.length * 2, mobile ? 4 : 8);
+      const pulseCount = reduceMotion ? 0 : Math.min(pairs.length * 2, mobile || effectsMode === "low" ? 4 : 8);
       const pulseGeometry = new THREE.SphereGeometry(0.045, 8, 8);
       const pulseMaterial = new THREE.MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const pulses = new THREE.InstancedMesh(pulseGeometry, pulseMaterial, pulseCount);
@@ -148,7 +150,7 @@ export function ThreeCanvas() {
 
     // Sparse ambient dust for depth — not decorative particles standing in
     // for the network itself, just atmosphere behind it.
-    const dustCount = mobile ? 90 : 240;
+    const dustCount = reduceMotion ? 45 : mobile || effectsMode === "low" ? 90 : 240;
     const dustPositions = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount; i++) {
       dustPositions[i * 3] = (Math.random() - 0.5) * 18;
@@ -165,7 +167,7 @@ export function ThreeCanvas() {
     const cursorGeometry = new THREE.RingGeometry(0.11, 0.13, 32);
     const cursorMaterial = new THREE.MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.4, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
     const cursorRing = new THREE.Mesh(cursorGeometry, cursorMaterial);
-    cursorRing.visible = !mobile;
+    cursorRing.visible = !mobile && !reduceMotion && effectsMode !== "low";
     scene.add(cursorRing);
 
     // Label elements — real DOM text kept in perfect sync with projected
@@ -182,10 +184,17 @@ export function ThreeCanvas() {
     const targetPointer = new THREE.Vector2();
     const onPointerMove = (event: PointerEvent) => targetPointer.set((event.clientX / window.innerWidth) * 2 - 1, -((event.clientY / window.innerHeight) * 2 - 1));
     const intensityByMode = { low: 0.32, balanced: 0.7, immersive: 1 } as const;
-    let intensity = intensityByMode[(localStorage.getItem("gopal-effects-mode") as keyof typeof intensityByMode) || "balanced"] || intensityByMode.balanced;
+    const frameIntervalByMode = { low: 1000 / 12, balanced: 1000 / 30, immersive: 1000 / 60 } as const;
+    const qualityCapByMode = { low: 0.72, balanced: 0.9, immersive: 1 } as const;
+    let intensity = intensityByMode[effectsMode];
     const onEffects = (event: Event) => {
       const mode = (event as CustomEvent<{ mode?: keyof typeof intensityByMode }>).detail?.mode || "balanced";
+      effectsMode = mode;
       intensity = intensityByMode[mode];
+      qualityScale = reduceMotion ? 0.62 : qualityCapByMode[mode];
+      cursorRing.visible = !mobile && !reduceMotion && mode !== "low";
+      canvas.dataset.frameRate = String(reduceMotion ? 4 : Math.round(1000 / frameIntervalByMode[mode]));
+      resize();
     };
     const resize = () => {
       const width = window.innerWidth;
@@ -211,16 +220,18 @@ export function ThreeCanvas() {
       resize();
     };
 
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    if (!mobile && !reduceMotion) window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("gopal-effects", onEffects);
     window.addEventListener("resize", resize, { passive: true });
     document.addEventListener("visibilitychange", onVisibilityChange);
     canvas.addEventListener("webglcontextlost", onContextLost);
     canvas.addEventListener("webglcontextrestored", onContextRestored);
     resize();
+    canvas.dataset.frameRate = String(reduceMotion ? 4 : Math.round(1000 / frameIntervalByMode[effectsMode]));
 
     let animationFrame = 0;
     let previous = performance.now();
+    let lastRendered = 0;
     let sampledFrames = 0;
     let sampledTime = 0;
     const projected = new THREE.Vector3();
@@ -230,11 +241,18 @@ export function ThreeCanvas() {
     const animate = (now: number) => {
       animationFrame = requestAnimationFrame(animate);
       if (document.hidden || contextLost) return;
+      const minimumFrameInterval = reduceMotion ? 250 : frameIntervalByMode[effectsMode];
+      if (now - lastRendered < minimumFrameInterval - 1) return;
+      lastRendered = now;
       const delta = Math.min((now - previous) / 1000, 0.05);
       previous = now;
       sampledFrames++;
       sampledTime += delta;
-      if (!reduceMotion && sampledTime >= 2.5) {
+      if (effectsMode !== "immersive") {
+        sampledFrames = 0;
+        sampledTime = 0;
+      }
+      if (!reduceMotion && effectsMode === "immersive" && sampledTime >= 2.5) {
         const fps = sampledFrames / sampledTime;
         const nextQuality = fps < 43 ? Math.max(0.68, qualityScale - 0.12) : fps > 57 ? Math.min(1, qualityScale + 0.08) : qualityScale;
         if (Math.abs(nextQuality - qualityScale) > 0.01) {
@@ -283,7 +301,7 @@ export function ThreeCanvas() {
         const target = closing ? 0 : ambient * 0.5 + (emphasis[edge.group] ?? 0) * 0.5;
         edge.boost = reduceMotion ? target : THREE.MathUtils.lerp(edge.boost, target, 1 - Math.pow(0.0008, delta));
         edge.material.opacity = edge.boost * intensity;
-        edge.pulseMaterial.opacity = edge.boost * intensity * 1.4;
+        edge.pulseMaterial.opacity = reduceMotion ? 0 : edge.boost * intensity * 1.4;
         if (!reduceMotion && edge.boost > 0.05) {
           const count = edge.pulses.count;
           for (let i = 0; i < count; i++) {
@@ -335,7 +353,7 @@ export function ThreeCanvas() {
 
     return () => {
       cancelAnimationFrame(animationFrame);
-      window.removeEventListener("pointermove", onPointerMove);
+      if (!mobile && !reduceMotion) window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("gopal-effects", onEffects);
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", onVisibilityChange);
