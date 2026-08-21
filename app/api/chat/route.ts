@@ -8,6 +8,8 @@ const MAX_REQUESTS = 30;
 const MAX_INPUT_LENGTH = 500;
 const MAX_HISTORY_MESSAGES = 8;
 const CACHE_TTL_MS = 15 * 60 * 1000;
+const MAX_RATE_ENTRIES = 1000;
+const MAX_CACHE_ENTRIES = 200;
 
 type RateEntry = { count: number; resetAt: number };
 type ChatMessage = { role: "user" | "assistant"; content: string };
@@ -37,20 +39,45 @@ function clientIdentifier(request: NextRequest) {
   );
 }
 
-function isRateLimited(identifier: string) {
+function rateLimit(identifier: string) {
   const now = Date.now();
+  if (rateLimits.size >= MAX_RATE_ENTRIES) {
+    for (const [key, entry] of rateLimits) if (entry.resetAt <= now) rateLimits.delete(key);
+    while (rateLimits.size >= MAX_RATE_ENTRIES) rateLimits.delete(rateLimits.keys().next().value!);
+  }
   const current = rateLimits.get(identifier);
 
   if (!current || current.resetAt <= now) {
     rateLimits.set(identifier, { count: 1, resetAt: now + WINDOW_MS });
-    return false;
+    return { limited: false, retryAfter: 0 };
   }
 
   current.count += 1;
-  return current.count > MAX_REQUESTS;
+  return { limited: current.count > MAX_REQUESTS, retryAfter: Math.max(1, Math.ceil((current.resetAt - now) / 1000)) };
+}
+
+function requestGuard(request: NextRequest) {
+  const contentType = request.headers.get("content-type")?.toLowerCase() || "";
+  if (!contentType.startsWith("application/json")) return NextResponse.json({ error: "Content-Type must be application/json." }, { status: 415 });
+  const origin = request.headers.get("origin");
+  if (origin) {
+    try {
+      if (new URL(origin).host !== request.nextUrl.host) return NextResponse.json({ error: "Cross-site requests are not allowed." }, { status: 403 });
+    } catch {
+      return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
+    }
+  }
+  return null;
+}
+
+function pruneAnswerCache(now: number) {
+  for (const [key, entry] of answerCache) if (entry.expiresAt <= now) answerCache.delete(key);
+  while (answerCache.size >= MAX_CACHE_ENTRIES) answerCache.delete(answerCache.keys().next().value!);
 }
 
 export async function POST(request: NextRequest) {
+  const guarded = requestGuard(request);
+  if (guarded) return guarded;
   // OpenRouter is the active provider. The legacy variable remains a
   // temporary fallback so existing deployments continue working during the
   // environment-variable migration.
@@ -63,10 +90,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (isRateLimited(clientIdentifier(request))) {
+  const limit = rateLimit(clientIdentifier(request));
+  if (limit.limited) {
     return NextResponse.json(
       { error: "Too many questions. Please try again in a few minutes." },
-      { status: 429 },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
 
@@ -101,10 +129,12 @@ export async function POST(request: NextRequest) {
 
   const cacheContext = history.map((item) => `${item.role}:${item.content}`).join("|");
   const cacheKey = `${cacheContext}|user:${message}`.toLocaleLowerCase().replace(/\s+/g, " ");
+  const now = Date.now();
   const cached = answerCache.get(cacheKey);
-  if (cached && cached.expiresAt > Date.now()) {
+  if (cached && cached.expiresAt > now) {
     return NextResponse.json({ answer: cached.answer, mode: "cache" });
   }
+  if (answerCache.size >= MAX_CACHE_ENTRIES || cached) pruneAnswerCache(now);
 
   try {
     let modelResponse: Response | undefined;
@@ -153,6 +183,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (answerCache.size >= MAX_CACHE_ENTRIES) pruneAnswerCache(Date.now());
     answerCache.set(cacheKey, { answer, expiresAt: Date.now() + CACHE_TTL_MS });
     return NextResponse.json({ answer, mode: "live" });
   } catch (error) {
