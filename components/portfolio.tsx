@@ -405,15 +405,6 @@ function Contact() {
   }
   return (
     <Section id="contact" scene="close">
-      <div className="mb-16 typography-shield">
-        <h3 className="max-w-2xl text-[clamp(2.4rem,6vw,5rem)] font-semibold uppercase leading-[.95] tracking-[-.03em]">
-          <RevealText as="span">Let&rsquo;s build</RevealText>
-          <RevealText as="span" delay={0.06}>
-            intelligent systems.
-          </RevealText>
-        </h3>
-        <p className="mt-6 font-mono text-[10px] uppercase tracking-[.16em] text-[#6c7075]">Generative AI · RAG · Agents · Machine Learning · AWS</p>
-      </div>
       <div className="grid gap-px bg-white/[.1] lg:grid-cols-[.8fr_1.2fr]">
         <div className="bg-[#0d0e0f] p-7 sm:p-10">
           <p className="max-w-sm text-lg leading-8 text-[#c9cbce]">Open to thoughtful conversations about GenAI engineering, AI architecture, and applied research.</p>
@@ -441,8 +432,8 @@ function Contact() {
             Download résumé
           </a>
         </div>
-        <form onSubmit={submit} className="bg-[#0d0e0f] p-7 sm:p-10">
-          <p className="mb-8 text-sm text-[#83878c]">Send a message directly to Gopalakrishna.</p>
+        <form onSubmit={submit} aria-describedby="contact-form-description" className="bg-[#0d0e0f] p-7 sm:p-10">
+          <p id="contact-form-description" className="mb-8 text-sm text-[#83878c]">Send a message directly to Gopalakrishna.</p>
           <div className="hidden" aria-hidden="true">
             <label>
               Company
@@ -450,10 +441,10 @@ function Contact() {
             </label>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            <input name="name" aria-label="Name" placeholder="Your name" maxLength={80} required className="field" />
-            <input name="email" type="email" aria-label="Email" placeholder="Email address" maxLength={254} required className="field" />
+            <label className="font-mono text-[9px] uppercase tracking-[.14em] text-[#83878c]">Name<input name="name" autoComplete="name" placeholder="Your name" maxLength={80} required className="field mt-2" /></label>
+            <label className="font-mono text-[9px] uppercase tracking-[.14em] text-[#83878c]">Email<input name="email" type="email" autoComplete="email" placeholder="Email address" maxLength={254} required className="field mt-2" /></label>
           </div>
-          <textarea name="message" aria-label="Message" placeholder="Tell me about your project or role" rows={5} minLength={10} maxLength={3000} required className="field mt-5 resize-none" />
+          <label className="mt-5 block font-mono text-[9px] uppercase tracking-[.14em] text-[#83878c]">Message<textarea name="message" placeholder="Tell me about your project or role" rows={5} minLength={10} maxLength={3000} required className="field mt-2 resize-none" /></label>
           <div className="mt-7 flex flex-wrap items-center gap-4">
             <Magnetic>
               <motion.button whileHover={sending ? undefined : { y: -2 }} whileTap={sending ? undefined : { scale: 0.97 }} transition={spring} disabled={sending} className="bg-[#ece9e2] px-5 py-3 text-sm font-semibold text-[#0a0a0b] disabled:cursor-wait disabled:opacity-60">
