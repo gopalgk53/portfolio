@@ -99,7 +99,10 @@ export function Hero() {
           <div className="mt-8 grid gap-8 border-t border-white/15 pt-5 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
             <p className="max-w-md text-sm leading-6 text-[#aaa9a3]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
             <p className="max-w-sm text-sm leading-6 text-[#777873]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
-            <a href="#projects" className="flex items-center gap-3 text-xs uppercase tracking-[.16em]">Enter systems <ArrowDown className="h-4 w-4" /></a>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <a href="#projects" className="flex items-center gap-3 text-xs uppercase tracking-[.16em]">Enter systems <ArrowDown className="h-4 w-4" /></a>
+              <a href="/story" className="flex items-center gap-2 text-xs uppercase tracking-[.16em] text-[var(--accent)]">Cinematic story <ArrowUpRight className="h-4 w-4" /></a>
+            </div>
           </div>
         </motion.div>
         <div className="absolute bottom-7 left-5 font-mono text-[9px] uppercase tracking-[.18em] text-[#666762] sm:left-8">Scroll / camera enabled</div>
