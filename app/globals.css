@@ -47,21 +47,23 @@ p{text-wrap:pretty}
 /* Layered stage: fixed 3D network behind, scroll content above it. */
 #main-content{position:relative;z-index:10;width:100%;min-height:100vh;overflow-x:clip;outline:none}
 .three-stage{position:fixed;inset:0;z-index:1;width:100vw;height:100vh;pointer-events:none;overflow:hidden;isolation:isolate}
-.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at var(--cursor-x, 62%) var(--cursor-y, 42%),rgba(217,255,67,.075),transparent 68%)}
-.three-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 380px at var(--cursor-x, 50%) var(--cursor-y, 50%),rgba(217,255,67,.05),transparent 72%)}
+.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at var(--cursor-x, 62%) var(--cursor-y, 42%),rgba(217,255,67,.075),transparent 68%);animation:ambient-breathe 9s ease-in-out infinite}
+.three-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 380px at var(--cursor-x, 50%) var(--cursor-y, 50%),rgba(217,255,67,.05),transparent 72%);animation:ambient-breathe 6.5s ease-in-out infinite reverse}
+@keyframes ambient-breathe{0%,100%{opacity:.7}50%{opacity:1.15}}
+@media(prefers-reduced-motion:reduce){.three-stage::before,.three-stage::after{animation:none}}
 /* Filmic grain over the whole experience: barely-there, but it removes the
    flat digital-black feel and ties type, network, and surfaces together. */
 body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")}
 #webgl-canvas{display:block;width:100%;height:100%;transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
 .node-label-host{position:absolute;inset:0;pointer-events:none}
-.node-label{position:absolute;left:0;top:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text);opacity:0;white-space:nowrap;will-change:transform,opacity}
+.node-label{position:absolute;left:0;top:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text);opacity:0;white-space:nowrap;will-change:transform,opacity;text-shadow:0 0 12px rgba(8,9,9,.8)}
 
 /* A soft radial vignette behind headline text keeps it legible over the
    network without boxing it in a card. */
 .typography-shield{position:relative;isolation:isolate}
 .typography-shield::before{content:"";position:absolute;z-index:-1;inset:-2.5rem -3rem;background:radial-gradient(ellipse at center,rgba(10,10,11,.9) 0%,rgba(10,10,11,.6) 52%,transparent 78%);pointer-events:none}
 
-.eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .hero-title{overflow:hidden;font-size:clamp(3.9rem,12.2vw,13.8rem);font-weight:500;line-height:.76;letter-spacing:-.07em;text-transform:uppercase}
 .hero-title>span{will-change:transform}
 .cinematic-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,9,9,.5),transparent 35%,transparent 68%,rgba(8,9,9,.3))}
