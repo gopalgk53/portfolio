@@ -193,7 +193,7 @@ html[data-effects="immersive"] #webgl-canvas{opacity:1}
 @media(max-width:767px){
   .story-panel:nth-child(even) .story-panel-inner{text-align:left;margin-left:0}
   .story-rail{display:none}
-  .story-panel{min-height:120vh}
+  .story-panel:not(.story-panel--cta){min-height:120vh}
 }
 
 .story-overlay--static .story-panel{min-height:100svh}
