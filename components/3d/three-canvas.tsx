@@ -421,7 +421,11 @@ export function ThreeCanvas() {
         el.style.opacity = behind ? "0" : String(0.25 + boost * 0.65 * intensity);
       });
 
-      const capabilitiesTarget = closing || domain !== "capabilities" ? 0 : 1;
+      // A low ambient baseline (not 0) keeps the five domain clusters
+      // present as background texture throughout the whole scroll, not
+      // just while Capabilities is centered — they still bloom to full
+      // strength there, same as the main network's ambient/emphasis model.
+      const capabilitiesTarget = closing ? 0 : domain === "capabilities" ? 1 : 0.16;
       capabilitiesBoost = reduceMotion ? capabilitiesTarget : THREE.MathUtils.lerp(capabilitiesBoost, capabilitiesTarget, 1 - Math.pow(0.0006, delta));
 
       capabilityMotifs.forEach((motif) => {

@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { spring } from "../lib/motion";
 
 type Status = "idle" | "ready" | "computing" | "streaming" | "complete" | "error";
-const finalAnswer = "A production-ready RAG response should ground every claim in retrieved evidence, apply explicit refusal rules, preserve source attribution, and return a predictable structure for downstream systems.";
 const panel = "border border-white/[.12] bg-white/[.015]";
+const FALLBACK_ANSWER = "The live model is temporarily unavailable, so this is a static example: a production-ready RAG response should ground every claim in retrieved evidence, apply explicit refusal rules, preserve source attribution, and return a predictable structure for downstream systems.";
 
 export function PromptPlayground() {
   const [prompt, setPrompt] = useState("");
@@ -19,51 +19,80 @@ export function PromptPlayground() {
   const [latency, setLatency] = useState(0);
   const [tokens, setTokens] = useState(0);
   const [focus, setFocus] = useState<0 | 1 | 2 | 3>(0);
+  const [errorMessage, setErrorMessage] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
+  const revealTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const requestId = useRef(0);
   const reduced = useReducedMotion();
 
   useEffect(() => {
     outputRef.current?.scrollTo({ top: outputRef.current.scrollHeight, behavior: reduced ? "auto" : "smooth" });
   }, [output, reduced]);
 
-  function execute() {
+  useEffect(() => () => {
+    if (revealTimer.current) clearInterval(revealTimer.current);
+  }, []);
+
+  function revealAnswer(text: string) {
+    if (revealTimer.current) clearInterval(revealTimer.current);
+    setStatus("streaming");
+    let index = 0;
+    revealTimer.current = setInterval(
+      () => {
+        index += reduced ? text.length : 4;
+        setOutput(text.slice(0, index));
+        if (index >= text.length) {
+          if (revealTimer.current) clearInterval(revealTimer.current);
+          setStatus("complete");
+        }
+      },
+      reduced ? 1 : 24,
+    );
+  }
+
+  async function execute() {
     if (!prompt.trim()) {
       setStatus("error");
       setFocus(1);
       return;
     }
+    const thisRequest = ++requestId.current;
     setStatus("computing");
     setFocus(3);
     setOutput("");
     setLatency(0);
     setTokens(0);
-    const telemetry = setInterval(() => {
-      setLatency(38 + Math.random() * 76);
-      setTokens(Math.floor(18 + Math.random() * 34));
-    }, 70);
-    setTimeout(
-      () => {
-        setStatus("streaming");
-        let index = 0;
-        const stream = setInterval(
-          () => {
-            index += reduced ? finalAnswer.length : 4;
-            setOutput(finalAnswer.slice(0, index));
-            if (index >= finalAnswer.length) {
-              clearInterval(stream);
-              clearInterval(telemetry);
-              setLatency(86.42);
-              setTokens(41);
-              setStatus("complete");
-            }
-          },
-          reduced ? 1 : 32,
-        );
-      },
-      reduced ? 50 : 760,
-    );
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/playground", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: prompt.trim(), temperature, topP }),
+      });
+      const data = (await response.json()) as { answer?: string; latencyMs?: number; tokens?: number; error?: string };
+      if (thisRequest !== requestId.current) return; // a newer run superseded this one
+
+      if (!response.ok || !data.answer) {
+        setErrorMessage(data.error || "The live model is temporarily unavailable.");
+        setLatency(0);
+        setTokens(0);
+        revealAnswer(FALLBACK_ANSWER);
+        return;
+      }
+
+      setLatency(data.latencyMs ?? 0);
+      setTokens(data.tokens ?? Math.ceil(data.answer.length / 4));
+      revealAnswer(data.answer);
+    } catch {
+      if (thisRequest !== requestId.current) return;
+      setErrorMessage("Network error reaching the live model.");
+      revealAnswer(FALLBACK_ANSWER);
+    }
   }
   function reset() {
+    requestId.current += 1; // orphan any in-flight request/reveal
+    if (revealTimer.current) clearInterval(revealTimer.current);
     setPrompt("");
     setTemperature(0.3);
     setTopP(0.9);
@@ -72,6 +101,7 @@ export function PromptPlayground() {
     setOutput("");
     setLatency(0);
     setTokens(0);
+    setErrorMessage("");
     setFocus(0);
   }
 
@@ -169,7 +199,7 @@ export function PromptPlayground() {
               <div className="grid h-full place-items-center text-center text-[#83878c]">
                 <div>
                   <Sparkles className="mx-auto mb-4 h-5 w-5 animate-pulse" />
-                  <p>Calculating semantic vector distances…</p>
+                  <p>Calling the live model…</p>
                 </div>
               </div>
             )}
@@ -180,11 +210,14 @@ export function PromptPlayground() {
               </p>
             )}
           </div>
+          {errorMessage && (status === "streaming" || status === "complete") && (
+            <p className="mt-2 font-mono text-[9px] text-[#c96a6a]">{errorMessage} Showing a static example instead.</p>
+          )}
           <footer className="mt-4 border-t border-white/[.1] pt-3">
-            <p className="mb-2 font-mono text-[8px] uppercase tracking-[.14em] text-[#4b4e52]">Simulated telemetry</p>
+            <p className="mb-2 font-mono text-[8px] uppercase tracking-[.14em] text-[#4b4e52]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
             <div className="flex justify-between gap-4 font-mono text-[9px]">
-              <span className="text-[#83878c]">LATENCY: {latency.toFixed(2)}ms</span>
-              <span className="text-[#83878c]">TOKEN YIELD: {tokens} t/s</span>
+              <span className="text-[#83878c]">LATENCY: {latency > 0 ? `${latency.toFixed(0)}ms` : "—"}</span>
+              <span className="text-[#83878c]">TOKENS: {tokens > 0 ? tokens : "—"}</span>
             </div>
           </footer>
         </motion.article>
