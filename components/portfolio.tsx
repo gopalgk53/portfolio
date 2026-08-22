@@ -24,7 +24,7 @@ const InfrastructureDashboard = dynamic(() => import("./infrastructure-dashboard
 const PipelineDeepDive = dynamic(() => import("./pipeline-deep-dive").then(module => module.PipelineDeepDive), { loading: LabLoading });
 
 type Project = (typeof projects)[number];
-type SceneId = "identity" | "retrieval" | "agents" | "infra" | "close";
+type SceneId = "identity" | "retrieval" | "agents" | "infra" | "capabilities" | "close";
 
 const AGENT_DOMAINS = ["Compliance", "Risk", "Communication"];
 
@@ -275,7 +275,7 @@ function Projects() {
 
 function Skills() {
   return (
-    <Section id="skills" scene="infra">
+    <Section id="skills" scene="capabilities">
       <div className="border-t border-white/[.14]">
         {skills.map((s, i) => (
           <motion.div key={s.group} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={staggerChild(i)} className="grid gap-5 border-b border-white/[.14] py-7 md:grid-cols-[2rem_17rem_1fr]">

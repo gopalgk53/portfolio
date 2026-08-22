@@ -101,7 +101,6 @@ export function Hero() {
             <p className="max-w-sm text-sm leading-6 text-[#777873]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               <a href="#projects" className="flex items-center gap-3 text-xs uppercase tracking-[.16em]">Enter systems <ArrowDown className="h-4 w-4" /></a>
-              <a href="/story" className="flex items-center gap-2 text-xs uppercase tracking-[.16em] text-[var(--accent)]">Cinematic story <ArrowUpRight className="h-4 w-4" /></a>
             </div>
           </div>
         </motion.div>

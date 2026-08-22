@@ -6,7 +6,7 @@ import { playSceneChord } from "../../lib/sound";
 // Which cluster of the AI Knowledge Network should read as "active" while a
 // given section is in view. The palette stays a single accent throughout —
 // only which nodes light up (and how much) changes between domains.
-export type SceneDomain = "identity" | "retrieval" | "agents" | "infra" | "close";
+export type SceneDomain = "identity" | "retrieval" | "agents" | "infra" | "capabilities" | "close";
 
 const SceneContext = createContext<SceneDomain>("identity");
 
