@@ -43,32 +43,26 @@ export function ScrollOverlay() {
         if (!panel) return;
         const text = panel.querySelector<HTMLElement>("[data-chapter-text]");
         if (!text) return;
-        gsap.fromTo(
-          text,
-          { autoAlpha: 0, y: reduceMotion ? 0 : 42 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            ease: "none",
+
+        // One timeline, one ScrollTrigger, three keyframes (in / hold / out).
+        // Two independent scrubbed tweens on the same element previously
+        // fought each other: whichever ScrollTrigger was created later kept
+        // re-rendering its own not-yet-started "from" state (autoAlpha: 0)
+        // over the top of the other tween's result on every scroll event,
+        // so the fade-in effectively never won. A single timeline has only
+        // one render per scroll tick, so there is nothing left to clobber it.
+        gsap
+          .timeline({
             scrollTrigger: {
               trigger: panel,
-              start: "top 78%",
-              end: "top 30%",
+              start: "top 80%",
+              end: "bottom 20%",
               scrub: reduceMotion ? true : 1,
             },
-          },
-        );
-        gsap.to(text, {
-          autoAlpha: 0,
-          y: reduceMotion ? 0 : -32,
-          ease: "none",
-          scrollTrigger: {
-            trigger: panel,
-            start: "bottom 55%",
-            end: "bottom 12%",
-            scrub: reduceMotion ? true : 1,
-          },
-        });
+          })
+          .fromTo(text, { autoAlpha: 0, y: reduceMotion ? 0 : 42 }, { autoAlpha: 1, y: 0, ease: "none", duration: 0.35 })
+          .to(text, { autoAlpha: 1, y: 0, ease: "none", duration: 0.3 })
+          .to(text, { autoAlpha: 0, y: reduceMotion ? 0 : -32, ease: "none", duration: 0.35 });
       });
 
       return () => masterTrigger.kill();
