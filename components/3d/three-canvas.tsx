@@ -224,7 +224,7 @@ export function ThreeCanvas() {
 
     // Sparse ambient dust for depth — not decorative particles standing in
     // for the network itself, just atmosphere behind it.
-    const dustCount = reduceMotion ? 45 : mobile || effectsMode === "low" ? 90 : 240;
+    const dustCount = reduceMotion ? 45 : mobile || effectsMode === "low" ? 130 : 360;
     const dustPositions = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount; i++) {
       dustPositions[i * 3] = (Math.random() - 0.5) * 18;
@@ -233,7 +233,7 @@ export function ThreeCanvas() {
     }
     const dustGeometry = new THREE.BufferGeometry();
     dustGeometry.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
-    const dustMaterial = new THREE.PointsMaterial({ color: 0x53565c, size: 0.02, transparent: true, opacity: 0.35, depthWrite: false, sizeAttenuation: true });
+    const dustMaterial = new THREE.PointsMaterial({ color: 0x7a7d82, size: 0.032, transparent: true, opacity: 0.5, depthWrite: false, sizeAttenuation: true });
     const dust = new THREE.Points(dustGeometry, dustMaterial);
     // Its own group, siblings with (not a child of) the network graph, so it
     // drifts at a different rate under the cursor — a cheap depth-of-field
@@ -470,11 +470,11 @@ export function ThreeCanvas() {
 
       // A slow independent twinkle on top of the domain-driven target keeps
       // the field reading as alive even when nothing else is changing.
-      const dustTwinkle = reduceMotion ? 1 : 0.85 + Math.sin(time * 0.35) * 0.15;
-      dustMaterial.opacity = closing ? 0 : 0.35 * intensity * dustTwinkle;
+      const dustTwinkle = reduceMotion ? 1 : 0.6 + Math.sin(time * 0.5) * 0.4;
+      dustMaterial.opacity = closing ? 0 : 0.5 * intensity * dustTwinkle;
 
-      graph.rotation.y = reduceMotion ? 0.05 : Math.sin(time * 0.05) * 0.13 + pointer.x * 0.15;
-      graph.rotation.x = reduceMotion ? 0 : pointer.y * 0.09;
+      graph.rotation.y = reduceMotion ? 0.05 : Math.sin(time * 0.12) * 0.26 + pointer.x * 0.15;
+      graph.rotation.x = reduceMotion ? 0 : Math.cos(time * 0.09) * 0.07 + pointer.y * 0.09;
       graph.position.x = THREE.MathUtils.lerp(graph.position.x, pointer.x * 0.55, 0.04);
       graph.position.y = THREE.MathUtils.lerp(graph.position.y, pointer.y * 0.32, 0.04);
 
@@ -546,6 +546,7 @@ export function ThreeCanvas() {
 
   return (
     <div className="three-stage" aria-hidden="true">
+      <div className="ambient-drift" />
       <canvas ref={canvasRef} id="webgl-canvas" />
       <div ref={labelHostRef} className="node-label-host" />
     </div>
