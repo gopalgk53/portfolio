@@ -235,7 +235,12 @@ export function ThreeCanvas() {
     dustGeometry.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
     const dustMaterial = new THREE.PointsMaterial({ color: 0x53565c, size: 0.02, transparent: true, opacity: 0.35, depthWrite: false, sizeAttenuation: true });
     const dust = new THREE.Points(dustGeometry, dustMaterial);
-    graph.add(dust);
+    // Its own group, siblings with (not a child of) the network graph, so it
+    // drifts at a different rate under the cursor — a cheap depth-of-field
+    // parallax layer instead of everything moving in perfect lockstep.
+    const dustGroup = new THREE.Group();
+    dustGroup.add(dust);
+    scene.add(dustGroup);
 
     // Pointer-tracking accent ring — the only "cursor response" element.
     const cursorGeometry = new THREE.RingGeometry(0.11, 0.13, 32);
@@ -463,12 +468,23 @@ export function ThreeCanvas() {
         }
       });
 
-      dustMaterial.opacity = closing ? 0 : 0.35 * intensity;
+      // A slow independent twinkle on top of the domain-driven target keeps
+      // the field reading as alive even when nothing else is changing.
+      const dustTwinkle = reduceMotion ? 1 : 0.85 + Math.sin(time * 0.35) * 0.15;
+      dustMaterial.opacity = closing ? 0 : 0.35 * intensity * dustTwinkle;
 
       graph.rotation.y = reduceMotion ? 0.05 : Math.sin(time * 0.05) * 0.13 + pointer.x * 0.15;
       graph.rotation.x = reduceMotion ? 0 : pointer.y * 0.09;
       graph.position.x = THREE.MathUtils.lerp(graph.position.x, pointer.x * 0.55, 0.04);
       graph.position.y = THREE.MathUtils.lerp(graph.position.y, pointer.y * 0.32, 0.04);
+
+      // Dust drifts on its own slower rotation and a weaker, lagged pointer
+      // response than the graph — the parallax gap between the two is what
+      // reads as depth rather than one flat plane of motion.
+      dustGroup.rotation.y = reduceMotion ? 0 : Math.sin(time * 0.025) * 0.2 + pointer.x * 0.06;
+      dustGroup.rotation.x = reduceMotion ? 0 : Math.cos(time * 0.02) * 0.1 + pointer.y * 0.03;
+      dustGroup.position.x = THREE.MathUtils.lerp(dustGroup.position.x, pointer.x * 0.15, 0.015);
+      dustGroup.position.y = THREE.MathUtils.lerp(dustGroup.position.y, pointer.y * 0.1, 0.015);
 
       // SceneProvider remains the director: each editorial chapter shifts the
       // same knowledge graph and camera toward the corresponding subsystem.
