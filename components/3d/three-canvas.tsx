@@ -50,11 +50,85 @@ const domainEmphasis: Record<SceneDomain, Partial<Record<NodeGroup, number>>> = 
   retrieval: { retrieval: 1 },
   agents: { agents: 1, retrieval: 0.3 },
   infra: { infra: 1, agents: 0.25 },
+  capabilities: {},
   close: {},
 };
 
 const ACCENT = 0xd9ff43;
 const DOT_BASE = 0xd7d8dc;
+
+// ---------------------------------------------------------------------------
+// Capabilities motifs — five small, self-contained constructs, one per
+// execution-stack category, that only surface while that section is
+// centered. Same rule as the network above: shape carries the meaning, not
+// color — a layered lattice for Models, a chasing pulse train for
+// Inference, a hub with orbiting spokes for Orchestration/Agents, a rising
+// stream for Vector/RAG, a flat grid for Engineering.
+// ---------------------------------------------------------------------------
+type CapabilityId = "models" | "inference" | "orchestration" | "vectorRag" | "engineering";
+
+interface CapabilitySpec {
+  id: CapabilityId;
+  label: string;
+  x: number;
+  points: THREE.Vector3[];
+  edges: Array<[number, number]>;
+  motion?: "chase" | "orbit";
+}
+
+const CAPABILITY_Y = 2.7;
+
+const CAPABILITIES: CapabilitySpec[] = [
+  {
+    id: "models",
+    label: "Models & Fine-Tuning",
+    x: -6.4,
+    points: [
+      new THREE.Vector3(-0.5, 0.5, 0), new THREE.Vector3(0, 0.5, 0.3), new THREE.Vector3(0.5, 0.5, 0),
+      new THREE.Vector3(-0.5, 0, -0.2), new THREE.Vector3(0, 0, 0.1), new THREE.Vector3(0.5, 0, -0.2),
+      new THREE.Vector3(-0.5, -0.5, 0), new THREE.Vector3(0, -0.5, 0.3), new THREE.Vector3(0.5, -0.5, 0),
+    ],
+    edges: [[0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8], [0, 3], [3, 6], [1, 4], [4, 7], [2, 5], [5, 8]],
+  },
+  {
+    id: "inference",
+    label: "Inference & Optimization",
+    x: -3.2,
+    points: [
+      new THREE.Vector3(-0.6, 0, 0), new THREE.Vector3(-0.3, 0, 0), new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0.3, 0, 0), new THREE.Vector3(0.6, 0, 0),
+    ],
+    edges: [[0, 1], [1, 2], [2, 3], [3, 4]],
+    motion: "chase",
+  },
+  {
+    id: "orchestration",
+    label: "Orchestration & Agents",
+    x: 0,
+    points: [
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0.55, 0, 0), new THREE.Vector3(-0.55, 0, 0),
+      new THREE.Vector3(0, 0.55, 0), new THREE.Vector3(0, -0.55, 0),
+    ],
+    edges: [[0, 1], [0, 2], [0, 3], [0, 4]],
+    motion: "orbit",
+  },
+  {
+    id: "vectorRag",
+    label: "Vector Databases & RAG",
+    x: 3.2,
+    points: [new THREE.Vector3(0, -0.6, 0), new THREE.Vector3(0, -0.2, 0), new THREE.Vector3(0, 0.2, 0), new THREE.Vector3(0, 0.6, 0)],
+    edges: [[0, 1], [1, 2], [2, 3]],
+    motion: "chase",
+  },
+  {
+    id: "engineering",
+    label: "Engineering & Infrastructure",
+    x: 6.4,
+    points: [new THREE.Vector3(-0.4, 0.35, 0), new THREE.Vector3(0.4, 0.35, 0), new THREE.Vector3(-0.4, -0.35, 0), new THREE.Vector3(0.4, -0.35, 0)],
+    edges: [[0, 1], [0, 2], [1, 3], [2, 3]],
+  },
+];
 
 function circleTexture() {
   const size = 128;
@@ -180,6 +254,44 @@ export function ThreeCanvas() {
       return el;
     });
 
+    // Capabilities motifs — see CAPABILITIES above. Each is its own small
+    // group (points + connecting edges + one label), hidden until the
+    // Capabilities section is centered.
+    const capabilityMotifs = CAPABILITIES.map((cap) => {
+      const group = new THREE.Group();
+      group.position.set(cap.x, CAPABILITY_Y, 0);
+      graph.add(group);
+
+      const points = cap.points.map((local) => {
+        const material = new THREE.SpriteMaterial({ map: texture, color: DOT_BASE, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+        const sprite = new THREE.Sprite(material);
+        sprite.position.copy(local);
+        sprite.scale.setScalar(0.22);
+        group.add(sprite);
+        return { material, sprite };
+      });
+
+      const edgePositions: number[] = [];
+      cap.edges.forEach(([a, b]) => {
+        const from = cap.points[a];
+        const to = cap.points[b];
+        edgePositions.push(from.x, from.y, from.z, to.x, to.y, to.z);
+      });
+      const lineGeometry = new THREE.BufferGeometry();
+      lineGeometry.setAttribute("position", new THREE.Float32BufferAttribute(edgePositions, 3));
+      const lineMaterial = new THREE.LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+      group.add(lines);
+
+      const labelEl = document.createElement("span");
+      labelEl.textContent = cap.label.toUpperCase();
+      labelEl.className = "node-label node-label--secondary";
+      labelHost.appendChild(labelEl);
+
+      return { spec: cap, group, points, lineGeometry, lineMaterial, labelEl };
+    });
+    let capabilitiesBoost = 0;
+
     const pointer = new THREE.Vector2();
     const targetPointer = new THREE.Vector2();
     const onPointerMove = (event: PointerEvent) => targetPointer.set((event.clientX / window.innerWidth) * 2 - 1, -((event.clientY / window.innerHeight) * 2 - 1));
@@ -297,6 +409,31 @@ export function ThreeCanvas() {
         el.style.opacity = behind ? "0" : String(0.25 + boost * 0.65 * intensity);
       });
 
+      const capabilitiesTarget = closing || domain !== "capabilities" ? 0 : 1;
+      capabilitiesBoost = reduceMotion ? capabilitiesTarget : THREE.MathUtils.lerp(capabilitiesBoost, capabilitiesTarget, 1 - Math.pow(0.0006, delta));
+
+      capabilityMotifs.forEach((motif) => {
+        if (motif.spec.motion === "orbit") {
+          motif.group.rotation.z = reduceMotion ? 0 : time * 0.4;
+        }
+        motif.points.forEach((point, idx) => {
+          let localOpacity = capabilitiesBoost;
+          if (motif.spec.motion === "chase") {
+            const wave = Math.max(0, Math.sin(time * 1.8 - idx * 0.85));
+            localOpacity = capabilitiesBoost * (0.35 + 0.65 * wave);
+          }
+          point.material.opacity = localOpacity * intensity;
+        });
+        motif.lineMaterial.opacity = capabilitiesBoost * intensity * 0.6;
+
+        projected.copy(motif.group.position).project(camera);
+        const cx = (projected.x * 0.5 + 0.5) * window.innerWidth;
+        const cy = (-projected.y * 0.5 + 0.5) * window.innerHeight + 34;
+        const behind = projected.z > 1;
+        motif.labelEl.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0) translate(-50%, -50%)`;
+        motif.labelEl.style.opacity = behind ? "0" : String(capabilitiesBoost * 0.9 * intensity);
+      });
+
       edgeState.forEach((edge) => {
         const target = closing ? 0 : ambient * 0.5 + (emphasis[edge.group] ?? 0) * 0.5;
         edge.boost = reduceMotion ? target : THREE.MathUtils.lerp(edge.boost, target, 1 - Math.pow(0.0008, delta));
@@ -333,6 +470,7 @@ export function ThreeCanvas() {
         retrieval: { x: -2.4, y: .45, z: 8.2, look: -1.4 },
         agents: { x: 3.1, y: -.15, z: 7.2, look: 4.7 },
         infra: { x: 5.2, y: -.8, z: 8.5, look: 6.7 },
+        capabilities: { x: 0, y: 2.15, z: 12.5, look: 0 },
         close: { x: 7.8, y: -1.4, z: 12.5, look: 8.1 },
       };
       const destination = cameraTarget[domain];
@@ -372,6 +510,12 @@ export function ThreeCanvas() {
       cursorGeometry.dispose();
       cursorMaterial.dispose();
       labelEls.forEach((el) => el.remove());
+      capabilityMotifs.forEach((motif) => {
+        motif.points.forEach((point) => point.material.dispose());
+        motif.lineGeometry.dispose();
+        motif.lineMaterial.dispose();
+        motif.labelEl.remove();
+      });
       renderer.dispose();
       renderer.forceContextLoss();
     };
