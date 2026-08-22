@@ -32,7 +32,7 @@ const naturalCopy: Record<string, { eyebrow: string; title: string; description?
   about: { eyebrow: "01 / Profile", title: "I build AI systems that move from prototype → production.", description: "Seven years across construction operations and data science inform a workflow-first approach to Generative AI, RAG, and autonomous agents." },
   projects: { eyebrow: "02 / Selected work", title: "Selected AI systems.", description: "Nine blueprint projects with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
   skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
-  playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A small browser demo for comparing prompts and adjusting common model settings. The output and timing data are simulated." },
+  playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
   experience: { eyebrow: "05 / Experience", title: "From operations to data and AI." },
   certifications: { eyebrow: "06 / Credentials", title: "Formal training behind the practice." },
   contact: { eyebrow: "07 / Contact", title: "Let's build intelligent systems." },
@@ -300,7 +300,7 @@ function Playground() {
     <div className="model-lab" data-scene="infra">
       <Section id="playground" scene="infra">
         <div className="mb-16 grid gap-6 border-y border-black/20 py-5 font-mono text-[9px] uppercase tracking-[.16em] md:grid-cols-3">
-          <span>Outputs · simulated</span><span>Timing · simulated</span><span>Purpose · interaction study</span>
+          <span>Outputs · live model</span><span>Timing · measured server-side</span><span>Purpose · interaction study</span>
         </div>
         <PromptPlayground />
       </Section>
