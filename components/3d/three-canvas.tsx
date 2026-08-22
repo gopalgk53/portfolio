@@ -294,7 +294,14 @@ export function ThreeCanvas() {
 
     const pointer = new THREE.Vector2();
     const targetPointer = new THREE.Vector2();
-    const onPointerMove = (event: PointerEvent) => targetPointer.set((event.clientX / window.innerWidth) * 2 - 1, -((event.clientY / window.innerHeight) * 2 - 1));
+    const cursorGlowStyle = document.documentElement.style;
+    const onPointerMove = (event: PointerEvent) => {
+      targetPointer.set((event.clientX / window.innerWidth) * 2 - 1, -((event.clientY / window.innerHeight) * 2 - 1));
+      // Drives the CSS ambient glow (.three-stage::before/::after) — cheap,
+      // no React re-render, sibling to the WebGL parallax below.
+      cursorGlowStyle.setProperty("--cursor-x", `${((event.clientX / window.innerWidth) * 100).toFixed(1)}%`);
+      cursorGlowStyle.setProperty("--cursor-y", `${((event.clientY / window.innerHeight) * 100).toFixed(1)}%`);
+    };
     const intensityByMode = { low: 0.32, balanced: 0.7, immersive: 1 } as const;
     const frameIntervalByMode = { low: 1000 / 12, balanced: 1000 / 30, immersive: 1000 / 60 } as const;
     const qualityCapByMode = { low: 0.72, balanced: 0.9, immersive: 1 } as const;
@@ -458,10 +465,10 @@ export function ThreeCanvas() {
 
       dustMaterial.opacity = closing ? 0 : 0.35 * intensity;
 
-      graph.rotation.y = reduceMotion ? 0.05 : Math.sin(time * 0.05) * 0.13 + pointer.x * 0.09;
-      graph.rotation.x = reduceMotion ? 0 : pointer.y * 0.05;
-      graph.position.x = THREE.MathUtils.lerp(graph.position.x, pointer.x * 0.35, 0.03);
-      graph.position.y = THREE.MathUtils.lerp(graph.position.y, pointer.y * 0.2, 0.03);
+      graph.rotation.y = reduceMotion ? 0.05 : Math.sin(time * 0.05) * 0.13 + pointer.x * 0.15;
+      graph.rotation.x = reduceMotion ? 0 : pointer.y * 0.09;
+      graph.position.x = THREE.MathUtils.lerp(graph.position.x, pointer.x * 0.55, 0.04);
+      graph.position.y = THREE.MathUtils.lerp(graph.position.y, pointer.y * 0.32, 0.04);
 
       // SceneProvider remains the director: each editorial chapter shifts the
       // same knowledge graph and camera toward the corresponding subsystem.
@@ -476,14 +483,14 @@ export function ThreeCanvas() {
       const destination = cameraTarget[domain];
       const cameraEase = reduceMotion ? 1 : 1 - Math.pow(0.002, delta);
       camera.position.z = THREE.MathUtils.lerp(camera.position.z, destination.z, cameraEase);
-      camera.position.x = THREE.MathUtils.lerp(camera.position.x, destination.x + pointer.x * .35 * intensity, cameraEase);
-      camera.position.y = THREE.MathUtils.lerp(camera.position.y, destination.y + pointer.y * .18 * intensity, cameraEase);
+      camera.position.x = THREE.MathUtils.lerp(camera.position.x, destination.x + pointer.x * .5 * intensity, cameraEase);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, destination.y + pointer.y * .28 * intensity, cameraEase);
       camera.lookAt(destination.look, 0, 0);
 
       projected.set(pointer.x * 5.2, pointer.y * 3, 1.2);
       cursorRing.position.copy(projected);
       cursorRing.scale.setScalar(1 + Math.sin(time * 3.4) * 0.1);
-      cursorMaterial.opacity = closing ? 0 : 0.32 * intensity;
+      cursorMaterial.opacity = closing ? 0 : 0.42 * intensity;
 
       renderer.render(scene, camera);
     };

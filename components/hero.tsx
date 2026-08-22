@@ -87,8 +87,10 @@ export function Hero() {
       </nav>
 
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
-        <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[#777873] sm:left-8">
-          <p>Gopalakrishna Maddipalli</p><p>Generative AI engineer</p><p>India · 2026</p>
+        <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 sm:left-8">
+          <p className="font-sans text-[15px] font-medium uppercase leading-6 tracking-[.1em] text-[#f0eee7] sm:text-[17px]">Gopalakrishna Maddipalli</p>
+          <p className="mt-1 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[#777873]">Generative AI engineer</p>
+          <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[#777873]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
           <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--signal)]">Systems that reason with context</p>
