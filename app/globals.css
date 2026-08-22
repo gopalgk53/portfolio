@@ -47,7 +47,8 @@ p{text-wrap:pretty}
 /* Layered stage: fixed 3D network behind, scroll content above it. */
 #main-content{position:relative;z-index:10;width:100%;min-height:100vh;overflow-x:clip;outline:none}
 .three-stage{position:fixed;inset:0;z-index:1;width:100vw;height:100vh;pointer-events:none;overflow:hidden;isolation:isolate}
-.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 62% 54% at 62% 42%,rgba(217,255,67,.045),transparent 68%)}
+.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at var(--cursor-x, 62%) var(--cursor-y, 42%),rgba(217,255,67,.075),transparent 68%)}
+.three-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 380px at var(--cursor-x, 50%) var(--cursor-y, 50%),rgba(217,255,67,.05),transparent 72%)}
 /* Filmic grain over the whole experience: barely-there, but it removes the
    flat digital-black feel and ties type, network, and surfaces together. */
 body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")}
@@ -67,12 +68,11 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 .chapter{background:linear-gradient(180deg,rgba(8,9,9,.92),rgba(8,9,9,.75) 50%,rgba(8,9,9,.92))}
 .manifesto{background:#0b0c0b}
 .manifesto::before{content:"";position:absolute;left:55%;top:50%;width:60vw;height:60vw;border:1px solid rgba(217,255,67,.18);transform:translate(-50%,-50%) rotate(25deg);pointer-events:none}
-.model-lab{color:#11120f;background:#e9e7df}
-.model-lab .chapter{background:#e9e7df}
-.model-lab .eyebrow,.model-lab p{color:#34352f}
-.model-lab h2,.model-lab h3,.model-lab label{color:#11120f}
-.model-lab .typography-shield::before{display:none}
-.model-lab input,.model-lab textarea,.model-lab select{color:#11120f;background:transparent;border-color:rgba(0,0,0,.2)}
+.model-lab{color:var(--text);background:var(--bg)}
+.model-lab .chapter{background:var(--bg)}
+.model-lab .eyebrow,.model-lab p{color:var(--muted)}
+.model-lab h2,.model-lab h3,.model-lab label{color:var(--text)}
+.model-lab input,.model-lab textarea,.model-lab select{color:var(--text);background:rgba(255,255,255,.02);border-color:var(--border)}
 
 /* Nav — a hairline, no blur pill, no chrome. */
 .site-nav{position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid transparent;transition:border-color .4s ease,background-color .4s ease}
