@@ -226,10 +226,19 @@ export function ThreeCanvas() {
     // for the network itself, just atmosphere behind it.
     const dustCount = reduceMotion ? 45 : mobile || effectsMode === "low" ? 130 : 360;
     const dustPositions = new Float32Array(dustCount * 3);
+    // A fixed base position per particle plus a random phase/frequency —
+    // the animate loop offsets each particle from its base by a sine wave
+    // of its own phase, a cheap stand-in for Perlin/simplex drift that
+    // needs no noise library and no per-frame allocation.
+    const dustBase = new Float32Array(dustCount * 3);
+    const dustPhase = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount; i++) {
-      dustPositions[i * 3] = (Math.random() - 0.5) * 18;
-      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 2;
+      dustPositions[i * 3] = dustBase[i * 3] = (Math.random() - 0.5) * 18;
+      dustPositions[i * 3 + 1] = dustBase[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      dustPositions[i * 3 + 2] = dustBase[i * 3 + 2] = (Math.random() - 0.5) * 8 - 2;
+      dustPhase[i * 3] = Math.random() * Math.PI * 2;
+      dustPhase[i * 3 + 1] = Math.random() * Math.PI * 2;
+      dustPhase[i * 3 + 2] = Math.random() * Math.PI * 2;
     }
     const dustGeometry = new THREE.BufferGeometry();
     dustGeometry.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
@@ -300,12 +309,19 @@ export function ThreeCanvas() {
     const pointer = new THREE.Vector2();
     const targetPointer = new THREE.Vector2();
     const cursorGlowStyle = document.documentElement.style;
-    const onPointerMove = (event: PointerEvent) => {
-      targetPointer.set((event.clientX / window.innerWidth) * 2 - 1, -((event.clientY / window.innerHeight) * 2 - 1));
+    const setPointerFromClient = (clientX: number, clientY: number) => {
+      targetPointer.set((clientX / window.innerWidth) * 2 - 1, -((clientY / window.innerHeight) * 2 - 1));
       // Drives the CSS ambient glow (.three-stage::before/::after) — cheap,
       // no React re-render, sibling to the WebGL parallax below.
-      cursorGlowStyle.setProperty("--cursor-x", `${((event.clientX / window.innerWidth) * 100).toFixed(1)}%`);
-      cursorGlowStyle.setProperty("--cursor-y", `${((event.clientY / window.innerHeight) * 100).toFixed(1)}%`);
+      cursorGlowStyle.setProperty("--cursor-x", `${((clientX / window.innerWidth) * 100).toFixed(1)}%`);
+      cursorGlowStyle.setProperty("--cursor-y", `${((clientY / window.innerHeight) * 100).toFixed(1)}%`);
+    };
+    const onPointerMove = (event: PointerEvent) => setPointerFromClient(event.clientX, event.clientY);
+    // Touch gets the same wake/parallax response as desktop pointermove —
+    // a tap or drag anywhere on screen, not just fine-pointer devices.
+    const onTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (touch) setPointerFromClient(touch.clientX, touch.clientY);
     };
     const intensityByMode = { low: 0.32, balanced: 0.7, immersive: 1 } as const;
     const frameIntervalByMode = { low: 1000 / 12, balanced: 1000 / 30, immersive: 1000 / 60 } as const;
@@ -345,6 +361,10 @@ export function ThreeCanvas() {
     };
 
     if (!mobile && !reduceMotion) window.addEventListener("pointermove", onPointerMove, { passive: true });
+    if (!reduceMotion) {
+      window.addEventListener("touchstart", onTouchMove, { passive: true });
+      window.addEventListener("touchmove", onTouchMove, { passive: true });
+    }
     window.addEventListener("gopal-effects", onEffects);
     window.addEventListener("resize", resize, { passive: true });
     document.addEventListener("visibilitychange", onVisibilityChange);
@@ -361,6 +381,12 @@ export function ThreeCanvas() {
     const projected = new THREE.Vector3();
     const pulseDummy = new THREE.Object3D();
     const groupBoost: Record<NodeGroup, number> = { retrieval: 0, agents: 0, infra: 0 };
+    // A fast flick/swipe spikes scatterEnergy, which decays back to 0 over
+    // roughly half a second — the "gentle wake vs. violent scatter" the
+    // pointer speed should produce, without a physics library.
+    const previousTargetPointer = new THREE.Vector2();
+    let scatterEnergy = 0;
+    const dustPos = dustGeometry.getAttribute("position") as THREE.BufferAttribute;
 
     const animate = (now: number) => {
       animationFrame = requestAnimationFrame(animate);
@@ -389,6 +415,17 @@ export function ThreeCanvas() {
       }
 
       pointer.lerp(targetPointer, 1 - Math.pow(0.001, delta));
+
+      // Velocity-sensitive scatter: how far the raw pointer target moved
+      // this frame, independent of the eased `pointer` above. A slow drag
+      // barely registers; a fast flick spikes scatterEnergy toward 1 and
+      // it decays back out over ~0.5s.
+      if (!reduceMotion && delta > 0) {
+        const rawVelocity = targetPointer.distanceTo(previousTargetPointer) / delta;
+        previousTargetPointer.copy(targetPointer);
+        scatterEnergy = Math.max(scatterEnergy * Math.pow(0.02, delta), Math.min(rawVelocity * 0.55, 1));
+      }
+
       const time = now / 1000;
       const domain = activeRef.current;
       const closing = domain === "close";
@@ -484,11 +521,27 @@ export function ThreeCanvas() {
 
       // Dust drifts on its own slower rotation and a weaker, lagged pointer
       // response than the graph — the parallax gap between the two is what
-      // reads as depth rather than one flat plane of motion.
-      dustGroup.rotation.y = reduceMotion ? 0 : Math.sin(time * 0.025) * 0.2 + pointer.x * 0.06;
-      dustGroup.rotation.x = reduceMotion ? 0 : Math.cos(time * 0.02) * 0.1 + pointer.y * 0.03;
-      dustGroup.position.x = THREE.MathUtils.lerp(dustGroup.position.x, pointer.x * 0.15, 0.015);
-      dustGroup.position.y = THREE.MathUtils.lerp(dustGroup.position.y, pointer.y * 0.1, 0.015);
+      // reads as depth rather than one flat plane of motion. scatterEnergy
+      // (from the velocity check above) briefly exaggerates all of it, so a
+      // fast flick reads as a burst rather than the same gentle wake.
+      dustGroup.rotation.y = reduceMotion ? 0 : Math.sin(time * 0.025) * 0.2 + pointer.x * (0.06 + scatterEnergy * 0.5);
+      dustGroup.rotation.x = reduceMotion ? 0 : Math.cos(time * 0.02) * 0.1 + pointer.y * (0.03 + scatterEnergy * 0.3);
+      dustGroup.position.x = THREE.MathUtils.lerp(dustGroup.position.x, pointer.x * (0.15 + scatterEnergy * 0.9), 0.015 + scatterEnergy * 0.05);
+      dustGroup.position.y = THREE.MathUtils.lerp(dustGroup.position.y, pointer.y * (0.1 + scatterEnergy * 0.6), 0.015 + scatterEnergy * 0.05);
+
+      // Organic per-particle drift — each dust point orbits its own base
+      // position on a sine wave of its own random phase, a cheap stand-in
+      // for Perlin/simplex noise; scatterEnergy widens the orbit briefly.
+      if (!reduceMotion) {
+        const noiseAmplitude = 0.35 + scatterEnergy * 1.6;
+        for (let i = 0; i < dustCount; i++) {
+          const i3 = i * 3;
+          dustPositions[i3] = dustBase[i3] + Math.sin(time * 0.4 + dustPhase[i3]) * noiseAmplitude;
+          dustPositions[i3 + 1] = dustBase[i3 + 1] + Math.sin(time * 0.35 + dustPhase[i3 + 1]) * noiseAmplitude;
+          dustPositions[i3 + 2] = dustBase[i3 + 2] + Math.cos(time * 0.3 + dustPhase[i3 + 2]) * noiseAmplitude * 0.6;
+        }
+        dustPos.needsUpdate = true;
+      }
 
       // SceneProvider remains the director: each editorial chapter shifts the
       // same knowledge graph and camera toward the corresponding subsystem.
@@ -519,6 +572,10 @@ export function ThreeCanvas() {
     return () => {
       cancelAnimationFrame(animationFrame);
       if (!mobile && !reduceMotion) window.removeEventListener("pointermove", onPointerMove);
+      if (!reduceMotion) {
+        window.removeEventListener("touchstart", onTouchMove);
+        window.removeEventListener("touchmove", onTouchMove);
+      }
       window.removeEventListener("gopal-effects", onEffects);
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", onVisibilityChange);
