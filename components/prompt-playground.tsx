@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { spring } from "../lib/motion";
 
 type Status = "idle" | "ready" | "computing" | "streaming" | "complete" | "error";
-const panel = "border border-white/[.12] bg-white/[.015]";
+const panel = "rounded-[var(--radius-md)] border border-white/[.12] bg-white/[.015]";
 const FALLBACK_ANSWER = "The live model is temporarily unavailable, so this is a static example: a production-ready RAG response should ground every claim in retrieved evidence, apply explicit refusal rules, preserve source attribution, and return a predictable structure for downstream systems.";
 
 export function PromptPlayground() {
@@ -109,7 +109,7 @@ export function PromptPlayground() {
     <div>
       <div className="mb-5 flex items-center justify-between gap-4">
         <p className="font-mono text-[10px] uppercase tracking-[.1em] text-[#6c7075]">Status: {status}</p>
-        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }} transition={spring} onClick={reset} className="flex items-center gap-2 border border-white/[.14] px-3 py-2 text-xs text-[#c9cbce]">
+        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }} transition={spring} onClick={reset} className="btn-pill btn-pill--outline">
           <RotateCcw className="h-3 w-3" />
           Reset
         </motion.button>
@@ -131,7 +131,7 @@ export function PromptPlayground() {
               }}
               rows={8}
               placeholder={status === "error" ? "Add a prompt to inspect model behavior." : "Enter a prompt to inspect model behavior…"}
-              className="w-full resize-none border border-white/[.12] bg-black/40 py-3 pl-8 pr-3 font-mono text-xs leading-6 text-[#c9cbce] outline-none focus:border-[var(--accent)]"
+              className="w-full resize-none rounded-[var(--radius-sm)] border border-white/[.12] bg-black/40 py-3 pl-8 pr-3 font-mono text-xs leading-6 text-[#c9cbce] outline-none focus:border-[var(--accent)]"
             />
           </div>
           <div className="mt-2 flex gap-4 font-mono text-[9px] text-[#6c7075]">
@@ -149,7 +149,7 @@ export function PromptPlayground() {
               <input type="range" min=".1" max="1" step=".1" value={topP} disabled={status === "computing" || status === "streaming"} onChange={(e) => setTopP(Number(e.target.value))} className="mt-3 w-full accent-[var(--accent)]" />
             </label>
           </div>
-          <motion.button onClick={execute} disabled={status === "computing" || status === "streaming"} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={spring} className="mt-auto self-end bg-[#ece9e2] px-5 py-3 text-sm font-semibold text-[#0a0a0b] disabled:opacity-40">
+          <motion.button onClick={execute} disabled={status === "computing" || status === "streaming"} whileTap={{ scale: 0.98 }} transition={spring} className="btn-pill btn-pill--solid mt-auto self-end">
             {status === "computing" || status === "streaming" ? "Generating…" : "Run prompt"}
           </motion.button>
         </motion.article>
@@ -159,7 +159,7 @@ export function PromptPlayground() {
             <span className="font-medium text-[#c9cbce]">Compare approaches</span>
             <span className="text-[#6c7075]">Basic ↔ structured</span>
           </header>
-          <div className="relative mt-5 h-[390px] overflow-hidden border border-white/[.1] bg-black/40">
+          <div className="relative mt-5 h-[390px] overflow-hidden rounded-[var(--radius-sm)] border border-white/[.1] bg-black/40">
             <div className="absolute inset-0 p-5 font-mono text-[10px] leading-6 text-[#6c7075]">
               <b className="text-[#83878c]">NAIVE PROMPT</b>
               <p className="mt-5">Answer my question about this document. Make the answer useful.</p>
@@ -182,7 +182,7 @@ export function PromptPlayground() {
             </div>
             <div style={{ left: `${divider}%` }} className="pointer-events-none absolute inset-y-0 w-px bg-[var(--accent)]" />
             <input aria-label="Compare naive and optimized prompt" type="range" min="5" max="95" value={divider} onChange={(e) => setDivider(Number(e.target.value))} className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0" />
-            <div style={{ left: `calc(${divider}% - 18px)` }} className="pointer-events-none absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center border border-white/[.2] bg-[#0a0a0b] font-mono text-[9px] text-[#c9cbce]">
+            <div style={{ left: `calc(${divider}% - 18px)` }} className="pointer-events-none absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/[.2] bg-[#0a0a0b] font-mono text-[9px] text-[#c9cbce]">
               ↔
             </div>
           </div>
@@ -193,7 +193,7 @@ export function PromptPlayground() {
             <span className="font-medium text-[#c9cbce]">Example output</span>
             <span className="text-[#83878c]">{status === "idle" || status === "ready" || status === "error" ? "Waiting" : status}</span>
           </header>
-          <div ref={outputRef} className="relative mt-5 flex-1 overflow-y-auto border border-white/[.1] bg-black/40 p-5 font-mono text-xs leading-7 text-[#c9cbce]">
+          <div ref={outputRef} className="relative mt-5 flex-1 overflow-y-auto rounded-[var(--radius-sm)] border border-white/[.1] bg-black/40 p-5 font-mono text-xs leading-7 text-[#c9cbce]">
             {(status === "idle" || status === "ready" || status === "error") && <p className="text-[#4b4e52]">Awaiting execution. Enter a prompt and run it.</p>}
             {status === "computing" && (
               <div className="grid h-full place-items-center text-center text-[#83878c]">

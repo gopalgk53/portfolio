@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { spring } from "../lib/motion";
 
 const models = ["Llama-3-70B", "Mistral-Large", "Custom-RAG-Pipeline"];
-const panel = "border border-white/[.12] bg-white/[.015] p-6";
+const panel = "rounded-[var(--radius-md)] border border-white/[.12] bg-white/[.015] p-6";
 
 export function InfrastructureDashboard() {
   const [model, setModel] = useState(models[2]);
@@ -44,7 +44,7 @@ export function InfrastructureDashboard() {
           <p className="eyebrow">Infrastructure observability</p>
           <h2 className="mt-3 text-4xl font-bold tracking-[-.03em] sm:text-6xl">Model execution, made observable.</h2>
           <p className="mt-5 max-w-2xl text-[#83878c]">Browser-generated observability data demonstrating inference monitoring interface design.</p>
-          <span className="mt-4 inline-block border border-white/[.14] px-3 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[#9a9ea3]">Simulated runtime telemetry</span>
+          <span className="mt-4 inline-block rounded-full border border-white/[.14] px-3 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[#9a9ea3]">Simulated runtime telemetry</span>
         </header>
         <div className="grid gap-5 lg:grid-cols-2">
           <article className={`${panel} min-h-[350px]`}>
@@ -52,7 +52,7 @@ export function InfrastructureDashboard() {
               <span className="text-[#83878c]">NODE_01 / RUNTIME</span>
               <span className="text-[#8fae90]">● ACTIVE</span>
             </div>
-            <div className="mt-6 border border-white/[.08] bg-black/40 p-4 font-mono text-[10px] leading-7">
+            <div className="mt-6 rounded-[var(--radius-sm)] border border-white/[.08] bg-black/40 p-4 font-mono text-[10px] leading-7">
               {logs.map((x, i) => (
                 <motion.p key={x} animate={{ opacity: resetting ? 0 : 0.35 + i * 0.18, x: resetting ? -8 : 0 }} transition={spring} className="text-[#83878c]">
                   [{String(tick + i).padStart(4, "0")}] {x}...
@@ -61,7 +61,7 @@ export function InfrastructureDashboard() {
             </div>
             <div className="mt-6 flex gap-2 overflow-x-auto">
               {models.map((x) => (
-                <button key={x} onClick={() => setModel(x)} className={`whitespace-nowrap border px-3 py-2 font-mono text-[9px] ${model === x ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[#ece9e2]" : "border-white/[.1] text-[#6c7075]"}`}>
+                <button key={x} onClick={() => setModel(x)} className={`whitespace-nowrap rounded-full border px-3 py-2 font-mono text-[9px] transition-colors ${model === x ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[#ece9e2]" : "border-white/[.1] text-[#6c7075]"}`}>
                   {x}
                 </button>
               ))}
@@ -103,7 +103,7 @@ export function InfrastructureDashboard() {
                     <span className="text-[#83878c]">{label}</span>
                     <span className="text-[#ece9e2]">{resetting ? 0 : ms}ms</span>
                   </div>
-                  <div className="h-2 overflow-hidden border border-white/[.1] bg-black/40">
+                  <div className="h-2 overflow-hidden rounded-full border border-white/[.1] bg-black/40">
                     <motion.div animate={{ width: resetting ? 0 : `${width}%` }} transition={spring} className="h-full bg-[var(--accent)] opacity-80" />
                   </div>
                 </div>
@@ -129,7 +129,7 @@ export function InfrastructureDashboard() {
                 </div>
               ))}
             </div>
-            <button onClick={flush} disabled={resetting} className="mt-7 flex items-center gap-2 border border-white/[.14] px-3 py-2 font-mono text-[9px] text-[#c9cbce]">
+            <button onClick={flush} disabled={resetting} className="btn-pill btn-pill--outline mt-7">
               <RotateCcw className={`h-3 w-3 ${resetting ? "animate-spin" : ""}`} />
               FLUSH PIPELINE
             </button>

@@ -67,12 +67,12 @@ export function Hero() {
           <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`font-mono text-[10px] uppercase tracking-[.28em] ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>GK / AI systems</a>
           <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[.12em] text-[#9b9b96] md:flex">
             {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} className={activeId === id ? "text-[var(--accent)]" : undefined}>{label}</a>)}
-            <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="flex items-center gap-1 text-[#f0eee7]">Résumé <ArrowUpRight className="h-3 w-3" /></a>
             <SoundToggle className="text-[#9b9b96]" />
+            <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--solid">Résumé <ArrowUpRight className="h-3 w-3" /></a>
           </div>
           <div className="flex items-center gap-3 md:hidden">
             <SoundToggle className="text-[#9b9b96]" />
-            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center border border-white/15">
+            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center rounded-full border border-white/15">
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
@@ -80,7 +80,7 @@ export function Hero() {
         <AnimatePresence>{menuOpen && (
           <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-white/10 bg-[#080909] px-5 py-5 md:hidden">
             {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-white/10 py-4 text-sm uppercase tracking-wider ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
-            <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 py-4 text-sm uppercase tracking-wider">Résumé <ArrowUpRight className="h-4 w-4" /></a>
+            <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
           </motion.div>
         )}</AnimatePresence>
         <motion.div aria-hidden="true" style={{ scaleX: pageProgress }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left bg-[var(--accent)]" />
@@ -104,6 +104,27 @@ export function Hero() {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               <a href="#projects" className="flex items-center gap-3 text-xs uppercase tracking-[.16em]">Enter systems <ArrowDown className="h-4 w-4" /></a>
             </div>
+          </div>
+        </motion.div>
+        <motion.div
+          aria-hidden="true"
+          initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          style={reducedMotion ? undefined : { y: metaY }}
+          className="hero-console absolute bottom-24 left-5 z-20 hidden w-[19rem] px-5 py-4 sm:left-8 lg:block"
+        >
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[9px] uppercase tracking-[.18em] text-[#8b8f95]">Agent status</span>
+            <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--accent)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+              Online
+            </span>
+          </div>
+          <p className="mt-3 font-mono text-[11px] leading-6 text-[#c9cbce]">retrieval → rerank → grounded generation</p>
+          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 font-mono text-[9px] uppercase tracking-[.14em] text-[#6c7075]">
+            <span>Stack · RAG + Agents</span>
+            <span>Mode · Grounded</span>
           </div>
         </motion.div>
         <div className="absolute bottom-7 left-5 font-mono text-[9px] uppercase tracking-[.18em] text-[#666762] sm:left-8">Scroll / camera enabled</div>
