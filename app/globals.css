@@ -27,6 +27,9 @@
   --accent-soft: rgba(217,255,67,.1);
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
+  --radius-sm: 10px;
+  --radius-md: 20px;
+  --radius-pill: 999px;
 }
 
 *{box-sizing:border-box}
@@ -79,20 +82,42 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 .model-lab input,.model-lab textarea,.model-lab select{color:var(--text);background:rgba(255,255,255,.02);border-color:var(--border)}
 
 /* Nav — a hairline, no blur pill, no chrome. */
-.site-nav{position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid transparent;transition:border-color .4s ease,background-color .4s ease}
-.site-nav[data-scrolled="true"]{border-color:var(--border);background:rgba(8,9,9,.9)}
+.site-nav{position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid transparent;transition:border-color .4s ease,background-color .4s ease,backdrop-filter .4s ease}
+.site-nav[data-scrolled="true"]{border-color:var(--border);background:rgba(8,9,9,.72);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3)}
 
-.field{width:100%;border:1px solid var(--border);border-radius:2px;background:rgba(255,255,255,.02);padding:1rem;color:var(--text);outline:none}
+.field{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);background:rgba(255,255,255,.02);padding:1rem;color:var(--text);outline:none;transition:border-color .25s ease,background-color .25s ease}
 .field::placeholder{color:var(--faint)}
-.field:focus{border-color:var(--accent)}
+.field:focus{border-color:var(--accent);background:rgba(255,255,255,.035)}
+
+/* Pill buttons — the antigravity-style elevated CTA: a solid variant for
+   primary actions, an outline variant for secondary ones. Both lift and
+   glow gently on hover instead of the old flat hard-edge buttons. */
+.btn-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:var(--radius-pill);padding:.85rem 1.6rem;font:600 10.5px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s cubic-bezier(.4,0,.2,1),background-color .3s ease,color .3s ease,border-color .3s ease}
+.btn-pill--solid{border:1px solid transparent;background:var(--text);color:#0a0a0b}
+.btn-pill--solid:hover{background:var(--accent);box-shadow:0 12px 32px -8px rgba(217,255,67,.45)}
+.btn-pill--outline{border:1px solid var(--border-strong);color:var(--text);background:rgba(255,255,255,.02)}
+.btn-pill--outline:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 10px 28px -10px rgba(217,255,67,.3)}
+.btn-pill:disabled{cursor:wait;opacity:.55;transform:none!important;box-shadow:none!important}
+
+/* Elevated card surface — rounded, hairline border, soft ambient shadow.
+   Used for anything that should read as a floating panel rather than a
+   flat editorial block. */
+.card-elevated{border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface);box-shadow:0 30px 70px -32px rgba(0,0,0,.65);transition:border-color .35s ease,box-shadow .35s ease,transform .35s cubic-bezier(.4,0,.2,1)}
+.card-elevated:hover{border-color:rgba(217,255,67,.28);box-shadow:0 34px 80px -28px rgba(217,255,67,.16),0 30px 70px -32px rgba(0,0,0,.65)}
 
 /* "Technical lab" disclosure — kept, restyled to the neutral system. */
-.lab-disclosure{position:relative;z-index:10;margin:1rem auto;max-width:80rem;border:1px solid var(--border);background:var(--surface)}
+.lab-disclosure{position:relative;z-index:10;margin:1rem auto;max-width:80rem;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
 .lab-disclosure>summary{cursor:pointer;list-style:none;padding:1.25rem 2rem;font:.68rem "JetBrains Mono",monospace;letter-spacing:.08em;color:var(--muted)}
 .lab-disclosure>summary::-webkit-details-marker{display:none}
 .lab-disclosure>summary::before{content:"+";margin-right:.75rem;color:var(--accent)}
 .lab-disclosure[open]>summary::before{content:"\2212"}
 .lab-disclosure>section{border-top:1px solid var(--border)}
+
+/* Floating hero console — the antigravity-style elevated product card,
+   docked over the 3D scene instead of a flat screenshot. */
+.hero-console{position:relative;border-radius:var(--radius-md);border:1px solid rgba(217,255,67,.2);background:rgba(16,17,16,.7);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 40px 100px -30px rgba(0,0,0,.8);overflow:hidden}
+.hero-console::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(217,255,67,.1),transparent 55%)}
+@media(prefers-reduced-motion:reduce){.hero-console{backdrop-filter:none;-webkit-backdrop-filter:none}}
 
 /* Editorial archive and spatial case-study narratives. */
 .case-nav{display:flex;align-items:center;justify-content:space-between;min-height:72px;padding:0 clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);font:500 10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -107,7 +132,7 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 .case-footer{display:flex;justify-content:space-between;padding:5rem clamp(1.25rem,4vw,4rem);font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.case-footer a{color:var(--accent)}
 .case-study-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(18rem,3fr);column-gap:clamp(2rem,7vw,8rem);min-height:calc(100svh - 72px);padding:clamp(6rem,12vw,10rem) clamp(1.25rem,4vw,4rem) 4rem}
 .case-study-meta{font:10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.case-study-meta p+p{margin-top:.6rem;color:var(--faint)}
-.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:500;line-height:.82;letter-spacing:-.07em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:#c9cbce}.case-repository{grid-column:2;justify-self:start;margin-top:3rem;border-bottom:1px solid var(--accent);padding-bottom:.45rem;font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:500;line-height:.82;letter-spacing:-.07em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:#c9cbce}.case-repository{grid-column:2;justify-self:start;margin-top:3rem;border:1px solid var(--accent);border-radius:var(--radius-pill);padding:.65rem 1.3rem;font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);transition:background-color .3s ease,color .3s ease,box-shadow .3s ease}.case-repository:hover{background:var(--accent);color:#0a0a0b;box-shadow:0 10px 28px -10px rgba(217,255,67,.4)}
 .case-signal{display:grid;grid-template-columns:minmax(10rem,1fr) minmax(18rem,3fr);gap:clamp(2rem,7vw,8rem);padding:4rem clamp(1.25rem,4vw,4rem);background:var(--accent);color:#10110d}.case-signal .eyebrow{color:#39420f}.case-signal>p:last-child{max-width:56rem;font-size:clamp(1.15rem,2.3vw,2rem);line-height:1.45}
 .case-architecture,.case-engineering{display:grid;grid-template-columns:minmax(15rem,1fr) minmax(18rem,2fr);gap:clamp(3rem,8vw,10rem);padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}
 .case-section-heading h2,.case-engineering h2{margin-top:1.5rem;font-size:clamp(2.5rem,5vw,5.5rem);font-weight:500;line-height:.95;letter-spacing:-.055em}.case-flow{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.case-flow li{display:grid;grid-template-columns:4rem 1fr;align-items:center;min-height:6.5rem;border-bottom:1px solid var(--border)}.case-flow span,.case-engineering li span{font:10px "JetBrains Mono",monospace;color:var(--faint)}.case-flow strong{font-size:clamp(1.15rem,2vw,1.65rem);font-weight:500}

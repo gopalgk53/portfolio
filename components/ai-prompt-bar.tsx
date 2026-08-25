@@ -64,7 +64,7 @@ export function AIPromptBar() {
 
   return (
     <div className="w-full max-w-3xl">
-      <motion.div layout transition={spring} className="border border-white/[.12] bg-white/[.015] p-5">
+      <motion.div layout transition={spring} className="rounded-[var(--radius-md)] border border-white/[.12] bg-white/[.015] p-5">
         <div className="mb-4 flex items-center justify-between text-xs text-[#83878c]">
           <span className="flex items-center gap-2">
             <Terminal className="h-3.5 w-3.5 text-[var(--accent)]" />
@@ -86,7 +86,7 @@ export function AIPromptBar() {
             whileTap={{ scale: 0.94 }}
             transition={spring}
             disabled={loading}
-            className="absolute right-2 top-2 border border-white/[.14] bg-[var(--accent)] p-2 text-white"
+            className="absolute right-2 top-2 rounded-full border border-white/[.14] bg-[var(--accent)] p-2 text-white"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CornerDownLeft className="h-4 w-4" />}
           </motion.button>

@@ -152,7 +152,7 @@ export function AIAssistant() {
             exit={{ opacity: 0, x: 12 }}
             transition={spring}
             onClick={() => setOpen(true)}
-            className="absolute bottom-2 right-16 w-64 border border-white/[.14] bg-[#0a0a0b]/95 p-3 text-left font-mono text-[11px] leading-5 text-[#c9cbce]"
+            className="card-elevated absolute bottom-2 right-16 w-64 bg-[#0a0a0b]/95 p-3 text-left font-mono text-[11px] leading-5 text-[#c9cbce]"
           >
             System online. Ask me about Gopal&apos;s AI stack…
           </motion.button>
@@ -184,7 +184,7 @@ export function AIAssistant() {
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
             exit={{ opacity: 0, scale: 0.72, y: 38, x: 24 }}
             transition={spring}
-            className={`flex h-[min(600px,78dvh)] w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden border bg-[#0a0a0b] ${warning ? "border-[#c9a25a]/50" : "border-white/[.14]"}`}
+            className={`flex h-[min(600px,78dvh)] w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-[var(--radius-md)] border bg-[#0a0a0b] shadow-[0_40px_100px_-30px_rgba(0,0,0,.85)] ${warning ? "border-[#c9a25a]/50" : "border-white/[.14]"}`}
           >
             <header className={`flex h-16 shrink-0 items-center justify-between border-b px-4 ${warning ? "border-[#c9a25a]/35" : "border-white/[.12]"}`}>
               <div>
@@ -206,12 +206,12 @@ export function AIAssistant() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={spring}
-                  className={`max-w-[90%] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-white/[.14] bg-transparent text-[#c9cbce]" : "border-l-2 border-[var(--accent)] bg-white/[.02] text-[#c9cbce]"}`}
+                  className={`max-w-[90%] rounded-[var(--radius-sm)] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-white/[.14] bg-transparent text-[#c9cbce]" : "border-l-2 border-[var(--accent)] bg-white/[.02] text-[#c9cbce]"}`}
                 >
                   {message.role === "assistant" ? <FormattedMessage text={message.text} /> : message.text}
                   {message.role === "assistant" && index === messages.length - 1 && thinking && <span className="ml-1 animate-pulse text-[var(--accent)]">▮</span>}
                   {message.warning && (
-                    <button onClick={reset} className="mt-3 flex items-center gap-2 border border-[#c9a25a]/30 px-3 py-2 font-mono text-[10px] text-[#c9a25a]">
+                    <button onClick={reset} className="mt-3 flex items-center gap-2 rounded-full border border-[#c9a25a]/30 px-3 py-2 font-mono text-[10px] text-[#c9a25a]">
                       <RotateCcw className="h-3 w-3" />
                       Reset session
                     </button>
@@ -222,7 +222,7 @@ export function AIAssistant() {
               {messages.length <= 1 && !thinking && (
                 <div className="flex flex-wrap gap-2">
                   {quick.map((item) => (
-                    <button key={item} onClick={() => respond(item)} className="border border-white/[.14] px-3 py-2 font-mono text-[10px] text-[#c9cbce] hover:border-[var(--accent)]">
+                    <button key={item} onClick={() => respond(item)} className="rounded-full border border-white/[.14] px-3 py-2 font-mono text-[10px] text-[#c9cbce] hover:border-[var(--accent)]">
                       {item}
                     </button>
                   ))}
@@ -237,9 +237,9 @@ export function AIAssistant() {
                 disabled={thinking}
                 aria-label="Ask Gopal AI assistant"
                 placeholder={thinking ? "Generating grounded answer…" : "Ask about stack, projects, or experience…"}
-                className="min-w-0 flex-1 border border-white/[.14] bg-white/[.02] px-3 py-3 font-mono text-[11px] text-[#ece9e2] outline-none focus:border-[var(--accent)]"
+                className="min-w-0 flex-1 rounded-[var(--radius-pill)] border border-white/[.14] bg-white/[.02] px-4 py-3 font-mono text-[11px] text-[#ece9e2] outline-none focus:border-[var(--accent)]"
               />
-              <button disabled={thinking || !input.trim()} aria-label="Send message" className="grid w-11 place-items-center border border-white/[.14] bg-[var(--accent-soft)] text-[var(--accent)] disabled:opacity-30">
+              <button disabled={thinking || !input.trim()} aria-label="Send message" className="grid w-11 shrink-0 place-items-center rounded-full border border-white/[.14] bg-[var(--accent-soft)] text-[var(--accent)] disabled:opacity-30">
                 <Send className="h-4 w-4" />
               </button>
             </form>

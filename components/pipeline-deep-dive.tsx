@@ -21,15 +21,15 @@ export function PipelineDeepDive() {
           <h2 className="mt-3 text-4xl font-bold tracking-[-.03em] sm:text-6xl">Inside a production RAG loop.</h2>
           <p className="mt-5 max-w-2xl text-[#83878c]">Select a stage to isolate its responsibilities and inspect the architecture.</p>
         </header>
-        <div className="grid gap-6 border border-white/[.12] bg-white/[.015] p-6 lg:grid-cols-[1.65fr_.85fr] lg:p-8">
-          <div className="relative overflow-x-auto border border-white/[.08] bg-[linear-gradient(rgba(79,107,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(79,107,255,.035)_1px,transparent_1px)] bg-[size:32px_32px] p-6">
+        <div className="grid gap-6 rounded-[var(--radius-md)] border border-white/[.12] bg-white/[.015] p-6 lg:grid-cols-[1.65fr_.85fr] lg:p-8">
+          <div className="relative overflow-x-auto rounded-[var(--radius-sm)] border border-white/[.08] bg-[linear-gradient(rgba(79,107,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(79,107,255,.035)_1px,transparent_1px)] bg-[size:32px_32px] p-6">
             <div className="flex min-w-[850px] items-center gap-3">
               {stages.map((stage, i) => (
                 <div className="contents" key={stage.name}>
                   <motion.button
                     onClick={() => setSelected(i)}
                     animate={{ opacity: selected === i ? 1 : 0.32, scale: selected === i ? 1.035 : 1 }}
-                    className="relative h-28 w-32 shrink-0 border bg-black/60 p-3 text-left"
+                    className="relative h-28 w-32 shrink-0 rounded-[var(--radius-sm)] border bg-black/60 p-3 text-left"
                     style={{ borderColor: selected === i ? "var(--accent)" : "rgba(255,255,255,.12)" }}
                   >
                     <span className="font-mono text-[8px] text-[#6c7075]">STAGE_0{i + 1}</span>
@@ -44,7 +44,7 @@ export function PipelineDeepDive() {
               ))}
             </div>
           </div>
-          <aside className="border border-white/[.12] bg-black/40 p-6">
+          <aside className="rounded-[var(--radius-sm)] border border-white/[.12] bg-black/40 p-6">
             <p className="font-mono text-[9px] text-[#83878c]">ACTIVE_COORDINATE / 0{selected + 1}</p>
             <h3 className="mt-5 text-2xl font-semibold text-[#ece9e2]">{stages[selected].name}</h3>
             <p className="mt-4 text-sm leading-7 text-[#83878c]">{stages[selected].detail}</p>

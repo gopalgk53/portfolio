@@ -80,7 +80,7 @@ function About() {
     <Section id="about" scene="identity">
       <div className="grid gap-10 lg:grid-cols-[.72fr_1.28fr]">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.35 }} transition={spring} className="relative">
-          <div className="aspect-[4/5] overflow-hidden bg-[#111214]">
+          <div className="card-elevated aspect-[4/5] overflow-hidden bg-[#111214]">
             <img src="/gopalakrishna.jpg" alt="Gopalakrishna, Generative AI Engineer" loading="lazy" className="h-full w-full object-cover" />
           </div>
           <div className="mt-4 flex justify-between border-t border-white/[.14] pt-3 text-xs">
@@ -119,9 +119,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <motion.article
       layout
-      whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0, 217, 255, 0.1)" }}
+      whileHover={{ y: -6 }}
       transition={spring}
-      className="group relative grid min-h-[360px] overflow-hidden border-t border-white/15 py-10 md:grid-cols-[7rem_1fr_1fr] md:gap-10 md:py-14"
+      className="card-elevated group relative grid min-h-[360px] overflow-hidden px-6 py-10 md:grid-cols-[7rem_1fr_1fr] md:gap-10 md:px-8 md:py-14"
     >
       <div className="text-[11px] text-[#6c7075]">{String(index + 1).padStart(2, "0")} / 09</div>
       <div className="relative z-10">
@@ -258,7 +258,7 @@ function Projects() {
       <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
       <FlagshipProject project={multiAgent} index={multiAgentIndex} scene="agents" viz={<AgentFlow flow={multiAgent.flow} domains={AGENT_DOMAINS} />} />
 
-      <div className="mt-24">
+      <div className="mt-24 flex flex-col gap-6">
         {rest.map((p) => (
           <ProjectCard key={p.id} project={p} index={projects.indexOf(p)} />
         ))}
@@ -366,7 +366,7 @@ function Certifications() {
           );
         })}
       </div>
-      <motion.button onClick={() => setAll(!all)} whileTap={{ scale: 0.97 }} transition={spring} className="mt-7 border-b border-[var(--accent)] pb-1 text-sm">
+      <motion.button onClick={() => setAll(!all)} whileTap={{ scale: 0.97 }} transition={spring} className="btn-pill btn-pill--outline mt-7">
         {all ? "Show featured" : `View all ${certifications.length} credentials`}
       </motion.button>
     </Section>
@@ -428,7 +428,7 @@ function Contact() {
               );
             })}
           </div>
-          <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="mt-7 inline-flex border-b border-[var(--accent)] pb-1 text-sm">
+          <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--outline mt-7">
             Download résumé
           </a>
         </div>
@@ -447,7 +447,7 @@ function Contact() {
           <label className="mt-5 block font-mono text-[9px] uppercase tracking-[.14em] text-[#83878c]">Message<textarea name="message" placeholder="Tell me about your project or role" rows={5} minLength={10} maxLength={3000} required className="field mt-2 resize-none" /></label>
           <div className="mt-7 flex flex-wrap items-center gap-4">
             <Magnetic>
-              <motion.button whileHover={sending ? undefined : { y: -2 }} whileTap={sending ? undefined : { scale: 0.97 }} transition={spring} disabled={sending} className="bg-[#ece9e2] px-5 py-3 text-sm font-semibold text-[#0a0a0b] disabled:cursor-wait disabled:opacity-60">
+              <motion.button whileTap={sending ? undefined : { scale: 0.97 }} transition={spring} disabled={sending} className="btn-pill btn-pill--solid">
                 {sending ? "Sending…" : "Send message"}
               </motion.button>
             </Magnetic>
