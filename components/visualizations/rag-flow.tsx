@@ -31,7 +31,7 @@ export function RagFlow({ flow }: { flow: string }) {
   }, [visible, paused, stages.length]);
 
   return (
-    <div ref={root} className="border border-white/[.12] bg-white/[.015] p-6 sm:p-8">
+    <div ref={root} className="glass-panel p-6 sm:p-8">
       <p className="eyebrow mb-8">Retrieval loop</p>
       <div className="flex flex-wrap items-center gap-y-6 overflow-x-auto pb-2 sm:flex-nowrap sm:gap-0">
         {stages.map((stage, i) => (
@@ -46,8 +46,8 @@ export function RagFlow({ flow }: { flow: string }) {
               {active === i && (
                 <motion.span layoutId="rag-active" transition={spring} className="absolute -inset-x-2 -inset-y-2 border border-[var(--accent)]" />
               )}
-              <span className="relative font-mono text-[9px] text-[#5b5f64]">{String(i + 1).padStart(2, "0")}</span>
-              <span className={`relative whitespace-nowrap font-mono text-[11px] uppercase tracking-[.08em] ${active === i ? "text-[#ece9e2]" : "text-[#83878c]"}`}>{stage}</span>
+              <span className="relative font-mono text-[9px] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
+              <span className={`relative whitespace-nowrap font-mono text-[11px] uppercase tracking-[.08em] ${active === i ? "text-white" : "text-[var(--muted)]"}`}>{stage}</span>
             </button>
             {i < stages.length - 1 && (
               <span className="relative mx-3 h-px w-8 shrink-0 bg-white/[.14] sm:w-10">
@@ -63,7 +63,7 @@ export function RagFlow({ flow }: { flow: string }) {
           </div>
         ))}
       </div>
-      <p className="mt-8 max-w-lg text-sm leading-6 text-[#83878c]">
+      <p className="mt-8 max-w-lg text-sm leading-6 text-[var(--muted)]">
         Documents are embedded and indexed ahead of time; at query time the retriever pulls and reranks the closest matches before the LLM
         generates a grounded, source-aware answer.
       </p>

@@ -43,25 +43,25 @@ export function InfrastructureDashboard() {
         <header className="mb-12">
           <p className="eyebrow">Infrastructure observability</p>
           <h2 className="mt-3 text-4xl font-bold tracking-[-.03em] sm:text-6xl">Model execution, made observable.</h2>
-          <p className="mt-5 max-w-2xl text-[#83878c]">Browser-generated observability data demonstrating inference monitoring interface design.</p>
-          <span className="mt-4 inline-block rounded-full border border-white/[.14] px-3 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[#9a9ea3]">Simulated runtime telemetry</span>
+          <p className="mt-5 max-w-2xl text-[var(--muted)]">Browser-generated observability data demonstrating inference monitoring interface design.</p>
+          <span className="mt-4 inline-block rounded-full border border-white/[.14] px-3 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--muted)]">Simulated runtime telemetry</span>
         </header>
         <div className="grid gap-5 lg:grid-cols-2">
           <article className={`${panel} min-h-[350px]`}>
             <div className="flex justify-between font-mono text-[9px]">
-              <span className="text-[#83878c]">NODE_01 / RUNTIME</span>
+              <span className="text-[var(--muted)]">NODE_01 / RUNTIME</span>
               <span className="text-[#8fae90]">● ACTIVE</span>
             </div>
             <div className="mt-6 rounded-[var(--radius-sm)] border border-white/[.08] bg-black/40 p-4 font-mono text-[10px] leading-7">
               {logs.map((x, i) => (
-                <motion.p key={x} animate={{ opacity: resetting ? 0 : 0.35 + i * 0.18, x: resetting ? -8 : 0 }} transition={spring} className="text-[#83878c]">
+                <motion.p key={x} animate={{ opacity: resetting ? 0 : 0.35 + i * 0.18, x: resetting ? -8 : 0 }} transition={spring} className="text-[var(--muted)]">
                   [{String(tick + i).padStart(4, "0")}] {x}...
                 </motion.p>
               ))}
             </div>
             <div className="mt-6 flex gap-2 overflow-x-auto">
               {models.map((x) => (
-                <button key={x} onClick={() => setModel(x)} className={`whitespace-nowrap rounded-full border px-3 py-2 font-mono text-[9px] transition-colors ${model === x ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[#ece9e2]" : "border-white/[.1] text-[#6c7075]"}`}>
+                <button key={x} onClick={() => setModel(x)} className={`whitespace-nowrap rounded-full border px-3 py-2 font-mono text-[9px] transition-colors ${model === x ? "border-[var(--accent)] bg-[var(--accent-soft)] text-white" : "border-white/[.1] text-[var(--faint)]"}`}>
                   {x}
                 </button>
               ))}
@@ -69,28 +69,28 @@ export function InfrastructureDashboard() {
           </article>
           <article className={`${panel} min-h-[350px]`}>
             <div className="flex justify-between font-mono text-[9px]">
-              <span className="text-[#83878c]">NODE_02 / TOKEN_THROUGHPUT</span>
-              <b className="text-[#ece9e2]">{resetting ? 0 : Math.round(data.at(-1) || 0)} TPS</b>
+              <span className="text-[var(--muted)]">NODE_02 / TOKEN_THROUGHPUT</span>
+              <b className="text-white">{resetting ? 0 : Math.round(data.at(-1) || 0)} TPS</b>
             </div>
             <svg viewBox="0 0 100 60" className="mt-8 h-56 w-full" role="img" aria-label="Simulated tokens per second sparkline">
               <defs>
                 <linearGradient id="spark" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#4f6bff" stopOpacity=".22" />
-                  <stop offset="1" stopColor="#4f6bff" stopOpacity="0" />
+                  <stop offset="0" stopColor="var(--accent)" stopOpacity=".22" />
+                  <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
                 </linearGradient>
               </defs>
               {[15, 30, 45].map((y) => (
-                <line key={y} x1="0" x2="100" y1={y} y2={y} stroke="#26282c" strokeWidth=".25" />
+                <line key={y} x1="0" x2="100" y1={y} y2={y} stroke="rgba(255,255,255,.08)" strokeWidth=".25" />
               ))}
               <polygon points={`0,60 ${resetting ? "0,54 100,54" : points} 100,60`} fill="url(#spark)" />
-              <polyline points={resetting ? "0,54 100,54" : points} fill="none" stroke="#4f6bff" strokeWidth=".65" vectorEffect="non-scaling-stroke" />
+              <polyline points={resetting ? "0,54 100,54" : points} fill="none" stroke="var(--accent)" strokeWidth=".65" vectorEffect="non-scaling-stroke" />
             </svg>
-            <p className="font-mono text-[9px] text-[#6c7075]">MODEL: {model} · POLL: 1.5s</p>
+            <p className="font-mono text-[9px] text-[var(--faint)]">MODEL: {model} · POLL: 1.5s</p>
           </article>
           <article className={`${panel} min-h-[330px]`}>
             <div className="flex justify-between font-mono text-[9px]">
-              <span className="text-[#83878c]">NODE_03 / LATENCY</span>
-              <span className="text-[#6c7075]">SIMULATED</span>
+              <span className="text-[var(--muted)]">NODE_03 / LATENCY</span>
+              <span className="text-[var(--faint)]">SIMULATED</span>
             </div>
             <div className="mt-8 space-y-7">
               {[
@@ -100,8 +100,8 @@ export function InfrastructureDashboard() {
               ].map(([label, ms, width]) => (
                 <div key={label as string}>
                   <div className="mb-2 flex justify-between font-mono text-[10px]">
-                    <span className="text-[#83878c]">{label}</span>
-                    <span className="text-[#ece9e2]">{resetting ? 0 : ms}ms</span>
+                    <span className="text-[var(--muted)]">{label}</span>
+                    <span className="text-white">{resetting ? 0 : ms}ms</span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full border border-white/[.1] bg-black/40">
                     <motion.div animate={{ width: resetting ? 0 : `${width}%` }} transition={spring} className="h-full bg-[var(--accent)] opacity-80" />
@@ -112,8 +112,8 @@ export function InfrastructureDashboard() {
           </article>
           <article className={`${panel} min-h-[330px]`}>
             <div className="flex justify-between font-mono text-[9px]">
-              <span className="text-[#83878c]">NODE_04 / SUMMARY</span>
-              <span className="text-[#6c7075]">DEMO DATA</span>
+              <span className="text-[var(--muted)]">NODE_04 / SUMMARY</span>
+              <span className="text-[var(--faint)]">DEMO DATA</span>
             </div>
             <div className="mt-7 grid gap-5">
               {[
@@ -122,8 +122,8 @@ export function InfrastructureDashboard() {
                 ["COMPUTE_EFFICIENCY_INDEX", "87.2"],
               ].map(([label, value]) => (
                 <div key={label}>
-                  <p className="font-mono text-[9px] text-[#6c7075]">{label}</p>
-                  <motion.b animate={{ opacity: resetting ? 0.2 : 1 }} className="mt-1 block text-3xl tabular-nums text-[#ece9e2]">
+                  <p className="font-mono text-[9px] text-[var(--faint)]">{label}</p>
+                  <motion.b animate={{ opacity: resetting ? 0.2 : 1 }} className="mt-1 block text-3xl tabular-nums text-white">
                     {resetting ? "0" : value}
                   </motion.b>
                 </div>

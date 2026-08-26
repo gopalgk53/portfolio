@@ -108,7 +108,7 @@ export function PromptPlayground() {
   return (
     <div>
       <div className="mb-5 flex items-center justify-between gap-4">
-        <p className="font-mono text-[10px] uppercase tracking-[.1em] text-[#6c7075]">Status: {status}</p>
+        <p className="font-mono text-[10px] uppercase tracking-[.1em] text-[var(--faint)]">Status: {status}</p>
         <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }} transition={spring} onClick={reset} className="btn-pill btn-pill--outline">
           <RotateCcw className="h-3 w-3" />
           Reset
@@ -117,8 +117,8 @@ export function PromptPlayground() {
       <div className="grid gap-5 xl:grid-cols-[1.05fr_.9fr_1.25fr]">
         <motion.article animate={{ opacity: focus === 0 || focus === 1 ? 1 : 0.55 }} transition={spring} className={`${panel} flex min-h-[500px] flex-col p-5 ${status === "error" ? "!border-[#c96a6a]/70" : ""}`} onFocus={() => setFocus(1)} onBlur={() => setFocus(0)}>
           <header className="flex justify-between text-xs">
-            <span className="font-medium text-[#c9cbce]">Write a prompt</span>
-            <span className={status === "error" ? "text-[#c96a6a]" : "text-[#6c7075]"}>{status === "error" ? "Add a prompt" : prompt ? "Ready" : "Empty"}</span>
+            <span className="font-medium text-[var(--muted)]">Write a prompt</span>
+            <span className={status === "error" ? "text-[#c96a6a]" : "text-[var(--faint)]"}>{status === "error" ? "Add a prompt" : prompt ? "Ready" : "Empty"}</span>
           </header>
           <div className="relative mt-5">
             <span className="absolute left-3 top-3 font-mono text-sm text-[var(--accent)]">›</span>
@@ -131,21 +131,21 @@ export function PromptPlayground() {
               }}
               rows={8}
               placeholder={status === "error" ? "Add a prompt to inspect model behavior." : "Enter a prompt to inspect model behavior…"}
-              className="w-full resize-none rounded-[var(--radius-sm)] border border-white/[.12] bg-black/40 py-3 pl-8 pr-3 font-mono text-xs leading-6 text-[#c9cbce] outline-none focus:border-[var(--accent)]"
+              className="w-full resize-none rounded-[var(--radius-sm)] border border-white/[.12] bg-black/40 py-3 pl-8 pr-3 font-mono text-xs leading-6 text-[var(--muted)] outline-none focus:border-[var(--accent)]"
             />
           </div>
-          <div className="mt-2 flex gap-4 font-mono text-[9px] text-[#6c7075]">
+          <div className="mt-2 flex gap-4 font-mono text-[9px] text-[var(--faint)]">
             <span>CHARS: {prompt.length}</span>
             <span>TOKENS_EST: {Math.ceil(prompt.length / 4)}</span>
             <span>GROUNDING: ON</span>
           </div>
           <div className="mt-6 space-y-5">
-            <label className="block font-mono text-[10px] text-[#83878c]">
-              TEMPERATURE <b className="float-right text-[#ece9e2]">{temperature.toFixed(1)}</b>
+            <label className="block font-mono text-[10px] text-[var(--muted)]">
+              TEMPERATURE <b className="float-right text-white">{temperature.toFixed(1)}</b>
               <input type="range" min="0" max="1.5" step=".1" value={temperature} disabled={status === "computing" || status === "streaming"} onChange={(e) => setTemperature(Number(e.target.value))} className="mt-3 w-full accent-[var(--accent)]" />
             </label>
-            <label className="block font-mono text-[10px] text-[#83878c]">
-              TOP-P <b className="float-right text-[#ece9e2]">{topP.toFixed(1)}</b>
+            <label className="block font-mono text-[10px] text-[var(--muted)]">
+              TOP-P <b className="float-right text-white">{topP.toFixed(1)}</b>
               <input type="range" min=".1" max="1" step=".1" value={topP} disabled={status === "computing" || status === "streaming"} onChange={(e) => setTopP(Number(e.target.value))} className="mt-3 w-full accent-[var(--accent)]" />
             </label>
           </div>
@@ -156,17 +156,17 @@ export function PromptPlayground() {
 
         <motion.article animate={{ opacity: focus === 0 || focus === 2 ? 1 : 0.55 }} transition={spring} className={`${panel} min-h-[500px] p-5`} onPointerDown={() => setFocus(2)}>
           <header className="flex justify-between text-xs">
-            <span className="font-medium text-[#c9cbce]">Compare approaches</span>
-            <span className="text-[#6c7075]">Basic ↔ structured</span>
+            <span className="font-medium text-[var(--muted)]">Compare approaches</span>
+            <span className="text-[var(--faint)]">Basic ↔ structured</span>
           </header>
           <div className="relative mt-5 h-[390px] overflow-hidden rounded-[var(--radius-sm)] border border-white/[.1] bg-black/40">
-            <div className="absolute inset-0 p-5 font-mono text-[10px] leading-6 text-[#6c7075]">
-              <b className="text-[#83878c]">NAIVE PROMPT</b>
+            <div className="absolute inset-0 p-5 font-mono text-[10px] leading-6 text-[var(--faint)]">
+              <b className="text-[var(--muted)]">NAIVE PROMPT</b>
               <p className="mt-5">Answer my question about this document. Make the answer useful.</p>
               <p className="mt-8 text-[#c96a6a]/70">RISK: HIGH AMBIGUITY</p>
             </div>
-            <div style={{ clipPath: `inset(0 0 0 ${divider}%)` }} className="absolute inset-0 bg-[#0a0a0b] p-5 font-mono text-[10px] leading-6 text-[#c9cbce]">
-              <b className="text-[#ece9e2]">OPTIMIZED SYSTEM PROMPT</b>
+            <div style={{ clipPath: `inset(0 0 0 ${divider}%)` }} className="absolute inset-0 bg-[var(--bg)] p-5 font-mono text-[10px] leading-6 text-[var(--muted)]">
+              <b className="text-white">OPTIMIZED SYSTEM PROMPT</b>
               <p className="mt-5">
                 <span className="text-[var(--accent)]">ROLE:</span> Evidence-grounded legal assistant
                 <br />
@@ -182,7 +182,7 @@ export function PromptPlayground() {
             </div>
             <div style={{ left: `${divider}%` }} className="pointer-events-none absolute inset-y-0 w-px bg-[var(--accent)]" />
             <input aria-label="Compare naive and optimized prompt" type="range" min="5" max="95" value={divider} onChange={(e) => setDivider(Number(e.target.value))} className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0" />
-            <div style={{ left: `calc(${divider}% - 18px)` }} className="pointer-events-none absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/[.2] bg-[#0a0a0b] font-mono text-[9px] text-[#c9cbce]">
+            <div style={{ left: `calc(${divider}% - 18px)` }} className="pointer-events-none absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/[.2] bg-[var(--bg)] font-mono text-[9px] text-[var(--muted)]">
               ↔
             </div>
           </div>
@@ -190,13 +190,13 @@ export function PromptPlayground() {
 
         <motion.article animate={{ opacity: focus === 0 || focus === 3 ? 1 : 0.55 }} transition={spring} className={`${panel} flex min-h-[500px] flex-col p-5`} onPointerDown={() => setFocus(3)}>
           <header className="flex justify-between text-xs">
-            <span className="font-medium text-[#c9cbce]">Example output</span>
-            <span className="text-[#83878c]">{status === "idle" || status === "ready" || status === "error" ? "Waiting" : status}</span>
+            <span className="font-medium text-[var(--muted)]">Example output</span>
+            <span className="text-[var(--muted)]">{status === "idle" || status === "ready" || status === "error" ? "Waiting" : status}</span>
           </header>
-          <div ref={outputRef} className="relative mt-5 flex-1 overflow-y-auto rounded-[var(--radius-sm)] border border-white/[.1] bg-black/40 p-5 font-mono text-xs leading-7 text-[#c9cbce]">
-            {(status === "idle" || status === "ready" || status === "error") && <p className="text-[#4b4e52]">Awaiting execution. Enter a prompt and run it.</p>}
+          <div ref={outputRef} className="relative mt-5 flex-1 overflow-y-auto rounded-[var(--radius-sm)] border border-white/[.1] bg-black/40 p-5 font-mono text-xs leading-7 text-[var(--muted)]">
+            {(status === "idle" || status === "ready" || status === "error") && <p className="text-[var(--faint)]">Awaiting execution. Enter a prompt and run it.</p>}
             {status === "computing" && (
-              <div className="grid h-full place-items-center text-center text-[#83878c]">
+              <div className="grid h-full place-items-center text-center text-[var(--muted)]">
                 <div>
                   <Sparkles className="mx-auto mb-4 h-5 w-5 animate-pulse" />
                   <p>Calling the live model…</p>
@@ -214,10 +214,10 @@ export function PromptPlayground() {
             <p className="mt-2 font-mono text-[9px] text-[#c96a6a]">{errorMessage} Showing a static example instead.</p>
           )}
           <footer className="mt-4 border-t border-white/[.1] pt-3">
-            <p className="mb-2 font-mono text-[8px] uppercase tracking-[.14em] text-[#4b4e52]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
+            <p className="mb-2 font-mono text-[8px] uppercase tracking-[.14em] text-[var(--faint)]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
             <div className="flex justify-between gap-4 font-mono text-[9px]">
-              <span className="text-[#83878c]">LATENCY: {latency > 0 ? `${latency.toFixed(0)}ms` : "—"}</span>
-              <span className="text-[#83878c]">TOKENS: {tokens > 0 ? tokens : "—"}</span>
+              <span className="text-[var(--muted)]">LATENCY: {latency > 0 ? `${latency.toFixed(0)}ms` : "—"}</span>
+              <span className="text-[var(--muted)]">TOKENS: {tokens > 0 ? tokens : "—"}</span>
             </div>
           </footer>
         </motion.article>

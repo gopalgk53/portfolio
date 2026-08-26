@@ -65,20 +65,20 @@ export function Hero() {
       <nav className="site-nav" data-scrolled={scrolled} aria-label="Primary navigation">
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 sm:px-8">
           <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`font-mono text-[10px] uppercase tracking-[.28em] ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>GK / AI systems</a>
-          <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[.12em] text-[#9b9b96] md:flex">
+          <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[.12em] text-[var(--muted)] md:flex">
             {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} className={activeId === id ? "text-[var(--accent)]" : undefined}>{label}</a>)}
-            <SoundToggle className="text-[#9b9b96]" />
+            <SoundToggle className="text-[var(--muted)]" />
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--solid">Résumé <ArrowUpRight className="h-3 w-3" /></a>
           </div>
           <div className="flex items-center gap-3 md:hidden">
-            <SoundToggle className="text-[#9b9b96]" />
+            <SoundToggle className="text-[var(--muted)]" />
             <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center rounded-full border border-white/15">
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
         </div>
         <AnimatePresence>{menuOpen && (
-          <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-white/10 bg-[#080909] px-5 py-5 md:hidden">
+          <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-white/10 bg-[var(--bg)] px-5 py-5 md:hidden">
             {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-white/10 py-4 text-sm uppercase tracking-wider ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
           </motion.div>
@@ -88,9 +88,9 @@ export function Hero() {
 
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
         <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 sm:left-8">
-          <p className="font-sans text-[15px] font-medium uppercase leading-6 tracking-[.1em] text-[#f0eee7] sm:text-[17px]">Gopalakrishna Maddipalli</p>
-          <p className="mt-1 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[#777873]">Generative AI engineer</p>
-          <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[#777873]">India · 2026</p>
+          <p className="font-sans text-[15px] font-medium uppercase leading-6 tracking-[.1em] text-white sm:text-[17px]">Gopalakrishna Maddipalli</p>
+          <p className="mt-1 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">Generative AI engineer</p>
+          <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
           <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--signal)]">Systems that reason with context</p>
@@ -99,8 +99,8 @@ export function Hero() {
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="block text-right">Intelligence</motion.span>
           </h1>
           <div className="mt-8 grid gap-8 border-t border-white/15 pt-5 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
-            <p className="max-w-md text-sm leading-6 text-[#aaa9a3]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
-            <p className="max-w-sm text-sm leading-6 text-[#777873]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
+            <p className="max-w-md text-sm leading-6 text-[var(--muted)]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
+            <p className="max-w-sm text-sm leading-6 text-[var(--muted)]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               <a href="#projects" className="flex items-center gap-3 text-xs uppercase tracking-[.16em]">Enter systems <ArrowDown className="h-4 w-4" /></a>
             </div>
@@ -112,23 +112,26 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           style={reducedMotion ? undefined : { y: metaY }}
-          className="hero-console absolute bottom-24 left-5 z-20 hidden w-[19rem] px-5 py-4 sm:left-8 lg:block"
+          className="hero-console absolute right-5 top-28 z-20 hidden w-[19rem] px-5 py-4 sm:right-8 lg:block"
         >
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] uppercase tracking-[.18em] text-[#8b8f95]">Agent status</span>
+            <span className="font-mono text-[9px] uppercase tracking-[.18em] text-[var(--muted)]">Agent status</span>
             <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--accent)]">
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
               Online
             </span>
           </div>
-          <p className="mt-3 font-mono text-[11px] leading-6 text-[#c9cbce]">retrieval → rerank → grounded generation</p>
-          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 font-mono text-[9px] uppercase tracking-[.14em] text-[#6c7075]">
+          <p className="mt-3 font-mono text-[11px] leading-6 text-white/80">retrieval → rerank → grounded generation</p>
+          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">
             <span>Stack · RAG + Agents</span>
             <span>Mode · Grounded</span>
           </div>
         </motion.div>
-        <div className="absolute bottom-7 left-5 font-mono text-[9px] uppercase tracking-[.18em] text-[#666762] sm:left-8">Scroll / camera enabled</div>
-        <div className="absolute bottom-7 right-5 font-mono text-[9px] uppercase tracking-[.18em] text-[#666762] sm:right-8">LLMs · RAG · Agents · AWS</div>
+        <div className="absolute bottom-20 left-5 hidden items-center gap-2.5 font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)] sm:left-8 sm:flex">
+          <span className="scroll-cue" aria-hidden="true" />
+          Scroll / camera enabled
+        </div>
+        <div className="absolute bottom-20 right-5 hidden font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)] sm:right-8 sm:block">LLMs · RAG · Agents · AWS</div>
       </section>
     </div>
   );
