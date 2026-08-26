@@ -43,13 +43,13 @@ export function Preloader() {
       initial={false}
       animate={phase === "exit" ? { y: "-100%" } : { y: "0%" }}
       transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
-      className="fixed inset-0 z-[200] grid place-items-center bg-[#0a0a0b]"
+      className="fixed inset-0 z-[200] grid place-items-center bg-[var(--bg)]"
     >
       <div className="text-center">
         <p className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-semibold uppercase tracking-[.14em]">Gopalakrishna</p>
-        <p className="mt-4 font-mono text-[10px] tracking-[.3em] text-[#6c7075]">{String(progress).padStart(2, "0")}%</p>
+        <p className="mt-4 font-mono text-[10px] tracking-[.3em] text-[var(--muted)]">{String(progress).padStart(2, "0")}%</p>
       </div>
-      <p className="absolute bottom-8 font-mono text-[9px] uppercase tracking-[.3em] text-[#4b4e52]">Generative AI Engineer</p>
+      <p className="absolute bottom-8 font-mono text-[9px] uppercase tracking-[.3em] text-[var(--faint)]">Generative AI Engineer</p>
     </motion.div>
   );
 }

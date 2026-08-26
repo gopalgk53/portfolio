@@ -20,7 +20,7 @@ const blocked = /ignore previous|system prompt|write a poem|cats|jailbreak|devel
 function inlineFormat(text: string): ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, index) =>
     part.startsWith("**") && part.endsWith("**")
-      ? <strong key={index} className="font-semibold text-[#f0eee7]">{part.slice(2, -2)}</strong>
+      ? <strong key={index} className="font-semibold text-white">{part.slice(2, -2)}</strong>
       : <span key={index}>{part}</span>,
   );
 }
@@ -152,7 +152,7 @@ export function AIAssistant() {
             exit={{ opacity: 0, x: 12 }}
             transition={spring}
             onClick={() => setOpen(true)}
-            className="card-elevated absolute bottom-2 right-16 w-64 bg-[#0a0a0b]/95 p-3 text-left font-mono text-[11px] leading-5 text-[#c9cbce]"
+            className="card-elevated absolute bottom-2 right-16 w-64 bg-[var(--bg)]/95 p-3 text-left font-mono text-[11px] leading-5 text-[var(--muted)]"
           >
             System online. Ask me about Gopal&apos;s AI stack…
           </motion.button>
@@ -170,7 +170,7 @@ export function AIAssistant() {
             exit={{ scale: 0.7, opacity: 0 }}
             whileHover={{ scale: 1.06 }}
             transition={spring}
-            className="grid h-14 w-14 place-items-center rounded-full border border-white/[.16] bg-[#0a0a0b] text-[var(--accent)]"
+            className="grid h-14 w-14 place-items-center rounded-full border border-white/[.16] bg-[var(--bg)] text-[var(--accent)]"
           >
             <Bot className="h-6 w-6" />
           </motion.button>
@@ -184,17 +184,17 @@ export function AIAssistant() {
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
             exit={{ opacity: 0, scale: 0.72, y: 38, x: 24 }}
             transition={spring}
-            className={`flex h-[min(600px,78dvh)] w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-[var(--radius-md)] border bg-[#0a0a0b] shadow-[0_40px_100px_-30px_rgba(0,0,0,.85)] ${warning ? "border-[#c9a25a]/50" : "border-white/[.14]"}`}
+            className={`flex h-[min(600px,78dvh)] w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-[var(--radius-md)] border bg-[var(--bg)] shadow-[0_40px_100px_-30px_rgba(0,0,0,.85)] ${warning ? "border-[#c9a25a]/50" : "border-white/[.14]"}`}
           >
             <header className={`flex h-16 shrink-0 items-center justify-between border-b px-4 ${warning ? "border-[#c9a25a]/35" : "border-white/[.12]"}`}>
               <div>
-                <h2 id="gopal-assistant-title" className="font-mono text-xs text-[#ece9e2]">
+                <h2 id="gopal-assistant-title" className="font-mono text-xs text-white">
                   Gopal-Bot v1.0 <span className="text-[#8fae90]">[online]</span>
                 </h2>
-                <p id="gopal-assistant-description" className="mt-1 font-mono text-[9px] text-[#6c7075]">Portfolio context assistant</p>
+                <p id="gopal-assistant-description" className="mt-1 font-mono text-[9px] text-[var(--faint)]">Portfolio context assistant</p>
               </div>
               <div className="flex">
-                <button onClick={() => closeAssistant()} aria-label="Minimize assistant" className="grid h-10 w-10 place-items-center text-[#83878c] hover:text-[var(--accent)]">
+                <button onClick={() => closeAssistant()} aria-label="Minimize assistant" className="grid h-10 w-10 place-items-center text-[var(--muted)] hover:text-[var(--accent)]">
                   <Minimize2 className="h-4 w-4" />
                 </button>
               </div>
@@ -206,7 +206,7 @@ export function AIAssistant() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={spring}
-                  className={`max-w-[90%] rounded-[var(--radius-sm)] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-white/[.14] bg-transparent text-[#c9cbce]" : "border-l-2 border-[var(--accent)] bg-white/[.02] text-[#c9cbce]"}`}
+                  className={`max-w-[90%] rounded-[var(--radius-sm)] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-white/[.14] bg-transparent text-[var(--muted)]" : "border-l-2 border-[var(--accent)] bg-white/[.02] text-[var(--muted)]"}`}
                 >
                   {message.role === "assistant" ? <FormattedMessage text={message.text} /> : message.text}
                   {message.role === "assistant" && index === messages.length - 1 && thinking && <span className="ml-1 animate-pulse text-[var(--accent)]">▮</span>}
@@ -218,11 +218,11 @@ export function AIAssistant() {
                   )}
                 </motion.div>
               ))}
-              {thinking && messages[messages.length - 1]?.role !== "assistant" && <div className="font-mono text-[10px] text-[#83878c]">Retrieving portfolio context and generating an answer…</div>}
+              {thinking && messages[messages.length - 1]?.role !== "assistant" && <div className="font-mono text-[10px] text-[var(--muted)]">Retrieving portfolio context and generating an answer…</div>}
               {messages.length <= 1 && !thinking && (
                 <div className="flex flex-wrap gap-2">
                   {quick.map((item) => (
-                    <button key={item} onClick={() => respond(item)} className="rounded-full border border-white/[.14] px-3 py-2 font-mono text-[10px] text-[#c9cbce] hover:border-[var(--accent)]">
+                    <button key={item} onClick={() => respond(item)} className="rounded-full border border-white/[.14] px-3 py-2 font-mono text-[10px] text-[var(--muted)] hover:border-[var(--accent)]">
                       {item}
                     </button>
                   ))}
@@ -237,7 +237,7 @@ export function AIAssistant() {
                 disabled={thinking}
                 aria-label="Ask Gopal AI assistant"
                 placeholder={thinking ? "Generating grounded answer…" : "Ask about stack, projects, or experience…"}
-                className="min-w-0 flex-1 rounded-[var(--radius-pill)] border border-white/[.14] bg-white/[.02] px-4 py-3 font-mono text-[11px] text-[#ece9e2] outline-none focus:border-[var(--accent)]"
+                className="min-w-0 flex-1 rounded-[var(--radius-pill)] border border-white/[.14] bg-white/[.02] px-4 py-3 font-mono text-[11px] text-white outline-none focus:border-[var(--accent)]"
               />
               <button disabled={thinking || !input.trim()} aria-label="Send message" className="grid w-11 shrink-0 place-items-center rounded-full border border-white/[.14] bg-[var(--accent-soft)] text-[var(--accent)] disabled:opacity-30">
                 <Send className="h-4 w-4" />

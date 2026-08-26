@@ -20,14 +20,14 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "dark",
-  themeColor: "#080909",
+  themeColor: "#050505",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark">
       <head><JsonLd /></head>
-      <body className="bg-[#0A0A0B] text-[#ece9e2] antialiased font-sans">
+      <body className="bg-[#050505] text-white antialiased font-sans">
         <a href="#main-content" className="skip-link">Skip to main content</a>
         {children}<Analytics/><SpeedInsights/>
       </body>

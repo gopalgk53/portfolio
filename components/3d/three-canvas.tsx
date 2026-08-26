@@ -54,7 +54,7 @@ const domainEmphasis: Record<SceneDomain, Partial<Record<NodeGroup, number>>> = 
   close: {},
 };
 
-const ACCENT = 0xd9ff43;
+const ACCENT = 0x63b3ff;
 const DOT_BASE = 0xd7d8dc;
 
 // ---------------------------------------------------------------------------

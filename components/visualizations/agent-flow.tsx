@@ -33,7 +33,7 @@ export function AgentFlow({ flow, domains }: { flow: string; domains: string[] }
   }, [visible, paused, stages.length]);
 
   return (
-    <div ref={root} className="border border-white/[.12] bg-white/[.015] p-6 sm:p-8">
+    <div ref={root} className="glass-panel p-6 sm:p-8">
       <p className="eyebrow mb-8">Agent coordination</p>
       <div className="flex flex-col items-center gap-8">
         <div className="flex flex-wrap items-center justify-center gap-y-6">
@@ -47,8 +47,8 @@ export function AgentFlow({ flow, domains }: { flow: string; domains: string[] }
                 className="group relative flex shrink-0 flex-col items-center gap-2 px-1"
               >
                 {active === i && <motion.span layoutId="agent-active" transition={spring} className="absolute -inset-x-2 -inset-y-2 border border-[var(--accent)]" />}
-                <span className="relative font-mono text-[9px] text-[#5b5f64]">{String(i + 1).padStart(2, "0")}</span>
-                <span className={`relative whitespace-nowrap font-mono text-[11px] uppercase tracking-[.08em] ${active === i ? "text-[#ece9e2]" : "text-[#83878c]"}`}>{stage}</span>
+                <span className="relative font-mono text-[9px] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
+                <span className={`relative whitespace-nowrap font-mono text-[11px] uppercase tracking-[.08em] ${active === i ? "text-white" : "text-[var(--muted)]"}`}>{stage}</span>
               </button>
               {i < stages.length - 1 && <span className="mx-3 h-px w-8 shrink-0 bg-white/[.14] sm:w-10" />}
             </div>
@@ -57,13 +57,13 @@ export function AgentFlow({ flow, domains }: { flow: string; domains: string[] }
 
         <motion.div initial={false} animate={{ opacity: active === specialistsIndex ? 1 : 0.25 }} transition={spring} className="flex flex-wrap justify-center gap-3">
           {domains.map((domain) => (
-            <span key={domain} className="border border-white/[.12] px-3 py-2 font-mono text-[9px] uppercase tracking-[.1em] text-[#c9cbce]">
+            <span key={domain} className="border border-white/[.12] px-3 py-2 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--muted)]">
               {domain}
             </span>
           ))}
         </motion.div>
       </div>
-      <p className="mt-8 max-w-lg text-sm leading-6 text-[#83878c]">
+      <p className="mt-8 max-w-lg text-sm leading-6 text-[var(--muted)]">
         A planner routes each request to specialist workstreams, calls tools where needed, and holds the result for human approval before a
         final response is returned.
       </p>
