@@ -1,11 +1,44 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Minimize2, RotateCcw, Send } from "lucide-react";
+import { Bot, CheckCircle2, Minimize2, RotateCcw, Send } from "lucide-react";
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { spring } from "../lib/motion";
 
 type Message = { role: "user" | "assistant"; text: string; warning?: boolean };
+type Stage = "retrieving" | "reranking" | "generating" | null;
+const STAGE_ORDER = ["retrieving", "reranking", "generating"] as const;
+const STAGE_LABEL: Record<(typeof STAGE_ORDER)[number], string> = {
+  retrieving: "Retrieving context",
+  reranking: "Reranking",
+  generating: "Generating answer",
+};
+
+// The real RAG pipeline stages instead of a generic spinner — completed
+// steps get a checkmark, the active one pulses in the accent color.
+function StageList({ stage }: { stage: NonNullable<Stage> }) {
+  const activeIndex = STAGE_ORDER.indexOf(stage);
+  return (
+    <div className="mb-3 flex flex-col gap-1.5 font-mono text-[10px]">
+      {STAGE_ORDER.map((s, i) => {
+        const done = i < activeIndex;
+        const active = i === activeIndex;
+        return (
+          <div key={s} className={`flex items-center gap-2 ${active ? "text-[var(--accent)]" : "text-[var(--faint)]"}`}>
+            {done ? (
+              <CheckCircle2 className="h-3 w-3" />
+            ) : active ? (
+              <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-[var(--accent)]" />
+            ) : (
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full border border-current opacity-40" />
+            )}
+            <span className={done ? "line-through decoration-[var(--faint)]/60" : ""}>{STAGE_LABEL[s]}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 const STORE = "gopal-bot-session-v1";
 const welcome = "System initialized. I can help you explore Gopal's GenAI stack, project architectures, experience, and availability.";
 const quick = ["View AI stack", "Latest RAG project", "Hire Gopal"];
@@ -40,6 +73,7 @@ export function AIAssistant() {
   const [open, setOpen] = useState(false);
   const [tooltip, setTooltip] = useState(false);
   const [thinking, setThinking] = useState(false);
+  const [stage, setStage] = useState<Stage>(null);
   const [warning, setWarning] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -95,6 +129,11 @@ export function AIAssistant() {
       document.removeEventListener("keydown", key);
     };
   }, [open]);
+  useEffect(() => {
+    const openFromPalette = () => setOpen(true);
+    window.addEventListener("gopal-open-assistant", openFromPalette);
+    return () => window.removeEventListener("gopal-open-assistant", openFromPalette);
+  }, []);
 
   async function respond(question: string) {
     if (!question.trim() || thinking) return;
@@ -108,6 +147,8 @@ export function AIAssistant() {
     if (unsafe) {
       full = "[Guardrail exception]: I can only discuss Gopalakrishna's professional engineering profile. Try asking about his stack, projects, certifications, or availability.";
     } else {
+      setStage("retrieving");
+      const rerankTimer = window.setTimeout(() => setStage("reranking"), 450);
       try {
         const history = messages.slice(-8).map(message => ({ role: message.role, content: message.text }));
         const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: question.trim(), history }) });
@@ -116,8 +157,11 @@ export function AIAssistant() {
         full = data.answer;
       } catch {
         full = answers[question] || "Gopalakrishna focuses on production-minded RAG, agent orchestration, model optimization and document intelligence. The live assistant is temporarily unavailable; try the project and skills sections instead.";
+      } finally {
+        window.clearTimeout(rerankTimer);
       }
     }
+    setStage("generating");
 
     let index = 0;
     setMessages((current) => [...current, { role: "assistant", text: "", warning: unsafe }]);
@@ -127,6 +171,7 @@ export function AIAssistant() {
       if (index >= full.length) {
         clearInterval(timer);
         setThinking(false);
+        setStage(null);
       }
     }, 18);
   }
@@ -139,6 +184,7 @@ export function AIAssistant() {
     setMessages([{ role: "assistant", text: welcome }]);
     setWarning(false);
     setThinking(false);
+    setStage(null);
     setInput("");
   }
 
@@ -200,25 +246,29 @@ export function AIAssistant() {
               </div>
             </header>
             <div ref={feed} role="log" aria-live="polite" aria-relevant="additions text" aria-busy={thinking} className="flex-1 space-y-4 overflow-y-auto p-4">
-              {messages.map((message, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={spring}
-                  className={`max-w-[90%] rounded-[var(--radius-sm)] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-white/[.14] bg-transparent text-[var(--muted)]" : "border-l-2 border-[var(--accent)] bg-white/[.02] text-[var(--muted)]"}`}
-                >
-                  {message.role === "assistant" ? <FormattedMessage text={message.text} /> : message.text}
-                  {message.role === "assistant" && index === messages.length - 1 && thinking && <span className="ml-1 animate-pulse text-[var(--accent)]">▮</span>}
-                  {message.warning && (
-                    <button onClick={reset} className="mt-3 flex items-center gap-2 rounded-full border border-[#c9a25a]/30 px-3 py-2 font-mono text-[10px] text-[#c9a25a]">
-                      <RotateCcw className="h-3 w-3" />
-                      Reset session
-                    </button>
-                  )}
-                </motion.div>
-              ))}
-              {thinking && messages[messages.length - 1]?.role !== "assistant" && <div className="font-mono text-[10px] text-[var(--muted)]">Retrieving portfolio context and generating an answer…</div>}
+              {messages.map((message, index) => {
+                const isLastAssistant = message.role === "assistant" && index === messages.length - 1;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={spring}
+                    className={`max-w-[90%] rounded-[var(--radius-sm)] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-white/[.14] bg-transparent text-[var(--muted)]" : "border-l-2 border-[var(--accent)] bg-white/[.02] text-[var(--muted)]"}`}
+                  >
+                    {isLastAssistant && thinking && stage === "generating" && <StageList stage={stage} />}
+                    {message.role === "assistant" ? <FormattedMessage text={message.text} /> : message.text}
+                    {isLastAssistant && thinking && <span className="ml-1 animate-pulse text-[var(--accent)]">▮</span>}
+                    {message.warning && (
+                      <button onClick={reset} className="mt-3 flex items-center gap-2 rounded-full border border-[#c9a25a]/30 px-3 py-2 font-mono text-[10px] text-[#c9a25a]">
+                        <RotateCcw className="h-3 w-3" />
+                        Reset session
+                      </button>
+                    )}
+                  </motion.div>
+                );
+              })}
+              {thinking && messages[messages.length - 1]?.role !== "assistant" && stage && stage !== "generating" && <StageList stage={stage} />}
               {messages.length <= 1 && !thinking && (
                 <div className="flex flex-wrap gap-2">
                   {quick.map((item) => (

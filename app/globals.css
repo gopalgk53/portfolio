@@ -6,6 +6,7 @@
 @import "@fontsource/jetbrains-mono/400.css";
 @import "@fontsource/jetbrains-mono/500.css";
 @import "@fontsource/jetbrains-mono/600.css";
+@import "@fontsource/space-grotesk/700.css";
 
 @theme {
   --color-ground: #050505;
@@ -72,6 +73,11 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 
 .eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .hero-title{overflow:hidden;font-size:clamp(3.9rem,12.2vw,13.8rem);font-weight:700;line-height:.76;letter-spacing:-.04em;text-transform:uppercase}
+
+/* Signature name treatment — a distinct display face (the site's own former
+   identity font, scoped to just this line) against the small mono meta
+   lines beneath it, instead of a same-weight uppercase label. */
+.hero-name{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;font-weight:700;font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.05;letter-spacing:-.02em;text-transform:none;max-width:min(90vw,26rem)}
 .hero-title>span{will-change:transform}
 .cinematic-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(5,5,5,.5),transparent 35%,transparent 68%,rgba(5,5,5,.3))}
 .chapter{background:linear-gradient(180deg,rgba(5,5,5,.92),rgba(5,5,5,.75) 50%,rgba(5,5,5,.92))}
@@ -136,6 +142,9 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 .scroll-cue::before{content:"";position:absolute;left:50%;top:3px;width:3px;height:5px;border-radius:2px;background:var(--accent);transform:translateX(-50%);animation:scroll-cue-move 1.8s ease-in-out infinite}
 @keyframes scroll-cue-move{0%,100%{top:3px;opacity:1}60%{top:11px;opacity:.35}}
 
+.trace-caret{animation:trace-blink 1s step-end infinite}
+@keyframes trace-blink{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
+
 /* Floating hero console — an elevated glass card docked over the 3D scene,
    the site's product-surface centerpiece rather than a flat screenshot. */
 /* No position here deliberately — the element already carries Tailwind's
@@ -177,6 +186,7 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 @media(max-width:760px){
   .typography-shield::before{inset:-1.5rem;background:rgba(5,5,5,.78)}
   .node-label--secondary{display:none}
+  .hero-name{font-size:clamp(1.5rem,7.5vw,2rem);max-width:80vw}
   .hero-title{font-size:clamp(3.5rem,18vw,6rem);line-height:.82}
   .hero-title span:last-child{text-align:left}
   .flagship-chapter{min-height:auto}

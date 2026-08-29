@@ -276,13 +276,24 @@ export function ThreeCanvas() {
       group.position.set(cap.x, CAPABILITY_Y, 0);
       graph.add(group);
 
+      // Each point gets a scattered "origin" (its target pushed out to a
+      // random radius) alongside its true local position. The animate loop
+      // lerps sprite.position between the two as the cluster's boost rises,
+      // so the cluster visibly assembles into shape rather than just
+      // fading in place.
       const points = cap.points.map((local) => {
         const material = new THREE.SpriteMaterial({ map: texture, color: DOT_BASE, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
         const sprite = new THREE.Sprite(material);
-        sprite.position.copy(local);
+        const target = local.clone();
+        const scatterAngle = Math.random() * Math.PI * 2;
+        const scatterRadius = 1.6 + Math.random() * 1.8;
+        const origin = reduceMotion
+          ? target.clone()
+          : target.clone().add(new THREE.Vector3(Math.cos(scatterAngle) * scatterRadius, Math.sin(scatterAngle) * scatterRadius, (Math.random() - 0.5) * 1.4));
+        sprite.position.copy(origin);
         sprite.scale.setScalar(0.22);
         group.add(sprite);
-        return { material, sprite };
+        return { material, sprite, target, origin };
       });
 
       const edgePositions: number[] = [];
@@ -302,7 +313,7 @@ export function ThreeCanvas() {
       labelEl.className = "node-label node-label--secondary";
       labelHost.appendChild(labelEl);
 
-      return { spec: cap, group, points, lineGeometry, lineMaterial, labelEl };
+      return { spec: cap, group, points, lineGeometry, lineMaterial, labelEl, cursorBoost: 0 };
     });
     let capabilitiesBoost = 0;
 
@@ -469,22 +480,43 @@ export function ThreeCanvas() {
         if (motif.spec.motion === "orbit") {
           motif.group.rotation.z = reduceMotion ? 0 : time * 0.4;
         }
-        motif.points.forEach((point, idx) => {
-          let localOpacity = capabilitiesBoost;
-          if (motif.spec.motion === "chase") {
-            const wave = Math.max(0, Math.sin(time * 1.8 - idx * 0.85));
-            localOpacity = capabilitiesBoost * (0.35 + 0.65 * wave);
-          }
-          point.material.opacity = localOpacity * intensity;
-        });
-        motif.lineMaterial.opacity = capabilitiesBoost * intensity * 0.6;
 
         projected.copy(motif.group.position).project(camera);
         const cx = (projected.x * 0.5 + 0.5) * window.innerWidth;
         const cy = (-projected.y * 0.5 + 0.5) * window.innerHeight + 34;
         const behind = projected.z > 1;
+
+        // Local cursor response: how close the live pointer is to this
+        // cluster's own screen position, independent of which section is
+        // scrolled into view — a cluster brightens and assembles under the
+        // cursor, not just when Capabilities is centered.
+        let cursorLocal = 0;
+        if (!reduceMotion && !mobile && !behind) {
+          const pointerPxX = (targetPointer.x * 0.5 + 0.5) * window.innerWidth;
+          const pointerPxY = (-targetPointer.y * 0.5 + 0.5) * window.innerHeight;
+          const dist = Math.hypot(pointerPxX - cx, pointerPxY - cy);
+          cursorLocal = Math.max(0, 1 - dist / 260);
+        }
+        motif.cursorBoost = reduceMotion ? cursorLocal : THREE.MathUtils.lerp(motif.cursorBoost, cursorLocal, 1 - Math.pow(0.002, delta));
+
+        const formBoost = Math.max(capabilitiesBoost, motif.cursorBoost * 0.85);
+
+        motif.points.forEach((point, idx) => {
+          let localOpacity = Math.max(capabilitiesBoost, motif.cursorBoost * 0.75);
+          if (motif.spec.motion === "chase") {
+            const wave = Math.max(0, Math.sin(time * 1.8 - idx * 0.85));
+            localOpacity = Math.max(capabilitiesBoost * (0.35 + 0.65 * wave), motif.cursorBoost * 0.6);
+          }
+          point.material.opacity = Math.min(1, localOpacity) * intensity;
+          point.sprite.scale.setScalar(0.22 * (1 + motif.cursorBoost * 0.4));
+          if (!reduceMotion) {
+            point.sprite.position.lerpVectors(point.origin, point.target, THREE.MathUtils.clamp(formBoost * 1.15, 0, 1));
+          }
+        });
+        motif.lineMaterial.opacity = Math.max(capabilitiesBoost, motif.cursorBoost * 0.6) * intensity * 0.6;
+
         motif.labelEl.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0) translate(-50%, -50%)`;
-        motif.labelEl.style.opacity = behind ? "0" : String(capabilitiesBoost * 0.9 * intensity);
+        motif.labelEl.style.opacity = behind ? "0" : String(Math.max(capabilitiesBoost * 0.9, motif.cursorBoost * 0.8) * intensity);
       });
 
       edgeState.forEach((edge) => {
