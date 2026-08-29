@@ -4,8 +4,8 @@ import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } fr
 import { ArrowDown, ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SoundToggle } from "./sound-toggle";
-
-const nav = [["Systems", "projects"], ["Model lab", "playground"], ["Experience", "experience"], ["Stack", "skills"], ["Contact", "contact"]] as const;
+import { HeroAgentTrace } from "./hero-agent-trace";
+import { nav } from "../lib/nav";
 
 export function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -88,8 +88,8 @@ export function Hero() {
 
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
         <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 sm:left-8">
-          <p className="font-sans text-[15px] font-medium uppercase leading-6 tracking-[.1em] text-white sm:text-[17px]">Gopalakrishna Maddipalli</p>
-          <p className="mt-1 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">Generative AI engineer</p>
+          <p className="hero-name text-white">Gopalakrishna Maddipalli</p>
+          <p className="mt-2 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">Generative AI engineer</p>
           <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
@@ -121,7 +121,7 @@ export function Hero() {
               Online
             </span>
           </div>
-          <p className="mt-3 font-mono text-[11px] leading-6 text-white/80">retrieval → rerank → grounded generation</p>
+          <HeroAgentTrace />
           <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">
             <span>Stack · RAG + Agents</span>
             <span>Mode · Grounded</span>
