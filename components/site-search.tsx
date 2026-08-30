@@ -3,33 +3,71 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight, Search } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
-import { projects } from "../lib/data";
+import { certifications, projects, skills } from "../lib/data";
 import { spring } from "../lib/motion";
 
-type Result = { id: string; relevance: string };
+type ResultType = "project" | "skill" | "certification";
+type Result = { id: string; type: ResultType; relevance: string };
 type Mode = "idle" | "live" | "cache" | "fallback";
 
-const project = (id: string) => projects.find((p) => p.id === id)!;
+// Resolves a type-prefixed id (project:<id> / skill:<index> / cert:<index>)
+// back to real, renderable content — same id scheme app/api/search/route.ts
+// builds and validates against, so a result either resolves to something
+// real or gets silently dropped, never a broken row.
+function resolveDisplay(result: Result): { title: string; subtitle: string; href: string; external?: boolean } | null {
+  const rest = result.id.slice(result.id.indexOf(":") + 1);
+  if (result.type === "project") {
+    const p = projects.find((item) => item.id === rest);
+    if (!p) return null;
+    return { title: p.title, subtitle: result.relevance || p.impact, href: `/projects/${p.id}` };
+  }
+  if (result.type === "skill") {
+    const group = skills[Number(rest)];
+    if (!group) return null;
+    return { title: group.group, subtitle: result.relevance || group.items.slice(0, 4).join(", "), href: "#skills" };
+  }
+  const cert = certifications[Number(rest)];
+  if (!cert) return null;
+  const [name, meta, url] = cert;
+  return { title: name, subtitle: result.relevance || meta, href: url, external: true };
+}
 
 // A crude but honest client-side fallback for when the live model is
-// unavailable — literal keyword overlap against the real project fields,
-// not a fabricated "AI match". Kept clearly labeled as offline in the UI.
+// unavailable — literal keyword overlap against the real fields, not a
+// fabricated "AI match". Kept clearly labeled as offline in the UI.
 function localMatch(query: string): Result[] {
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!terms.length) return [];
-  const scored = projects.map((p) => {
-    const haystack = `${p.title} ${p.category} ${p.goal} ${p.impact} ${p.stack.join(" ")} ${p.flow}`.toLowerCase();
-    const score = terms.reduce((sum, term) => sum + (haystack.includes(term) ? 1 : 0), 0);
-    return { id: p.id, score };
-  });
+  const score = (haystack: string) => terms.reduce((sum, term) => sum + (haystack.toLowerCase().includes(term) ? 1 : 0), 0);
+
+  const scored: Array<{ id: string; type: ResultType; score: number }> = [
+    ...projects.map((p) => ({
+      id: `project:${p.id}`,
+      type: "project" as const,
+      score: score(`${p.title} ${p.category} ${p.goal} ${p.impact} ${p.stack.join(" ")} ${p.flow}`),
+    })),
+    ...skills.map((group, i) => ({
+      id: `skill:${i}`,
+      type: "skill" as const,
+      score: score(`${group.group} ${group.items.join(" ")}`),
+    })),
+    ...certifications.map(([name, meta], i) => ({
+      id: `cert:${i}`,
+      type: "certification" as const,
+      score: score(`${name} ${meta}`),
+    })),
+  ];
+
   return scored
     .filter((s) => s.score > 0)
     .sort((a, b) => b.score - a.score)
-    .slice(0, 4)
-    .map((s) => ({ id: s.id, relevance: "Keyword match" }));
+    .slice(0, 5)
+    .map((s) => ({ id: s.id, type: s.type, relevance: "Keyword match" }));
 }
 
-export function ProjectSearch() {
+const TYPE_LABEL: Record<ResultType, string> = { project: "Project", skill: "Skill", certification: "Credential" };
+
+export function SiteSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Result[]>([]);
   const [mode, setMode] = useState<Mode>("idle");
@@ -81,8 +119,8 @@ export function ProjectSearch() {
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search the real project corpus — e.g. “vector database experience”"
-          aria-label="Search projects"
+          placeholder="Search projects, skills, and credentials — e.g. “vector database experience”"
+          aria-label="Search projects, skills, and credentials"
           className="field w-full pl-11 pr-24 text-sm"
         />
         <button type="submit" disabled={loading} className="btn-pill btn-pill--solid absolute right-1.5 top-1.5 !py-2" style={{ padding: "0.5rem 1rem" }}>
@@ -99,19 +137,23 @@ export function ProjectSearch() {
           </p>
           <div className="flex flex-col gap-2">
             {results.map((result, index) => {
-              const p = project(result.id);
+              const display = resolveDisplay(result);
+              if (!display) return null;
               return (
                 <motion.a
                   key={result.id}
-                  href={`/projects/${result.id}`}
+                  href={display.href}
+                  target={display.external ? "_blank" : undefined}
+                  rel={display.external ? "noreferrer" : undefined}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ ...spring, delay: index * 0.04 }}
                   className="glow-card flex items-center justify-between gap-4 rounded-[var(--radius-sm)] border border-white/[.1] px-4 py-3 text-sm"
                 >
                   <span>
-                    <span className="font-medium text-white">{p.title}</span>
-                    <span className="ml-2 text-[var(--muted)]">{result.relevance || p.impact}</span>
+                    <span className="mr-2 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--accent)]">{TYPE_LABEL[result.type]}</span>
+                    <span className="font-medium text-white">{display.title}</span>
+                    <span className="ml-2 text-[var(--muted)]">{display.subtitle}</span>
                   </span>
                   <ArrowUpRight className="h-4 w-4 shrink-0 text-[var(--accent)]" />
                 </motion.a>

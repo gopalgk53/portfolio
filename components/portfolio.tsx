@@ -19,7 +19,7 @@ import { RagFlow } from "./visualizations/rag-flow";
 import { AgentFlow } from "./visualizations/agent-flow";
 import { HiringEvidence } from "./hiring-evidence";
 import { GithubActivity } from "./github-activity";
-import { ProjectSearch } from "./project-search";
+import { SiteSearch } from "./site-search";
 
 const LabLoading = () => <div className="px-8 py-16 font-mono text-[10px] uppercase tracking-[.16em] text-[var(--faint)]">Loading technical module…</div>;
 // ssr: false is deliberate — matches the exact pattern already used for
@@ -268,7 +268,7 @@ function Projects() {
         <span>Vector stores · Qdrant / FAISS</span>
       </div>
 
-      <ProjectSearch />
+      <SiteSearch />
 
       <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
       <FlagshipProject project={multiAgent} index={multiAgentIndex} scene="agents" viz={<AgentFlow flow={multiAgent.flow} domains={AGENT_DOMAINS} />} />
