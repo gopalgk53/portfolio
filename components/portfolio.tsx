@@ -18,6 +18,7 @@ import { Magnetic } from "./motion/magnetic";
 import { RagFlow } from "./visualizations/rag-flow";
 import { AgentFlow } from "./visualizations/agent-flow";
 import { HiringEvidence } from "./hiring-evidence";
+import { GithubActivity } from "./github-activity";
 
 const LabLoading = () => <div className="px-8 py-16 font-mono text-[10px] uppercase tracking-[.16em] text-[var(--faint)]">Loading technical module…</div>;
 const PromptPlayground = dynamic(() => import("./prompt-playground").then(module => module.PromptPlayground), { loading: LabLoading });
@@ -435,9 +436,10 @@ function Contact() {
               return (
                 <Magnetic key={label as string} className="block w-full">
                   <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} rel={String(url).startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between border-b border-white/[.12] py-4 text-sm text-[var(--muted)]">
-                    <span className="flex items-center gap-2 break-all">
+                    <span className="flex flex-wrap items-center gap-2 break-all">
                       <IconComp className="h-4 w-4 shrink-0" />
                       {label as string}
+                      {label === "GitHub" && <GithubActivity />}
                     </span>
                     <ArrowUpRight className="h-4 w-4 shrink-0" />
                   </a>
