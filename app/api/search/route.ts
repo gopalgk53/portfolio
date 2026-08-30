@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { projects } from "../../../lib/data";
+import { certifications, projects, skills } from "../../../lib/data";
 
 export const runtime = "nodejs";
 
@@ -10,8 +10,9 @@ const CACHE_TTL_MS = 15 * 60 * 1000;
 const MAX_RATE_ENTRIES = 1000;
 const MAX_CACHE_ENTRIES = 200;
 
+type ResultType = "project" | "skill" | "certification";
 type RateEntry = { count: number; resetAt: number };
-type SearchResult = { id: string; relevance: string };
+type SearchResult = { id: string; type: ResultType; relevance: string };
 type CacheEntry = { results: SearchResult[]; expiresAt: number };
 type APIResponse = {
   choices?: Array<{ message?: { content?: string } }>;
@@ -28,15 +29,26 @@ const globalStore = globalThis as typeof globalThis & {
 const rateLimits = globalStore.portfolioSearchRateLimits ?? (globalStore.portfolioSearchRateLimits = new Map());
 const resultCache = globalStore.portfolioSearchCache ?? (globalStore.portfolioSearchCache = new Map());
 
-const knownIds = new Set(projects.map((project) => project.id));
+// Ids are type-prefixed (project:<real id>, skill:<index>, cert:<index>) so
+// the type never has to be trusted separately from the id the model
+// returns — it's derived by splitting the id itself. Skills/certifications
+// have no natural id in lib/data.ts, so the array index is used; that's
+// stable because both arrays are static source, not runtime-reordered.
+const knownProjectIds = new Set(projects.map((project) => project.id));
+const knownSkillIndices = new Set(skills.map((_, i) => i));
+const knownCertIndices = new Set(certifications.map((_, i) => i));
 
-// Includes real project ids (not in lib/portfolio-context.ts's prose
-// summary, which is written for the chat assistant, not for id-matching) —
-// the reranker below needs an id it can echo back verbatim.
 function buildIndexedCorpus() {
-  return projects
-    .map((project) => `- id: ${project.id} | ${project.title} (${project.category}): ${project.goal} Stack: ${project.stack.join(", ")}. Flow: ${project.flow}.`)
+  const projectLines = projects
+    .map((project) => `- id: project:${project.id} | ${project.title} (${project.category}): ${project.goal} Stack: ${project.stack.join(", ")}. Flow: ${project.flow}.`)
     .join("\n");
+  const skillLines = skills
+    .map((group, i) => `- id: skill:${i} | ${group.group}: ${group.items.join(", ")}.`)
+    .join("\n");
+  const certLines = certifications
+    .map(([name, meta], i) => `- id: cert:${i} | ${name} — ${meta}.`)
+    .join("\n");
+  return `PROJECTS\n${projectLines}\n\nSKILLS\n${skillLines}\n\nCERTIFICATIONS\n${certLines}`;
 }
 
 function clientIdentifier(request: NextRequest) {
@@ -81,10 +93,24 @@ function pruneCache(now: number) {
   while (resultCache.size >= MAX_CACHE_ENTRIES) resultCache.delete(resultCache.keys().next().value!);
 }
 
+// Validates a raw id against the real corpus and returns its type — the
+// single source of truth for "is this id real", used by both the parser
+// below. Never trusts a `type` field the model might return separately.
+function resolveId(rawId: string): { id: string; type: ResultType } | null {
+  const separatorIndex = rawId.indexOf(":");
+  if (separatorIndex < 0) return null;
+  const prefix = rawId.slice(0, separatorIndex);
+  const rest = rawId.slice(separatorIndex + 1);
+  if (prefix === "project" && knownProjectIds.has(rest)) return { id: rawId, type: "project" };
+  if (prefix === "skill" && knownSkillIndices.has(Number(rest))) return { id: rawId, type: "skill" };
+  if (prefix === "cert" && knownCertIndices.has(Number(rest))) return { id: rawId, type: "certification" };
+  return null;
+}
+
 // Defensive parse of the model's response: strips a stray code fence if the
 // model adds one despite instructions, extracts the first {...} object,
-// validates shape, and drops any id that isn't a real project — the
-// frontend must never be able to render a hallucinated case study.
+// validates shape, and drops any id that isn't real — the frontend must
+// never be able to render a hallucinated project, skill, or credential.
 function parseResults(raw: string): SearchResult[] {
   const stripped = raw.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
   const match = stripped.match(/\{[\s\S]*\}/);
@@ -96,12 +122,14 @@ function parseResults(raw: string): SearchResult[] {
     const results: SearchResult[] = [];
     for (const item of parsed.results) {
       if (typeof item !== "object" || item === null) continue;
-      const id = (item as { id?: unknown }).id;
+      const rawId = (item as { id?: unknown }).id;
       const relevance = (item as { relevance?: unknown }).relevance;
-      if (typeof id !== "string" || !knownIds.has(id) || seen.has(id)) continue;
-      seen.add(id);
-      results.push({ id, relevance: typeof relevance === "string" ? relevance.slice(0, 140) : "" });
-      if (results.length >= 4) break;
+      if (typeof rawId !== "string" || seen.has(rawId)) continue;
+      const resolved = resolveId(rawId);
+      if (!resolved) continue;
+      seen.add(rawId);
+      results.push({ id: resolved.id, type: resolved.type, relevance: typeof relevance === "string" ? relevance.slice(0, 140) : "" });
+      if (results.length >= 5) break;
     }
     return results;
   } catch {
@@ -147,12 +175,12 @@ export async function POST(request: NextRequest) {
         messages: [
           {
             role: "system",
-            content: `You rerank a small, fixed list of real project case studies against a visitor's search query. Return ONLY strict JSON, no prose, no markdown fences, in exactly this shape: {"results":[{"id":"<id>","relevance":"<short phrase, under 12 words>"}]}. Only use ids from the list below — never invent one. Return at most 4 results, most relevant first, best matches only. If nothing is a good match, return {"results":[]}.\n\nPROJECTS\n${buildIndexedCorpus()}`,
+            content: `You rerank a small, fixed corpus of real portfolio content — project case studies, skill groups, and certifications — against a visitor's search query. Return ONLY strict JSON, no prose, no markdown fences, in exactly this shape: {"results":[{"id":"<id>","relevance":"<short phrase, under 12 words>"}]}. Only use ids exactly as they appear below (including the "project:"/"skill:"/"cert:" prefix) — never invent one. Return at most 5 results across all types, most relevant first, best matches only. If nothing is a good match, return {"results":[]}.\n\n${buildIndexedCorpus()}`,
           },
           { role: "user", content: query },
         ],
         temperature: 0.2,
-        max_tokens: 300,
+        max_tokens: 350,
       }),
       signal: AbortSignal.timeout(15_000),
     });
