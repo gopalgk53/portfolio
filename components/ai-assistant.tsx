@@ -50,6 +50,24 @@ const answers: Record<string, string> = {
 };
 const blocked = /ignore previous|system prompt|write a poem|cats|jailbreak|developer message|hidden instruction/i;
 
+// The literal stage labels RagFlow/AgentFlow render (see their `stages`
+// arrays) — not a separate vocabulary invented here. When an answer
+// mentions one, the matching diagram node highlights, via the same
+// window-event convention already used for gopal-open-assistant/gopal-effects.
+// Exactly the `flow` values from lib/data.ts's legal-rag and multi-agent
+// projects (split on " → "), minus the generic User/Answer/Request/Response
+// bookends RagFlow/AgentFlow add themselves — those are common English
+// words that would false-trigger on unrelated answers.
+const DIAGRAM_LABELS = ["Documents", "Embeddings", "Vector DB", "Rerank", "LLM", "Planner", "Specialists", "Tools", "Human approval"];
+function highlightDiagramNodes(answer: string) {
+  const lower = answer.toLowerCase();
+  for (const label of DIAGRAM_LABELS) {
+    if (lower.includes(label.toLowerCase())) {
+      window.dispatchEvent(new CustomEvent("gopal-highlight-node", { detail: { label } }));
+    }
+  }
+}
+
 function inlineFormat(text: string): ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, index) =>
     part.startsWith("**") && part.endsWith("**")
@@ -172,6 +190,7 @@ export function AIAssistant() {
         clearInterval(timer);
         setThinking(false);
         setStage(null);
+        if (!unsafe) highlightDiagramNodes(full);
       }
     }, 18);
   }
