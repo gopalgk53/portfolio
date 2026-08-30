@@ -19,6 +19,7 @@ import { RagFlow } from "./visualizations/rag-flow";
 import { AgentFlow } from "./visualizations/agent-flow";
 import { HiringEvidence } from "./hiring-evidence";
 import { GithubActivity } from "./github-activity";
+import { ProjectSearch } from "./project-search";
 
 const LabLoading = () => <div className="px-8 py-16 font-mono text-[10px] uppercase tracking-[.16em] text-[var(--faint)]">Loading technical module…</div>;
 const PromptPlayground = dynamic(() => import("./prompt-playground").then(module => module.PromptPlayground), { loading: LabLoading });
@@ -258,6 +259,8 @@ function Projects() {
         <span>Orchestration · LangGraph</span>
         <span>Vector stores · Qdrant / FAISS</span>
       </div>
+
+      <ProjectSearch />
 
       <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
       <FlagshipProject project={multiAgent} index={multiAgentIndex} scene="agents" viz={<AgentFlow flow={multiAgent.flow} domains={AGENT_DOMAINS} />} />

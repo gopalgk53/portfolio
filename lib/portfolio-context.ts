@@ -1,11 +1,18 @@
 import { certifications, projects, skills } from "./data";
 
-const projectSummary = projects
-  .map(
-    (project) =>
-      `- ${project.title} (${project.category}): ${project.goal} Impact: ${project.impact}. Stack: ${project.stack.join(", ")}. Architecture: ${project.flow}.`,
-  )
-  .join("\n");
+// Shared with app/api/search/route.ts so both the chat assistant and the
+// project search reranker are grounded in the exact same real-data summary
+// — never two versions that could drift apart.
+export function buildProjectSummary() {
+  return projects
+    .map(
+      (project) =>
+        `- ${project.title} (${project.category}): ${project.goal} Impact: ${project.impact}. Stack: ${project.stack.join(", ")}. Architecture: ${project.flow}.`,
+    )
+    .join("\n");
+}
+
+const projectSummary = buildProjectSummary();
 
 const skillSummary = skills
   .map((group) => `- ${group.group}: ${group.items.join(", ")}.`)

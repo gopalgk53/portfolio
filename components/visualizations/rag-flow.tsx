@@ -30,6 +30,23 @@ export function RagFlow({ flow }: { flow: string }) {
     return () => clearInterval(timer);
   }, [visible, paused, stages.length]);
 
+  // Lets the AI assistant "point at" this diagram — see
+  // components/ai-assistant.tsx's highlightDiagramNodes. Same
+  // setActive/setPaused pair the manual click handler below already uses.
+  useEffect(() => {
+    const onHighlight = (event: Event) => {
+      const label = (event as CustomEvent<{ label?: string }>).detail?.label;
+      if (!label) return;
+      const index = stages.findIndex((stage) => stage.toLowerCase() === label.toLowerCase());
+      if (index >= 0) {
+        setActive(index);
+        setPaused(true);
+      }
+    };
+    window.addEventListener("gopal-highlight-node", onHighlight);
+    return () => window.removeEventListener("gopal-highlight-node", onHighlight);
+  }, [stages]);
+
   return (
     <div ref={root} className="glass-panel p-6 sm:p-8">
       <p className="eyebrow mb-8">Retrieval loop</p>
