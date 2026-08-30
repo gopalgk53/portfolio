@@ -22,9 +22,17 @@ import { GithubActivity } from "./github-activity";
 import { ProjectSearch } from "./project-search";
 
 const LabLoading = () => <div className="px-8 py-16 font-mono text-[10px] uppercase tracking-[.16em] text-[var(--faint)]">Loading technical module…</div>;
-const PromptPlayground = dynamic(() => import("./prompt-playground").then(module => module.PromptPlayground), { loading: LabLoading });
-const InfrastructureDashboard = dynamic(() => import("./infrastructure-dashboard").then(module => module.InfrastructureDashboard), { loading: LabLoading });
-const PipelineDeepDive = dynamic(() => import("./pipeline-deep-dive").then(module => module.PipelineDeepDive), { loading: LabLoading });
+// ssr: false is deliberate — matches the exact pattern already used for
+// ThreeCanvas/AIAssistant in client-extras.tsx. Without it, these three
+// (browser-only, interactive-only) components would depend on Next's RSC
+// streaming to swap their real content in after SSR, and that hand-off was
+// silently failing: the LabLoading fallback stayed on screen forever while
+// the real component sat rendered-but-detached in the DOM (visible via a
+// stray <div id="S:..."> streaming boundary that never resolved). Rendering
+// them purely client-side sidesteps that failure mode entirely.
+const PromptPlayground = dynamic(() => import("./prompt-playground").then(module => module.PromptPlayground), { loading: LabLoading, ssr: false });
+const InfrastructureDashboard = dynamic(() => import("./infrastructure-dashboard").then(module => module.InfrastructureDashboard), { loading: LabLoading, ssr: false });
+const PipelineDeepDive = dynamic(() => import("./pipeline-deep-dive").then(module => module.PipelineDeepDive), { loading: LabLoading, ssr: false });
 
 type Project = (typeof projects)[number];
 type SceneId = "identity" | "retrieval" | "agents" | "infra" | "capabilities" | "close";
