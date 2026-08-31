@@ -49,6 +49,19 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
           <p className="eyebrow">04 / Next evidence to publish</p><h2>A blueprint becomes proof through reproducible evidence.</h2>
           <ol><li>Repository-specific implementation screenshots and exact folder links</li><li>Evaluation dataset and reproducible benchmark procedure</li><li>Failure-case analysis and architecture trade-offs</li><li>Deployment notes, tests, and observed runtime measurements</li></ol>
         </section>
+        <section className="case-evidence">
+          <p className="eyebrow">05 / Assumptions &amp; limitations</p><h2>What this case study is — and isn&apos;t.</h2>
+          <ol>
+            <li>This page documents an architecture blueprint and its intended outcome, not a monitored, running production deployment with live metrics.</li>
+            <li>
+              {project.impact.toLowerCase().includes("target")
+                ? "The impact figure above is a design target set before implementation, not a measured result from real usage."
+                : "The impact statement above describes the intended outcome this architecture was designed to produce, not a measured result from real usage."}
+            </li>
+            <li>Implementation-level specifics not published here — exact prompts, evaluation datasets, latency under real load, failure-mode handling — are exactly the &ldquo;next evidence to publish&rdquo; listed above.</li>
+            <li>No claim is made about uptime, accuracy, or performance beyond what&apos;s stated on this page.</li>
+          </ol>
+        </section>
       </article>
       <footer className="case-next"><p>Next system · {String(((projectIndex + 1) % projects.length) + 1).padStart(2, "0")}</p><Link href={`/projects/${nextProject.id}`}>{nextProject.title}<span aria-hidden="true">→</span></Link></footer>
     </main>
