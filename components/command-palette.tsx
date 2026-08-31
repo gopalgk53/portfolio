@@ -31,6 +31,8 @@ export function CommandPalette() {
       { id: "assistant", label: "Ask the AI assistant", hint: "A", group: "Actions" as const, action: () => window.dispatchEvent(new CustomEvent("gopal-open-assistant")) },
       { id: "resume", label: "Open résumé", hint: "R", group: "Actions" as const, href: "/Gopalakrishna_Maddipalli_CV.pdf" },
       { id: "cases", label: "Explore all case studies", hint: "↵", group: "Actions" as const, href: "/projects" },
+      { id: "changelog", label: "View changelog", hint: "↵", group: "Actions" as const, href: "/changelog" },
+      { id: "terminal", label: "Open terminal mode", hint: "T", group: "Actions" as const, href: "/terminal" },
     ],
     [],
   );
@@ -99,7 +101,7 @@ export function CommandPalette() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="fixed inset-0 z-[200] flex items-start justify-center bg-[var(--bg)]/72 px-5 pt-[14vh]"
+          className="no-print fixed inset-0 z-[200] flex items-start justify-center bg-[var(--bg)]/72 px-5 pt-[14vh]"
           onClick={() => setOpen(false)}
         >
           <motion.div

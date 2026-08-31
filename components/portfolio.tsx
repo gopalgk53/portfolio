@@ -10,6 +10,7 @@ const Github = Code2;
 const Linkedin = Link2;
 import { FormEvent, ReactNode, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { certifications, projects, skills } from "../lib/data";
 import { spring, staggerChild } from "../lib/motion";
 import { useGlowPointer } from "../lib/use-glow-pointer";
@@ -514,6 +515,11 @@ export function Portfolio() {
       <footer className="relative z-10 border-t border-white/[.1] px-5 py-10 sm:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-xs text-[var(--faint)] sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Gopalakrishna · Generative AI Engineer</p>
+          <nav aria-label="Site meta links" className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-[.08em]">
+            <Link href="/changelog" className="hover:text-[var(--accent)]">Changelog</Link>
+            <Link href="/api-docs" className="hover:text-[var(--accent)]">API</Link>
+            <a href="/llms.txt" className="hover:text-[var(--accent)]">llms.txt</a>
+          </nav>
           <p>India · gopalakrishnagenai.in</p>
         </div>
       </footer>

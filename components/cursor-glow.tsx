@@ -41,7 +41,7 @@ export function CursorGlow() {
     <div
       ref={dotRef}
       aria-hidden="true"
-      className={`pointer-events-none fixed left-0 top-0 z-[300] rounded-full ${hovering ? "h-12 w-12 opacity-70" : "h-6 w-6 opacity-40"}`}
+      className={`no-print pointer-events-none fixed left-0 top-0 z-[300] rounded-full ${hovering ? "h-12 w-12 opacity-70" : "h-6 w-6 opacity-40"}`}
       style={{
         background: "radial-gradient(circle, var(--accent) 0%, transparent 70%)",
         mixBlendMode: "screen",

@@ -41,7 +41,7 @@ export function PageTransition() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[250] bg-[var(--bg)]"
+      className="no-print pointer-events-none fixed inset-0 z-[250] bg-[var(--bg)]"
       style={{ opacity, transition: "opacity 320ms ease-out" }}
     />
   );
