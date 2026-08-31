@@ -167,7 +167,8 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 .case-footer{display:flex;justify-content:space-between;padding:5rem clamp(1.25rem,4vw,4rem);font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.case-footer a{color:var(--accent)}
 .case-study-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(18rem,3fr);column-gap:clamp(2rem,7vw,8rem);min-height:calc(100svh - 72px);padding:clamp(6rem,12vw,10rem) clamp(1.25rem,4vw,4rem) 4rem}
 .case-study-meta{font:10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.case-study-meta p+p{margin-top:.6rem;color:var(--faint)}
-.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:700;line-height:.82;letter-spacing:-.04em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:var(--muted)}.case-repository{grid-column:2;justify-self:start;margin-top:3rem;border:1px solid var(--accent);border-radius:var(--radius-pill);padding:.65rem 1.3rem;font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);transition:background-color .3s ease,color .3s ease,box-shadow .3s ease}.case-repository:hover{background:var(--accent);color:var(--bg);box-shadow:0 10px 28px -10px var(--glow)}
+.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:700;line-height:.82;letter-spacing:-.04em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:var(--muted)}.case-repository{border:1px solid var(--accent);border-radius:var(--radius-pill);padding:.65rem 1.3rem;font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);transition:background-color .3s ease,color .3s ease,box-shadow .3s ease}.case-repository:hover{background:var(--accent);color:var(--bg);box-shadow:0 10px 28px -10px var(--glow)}
+.case-repository-row{grid-column:2;justify-self:start;margin-top:3rem;display:flex;flex-wrap:wrap;gap:1rem}
 .case-signal{display:grid;grid-template-columns:minmax(10rem,1fr) minmax(18rem,3fr);gap:clamp(2rem,7vw,8rem);padding:4rem clamp(1.25rem,4vw,4rem);background:var(--accent);color:var(--bg)}.case-signal .eyebrow{color:rgba(5,5,5,.6)}.case-signal>p:last-child{max-width:56rem;font-size:clamp(1.15rem,2.3vw,2rem);line-height:1.45}
 .case-architecture,.case-engineering{display:grid;grid-template-columns:minmax(15rem,1fr) minmax(18rem,2fr);gap:clamp(3rem,8vw,10rem);padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}
 .case-section-heading h2,.case-engineering h2{margin-top:1.5rem;font-size:clamp(2.5rem,5vw,5.5rem);font-weight:600;line-height:.95;letter-spacing:-.03em}.case-flow{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.case-flow li{display:grid;grid-template-columns:4rem 1fr;align-items:center;min-height:6.5rem;border-bottom:1px solid var(--border)}.case-flow span,.case-engineering li span{font:10px "JetBrains Mono",monospace;color:var(--faint)}.case-flow strong{font-size:clamp(1.15rem,2vw,1.65rem);font-weight:600}
@@ -193,7 +194,7 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
   .flagship-chapter>.sticky{position:relative;top:auto}
   .manifesto::before{width:110vw;height:110vw}
   .case-index-hero{min-height:72svh}.case-index-intro{grid-template-columns:1fr;margin-top:4rem}.case-index-row{grid-template-columns:2.5rem 1fr 1.5rem;gap:1rem;min-height:9rem}.case-index-impact{display:none}.case-index-copy small{font-size:.78rem}.case-footer{gap:2rem}
-  .case-study-hero{display:block;min-height:auto;padding-top:6rem;padding-bottom:6rem}.case-study-hero h1{margin-top:4rem}.case-study-goal,.case-repository{margin-top:2.5rem}.case-signal,.case-architecture,.case-engineering{grid-template-columns:1fr}.case-architecture,.case-engineering{gap:4rem}.case-outcome{min-height:55svh}.case-evidence ol{grid-template-columns:1fr;margin-top:3rem}
+  .case-study-hero{display:block;min-height:auto;padding-top:6rem;padding-bottom:6rem}.case-study-hero h1{margin-top:4rem}.case-study-goal,.case-repository-row{margin-top:2.5rem}.case-signal,.case-architecture,.case-engineering{grid-template-columns:1fr}.case-architecture,.case-engineering{gap:4rem}.case-outcome{min-height:55svh}.case-evidence ol{grid-template-columns:1fr;margin-top:3rem}
 }
 
 html[data-effects="low"] #webgl-canvas{opacity:.45}
@@ -208,4 +209,23 @@ html[data-effects="immersive"] #webgl-canvas{opacity:1}
   .cinematic-hero section{position:relative!important}
   .flagship-chapter{min-height:auto!important}
   .flagship-chapter>.sticky{position:relative!important;top:auto!important}
+}
+
+/* Print: a readable document, not a screenshot of the cinematic site.
+   .no-print marks the floating/decorative UI (3D canvas, cursor glow,
+   page-transition curtain, AI assistant, command palette) that has no
+   place on paper; everything else keeps its real content, just re-themed
+   to black-on-white with animation and blur stripped out. */
+@media print{
+  .no-print,#webgl-canvas,.site-nav,.scroll-cue,.hero-console{display:none!important}
+  *,*::before,*::after{animation:none!important;transition:none!important;box-shadow:none!important;text-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  html,body{background:#fff!important}
+  body{color:#111!important}
+  .glass-panel,.card-elevated,.case-outcome,.case-engineering,.case-signal{background:#fff!important;border-color:#ccc!important;color:#111!important}
+  .case-signal{color:#111!important}
+  .case-outcome>p:last-child{color:#111!important}
+  a{color:#111!important;text-decoration:underline}
+  h1,h2,h3,strong,b{color:#000!important}
+  .eyebrow,.case-study-meta,[class*="text-[var(--faint)]"],[class*="text-[var(--muted)]"]{color:#444!important}
+  section,article,.case-flow li,.case-evidence li{break-inside:avoid}
 }

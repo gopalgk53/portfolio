@@ -211,7 +211,7 @@ export function AIAssistant() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[100] sm:bottom-6 sm:right-6" ref={panel}>
+    <div className="no-print fixed bottom-4 right-4 z-[100] sm:bottom-6 sm:right-6" ref={panel}>
       <AnimatePresence>
         {tooltip && !open && (
           <motion.button

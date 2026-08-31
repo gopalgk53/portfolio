@@ -215,10 +215,12 @@ export function PromptPlayground() {
           )}
           <footer className="mt-4 border-t border-white/[.1] pt-3">
             <p className="mb-2 font-mono text-[8px] uppercase tracking-[.14em] text-[var(--faint)]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
-            <div className="flex justify-between gap-4 font-mono text-[9px]">
+            <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 font-mono text-[9px]">
               <span className="text-[var(--muted)]">LATENCY: {latency > 0 ? `${latency.toFixed(0)}ms` : "—"}</span>
               <span className="text-[var(--muted)]">TOKENS: {tokens > 0 ? tokens : "—"}</span>
+              <span className="text-[var(--muted)]">COST: {tokens > 0 && !errorMessage ? "$0.00 (free-tier model)" : "—"}</span>
             </div>
+            {tokens > 0 && !errorMessage && <p className="mt-2 font-mono text-[8px] text-[var(--faint)]">Model: nvidia/nemotron-3-super-120b-a12b:free via OpenRouter</p>}
           </footer>
         </motion.article>
       </div>

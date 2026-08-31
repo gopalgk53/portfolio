@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects } from "../../../lib/data";
+import { PrintButton } from "../../../components/print-button";
 
 export const dynamicParams = false;
 export function generateStaticParams() { return projects.map((project) => ({ slug: project.id })); }
@@ -29,7 +30,10 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
           <div className="case-study-meta"><p>{project.category}</p><p>Architecture blueprint</p></div>
           <h1>{project.title}</h1>
           <p className="case-study-goal">{project.goal}</p>
-          <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="case-repository">Inspect repository ↗</a>
+          <div className="case-repository-row">
+            <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="case-repository">Inspect repository ↗</a>
+            <PrintButton />
+          </div>
         </header>
         <section className="case-signal" aria-label="Evidence status"><p className="eyebrow">Evidence status / blueprint</p><p>This case study documents an engineering blueprint and its intended business outcome. Targets are not represented as verified production benchmarks.</p></section>
         <section className="case-architecture">
