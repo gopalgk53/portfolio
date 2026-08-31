@@ -159,6 +159,11 @@ export async function POST(request: NextRequest) {
         ],
         temperature: 0.2,
         max_tokens: 350,
+        // Same hybrid-reasoning model as app/api/chat/route.ts — without
+        // this, a chain-of-thought preamble can eat the token budget before
+        // the required JSON ever appears, silently degrading every search
+        // to the local fallback instead of a real reranked result.
+        reasoning: { enabled: false },
       }),
       signal: AbortSignal.timeout(15_000),
     });
