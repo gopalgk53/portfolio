@@ -1,6 +1,6 @@
 import { architectureConsultantInstructions } from "../../../lib/portfolio-context";
 import { SourceRef } from "../../../lib/citations";
-import { buildCachedSseStream, buildLiveSseStream, openRouterDeltas, SSE_HEADERS } from "../../../lib/chat-stream";
+import { buildCachedSseStream, buildLiveSseStream, getCleanDeltaStream, SSE_HEADERS } from "../../../lib/chat-stream";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -101,7 +101,13 @@ export async function POST(request: NextRequest) {
   }
   if (answerCache.size >= MAX_CACHE_ENTRIES || cached) pruneAnswerCache(now);
 
-  try {
+  // See app/api/chat/route.ts's fetchOpenRouter for the full rationale —
+  // this owns its own 429/5xx HTTP retry, and getCleanDeltaStream
+  // (lib/chat-stream.ts) wraps it again to discard an attempt whose opening
+  // looks like leaked chain-of-thought rather than a real answer. Consult's
+  // open-ended "how would he approach X" prompts trigger Nemotron's
+  // reasoning even more reliably than direct chat Q&A, confirmed live.
+  async function fetchOpenRouter(): Promise<Response> {
     let modelResponse: Response | undefined;
     for (let attempt = 0; attempt < 2; attempt += 1) {
       modelResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -116,9 +122,6 @@ export async function POST(request: NextRequest) {
           temperature: 0.4,
           max_tokens: 500,
           stream: true,
-          // See app/api/chat/route.ts for why — Consult's open-ended "how
-          // would he approach X" prompts trigger Nemotron's chain-of-thought
-          // even more reliably than direct Q&A, confirmed live in production.
           reasoning: { enabled: false },
         }),
         signal: AbortSignal.timeout(20_000),
@@ -127,22 +130,17 @@ export async function POST(request: NextRequest) {
       const retryAfter = Number(modelResponse.headers.get("retry-after") || "1");
       await new Promise((resolve) => setTimeout(resolve, Math.min(Math.max(retryAfter, 1), 2) * 1000));
     }
+    return modelResponse!;
+  }
 
-    if (!modelResponse) throw new Error("OpenRouter request did not start");
-
-    if (!modelResponse.ok) {
-      let errorMessage: string | undefined;
-      try {
-        const errorBody = (await modelResponse.json()) as { error?: { message?: string } };
-        errorMessage = errorBody.error?.message;
-      } catch {
-        // Non-JSON error body — proceed without it.
-      }
-      console.error("OpenRouter consult error", modelResponse.status, errorMessage);
-      return NextResponse.json({ error: "Consult mode is temporarily unavailable." }, { status: modelResponse.status === 429 ? 429 : 502 });
+  try {
+    const deltas = await getCleanDeltaStream(fetchOpenRouter);
+    if (!deltas) {
+      console.error("OpenRouter consult: no usable streaming response after retries");
+      return NextResponse.json({ error: "Consult mode is temporarily unavailable." }, { status: 502 });
     }
 
-    const stream = buildLiveSseStream(openRouterDeltas(modelResponse), (result) => {
+    const stream = buildLiveSseStream(deltas, (result) => {
       if (answerCache.size >= MAX_CACHE_ENTRIES) pruneAnswerCache(Date.now());
       answerCache.set(cacheKey, { answer: result.answer, sources: result.sources, expiresAt: Date.now() + CACHE_TTL_MS });
     });
