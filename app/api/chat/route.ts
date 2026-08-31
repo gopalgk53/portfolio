@@ -1,6 +1,6 @@
 import { portfolioAssistantInstructions } from "../../../lib/portfolio-context";
 import { SourceRef } from "../../../lib/citations";
-import { buildCachedSseStream, buildLiveSseStream, ChatMessage, openRouterDeltas, SSE_HEADERS } from "../../../lib/chat-stream";
+import { buildCachedSseStream, buildLiveSseStream, ChatMessage, getCleanDeltaStream, SSE_HEADERS } from "../../../lib/chat-stream";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -133,7 +133,13 @@ export async function POST(request: NextRequest) {
   }
   if (answerCache.size >= MAX_CACHE_ENTRIES || cached) pruneAnswerCache(now);
 
-  try {
+  // Each call here already retries once internally on a 429/5xx HTTP
+  // response; getCleanDeltaStream (lib/chat-stream.ts) wraps that whole
+  // thing again — if the first successful stream's opening looks like
+  // leaked chain-of-thought (see reasoning:{enabled:false} below and its
+  // comment), it discards that attempt entirely and calls this a second
+  // time for a fresh one, rather than showing a visitor raw scratchpad text.
+  async function fetchOpenRouter(): Promise<Response> {
     let modelResponse: Response | undefined;
     for (let attempt = 0; attempt < 2; attempt += 1) {
       modelResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -159,7 +165,9 @@ export async function POST(request: NextRequest) {
           // on more open-ended questions, burning the whole token budget on
           // scratchpad text before ever reaching an actual answer. Confirmed
           // live against production (not guessed): fine on simple prompts,
-          // reliably broken on complex ones until this was added.
+          // reliably broken on complex ones until this was added. Even with
+          // it, this is a free-tier model and the leak isn't fully
+          // eliminated — hence getCleanDeltaStream's retry-on-leak above.
           reasoning: { enabled: false },
         }),
         signal: AbortSignal.timeout(20_000),
@@ -168,25 +176,20 @@ export async function POST(request: NextRequest) {
       const retryAfter = Number(modelResponse.headers.get("retry-after") || "1");
       await new Promise((resolve) => setTimeout(resolve, Math.min(Math.max(retryAfter, 1), 2) * 1000));
     }
+    return modelResponse!;
+  }
 
-    if (!modelResponse) throw new Error("OpenRouter request did not start");
-
-    if (!modelResponse.ok) {
-      let errorMessage: string | undefined;
-      try {
-        const errorBody = (await modelResponse.json()) as { error?: { message?: string } };
-        errorMessage = errorBody.error?.message;
-      } catch {
-        // Non-JSON error body — proceed without it.
-      }
-      console.error("OpenRouter response error", modelResponse.status, errorMessage);
+  try {
+    const deltas = await getCleanDeltaStream(fetchOpenRouter);
+    if (!deltas) {
+      console.error("OpenRouter chat: no usable streaming response after retries");
       return NextResponse.json(
         { error: "The live model is temporarily unavailable.", mode: "fallback" },
-        { status: modelResponse.status === 429 ? 429 : 502 },
+        { status: 502 },
       );
     }
 
-    const stream = buildLiveSseStream(openRouterDeltas(modelResponse), (result) => {
+    const stream = buildLiveSseStream(deltas, (result) => {
       if (answerCache.size >= MAX_CACHE_ENTRIES) pruneAnswerCache(Date.now());
       answerCache.set(cacheKey, { answer: result.answer, sources: result.sources, expiresAt: Date.now() + CACHE_TTL_MS });
     });

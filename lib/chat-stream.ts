@@ -90,6 +90,62 @@ export async function* openRouterDeltas(response: Response): AsyncGenerator<stri
   }
 }
 
+// nvidia/nemotron-3-super-120b-a12b is a hybrid-reasoning model — even with
+// reasoning:{enabled:false} on the request (see app/api/chat/route.ts),
+// OpenRouter's free tier occasionally still streams a raw chain-of-thought
+// preamble instead of a real answer. Every leak observed live in production
+// started with one of these unmistakable scratchpad phrases within the
+// first few words, so peeking at the opening of a stream is enough to catch
+// it before a visitor ever sees it — no need to inspect the whole answer,
+// which would risk false-positives on legitimate text.
+const REASONING_LEAK_PATTERN = /^(we need to|let'?s (think|craft|answer|see|write)|draft:|we must|okay,?\s|first,?\s+i\s|thinking:|<think>|i need to (figure|think))/i;
+export function looksLikeReasoningLeak(text: string): boolean {
+  return REASONING_LEAK_PATTERN.test(text.trim());
+}
+
+const PEEK_CHARS = 60;
+
+async function* prefixThenContinue(prefix: string, rest: AsyncGenerator<string>): AsyncGenerator<string> {
+  if (prefix) yield prefix;
+  yield* rest;
+}
+
+// Reads just enough of a delta stream (~one clause) to judge whether it
+// opens like leaked reasoning, then hands back a generator that replays
+// exactly what it consumed followed by the rest of the same stream — the
+// peek is invisible to whatever ends up consuming the returned generator.
+async function peekDeltas(deltas: AsyncGenerator<string>): Promise<{ looksLikeLeak: boolean; stream: AsyncGenerator<string> } | null> {
+  let peeked = "";
+  while (peeked.length < PEEK_CHARS) {
+    const { value, done } = await deltas.next();
+    if (done) break;
+    peeked += value;
+  }
+  if (!peeked) return null;
+  return { looksLikeLeak: looksLikeReasoningLeak(peeked), stream: prefixThenContinue(peeked, deltas) };
+}
+
+// Tries fetchAttempt (which already owns its own HTTP-level retry for
+// 429/5xx — see the route) up to twice, discarding the first attempt
+// entirely and trying again if its opening looks like a reasoning leak.
+// If the second attempt ALSO leaks, uses it anyway — the flush buffer and
+// extractSources() downstream still work correctly on it (it's just
+// probably a worse answer), and this stays far better than blocking a
+// visitor's request indefinitely chasing a guarantee a free model can't
+// promise.
+export async function getCleanDeltaStream(fetchAttempt: () => Promise<Response>): Promise<AsyncGenerator<string> | null> {
+  let fallback: AsyncGenerator<string> | null = null;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const response = await fetchAttempt();
+    if (!response.ok) continue;
+    const peeked = await peekDeltas(openRouterDeltas(response));
+    if (!peeked) continue;
+    if (!peeked.looksLikeLeak) return peeked.stream;
+    fallback = peeked.stream;
+  }
+  return fallback;
+}
+
 // Builds the outgoing ReadableStream for a live model call: consumes the
 // OpenRouter delta generator, flushes visible text as "token" events,
 // and emits one final "done" event with validated sources — calling
