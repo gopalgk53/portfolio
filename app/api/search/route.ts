@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { certifications, projects, skills } from "../../../lib/data";
+import { resolveSourceId, SourceType } from "../../../lib/citations";
 
 export const runtime = "nodejs";
 
@@ -10,7 +11,7 @@ const CACHE_TTL_MS = 15 * 60 * 1000;
 const MAX_RATE_ENTRIES = 1000;
 const MAX_CACHE_ENTRIES = 200;
 
-type ResultType = "project" | "skill" | "certification";
+type ResultType = SourceType;
 type RateEntry = { count: number; resetAt: number };
 type SearchResult = { id: string; type: ResultType; relevance: string };
 type CacheEntry = { results: SearchResult[]; expiresAt: number };
@@ -28,15 +29,6 @@ const globalStore = globalThis as typeof globalThis & {
 };
 const rateLimits = globalStore.portfolioSearchRateLimits ?? (globalStore.portfolioSearchRateLimits = new Map());
 const resultCache = globalStore.portfolioSearchCache ?? (globalStore.portfolioSearchCache = new Map());
-
-// Ids are type-prefixed (project:<real id>, skill:<index>, cert:<index>) so
-// the type never has to be trusted separately from the id the model
-// returns — it's derived by splitting the id itself. Skills/certifications
-// have no natural id in lib/data.ts, so the array index is used; that's
-// stable because both arrays are static source, not runtime-reordered.
-const knownProjectIds = new Set(projects.map((project) => project.id));
-const knownSkillIndices = new Set(skills.map((_, i) => i));
-const knownCertIndices = new Set(certifications.map((_, i) => i));
 
 function buildIndexedCorpus() {
   const projectLines = projects
@@ -93,20 +85,6 @@ function pruneCache(now: number) {
   while (resultCache.size >= MAX_CACHE_ENTRIES) resultCache.delete(resultCache.keys().next().value!);
 }
 
-// Validates a raw id against the real corpus and returns its type — the
-// single source of truth for "is this id real", used by both the parser
-// below. Never trusts a `type` field the model might return separately.
-function resolveId(rawId: string): { id: string; type: ResultType } | null {
-  const separatorIndex = rawId.indexOf(":");
-  if (separatorIndex < 0) return null;
-  const prefix = rawId.slice(0, separatorIndex);
-  const rest = rawId.slice(separatorIndex + 1);
-  if (prefix === "project" && knownProjectIds.has(rest)) return { id: rawId, type: "project" };
-  if (prefix === "skill" && knownSkillIndices.has(Number(rest))) return { id: rawId, type: "skill" };
-  if (prefix === "cert" && knownCertIndices.has(Number(rest))) return { id: rawId, type: "certification" };
-  return null;
-}
-
 // Defensive parse of the model's response: strips a stray code fence if the
 // model adds one despite instructions, extracts the first {...} object,
 // validates shape, and drops any id that isn't real — the frontend must
@@ -125,7 +103,7 @@ function parseResults(raw: string): SearchResult[] {
       const rawId = (item as { id?: unknown }).id;
       const relevance = (item as { relevance?: unknown }).relevance;
       if (typeof rawId !== "string" || seen.has(rawId)) continue;
-      const resolved = resolveId(rawId);
+      const resolved = resolveSourceId(rawId);
       if (!resolved) continue;
       seen.add(rawId);
       results.push({ id: resolved.id, type: resolved.type, relevance: typeof relevance === "string" ? relevance.slice(0, 140) : "" });
