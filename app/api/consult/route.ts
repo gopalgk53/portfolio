@@ -116,6 +116,10 @@ export async function POST(request: NextRequest) {
           temperature: 0.4,
           max_tokens: 500,
           stream: true,
+          // See app/api/chat/route.ts for why — Consult's open-ended "how
+          // would he approach X" prompts trigger Nemotron's chain-of-thought
+          // even more reliably than direct Q&A, confirmed live in production.
+          reasoning: { enabled: false },
         }),
         signal: AbortSignal.timeout(20_000),
       });

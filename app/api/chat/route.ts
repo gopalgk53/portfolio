@@ -154,6 +154,13 @@ export async function POST(request: NextRequest) {
           temperature: 0.35,
           max_tokens: 650,
           stream: true,
+          // Nemotron is a hybrid-reasoning model — without this, OpenRouter
+          // can stream its raw chain-of-thought straight into delta.content
+          // on more open-ended questions, burning the whole token budget on
+          // scratchpad text before ever reaching an actual answer. Confirmed
+          // live against production (not guessed): fine on simple prompts,
+          // reliably broken on complex ones until this was added.
+          reasoning: { enabled: false },
         }),
         signal: AbortSignal.timeout(20_000),
       });

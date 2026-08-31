@@ -112,6 +112,10 @@ export async function POST(request: NextRequest) {
           temperature,
           top_p: topP,
           max_tokens: 320,
+          // See app/api/chat/route.ts — same hybrid-reasoning model, same
+          // risk of the raw chain-of-thought consuming the token budget
+          // before a real answer appears.
+          reasoning: { enabled: false },
         }),
         signal: AbortSignal.timeout(20_000),
       });
