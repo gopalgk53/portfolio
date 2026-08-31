@@ -5,7 +5,7 @@ import { changelog } from "../../lib/changelog";
 export const metadata: Metadata = {
   title: "Changelog",
   description: "A real record of how this portfolio has shipped and evolved, pulled from its own merged pull requests.",
-  alternates: { canonical: "/changelog" },
+  alternates: { canonical: "/changelog", types: { "application/rss+xml": "/changelog/feed.xml" } },
 };
 
 const TAG_COLOR: Record<string, string> = {
@@ -32,6 +32,9 @@ export default function ChangelogPage() {
           A real record pulled from this site&apos;s own merged pull requests — not marketing copy. Each entry
           links to the actual PR on GitHub.
         </p>
+        <a href="/changelog/feed.xml" className="mt-4 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.1em] text-[var(--faint)] hover:text-[var(--accent)]">
+          RSS feed ↗
+        </a>
       </header>
       <section className="mx-auto mt-16 max-w-3xl border-t border-[var(--border)] px-5 pb-32 sm:px-10">
         {changelog.map((entry) => (
