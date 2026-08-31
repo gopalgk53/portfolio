@@ -5,31 +5,20 @@ import { ArrowUpRight, Search } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import { certifications, projects, skills } from "../lib/data";
 import { spring } from "../lib/motion";
+import { resolveSourceDisplay, SourceType, TYPE_LABEL } from "../lib/citations";
 
-type ResultType = "project" | "skill" | "certification";
+type ResultType = SourceType;
 type Result = { id: string; type: ResultType; relevance: string };
 type Mode = "idle" | "live" | "cache" | "fallback";
 
 // Resolves a type-prefixed id (project:<id> / skill:<index> / cert:<index>)
-// back to real, renderable content — same id scheme app/api/search/route.ts
-// builds and validates against, so a result either resolves to something
-// real or gets silently dropped, never a broken row.
+// back to real, renderable content via the shared resolver (also used by
+// app/api/search/route.ts and the AI assistant's citations), preferring the
+// model's per-result relevance blurb over the resolver's generic subtitle.
 function resolveDisplay(result: Result): { title: string; subtitle: string; href: string; external?: boolean } | null {
-  const rest = result.id.slice(result.id.indexOf(":") + 1);
-  if (result.type === "project") {
-    const p = projects.find((item) => item.id === rest);
-    if (!p) return null;
-    return { title: p.title, subtitle: result.relevance || p.impact, href: `/projects/${p.id}` };
-  }
-  if (result.type === "skill") {
-    const group = skills[Number(rest)];
-    if (!group) return null;
-    return { title: group.group, subtitle: result.relevance || group.items.slice(0, 4).join(", "), href: "#skills" };
-  }
-  const cert = certifications[Number(rest)];
-  if (!cert) return null;
-  const [name, meta, url] = cert;
-  return { title: name, subtitle: result.relevance || meta, href: url, external: true };
+  const display = resolveSourceDisplay({ id: result.id, type: result.type });
+  if (!display) return null;
+  return { ...display, subtitle: result.relevance || display.subtitle };
 }
 
 // A crude but honest client-side fallback for when the live model is
@@ -64,8 +53,6 @@ function localMatch(query: string): Result[] {
     .slice(0, 5)
     .map((s) => ({ id: s.id, type: s.type, relevance: "Keyword match" }));
 }
-
-const TYPE_LABEL: Record<ResultType, string> = { project: "Project", skill: "Skill", certification: "Credential" };
 
 export function SiteSearch() {
   const [query, setQuery] = useState("");

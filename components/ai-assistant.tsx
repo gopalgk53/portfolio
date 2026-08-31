@@ -4,8 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Bot, CheckCircle2, Minimize2, RotateCcw, Send } from "lucide-react";
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { spring } from "../lib/motion";
+import { resolveSourceDisplay, SourceRef, TYPE_LABEL } from "../lib/citations";
 
-type Message = { role: "user" | "assistant"; text: string; warning?: boolean };
+type Message = { role: "user" | "assistant"; text: string; warning?: boolean; sources?: SourceRef[] };
 type Stage = "retrieving" | "reranking" | "generating" | null;
 const STAGE_ORDER = ["retrieving", "reranking", "generating"] as const;
 const STAGE_LABEL: Record<(typeof STAGE_ORDER)[number], string> = {
@@ -162,6 +163,7 @@ export function AIAssistant() {
     setWarning(unsafe);
 
     let full = "";
+    let sources: SourceRef[] = [];
     if (unsafe) {
       full = "[Guardrail exception]: I can only discuss Gopalakrishna's professional engineering profile. Try asking about his stack, projects, certifications, or availability.";
     } else {
@@ -170,9 +172,10 @@ export function AIAssistant() {
       try {
         const history = messages.slice(-8).map(message => ({ role: message.role, content: message.text }));
         const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: question.trim(), history }) });
-        const data = (await response.json()) as { answer?: string; error?: string };
+        const data = (await response.json()) as { answer?: string; sources?: SourceRef[]; error?: string };
         if (!response.ok || !data.answer) throw new Error(data.error || "No answer returned");
         full = data.answer;
+        sources = Array.isArray(data.sources) ? data.sources : [];
       } catch {
         full = answers[question] || "Gopalakrishna focuses on production-minded RAG, agent orchestration, model optimization and document intelligence. The live assistant is temporarily unavailable; try the project and skills sections instead.";
       } finally {
@@ -182,7 +185,7 @@ export function AIAssistant() {
     setStage("generating");
 
     let index = 0;
-    setMessages((current) => [...current, { role: "assistant", text: "", warning: unsafe }]);
+    setMessages((current) => [...current, { role: "assistant", text: "", warning: unsafe, sources }]);
     const timer = setInterval(() => {
       index += 3;
       setMessages((current) => current.map((message, i) => (i === current.length - 1 ? { ...message, text: full.slice(0, index) } : message)));
@@ -278,6 +281,26 @@ export function AIAssistant() {
                     {isLastAssistant && thinking && stage === "generating" && <StageList stage={stage} />}
                     {message.role === "assistant" ? <FormattedMessage text={message.text} /> : message.text}
                     {isLastAssistant && thinking && <span className="ml-1 animate-pulse text-[var(--accent)]">▮</span>}
+                    {message.role === "assistant" && !!message.sources?.length && !(isLastAssistant && thinking) && (
+                      <div className="mt-3 flex flex-wrap gap-1.5 border-t border-white/[.08] pt-3">
+                        {message.sources.map((source) => {
+                          const display = resolveSourceDisplay(source);
+                          if (!display) return null;
+                          return (
+                            <a
+                              key={source.id}
+                              href={display.href}
+                              target={display.external ? "_blank" : undefined}
+                              rel={display.external ? "noreferrer" : undefined}
+                              className="inline-flex items-center gap-1.5 rounded-full border border-white/[.14] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[.08em] text-[var(--faint)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                            >
+                              <span className="text-[var(--accent)]">{TYPE_LABEL[source.type]}</span>
+                              {display.title}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
                     {message.warning && (
                       <button onClick={reset} className="mt-3 flex items-center gap-2 rounded-full border border-[#c9a25a]/30 px-3 py-2 font-mono text-[10px] text-[#c9a25a]">
                         <RotateCcw className="h-3 w-3" />

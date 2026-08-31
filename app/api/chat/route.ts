@@ -1,4 +1,5 @@
 import { portfolioAssistantInstructions } from "../../../lib/portfolio-context";
+import { resolveSourceId, SourceRef } from "../../../lib/citations";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -13,11 +14,34 @@ const MAX_CACHE_ENTRIES = 200;
 
 type RateEntry = { count: number; resetAt: number };
 type ChatMessage = { role: "user" | "assistant"; content: string };
-type CacheEntry = { answer: string; expiresAt: number };
+type CacheEntry = { answer: string; sources: SourceRef[]; expiresAt: number };
 type APIResponse = {
   choices?: Array<{ message?: { content?: string } }>;
   error?: { message?: string };
 };
+
+// The model appends a trailing "SOURCES: id1, id2" line per the system
+// prompt's CITATION INDEX. Strip it out of the displayed answer and turn it
+// into validated SourceRefs — an id that isn't real, or a model that ignores
+// the format entirely, just yields an empty source list, never a guess.
+function extractSources(raw: string): { answer: string; sources: SourceRef[] } {
+  const trimmed = raw.trim();
+  const match = trimmed.match(/\n\s*SOURCES:\s*(.*)$/i);
+  if (!match) return { answer: trimmed, sources: [] };
+  const answer = trimmed.slice(0, match.index).trim() || trimmed;
+  const list = match[1].trim();
+  if (!list || /^none$/i.test(list)) return { answer, sources: [] };
+  const seen = new Set<string>();
+  const sources: SourceRef[] = [];
+  for (const rawId of list.split(",").map((item) => item.trim()).filter(Boolean)) {
+    const resolved = resolveSourceId(rawId);
+    if (!resolved || seen.has(resolved.id)) continue;
+    seen.add(resolved.id);
+    sources.push(resolved);
+    if (sources.length >= 4) break;
+  }
+  return { answer, sources };
+}
 
 const globalRateStore = globalThis as typeof globalThis & {
   portfolioRateLimits?: Map<string, RateEntry>;
@@ -132,7 +156,7 @@ export async function POST(request: NextRequest) {
   const now = Date.now();
   const cached = answerCache.get(cacheKey);
   if (cached && cached.expiresAt > now) {
-    return NextResponse.json({ answer: cached.answer, mode: "cache" });
+    return NextResponse.json({ answer: cached.answer, sources: cached.sources, mode: "cache" });
   }
   if (answerCache.size >= MAX_CACHE_ENTRIES || cached) pruneAnswerCache(now);
 
@@ -175,17 +199,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const answer = data.choices?.[0]?.message?.content?.trim();
-    if (!answer) {
+    const rawAnswer = data.choices?.[0]?.message?.content?.trim();
+    if (!rawAnswer) {
       return NextResponse.json(
         { error: "The portfolio assistant returned an empty answer." },
         { status: 502 },
       );
     }
+    const { answer, sources } = extractSources(rawAnswer);
 
     if (answerCache.size >= MAX_CACHE_ENTRIES) pruneAnswerCache(Date.now());
-    answerCache.set(cacheKey, { answer, expiresAt: Date.now() + CACHE_TTL_MS });
-    return NextResponse.json({ answer, mode: "live" });
+    answerCache.set(cacheKey, { answer, sources, expiresAt: Date.now() + CACHE_TTL_MS });
+    return NextResponse.json({ answer, sources, mode: "live" });
   } catch (error) {
     console.error("Portfolio assistant request failed", error);
     return NextResponse.json(

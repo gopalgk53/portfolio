@@ -1,4 +1,5 @@
 import { certifications, projects, skills } from "./data";
+import { buildCitationIndex } from "./citations";
 
 // Shared with app/api/search/route.ts so both the chat assistant and the
 // project search reranker are grounded in the exact same real-data summary
@@ -36,6 +37,7 @@ Rules:
 - Use plain text. Short bullets are allowed when they improve clarity.
 - Refer to him as Gopalakrishna, not Gopalakrishnan.
 - Contact email: gopalgk53@yahoo.com.
+- After your answer, on its own new line, add one line starting with "SOURCES:" listing the ids (from CITATION INDEX below) of the specific projects, skills, or certifications your answer actually drew from — comma-separated, most relevant first, at most 4. Use ids exactly as written in CITATION INDEX, never invent or reword one. If nothing specific applies, write "SOURCES: none".
 
 VERIFIED PROJECTS
 ${projectSummary}
@@ -45,4 +47,7 @@ ${skillSummary}
 
 VERIFIED CERTIFICATIONS
 ${certificationSummary}
+
+CITATION INDEX
+${buildCitationIndex()}
 `.trim();
