@@ -53,3 +53,28 @@ export function buildCitationIndex() {
   const certLines = certifications.map(([name], i) => `cert:${i} = ${name}`).join("\n");
   return `${projectLines}\n${skillLines}\n${certLines}`;
 }
+
+// Shared by app/api/chat/route.ts and app/api/consult/route.ts (both
+// instruct the model to append a trailing "SOURCES: id1, id2" line per the
+// CITATION INDEX). Strips that line out of the displayed answer and turns
+// it into validated SourceRefs — an id that isn't real, or a model that
+// ignores the format entirely, just yields an empty source list, never a
+// guess.
+export function extractSources(raw: string): { answer: string; sources: SourceRef[] } {
+  const trimmed = raw.trim();
+  const match = trimmed.match(/\n\s*SOURCES:\s*(.*)$/i);
+  if (!match) return { answer: trimmed, sources: [] };
+  const answer = trimmed.slice(0, match.index).trim() || trimmed;
+  const list = match[1].trim();
+  if (!list || /^none$/i.test(list)) return { answer, sources: [] };
+  const seen = new Set<string>();
+  const sources: SourceRef[] = [];
+  for (const rawId of list.split(",").map((item) => item.trim()).filter(Boolean)) {
+    const resolved = resolveSourceId(rawId);
+    if (!resolved || seen.has(resolved.id)) continue;
+    seen.add(resolved.id);
+    sources.push(resolved);
+    if (sources.length >= 4) break;
+  }
+  return { answer, sources };
+}
