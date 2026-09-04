@@ -19,6 +19,7 @@ import { Magnetic } from "./motion/magnetic";
 import { RagFlow } from "./visualizations/rag-flow";
 import { AgentFlow } from "./visualizations/agent-flow";
 import { HiringEvidence } from "./hiring-evidence";
+import { AudienceHighlight } from "./audience-toggle";
 import { GithubActivity } from "./github-activity";
 import { SiteSearch } from "./site-search";
 
@@ -105,6 +106,7 @@ function About() {
             I focus on prompt engineering, advanced RAG topologies, autonomous multi-agent workflows, and the evaluation systems required to make
             them reliable — spanning Data Science, Generative AI, LLM applications, Machine Learning, and AWS.
           </p>
+          <AudienceHighlight />
           <div className="mt-14 grid border-y border-white/[.14] sm:grid-cols-3">
             {[["7+", "Years domain experience"], ["9", "Blueprint systems"], ["23", "Credentials retained"]].map(([n, l]) => (
               <div key={l} className="border-b border-white/[.12] py-6 sm:border-b-0 sm:border-r sm:px-6 first:pl-0 last:border-r-0">
@@ -518,6 +520,7 @@ export function Portfolio() {
           <nav aria-label="Site meta links" className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-[.08em]">
             <Link href="/changelog" className="hover:text-[var(--accent)]">Changelog</Link>
             <Link href="/api-docs" className="hover:text-[var(--accent)]">API</Link>
+            <Link href="/security" className="hover:text-[var(--accent)]">Security</Link>
             <a href="/llms.txt" className="hover:text-[var(--accent)]">llms.txt</a>
           </nav>
           <p>India · gopalakrishnagenai.in</p>

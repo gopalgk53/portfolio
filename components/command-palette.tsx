@@ -32,6 +32,7 @@ export function CommandPalette() {
       { id: "resume", label: "Open résumé", hint: "R", group: "Actions" as const, href: "/Gopalakrishna_Maddipalli_CV.pdf" },
       { id: "cases", label: "Explore all case studies", hint: "↵", group: "Actions" as const, href: "/projects" },
       { id: "changelog", label: "View changelog", hint: "↵", group: "Actions" as const, href: "/changelog" },
+      { id: "security", label: "Security & privacy", hint: "↵", group: "Actions" as const, href: "/security" },
       { id: "terminal", label: "Open terminal mode", hint: "T", group: "Actions" as const, href: "/terminal" },
     ],
     [],

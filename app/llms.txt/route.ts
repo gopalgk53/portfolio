@@ -35,6 +35,7 @@ ${certLines}
 - [/api/skills](${BASE}/api/skills): all skill groups as JSON
 - [/api/certifications](${BASE}/api/certifications): all certifications as JSON
 - Full docs: ${BASE}/api-docs
+- Data handling: ${BASE}/security
 
 ## Contact
 - Email: gopalgk53@yahoo.com
