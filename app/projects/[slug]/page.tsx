@@ -34,6 +34,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
           <p className="case-study-goal">{project.goal}</p>
           <div className="case-repository-row">
             <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="case-repository">Inspect repository ↗</a>
+            {isPaymentRisk && <a href="http://payment-risk-dashboard-alb-dev-63000172.ap-southeast-2.elb.amazonaws.com/" target="_blank" rel="noreferrer" className="case-repository">Open AWS dashboard ↗</a>}
             <PrintButton />
           </div>
         </header>
