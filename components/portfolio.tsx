@@ -22,6 +22,7 @@ import { HiringEvidence } from "./hiring-evidence";
 import { AudienceHighlight } from "./audience-toggle";
 import { GithubActivity } from "./github-activity";
 import { SiteSearch } from "./site-search";
+import { ProjectShowcase } from "./project-showcase";
 
 const LabLoading = () => <div className="px-8 py-16 font-mono text-[10px] uppercase tracking-[.16em] text-[var(--faint)]">Loading technical module…</div>;
 // ssr: false is deliberate — matches the exact pattern already used for
@@ -499,6 +500,7 @@ export function Portfolio() {
     <>
       <About />
       <Manifesto />
+      <ProjectShowcase />
       <Projects />
       <Playground />
       <details className="lab-disclosure">
