@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play } from "lucide-react";
 
 // lucide-react@1.31.0 (pinned in package.json) doesn't ship brand marks, so
@@ -8,7 +8,7 @@ import { ArrowUpRight, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play } fr
 // workaround the pre-redesign code used (Code2 for GitHub).
 const Github = Code2;
 const Linkedin = Link2;
-import { FormEvent, ReactNode, useRef, useState } from "react";
+import { FormEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { certifications, projects, skills } from "../lib/data";
@@ -132,12 +132,42 @@ function About() {
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [tab, setTab] = useState<"overview" | "architecture">("overview");
   const glowRef = useGlowPointer<HTMLElement>();
+  const [tiltEnabled, setTiltEnabled] = useState(false);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const springRotateX = useSpring(rotateX, { stiffness: 220, damping: 22 });
+  const springRotateY = useSpring(rotateY, { stiffness: 220, damping: 22 });
+
+  useEffect(() => {
+    setTiltEnabled(window.matchMedia("(hover: hover) and (pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+
+  // A subtle 3D tilt tied to pointer position within the card — on top of
+  // the glow-card's own cursor-tracked light and the existing lift-on-hover,
+  // not a replacement for either. Desktop fine-pointer only, off under
+  // prefers-reduced-motion, same gating as useGlowPointer/CursorGlow.
+  function onCardPointerMove(event: ReactPointerEvent<HTMLElement>) {
+    if (!tiltEnabled) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const px = (event.clientX - rect.left) / rect.width - 0.5;
+    const py = (event.clientY - rect.top) / rect.height - 0.5;
+    rotateY.set(px * 6);
+    rotateX.set(-py * 6);
+  }
+  function onCardPointerLeave() {
+    rotateX.set(0);
+    rotateY.set(0);
+  }
+
   return (
     <motion.article
       ref={glowRef}
       layout
       whileHover={{ y: -6 }}
       transition={spring}
+      onPointerMove={onCardPointerMove}
+      onPointerLeave={onCardPointerLeave}
+      style={tiltEnabled ? { rotateX: springRotateX, rotateY: springRotateY, transformPerspective: 1000 } : undefined}
       className="card-elevated glow-card group relative grid min-h-[360px] overflow-hidden px-6 py-10 md:grid-cols-[7rem_1fr_1fr] md:gap-10 md:px-8 md:py-14"
     >
       <div className="text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")} / 09</div>
@@ -392,10 +422,11 @@ function Certifications() {
             </div>
             {unavailable ? <span className="font-mono text-[9px] uppercase tracking-[.12em] text-[var(--faint)]">Verification host unavailable</span> : <ExternalLink className="h-4 w-4 shrink-0 text-[var(--accent)]" />}
           </>;
+          const reveal = { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: staggerChild(index % 6) };
           return unavailable ? (
-            <div key={name} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</div>
+            <motion.div key={name} {...reveal} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.div>
           ) : (
-            <motion.a key={name} href={url} target="_blank" rel="noreferrer" whileHover={{ x: 5 }} transition={spring} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.a>
+            <motion.a key={name} href={url} target="_blank" rel="noreferrer" {...reveal} whileHover={{ x: 5, transition: spring }} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.a>
           );
         })}
       </div>
