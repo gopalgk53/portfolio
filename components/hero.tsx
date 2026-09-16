@@ -26,6 +26,7 @@ export function Hero() {
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
   const { scrollYProgress: pageProgress } = useScroll();
+  const badgeRotate = useTransform(pageProgress, [0, 1], [0, 20]);
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const titleScale = useTransform(scrollYProgress, [0, .72], [1, .72]);
   const titleOpacity = useTransform(scrollYProgress, [0, .72, 1], [1, .8, 0]);
@@ -100,7 +101,7 @@ export function Hero() {
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
         <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 sm:left-8">
           <p className="hero-name text-white">Gopalakrishna Maddipalli</p>
-          <p className="mt-2 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">Generative AI engineer</p>
+          <p className="mt-2 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">AI Engineer</p>
           <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
@@ -110,16 +111,27 @@ export function Hero() {
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="text-gradient-accent block text-right">Intelligence</motion.span>
           </h1>
           <div className="mt-6 flex items-center gap-3" aria-hidden="true">
-            {heroBadges.map(({ Icon, label }, i) => (
+            {heroBadges.map(({ Icon, label, color }, i) => (
               <motion.div
                 key={label}
                 initial={reducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                title={label}
-                className="icon-badge grid h-11 w-11 place-items-center rounded-full"
               >
-                <Icon className="h-5 w-5" style={{ color: heroBadges[i].color }} />
+                {/* Two independent motions on one badge: a slow continuous
+                    float (idle, always running) and a scroll-tied rotation
+                    driven by pageProgress — the same value already driving
+                    the nav's progress underline, so scrolling visibly moves
+                    something in the hero, not just a bar at the very top. */}
+                <motion.div
+                  title={label}
+                  animate={reducedMotion ? undefined : { y: [0, -6, 0] }}
+                  transition={reducedMotion ? undefined : { duration: 3.4 + i * 0.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+                  style={reducedMotion ? undefined : { rotate: badgeRotate }}
+                  className="icon-badge grid h-11 w-11 place-items-center rounded-full"
+                >
+                  <Icon className="h-5 w-5" style={{ color }} />
+                </motion.div>
               </motion.div>
             ))}
           </div>

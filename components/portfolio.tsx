@@ -70,8 +70,13 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
   const ref = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.92", "start 0.4"] });
-  const scale = useTransform(scrollYProgress, [0, 1], [0.965, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
+  // Sections used to just barely scale/fade into place (0.965->1, easy to
+  // miss). Widened so scrolling to a new section is unmistakably a real
+  // camera move, not a subtle opacity tweak — added a y-rise on top since
+  // scale alone still read as static.
+  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [56, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.35, 1]);
   const eyebrowY = useTransform(scrollYProgress, [0, 1], [18, 0]);
 
   return (
@@ -79,7 +84,7 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
       ref={ref}
       id={id}
       data-scene={scene}
-      style={reducedMotion ? undefined : { scale, opacity }}
+      style={reducedMotion ? undefined : { scale, y, opacity }}
       className="chapter relative z-10 scroll-mt-20 border-t border-white/[.1] px-5 py-28 sm:px-8 sm:py-44"
     >
       <div className="mx-auto max-w-[1600px]">
