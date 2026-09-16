@@ -26,7 +26,7 @@ export default function ChangelogPage() {
       <header className="px-5 pt-20 sm:px-10 sm:pt-28">
         <p className="eyebrow">Build log · 2026</p>
         <h1 className="mt-4 max-w-2xl text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[.95] tracking-tight">
-          What actually <span className="text-[var(--accent)]">shipped.</span>
+          What actually <span className="text-gradient-accent">shipped.</span>
         </h1>
         <p className="mt-6 max-w-xl text-sm leading-7 text-[var(--muted)]">
           A real record pulled from this site&apos;s own merged pull requests — not marketing copy. Each entry
