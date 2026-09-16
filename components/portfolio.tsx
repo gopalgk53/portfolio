@@ -123,7 +123,7 @@ function About() {
           </p>
           <AudienceHighlight />
           <div className="mt-14 grid border-y border-white/[.14] sm:grid-cols-3">
-            {[["7+", "Years domain experience"], ["9", "Blueprint systems"], ["23", "Credentials retained"]].map(([n, l]) => (
+            {[["7+", "Years domain experience"], [String(projects.length), "Blueprint systems"], [String(certifications.length), "Credentials retained"]].map(([n, l]) => (
               <div key={l} className="border-b border-white/[.12] py-6 sm:border-b-0 sm:border-r sm:px-6 first:pl-0 last:border-r-0">
                 <b className="text-4xl font-medium tracking-[-.03em]">{n}</b>
                 <p className="mt-2 text-xs text-[var(--faint)]">{l}</p>
@@ -159,7 +159,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   // A subtle 3D tilt tied to pointer position within the card — on top of
   // the glow-card's own cursor-tracked light and the existing lift-on-hover,
   // not a replacement for either. Desktop fine-pointer only, off under
-  // prefers-reduced-motion, same gating as useGlowPointer/CursorGlow.
+  // prefers-reduced-motion, same gating pattern as useGlowPointer.
   function onCardPointerMove(event: ReactPointerEvent<HTMLElement>) {
     if (!tiltEnabled) return;
     const rect = event.currentTarget.getBoundingClientRect();
@@ -498,7 +498,7 @@ function Contact() {
                 <Magnetic key={label as string} className="block w-full">
                   <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} rel={String(url).startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between border-b border-white/[.12] py-4 text-sm text-[var(--muted)]">
                     <span className="flex flex-wrap items-center gap-2 break-all">
-                      <span className="icon-badge grid h-7 w-7 shrink-0 place-items-center rounded-full">
+                      <span className="icon-badge grid h-7 w-7 shrink-0 place-items-center rounded-[var(--radius-sm)]">
                         <IconComp className="h-3.5 w-3.5" style={{ color: badgeColor }} />
                       </span>
                       {label as string}

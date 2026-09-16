@@ -24,10 +24,15 @@
   --muted: #a8a8a8;
   --faint: #7a7a7a;
   --accent: #63b3ff;
-  --accent-2: #a855f7;
+  /* Desaturated from the reference's literal #a855f7 (Tailwind purple-500,
+     92% saturation) to 62% saturation, lightness nudged up to keep AA
+     contrast (4.56:1 against --bg) — reads as this site's own muted accent
+     evolving into a second color, not a different product's bright violet
+     dropped in next to it. */
+  --accent-2: #975ad1;
   --signal: #63b3ff;
   --accent-soft: rgba(99, 179, 255, .12);
-  --accent-2-soft: rgba(168, 85, 247, .12);
+  --accent-2-soft: rgba(151, 90, 209, .12);
   --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-2));
   --border: rgba(255, 255, 255, 0.10);
   --border-strong: rgba(255, 255, 255, 0.18);
@@ -51,15 +56,24 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 ::selection{color:var(--bg);background:var(--accent)}
 h1,h2,h3{margin:0;text-wrap:balance}
 .text-gradient-accent{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
-/* A small circular badge with a soft two-tone gradient fill and border —
-   used for the hero's capability icons and the Contact section's
-   GitHub/LinkedIn/email icons, matching the reference's icon-badge motif. */
-.icon-badge{background:linear-gradient(135deg,var(--accent-soft),var(--accent-2-soft));border:1px solid var(--border-strong)}
+/* Was a soft circular glow-fill lifted straight from the SaaS reference —
+   read as a different product's vocabulary next to this site's own
+   outline-first, hard-cornered idiom (.btn-pill--outline, .case-repository).
+   Re-expressed in that idiom instead: near-transparent dark fill, a plain
+   solid border (no translucent wash), sharp corners set by the caller via
+   var(--radius-sm) rather than full rounding. */
+.icon-badge{background:rgba(255,255,255,.02);border:1px solid var(--border-strong)}
 /* A quote-style treatment for an existing statement re-presented with
    emphasis — a gradient left border and decorative opening mark, not new
    copy. */
 .quote-panel{position:relative;border-left:3px solid transparent;border-image:var(--gradient-accent);border-image-slice:1;padding-left:1.5rem}
-.quote-panel::before{content:"\201C";position:absolute;left:-.15em;top:-.3em;font-size:3rem;line-height:1;font-family:Georgia,serif;color:var(--accent-2);opacity:.5}
+/* Was a decorative serif curly-quote — the one typographic voice this
+   site never uses anywhere else (everything else is JetBrains Mono
+   uppercase). Swapped for the exact "›" prompt marker
+   components/prompt-playground.tsx already uses for its input line, so
+   this reads as "a terminal printing a real statement," matching the
+   site's own idiom, not a borrowed one. */
+.quote-panel::before{content:"›";position:absolute;left:-.05em;top:-.05em;font-size:1.6em;line-height:1;font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--accent-2);opacity:.7}
 @supports not (background-clip:text){.text-gradient-accent{color:var(--accent);background:none}}
 p{text-wrap:pretty}
 .font-mono,code,pre{font-family:"JetBrains Mono",ui-monospace,monospace}

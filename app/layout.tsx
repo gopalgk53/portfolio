@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { JsonLd } from "../components/json-ld";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { CursorGlow } from "../components/cursor-glow";
 import { PageTransition } from "../components/page-transition";
 import { ScrollProgress } from "../components/scroll-progress";
 
@@ -32,7 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head><JsonLd /></head>
       <body className="bg-[#050505] text-white antialiased font-sans">
         <a href="#main-content" className="skip-link">Skip to main content</a>
-        {children}<ScrollProgress/><CursorGlow/><PageTransition/><Analytics/><SpeedInsights/>
+        {children}<ScrollProgress/><PageTransition/><Analytics/><SpeedInsights/>
       </body>
     </html>
   );
