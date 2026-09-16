@@ -1,11 +1,22 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Brain, Database, Menu, Workflow, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SoundToggle } from "./sound-toggle";
 import { HeroAgentTrace } from "./hero-agent-trace";
 import { nav } from "../lib/nav";
+
+// Three real pillars of the actual stack (matches the tagline right below
+// them: "LLMs, RAG, agents") — not decoration for its own sake. Colors
+// alternate accent/accent-2, same retrieval-vs-agentic split used in the 3D
+// scene and the project category labels, so it reads as one consistent
+// system rather than a one-off flourish.
+const heroBadges = [
+  { Icon: Brain, label: "LLMs & fine-tuning", color: "var(--accent)" },
+  { Icon: Database, label: "RAG & vector search", color: "var(--accent)" },
+  { Icon: Workflow, label: "Agent orchestration", color: "var(--accent-2)" },
+];
 
 export function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -98,6 +109,20 @@ export function Hero() {
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Generative</motion.span>
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="text-gradient-accent block text-right">Intelligence</motion.span>
           </h1>
+          <div className="mt-6 flex items-center gap-3" aria-hidden="true">
+            {heroBadges.map(({ Icon, label }, i) => (
+              <motion.div
+                key={label}
+                initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                title={label}
+                className="icon-badge grid h-11 w-11 place-items-center rounded-full"
+              >
+                <Icon className="h-5 w-5" style={{ color: heroBadges[i].color }} />
+              </motion.div>
+            ))}
+          </div>
           <div className="mt-8 grid gap-8 border-t border-white/15 pt-5 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
             <p className="max-w-md text-sm leading-6 text-[var(--muted)]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
             <p className="max-w-sm text-sm leading-6 text-[var(--muted)]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>

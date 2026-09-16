@@ -51,6 +51,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 ::selection{color:var(--bg);background:var(--accent)}
 h1,h2,h3{margin:0;text-wrap:balance}
 .text-gradient-accent{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* A small circular badge with a soft two-tone gradient fill and border —
+   used for the hero's capability icons and the Contact section's
+   GitHub/LinkedIn/email icons, matching the reference's icon-badge motif. */
+.icon-badge{background:linear-gradient(135deg,var(--accent-soft),var(--accent-2-soft));border:1px solid var(--border-strong)}
+/* A quote-style treatment for an existing statement re-presented with
+   emphasis — a gradient left border and decorative opening mark, not new
+   copy. */
+.quote-panel{position:relative;border-left:3px solid transparent;border-image:var(--gradient-accent);border-image-slice:1;padding-left:1.5rem}
+.quote-panel::before{content:"\201C";position:absolute;left:-.15em;top:-.3em;font-size:3rem;line-height:1;font-family:Georgia,serif;color:var(--accent-2);opacity:.5}
 @supports not (background-clip:text){.text-gradient-accent{color:var(--accent);background:none}}
 p{text-wrap:pretty}
 .font-mono,code,pre{font-family:"JetBrains Mono",ui-monospace,monospace}
