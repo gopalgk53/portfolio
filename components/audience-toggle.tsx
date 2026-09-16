@@ -2,6 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { certifications, projects } from "../lib/data";
 
 type Audience = "recruiter" | "engineer";
 const KEY = "gopal-audience-mode";
@@ -47,7 +48,7 @@ export function AudienceHighlight() {
         <div className="mt-5">
           <p className="text-sm leading-6 text-[var(--muted)]">
             Available for Generative AI Engineering and AI Architecture roles, based in India — 7+ years domain
-            experience, 9 blueprint systems, 24 credentials retained.
+            experience, {projects.length} blueprint systems, {certifications.length} credentials retained.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--solid">

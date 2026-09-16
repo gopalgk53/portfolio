@@ -60,7 +60,7 @@ const ACCENT = 0x63b3ff;
 // data (NodeGroup, CapabilityId) rather than introducing an arbitrary
 // color rule. Dots and ambient dust stay neutral; only the connecting
 // lines/pulses that actually form the "network" carry the two-tone split.
-const ACCENT_2 = 0xa855f7;
+const ACCENT_2 = 0x975ad1;
 const DOT_BASE = 0xd7d8dc;
 const GROUP_COLOR: Record<NodeGroup, number> = { retrieval: ACCENT, agents: ACCENT_2, infra: ACCENT_2 };
 

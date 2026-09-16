@@ -118,17 +118,18 @@ export function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
               >
-                {/* Two independent motions on one badge: a slow continuous
-                    float (idle, always running) and a scroll-tied rotation
-                    driven by pageProgress — the same value already driving
-                    the nav's progress underline, so scrolling visibly moves
-                    something in the hero, not just a bar at the very top. */}
+                {/* Was a continuous idle float plus a scroll-tied rotation —
+                    cut the idle float. It ran forever regardless of what the
+                    visitor did, one more always-on motion competing with the
+                    3D background, the section rise/scale, and the scroll bar.
+                    The scroll-tied rotation stays: it responds to something
+                    real (how far you've scrolled — the same pageProgress
+                    value already driving the nav's progress underline), so
+                    it's one of the few motions actually worth keeping. */}
                 <motion.div
                   title={label}
-                  animate={reducedMotion ? undefined : { y: [0, -6, 0] }}
-                  transition={reducedMotion ? undefined : { duration: 3.4 + i * 0.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
                   style={reducedMotion ? undefined : { rotate: badgeRotate }}
-                  className="icon-badge grid h-11 w-11 place-items-center rounded-full"
+                  className="icon-badge grid h-11 w-11 place-items-center rounded-[var(--radius-sm)]"
                 >
                   <Icon className="h-5 w-5" style={{ color }} />
                 </motion.div>
