@@ -74,7 +74,7 @@ export function TerminalShell() {
           "  projects          list all project ids",
           "  project <id>      show one project's real detail",
           "  skills            list skill groups",
-          "  certs             list all 23 certifications",
+          `  certs             list all ${certifications.length} certifications`,
           "  contact           email, résumé, site",
           "  open <path>       navigate this site, e.g. `open /projects`",
           "  clear             clear this terminal",

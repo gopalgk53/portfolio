@@ -385,9 +385,9 @@ function Certifications() {
         {visible.map(([name, meta, url], index) => {
           const unavailable = url.includes("leapsdata.analyttica.com");
           const content = <>
-            <span className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">{index === 0 ? "Primary · Great Learning" : `Credential ${String(index + 1).padStart(2, "0")}`}</span>
+            <span className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">{index === 0 ? "Latest · IBM / Coursera" : index === 1 ? "Primary · Great Learning" : `Credential ${String(index + 1).padStart(2, "0")}`}</span>
             <div>
-              <h3 className={index === 0 ? "text-xl font-medium" : "text-sm font-medium"}>{name}</h3>
+              <h3 className={index < 2 ? "text-xl font-medium" : "text-sm font-medium"}>{name}</h3>
               <p className="mt-1 text-xs text-[var(--faint)]">{meta}</p>
             </div>
             {unavailable ? <span className="font-mono text-[9px] uppercase tracking-[.12em] text-[var(--faint)]">Verification host unavailable</span> : <ExternalLink className="h-4 w-4 shrink-0 text-[var(--accent)]" />}

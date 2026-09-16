@@ -47,7 +47,7 @@ export function AudienceHighlight() {
         <div className="mt-5">
           <p className="text-sm leading-6 text-[var(--muted)]">
             Available for Generative AI Engineering and AI Architecture roles, based in India — 7+ years domain
-            experience, 9 blueprint systems, 23 credentials retained.
+            experience, 9 blueprint systems, 24 credentials retained.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--solid">

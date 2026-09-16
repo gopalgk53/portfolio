@@ -19,6 +19,7 @@ export const skills = [
 ];
 
 export const certifications = [
+  ["Generative AI for Data Analysts", "IBM · Coursera Specialization · Sep 2026", "https://coursera.org/share/e453902c46df4de213d408ab7f725a56"],
   ["Post Graduate Program in Artificial Intelligence and Machine Learning", "McCombs School of Business, The University of Texas at Austin · Great Learning · Jan 2021", "https://www.mygreatlearning.com/certificate/YKRZCXMO"],
   ["Statistical Methods for Decision Making", "Great Learning · May 2020", "https://olympus1.greatlearning.in/course_certificate/GWSUYGPZ"],
   ["Machine Learning Engineering for Production (MLOps) Specialization", "Coursera · Nov 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/JM8WZRKMAZJW"],
