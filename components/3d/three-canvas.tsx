@@ -55,17 +55,28 @@ const domainEmphasis: Record<SceneDomain, Partial<Record<NodeGroup, number>>> = 
 };
 
 const ACCENT = 0x63b3ff;
+// The site's second theme color (matches --accent-2 in globals.css exactly)
+// — used to tint the retrieval-vs-agentic split that already exists in the
+// data (NodeGroup, CapabilityId) rather than introducing an arbitrary
+// color rule. Dots and ambient dust stay neutral; only the connecting
+// lines/pulses that actually form the "network" carry the two-tone split.
+const ACCENT_2 = 0xa855f7;
 const DOT_BASE = 0xd7d8dc;
+const GROUP_COLOR: Record<NodeGroup, number> = { retrieval: ACCENT, agents: ACCENT_2, infra: ACCENT_2 };
 
 // ---------------------------------------------------------------------------
 // Capabilities motifs — five small, self-contained constructs, one per
 // execution-stack category, that only surface while that section is
-// centered. Same rule as the network above: shape carries the meaning, not
-// color — a layered lattice for Models, a chasing pulse train for
-// Inference, a hub with orbiting spokes for Orchestration/Agents, a rising
-// stream for Vector/RAG, a flat grid for Engineering.
+// centered. Shape still carries the primary meaning — a layered lattice
+// for Models, a chasing pulse train for Inference, a hub with orbiting
+// spokes for Orchestration/Agents, a rising stream for Vector/RAG, a flat
+// grid for Engineering — color now adds a second, secondary signal on top:
+// Orchestration/Agents (the agentic side) tints violet, everything else
+// stays the network's usual blue, mirroring the retrieval-vs-agentic split
+// already colored that way in the main graph above (GROUP_COLOR).
 // ---------------------------------------------------------------------------
 type CapabilityId = "models" | "inference" | "orchestration" | "vectorRag" | "engineering";
+const CAPABILITY_COLOR: Record<CapabilityId, number> = { models: ACCENT, inference: ACCENT, orchestration: ACCENT_2, vectorRag: ACCENT, engineering: ACCENT };
 
 interface CapabilitySpec {
   id: CapabilityId;
@@ -208,14 +219,14 @@ export function ThreeCanvas() {
       });
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-      const material = new THREE.LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const material = new THREE.LineBasicMaterial({ color: GROUP_COLOR[group], transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const lines = new THREE.LineSegments(geometry, material);
       graph.add(lines);
 
       // A handful of pulses travel each active edge group to suggest data flow.
       const pulseCount = reduceMotion ? 0 : Math.min(pairs.length * 2, mobile || effectsMode === "low" ? 4 : 8);
       const pulseGeometry = new THREE.SphereGeometry(0.045, 8, 8);
-      const pulseMaterial = new THREE.MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const pulseMaterial = new THREE.MeshBasicMaterial({ color: GROUP_COLOR[group], transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const pulses = new THREE.InstancedMesh(pulseGeometry, pulseMaterial, pulseCount);
       graph.add(pulses);
 
@@ -304,7 +315,7 @@ export function ThreeCanvas() {
       });
       const lineGeometry = new THREE.BufferGeometry();
       lineGeometry.setAttribute("position", new THREE.Float32BufferAttribute(edgePositions, 3));
-      const lineMaterial = new THREE.LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const lineMaterial = new THREE.LineBasicMaterial({ color: CAPABILITY_COLOR[cap.id], transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
       group.add(lines);
 

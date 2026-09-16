@@ -42,14 +42,23 @@ type SceneId = "identity" | "retrieval" | "agents" | "infra" | "capabilities" | 
 
 const AGENT_DOMAINS = ["Compliance", "Risk", "Communication"];
 
-const naturalCopy: Record<string, { eyebrow: string; title: string; description?: string }> = {
+// The same retrieval-vs-agentic split used for the 3D scene's network
+// colors (components/3d/three-canvas.tsx's GROUP_COLOR) — generative/agentic
+// categories tint violet, the more traditional ML/data categories stay
+// blue. One consistent color language across the whole site, not a
+// separate rule invented per component.
+function categoryColor(category: string): string {
+  return category === "Generative AI" || category === "Agentic AI" ? "var(--accent-2)" : "var(--accent)";
+}
+
+const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; description?: string }> = {
   about: { eyebrow: "01 / Profile", title: "I build AI systems that move from prototype → production.", description: "Seven years across construction operations and data science inform a workflow-first approach to Generative AI, RAG, and autonomous agents." },
-  projects: { eyebrow: "02 / Selected work", title: "Selected AI systems.", description: "Nine blueprint projects with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
+  projects: { eyebrow: "02 / Selected work", title: <>Selected AI <span className="text-gradient-accent">systems.</span></>, description: "Nine blueprint projects with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
   skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
   playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
   experience: { eyebrow: "05 / Experience", title: "From operations to data and AI." },
   certifications: { eyebrow: "06 / Credentials", title: "Formal training behind the practice." },
-  contact: { eyebrow: "07 / Contact", title: "Let's build intelligent systems." },
+  contact: { eyebrow: "07 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
 };
 
 // Each section "arrives" with a slow scale/opacity settle as it scrolls
@@ -61,8 +70,13 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
   const ref = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.92", "start 0.4"] });
-  const scale = useTransform(scrollYProgress, [0, 1], [0.965, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
+  // Sections used to just barely scale/fade into place (0.965->1, easy to
+  // miss). Widened so scrolling to a new section is unmistakably a real
+  // camera move, not a subtle opacity tweak — added a y-rise on top since
+  // scale alone still read as static.
+  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [56, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.35, 1]);
   const eyebrowY = useTransform(scrollYProgress, [0, 1], [18, 0]);
 
   return (
@@ -70,7 +84,7 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
       ref={ref}
       id={id}
       data-scene={scene}
-      style={reducedMotion ? undefined : { scale, opacity }}
+      style={reducedMotion ? undefined : { scale, y, opacity }}
       className="chapter relative z-10 scroll-mt-20 border-t border-white/[.1] px-5 py-28 sm:px-8 sm:py-44"
     >
       <div className="mx-auto max-w-[1600px]">
@@ -103,7 +117,7 @@ function About() {
           </div>
         </motion.div>
         <div>
-          <p className="max-w-3xl text-[clamp(1.45rem,2.7vw,2.55rem)] leading-[1.35] tracking-[-.03em] text-white">
+          <p className="quote-panel max-w-3xl text-[clamp(1.45rem,2.7vw,2.55rem)] leading-[1.35] tracking-[-.03em] text-white">
             I focus on prompt engineering, advanced RAG topologies, autonomous multi-agent workflows, and the evaluation systems required to make
             them reliable — spanning Data Science, Generative AI, LLM applications, Machine Learning, and AWS.
           </p>
@@ -172,7 +186,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     >
       <div className="text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")} / 09</div>
       <div className="relative z-10">
-      <p className="font-mono text-[9px] uppercase tracking-[.18em] text-[var(--signal)]">{project.category}</p>
+      <p className="font-mono text-[9px] uppercase tracking-[.18em]" style={{ color: categoryColor(project.category) }}>{project.category}</p>
       <h3 className="mt-5 max-w-2xl text-[clamp(1.8rem,4vw,4.5rem)] font-medium leading-[.98] tracking-[-.045em]">{project.title}</h3>
       <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.impact}</p>
       <div className="mt-7 flex gap-6 border-b border-white/[.12] md:hidden">
@@ -333,7 +347,7 @@ function SkillCard({ group, items, index }: { group: string; items: string[]; in
       transition={staggerChild(index)}
       className="glass-panel glow-card grid gap-5 p-7 md:grid-cols-[2rem_17rem_1fr] md:items-center"
     >
-      <span className="font-mono text-[10px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
+      <span className="font-mono text-[10px]" style={{ color: group === "Orchestration & Agents" ? "var(--accent-2)" : "var(--faint)" }}>{String(index + 1).padStart(2, "0")}</span>
       <h3 className="font-medium text-white">{group}</h3>
       <div className="flex flex-wrap gap-x-5 gap-y-2">
         {items.map((x) => (
@@ -376,7 +390,7 @@ function Manifesto() {
     <section data-scene="agents" className="manifesto relative z-10 flex min-h-svh items-center overflow-hidden px-5 py-28 sm:px-8">
       <div className="mx-auto w-full max-w-[1600px]">
         <p className="eyebrow mb-10">System principle / 01</p>
-        <p className="text-[clamp(3.4rem,10vw,10rem)] font-medium uppercase leading-[.82] tracking-[-.065em]">I build systems that think with context.</p>
+        <p className="text-[clamp(3.4rem,10vw,10rem)] font-medium uppercase leading-[.82] tracking-[-.065em]">I build systems that think with <span className="text-gradient-accent">context.</span></p>
         <div className="mt-12 h-px w-full bg-white/15" />
       </div>
     </section>
@@ -415,7 +429,7 @@ function Certifications() {
         {visible.map(([name, meta, url], index) => {
           const unavailable = url.includes("leapsdata.analyttica.com");
           const content = <>
-            <span className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">{index === 0 ? "Latest · IBM / Coursera" : index === 1 ? "Primary · Great Learning" : `Credential ${String(index + 1).padStart(2, "0")}`}</span>
+            <span className="font-mono text-[9px] uppercase tracking-[.14em]" style={{ color: index === 0 ? "var(--accent-2)" : index === 1 ? "var(--accent)" : "var(--faint)" }}>{index === 0 ? "Latest · IBM / Coursera" : index === 1 ? "Primary · Great Learning" : `Credential ${String(index + 1).padStart(2, "0")}`}</span>
             <div>
               <h3 className={index < 2 ? "text-xl font-medium" : "text-sm font-medium"}>{name}</h3>
               <p className="mt-1 text-xs text-[var(--faint)]">{meta}</p>
@@ -477,13 +491,16 @@ function Contact() {
               ["GitHub", "https://github.com/gopalgk53", Github],
               ["LinkedIn", "https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b", Linkedin],
               ["gopalgk53@yahoo.com", "mailto:gopalgk53@yahoo.com", Mail],
-            ].map(([label, url, Icon]) => {
+            ].map(([label, url, Icon], contactIndex) => {
               const IconComp = Icon as typeof Github;
+              const badgeColor = contactIndex % 2 === 0 ? "var(--accent)" : "var(--accent-2)";
               return (
                 <Magnetic key={label as string} className="block w-full">
                   <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} rel={String(url).startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between border-b border-white/[.12] py-4 text-sm text-[var(--muted)]">
                     <span className="flex flex-wrap items-center gap-2 break-all">
-                      <IconComp className="h-4 w-4 shrink-0" />
+                      <span className="icon-badge grid h-7 w-7 shrink-0 place-items-center rounded-full">
+                        <IconComp className="h-3.5 w-3.5" style={{ color: badgeColor }} />
+                      </span>
                       {label as string}
                       {label === "GitHub" && <GithubActivity />}
                     </span>

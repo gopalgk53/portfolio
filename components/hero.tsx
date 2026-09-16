@@ -1,11 +1,22 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Brain, Database, Menu, Workflow, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SoundToggle } from "./sound-toggle";
 import { HeroAgentTrace } from "./hero-agent-trace";
 import { nav } from "../lib/nav";
+
+// Three real pillars of the actual stack (matches the tagline right below
+// them: "LLMs, RAG, agents") — not decoration for its own sake. Colors
+// alternate accent/accent-2, same retrieval-vs-agentic split used in the 3D
+// scene and the project category labels, so it reads as one consistent
+// system rather than a one-off flourish.
+const heroBadges = [
+  { Icon: Brain, label: "LLMs & fine-tuning", color: "var(--accent)" },
+  { Icon: Database, label: "RAG & vector search", color: "var(--accent)" },
+  { Icon: Workflow, label: "Agent orchestration", color: "var(--accent-2)" },
+];
 
 export function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,6 +26,7 @@ export function Hero() {
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
   const { scrollYProgress: pageProgress } = useScroll();
+  const badgeRotate = useTransform(pageProgress, [0, 1], [0, 20]);
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const titleScale = useTransform(scrollYProgress, [0, .72], [1, .72]);
   const titleOpacity = useTransform(scrollYProgress, [0, .72, 1], [1, .8, 0]);
@@ -83,21 +95,46 @@ export function Hero() {
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
           </motion.div>
         )}</AnimatePresence>
-        <motion.div aria-hidden="true" style={{ scaleX: pageProgress }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left bg-[var(--accent)]" />
+        <motion.div aria-hidden="true" style={{ scaleX: pageProgress, background: "var(--gradient-accent)" }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left" />
       </nav>
 
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
         <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 sm:left-8">
           <p className="hero-name text-white">Gopalakrishna Maddipalli</p>
-          <p className="mt-2 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">Generative AI engineer</p>
+          <p className="mt-2 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">AI Engineer</p>
           <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
-          <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--signal)]">Systems that reason with context</p>
+          <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--accent-2)]">Systems that reason with context</p>
           <h1 className="hero-title" aria-label="Generative intelligence">
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Generative</motion.span>
-            <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="block text-right">Intelligence</motion.span>
+            <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="text-gradient-accent block text-right">Intelligence</motion.span>
           </h1>
+          <div className="mt-6 flex items-center gap-3" aria-hidden="true">
+            {heroBadges.map(({ Icon, label, color }, i) => (
+              <motion.div
+                key={label}
+                initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {/* Two independent motions on one badge: a slow continuous
+                    float (idle, always running) and a scroll-tied rotation
+                    driven by pageProgress — the same value already driving
+                    the nav's progress underline, so scrolling visibly moves
+                    something in the hero, not just a bar at the very top. */}
+                <motion.div
+                  title={label}
+                  animate={reducedMotion ? undefined : { y: [0, -6, 0] }}
+                  transition={reducedMotion ? undefined : { duration: 3.4 + i * 0.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+                  style={reducedMotion ? undefined : { rotate: badgeRotate }}
+                  className="icon-badge grid h-11 w-11 place-items-center rounded-full"
+                >
+                  <Icon className="h-5 w-5" style={{ color }} />
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
           <div className="mt-8 grid gap-8 border-t border-white/15 pt-5 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
             <p className="max-w-md text-sm leading-6 text-[var(--muted)]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
             <p className="max-w-sm text-sm leading-6 text-[var(--muted)]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
