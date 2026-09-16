@@ -83,7 +83,7 @@ export function Hero() {
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
           </motion.div>
         )}</AnimatePresence>
-        <motion.div aria-hidden="true" style={{ scaleX: pageProgress }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left bg-[var(--accent)]" />
+        <motion.div aria-hidden="true" style={{ scaleX: pageProgress, background: "var(--gradient-accent)" }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left" />
       </nav>
 
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
@@ -93,10 +93,10 @@ export function Hero() {
           <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
-          <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--signal)]">Systems that reason with context</p>
+          <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--accent-2)]">Systems that reason with context</p>
           <h1 className="hero-title" aria-label="Generative intelligence">
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Generative</motion.span>
-            <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="block text-right">Intelligence</motion.span>
+            <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="text-gradient-accent block text-right">Intelligence</motion.span>
           </h1>
           <div className="mt-8 grid gap-8 border-t border-white/15 pt-5 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
             <p className="max-w-md text-sm leading-6 text-[var(--muted)]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>

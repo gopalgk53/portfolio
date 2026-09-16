@@ -42,14 +42,14 @@ type SceneId = "identity" | "retrieval" | "agents" | "infra" | "capabilities" | 
 
 const AGENT_DOMAINS = ["Compliance", "Risk", "Communication"];
 
-const naturalCopy: Record<string, { eyebrow: string; title: string; description?: string }> = {
+const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; description?: string }> = {
   about: { eyebrow: "01 / Profile", title: "I build AI systems that move from prototype → production.", description: "Seven years across construction operations and data science inform a workflow-first approach to Generative AI, RAG, and autonomous agents." },
-  projects: { eyebrow: "02 / Selected work", title: "Selected AI systems.", description: "Nine blueprint projects with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
+  projects: { eyebrow: "02 / Selected work", title: <>Selected AI <span className="text-gradient-accent">systems.</span></>, description: "Nine blueprint projects with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
   skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
   playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
   experience: { eyebrow: "05 / Experience", title: "From operations to data and AI." },
   certifications: { eyebrow: "06 / Credentials", title: "Formal training behind the practice." },
-  contact: { eyebrow: "07 / Contact", title: "Let's build intelligent systems." },
+  contact: { eyebrow: "07 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
 };
 
 // Each section "arrives" with a slow scale/opacity settle as it scrolls
@@ -346,7 +346,7 @@ function Manifesto() {
     <section data-scene="agents" className="manifesto relative z-10 flex min-h-svh items-center overflow-hidden px-5 py-28 sm:px-8">
       <div className="mx-auto w-full max-w-[1600px]">
         <p className="eyebrow mb-10">System principle / 01</p>
-        <p className="text-[clamp(3.4rem,10vw,10rem)] font-medium uppercase leading-[.82] tracking-[-.065em]">I build systems that think with context.</p>
+        <p className="text-[clamp(3.4rem,10vw,10rem)] font-medium uppercase leading-[.82] tracking-[-.065em]">I build systems that think with <span className="text-gradient-accent">context.</span></p>
         <div className="mt-12 h-px w-full bg-white/15" />
       </div>
     </section>
