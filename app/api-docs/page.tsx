@@ -45,7 +45,7 @@ export default function ApiDocsPage() {
       <header className="px-5 pt-20 sm:px-10 sm:pt-28">
         <p className="eyebrow">Public data API · read-only</p>
         <h1 className="mt-4 max-w-2xl text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[.95] tracking-tight">
-          The same data, <span className="text-[var(--accent)]">as JSON.</span>
+          The same data, <span className="text-gradient-accent">as JSON.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-sm leading-7 text-[var(--muted)]">
           Three small, unauthenticated GET endpoints that mirror exactly what this site itself renders — no

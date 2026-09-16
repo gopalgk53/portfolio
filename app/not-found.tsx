@@ -16,7 +16,7 @@ export default function NotFound() {
       <div className="flex flex-1 flex-col justify-center px-5 py-24 sm:px-10">
         <p className="eyebrow">Retrieval miss</p>
         <h1 className="mt-4 max-w-3xl text-[clamp(3rem,9vw,7rem)] font-semibold leading-[.9] tracking-tight">
-          No document matched<br /><span className="text-[var(--accent)]">this query.</span>
+          No document matched<br /><span className="text-gradient-accent">this query.</span>
         </h1>
         <p className="mt-6 max-w-xl text-sm leading-7 text-[var(--muted)]">
           That page doesn&apos;t exist, or moved. The retriever came back empty — try one of these instead.

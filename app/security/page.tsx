@@ -48,7 +48,7 @@ export default function SecurityPage() {
       <header className="px-5 pt-20 sm:px-10 sm:pt-28">
         <p className="eyebrow">Transparency, not boilerplate</p>
         <h1 className="mt-4 max-w-2xl text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[.95] tracking-tight">
-          What this site <span className="text-[var(--accent)]">actually does.</span>
+          What this site <span className="text-gradient-accent">actually does.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-sm leading-7 text-[var(--muted)]">
           A specific, accurate account of how this site handles data — every claim below reflects the real,
