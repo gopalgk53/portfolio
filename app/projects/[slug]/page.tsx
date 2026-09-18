@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { projects } from "../../../lib/data";
 import { PrintButton } from "../../../components/print-button";
 import { PaymentRiskBenchmark } from "../../../components/payment-risk-benchmark";
+import { PaymentRiskStory } from "../../../components/payment-risk-story";
 
 export const dynamicParams = false;
 export function generateStaticParams() { return projects.map((project) => ({ slug: project.id })); }
@@ -39,6 +40,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
           </div>
         </header>
         <section className="case-signal" aria-label="Evidence status"><p className="eyebrow">Evidence status / {isPaymentRisk ? "verified project" : "blueprint"}</p><p>{isPaymentRisk ? "Built with synthetic construction payment-protection data. The model supports operational prioritization and human review; it does not provide legal advice or make automated legal decisions." : "This case study documents an engineering blueprint and its intended business outcome. Targets are not represented as verified production benchmarks."}</p></section>
+        {isPaymentRisk && <PaymentRiskStory />}
         <section className="case-architecture">
           <div className="case-section-heading"><p className="eyebrow">01 / System flow</p><h2>Architecture,<br />step by step.</h2></div>
           <ol className="case-flow">{nodes.map((node, index) => <li key={`${node}-${index}`}><span>{String(index + 1).padStart(2, "0")}</span><strong>{node}</strong></li>)}</ol>

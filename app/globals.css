@@ -31,8 +31,13 @@
      dropped in next to it. */
   --accent-2: #975ad1;
   --signal: #63b3ff;
+  /* Third color, used only for time/deadline meaning (never decorative).
+     9.06:1 against --bg and identical when reversed as a fill with --bg
+     text, so it works both as label text and as a solid badge fill. */
+  --accent-gold: #d9a441;
   --accent-soft: rgba(99, 179, 255, .12);
   --accent-2-soft: rgba(151, 90, 209, .12);
+  --accent-gold-soft: rgba(217, 164, 65, .12);
   --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-2));
   --border: rgba(255, 255, 255, 0.10);
   --border-strong: rgba(255, 255, 255, 0.18);
