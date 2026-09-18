@@ -332,7 +332,7 @@ export function AIAssistant() {
             exit={{ opacity: 0, x: 12 }}
             transition={spring}
             onClick={() => setOpen(true)}
-            className="card-elevated absolute bottom-2 right-16 w-64 bg-[var(--bg)]/95 p-3 text-left font-mono text-[11px] leading-5 text-[var(--muted)]"
+            className="absolute bottom-2 right-16 w-64 rounded-[var(--radius-md)] border border-[var(--border)] bg-white p-3 text-left text-[13px] leading-5 text-[var(--muted)] shadow-[0_1px_2px_rgba(15,23,42,.04),0_30px_70px_-32px_rgba(15,23,42,.16)]"
           >
             System online. Ask me about Gopal&apos;s AI stack…
           </motion.button>

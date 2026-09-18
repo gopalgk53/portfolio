@@ -76,7 +76,7 @@ export function Hero() {
     <div ref={sectionRef} data-scene="identity" className="cinematic-hero relative min-h-[145svh] overflow-clip">
       <nav className="site-nav" data-scrolled={scrolled} aria-label="Primary navigation">
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 sm:px-8">
-          <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`font-mono text-[10px] uppercase tracking-[.28em] ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>GK / AI systems</a>
+          <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`text-[13px] font-semibold tracking-tight ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>Gopalakrishna · AI Systems</a>
           <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[.12em] text-[var(--muted)] md:flex">
             {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} className={activeId === id ? "text-[var(--accent)]" : undefined}>{label}</a>)}
             <SoundToggle className="text-[var(--muted)]" />
@@ -101,8 +101,8 @@ export function Hero() {
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
         <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 sm:left-8">
           <p className="hero-name text-white">Gopalakrishna Maddipalli</p>
-          <p className="mt-2 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">AI Engineer</p>
-          <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">India · 2026</p>
+          <p className="mt-2 text-[13px] font-medium leading-5 text-[var(--muted)]">AI Engineer</p>
+          <p className="text-[13px] font-medium leading-5 text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
           <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--accent-2)]">Systems that reason with context</p>

@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PageTransition } from "../components/page-transition";
 import { ScrollProgress } from "../components/scroll-progress";
+import { DataScatterBackground } from "../components/data-scatter-background";
 
 export const metadata: Metadata = {
   title: { default: "Gopalakrishna — Generative AI Engineer", template: "%s | Gopalakrishna" },
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head><JsonLd /></head>
       <body className="bg-[var(--bg)] text-[var(--text)] antialiased font-sans">
         <a href="#main-content" className="skip-link">Skip to main content</a>
+        <DataScatterBackground/>
         {children}<ScrollProgress/><PageTransition/><Analytics/><SpeedInsights/>
       </body>
     </html>
