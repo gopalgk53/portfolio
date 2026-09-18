@@ -164,7 +164,7 @@ export function MultiAgentShowcase({
       <section id="ma-hero" className="band-navy relative overflow-hidden px-5 py-16 sm:px-8 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={spring}>
-            <span className="inline-flex items-center gap-2 rounded-[var(--radius-pill)] border border-[var(--navy-border)] px-3 py-1 font-mono text-[10px] uppercase tracking-[.1em] text-[var(--navy-text)]">
+            <span className="inline-flex items-center gap-2 rounded-[var(--radius-pill)] border border-[var(--navy-border)] px-3 py-1 text-[11px] font-semibold text-[var(--navy-text)]">
               <Crown className="h-3.5 w-3.5" aria-hidden="true" />
               Flagship blueprint
             </span>

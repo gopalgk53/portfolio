@@ -65,7 +65,7 @@ export function AgentFlow({ flow, domains }: { flow: string; domains: string[] }
               >
                 {active === i && <motion.span layoutId="agent-active" transition={spring} className="absolute -inset-x-2 -inset-y-2 border border-[var(--accent)]" />}
                 <span className="relative font-mono text-[9px] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
-                <span className={`relative whitespace-nowrap font-mono text-[11px] uppercase tracking-[.08em] ${active === i ? "text-[var(--text)]" : "text-[var(--muted)]"}`}>{stage}</span>
+                <span className={`relative whitespace-nowrap text-[12px] font-semibold ${active === i ? "text-[var(--text)]" : "text-[var(--muted)]"}`}>{stage}</span>
               </button>
               {i < stages.length - 1 && <span className="mx-3 h-px w-8 shrink-0 bg-[var(--border-strong)] sm:w-10" />}
             </div>
@@ -74,7 +74,7 @@ export function AgentFlow({ flow, domains }: { flow: string; domains: string[] }
 
         <motion.div initial={false} animate={{ opacity: active === specialistsIndex ? 1 : 0.25 }} transition={spring} className="flex flex-wrap justify-center gap-3">
           {domains.map((domain) => (
-            <span key={domain} className="border border-[var(--border)] px-3 py-2 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--muted)]">
+            <span key={domain} className="border border-[var(--border)] px-3 py-2 text-[11px] font-semibold text-[var(--muted)]">
               {domain}
             </span>
           ))}

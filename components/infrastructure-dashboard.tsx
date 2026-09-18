@@ -44,7 +44,7 @@ export function InfrastructureDashboard() {
           <p className="eyebrow">Infrastructure observability</p>
           <h2 className="mt-3 text-4xl font-bold tracking-[-.03em] sm:text-6xl">Model execution, made observable.</h2>
           <p className="mt-5 max-w-2xl text-[var(--muted)]">Browser-generated observability data demonstrating inference monitoring interface design.</p>
-          <span className="mt-4 inline-block rounded-full border border-[var(--border-strong)] px-3 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--muted)]">Simulated runtime telemetry</span>
+          <span className="mt-4 inline-block rounded-full border border-[var(--border-strong)] px-3 py-1 text-[11px] font-semibold text-[var(--muted)]">Simulated runtime telemetry</span>
         </header>
         <div className="grid gap-5 lg:grid-cols-2">
           <article className={`${panel} min-h-[350px]`}>

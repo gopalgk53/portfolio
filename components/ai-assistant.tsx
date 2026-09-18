@@ -397,7 +397,7 @@ export function AIAssistant() {
                     role="tab"
                     aria-selected={mode === m}
                     onClick={() => setMode(m)}
-                    className={`rounded-[var(--radius-pill)] py-1.5 font-mono text-[10px] uppercase tracking-[.08em] transition-colors ${mode === m ? "bg-[var(--accent-soft)] text-[var(--accent)]" : "text-[var(--faint)] hover:text-[var(--muted)]"}`}
+                    className={`rounded-[var(--radius-pill)] py-1.5 text-[11px] font-semibold transition-colors ${mode === m ? "bg-[var(--accent-soft)] text-[var(--accent)]" : "text-[var(--faint)] hover:text-[var(--muted)]"}`}
                   >
                     {m === "chat" ? "Ask" : "Consult"}
                   </button>
@@ -429,7 +429,7 @@ export function AIAssistant() {
                               href={display.href}
                               target={display.external ? "_blank" : undefined}
                               rel={display.external ? "noreferrer" : undefined}
-                              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-strong)] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[.08em] text-[var(--faint)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-strong)] px-2.5 py-1 text-[11px] font-semibold text-[var(--faint)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
                             >
                               <span className="text-[var(--accent)]">{TYPE_LABEL[source.type]}</span>
                               {display.title}

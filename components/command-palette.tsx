@@ -136,7 +136,7 @@ export function CommandPalette() {
                 if (!items.length) return null;
                 return (
                   <div key={group} className="py-2">
-                    <p className="px-3 pb-1 font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)]">{group}</p>
+                    <p className="px-3 pb-1 text-[11px] font-semibold text-[var(--faint)]">{group}</p>
                     {items.map((command) => {
                       const index = filtered.indexOf(command);
                       const isSelected = index === selected;
@@ -158,7 +158,7 @@ export function CommandPalette() {
               {!filtered.length && <p className="px-3 py-6 text-center text-sm text-[var(--faint)]">No matches.</p>}
             </div>
 
-            <div className="flex items-center gap-5 border-t border-[var(--border)] px-5 py-3 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--faint)]">
+            <div className="flex items-center gap-5 border-t border-[var(--border)] px-5 py-3 text-[11px] font-semibold text-[var(--faint)]">
               <span>↑↓ navigate</span>
               <span>↵ select</span>
               <span className="ml-auto">⌘K toggle</span>

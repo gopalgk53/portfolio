@@ -49,7 +49,7 @@ export function Preloader() {
         <p className="text-[clamp(1.6rem,4.5vw,3.2rem)] font-semibold uppercase tracking-[.14em]">Gopalakrishna</p>
         <p className="mt-4 font-mono text-[10px] tracking-[.3em] text-[var(--muted)]">{String(progress).padStart(2, "0")}%</p>
       </div>
-      <p className="absolute bottom-8 font-mono text-[9px] uppercase tracking-[.3em] text-[var(--faint)]">Generative AI Engineer</p>
+      <p className="absolute bottom-8 text-[11px] font-semibold text-[var(--faint)]">Generative AI Engineer</p>
     </motion.div>
   );
 }

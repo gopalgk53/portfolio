@@ -117,7 +117,7 @@ export function SiteSearch() {
 
       {mode !== "idle" && (
         <div className="mt-4">
-          <p className="mb-3 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">
+          <p className="mb-3 text-[11px] font-semibold text-[var(--faint)]">
             {mode === "live" ? "Live ranking · real model" : mode === "cache" ? "Cached ranking" : "Offline keyword match"}
             {" · "}
             {results.length ? `${results.length} match${results.length === 1 ? "" : "es"}` : "no matches"}
@@ -138,7 +138,7 @@ export function SiteSearch() {
                   className="glow-card flex items-center justify-between gap-4 rounded-[var(--radius-sm)] border border-[var(--border)] px-4 py-3 text-sm"
                 >
                   <span>
-                    <span className="mr-2 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--accent)]">{TYPE_LABEL[result.type]}</span>
+                    <span className="mr-2 text-[11px] font-semibold text-[var(--accent)]">{TYPE_LABEL[result.type]}</span>
                     <span className="font-medium text-[var(--text)]">{display.title}</span>
                     <span className="ml-2 text-[var(--muted)]">{display.subtitle}</span>
                   </span>

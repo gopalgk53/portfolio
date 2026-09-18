@@ -19,7 +19,7 @@ const TAG_COLOR: Record<string, string> = {
 
 export default function ChangelogPage() {
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/75 text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/88 text-[var(--text)]">
       <nav className="case-nav" aria-label="Changelog navigation">
         <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Changelog · {changelog.length} entries</span>

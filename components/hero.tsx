@@ -105,7 +105,7 @@ export function Hero() {
           <p className="text-[13px] font-medium leading-5 text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
-          <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--accent-2)]">Systems that reason with context</p>
+          <p className="mb-4 text-right text-[11px] font-semibold text-[var(--accent-2)]">Systems that reason with context</p>
           <h1 className="hero-title" aria-label="Generative intelligence">
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Generative</motion.span>
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="text-gradient-accent block text-right">Intelligence</motion.span>
@@ -144,7 +144,7 @@ export function Hero() {
             <p className="max-w-md text-sm leading-6 text-[var(--muted)]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
             <p className="max-w-sm text-sm leading-6 text-[var(--muted)]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-              <a href="#projects" className="flex items-center gap-3 text-xs uppercase tracking-[.16em]">Enter systems <ArrowDown className="h-4 w-4" /></a>
+              <a href="#projects" className="flex items-center gap-3 text-[13px] font-semibold">Enter systems <ArrowDown className="h-4 w-4" /></a>
             </div>
           </div>
         </motion.div>
@@ -157,23 +157,23 @@ export function Hero() {
           className="hero-console absolute right-5 top-28 z-20 hidden w-[19rem] px-5 py-4 sm:right-8 lg:block"
         >
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] uppercase tracking-[.18em] text-[var(--muted)]">Agent status</span>
-            <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--accent)]">
+            <span className="text-[11px] font-semibold text-[var(--muted)]">Agent status</span>
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--accent)]">
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
               Online
             </span>
           </div>
           <HeroAgentTrace />
-          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">
+          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 text-[11px] font-semibold text-[var(--faint)]">
             <span>Stack · RAG + Agents</span>
             <span>Mode · Grounded</span>
           </div>
         </motion.div>
-        <div className="absolute bottom-20 left-5 hidden items-center gap-2.5 font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)] sm:left-8 sm:flex">
+        <div className="absolute bottom-20 left-5 hidden items-center gap-2.5 text-[11px] font-semibold text-[var(--faint)] sm:left-8 sm:flex">
           <span className="scroll-cue" aria-hidden="true" />
           Scroll / camera enabled
         </div>
-        <div className="absolute bottom-20 right-5 hidden font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)] sm:right-8 sm:block">LLMs · RAG · Agents · AWS</div>
+        <div className="absolute bottom-20 right-5 hidden text-[11px] font-semibold text-[var(--faint)] sm:right-8 sm:block">LLMs · RAG · Agents · AWS</div>
       </section>
     </div>
   );

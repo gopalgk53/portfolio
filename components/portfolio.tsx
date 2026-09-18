@@ -25,7 +25,7 @@ import { GithubActivity } from "./github-activity";
 import { SiteSearch } from "./site-search";
 import { ProjectShowcase } from "./project-showcase";
 
-const LabLoading = () => <div className="px-8 py-16 font-mono text-[10px] uppercase tracking-[.16em] text-[var(--faint)]">Loading technical module…</div>;
+const LabLoading = () => <div className="px-8 py-16 text-[11px] font-semibold text-[var(--faint)]">Loading technical module…</div>;
 // ssr: false is deliberate — matches the exact pattern already used for
 // ThreeCanvas/AIAssistant in client-extras.tsx. Without it, these three
 // (browser-only, interactive-only) components would depend on Next's RSC
@@ -67,7 +67,7 @@ const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; descripti
 // into view — the scene-to-scene morph the brief asks for, rather than a
 // hard cut between stacked blocks. The eyebrow label drifts at a slightly
 // different rate than the rest of the header for a touch of spatial depth.
-function Section({ id, scene, children }: { id: string; scene: SceneId; children: ReactNode }) {
+function Section({ id, scene, quiet, children }: { id: string; scene: SceneId; quiet?: boolean; children: ReactNode }) {
   const copy = naturalCopy[id];
   const ref = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
@@ -87,7 +87,7 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
       id={id}
       data-scene={scene}
       style={reducedMotion ? undefined : { scale, y, opacity }}
-      className="chapter relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-28 sm:px-8 sm:py-44"
+      className={`chapter ${quiet ? "chapter--quiet" : ""} relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-28 sm:px-8 sm:py-44`}
     >
       <div className="mx-auto max-w-[1600px]">
         <header className="typography-shield mb-16 grid gap-7 lg:grid-cols-[10rem_1fr_.65fr] lg:items-start">
@@ -132,7 +132,7 @@ function About() {
               </div>
             ))}
           </div>
-          <p className="mb-2 mt-12 font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)]">Current focus</p>
+          <p className="mb-2 mt-12 text-[11px] font-semibold text-[var(--faint)]">Current focus</p>
           {["Evaluation-led RAG", "Stateful agent orchestration", "Low-latency model serving"].map((x) => (
             <motion.div key={x} whileHover={{ x: 5 }} transition={spring} className="flex items-center gap-3 border-b border-[var(--border)] py-5">
               <CheckCircle2 className="h-4 w-4 text-[var(--accent)]" />
@@ -188,7 +188,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     >
       <div className="text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")} / 09</div>
       <div className="relative z-10">
-      <p className="font-mono text-[9px] uppercase tracking-[.18em]" style={{ color: categoryColor(project.category) }}>{project.category}</p>
+      <p className="text-[11px] font-semibold" style={{ color: categoryColor(project.category) }}>{project.category}</p>
       <h3 className="mt-5 max-w-2xl text-[clamp(1.8rem,4vw,4.5rem)] font-medium leading-[.98] tracking-[-.045em]">{project.title}</h3>
       <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.impact}</p>
       <div className="mt-7 flex gap-6 border-b border-[var(--border)] md:hidden">
@@ -229,7 +229,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         ))}
       </div></div>
       <div className="relative z-10 flex flex-col justify-between border-l border-[var(--border)] pl-6">
-        <div><p className="font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)]">System flow</p><p className="mt-4 text-sm leading-7 text-[var(--muted)]">{project.flow}</p></div>
+        <div><p className="text-[11px] font-semibold text-[var(--faint)]">System flow</p><p className="mt-4 text-sm leading-7 text-[var(--muted)]">{project.flow}</p></div>
         <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-[var(--border)] pt-5 text-xs">
           <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
             Read case study <ArrowUpRight className="h-3 w-3" />
@@ -272,15 +272,15 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
 
       <div className="relative mt-10 grid gap-8 border-y border-[var(--border)] py-8 sm:grid-cols-3">
         <div>
-          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[var(--faint)]">Problem</p>
+          <p className="text-[11px] font-semibold text-[var(--faint)]">Problem</p>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.goal}</p>
         </div>
         <div>
-          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[var(--faint)]">Engineering</p>
+          <p className="text-[11px] font-semibold text-[var(--faint)]">Engineering</p>
           <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm leading-6 text-[var(--muted)]">{project.stack.join(" · ")}</p>
         </div>
         <div>
-          <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[var(--faint)]">Impact</p>
+          <p className="text-[11px] font-semibold text-[var(--faint)]">Impact</p>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.impact}</p>
         </div>
       </div></div>
@@ -378,7 +378,7 @@ function Playground() {
   return (
     <div className="model-lab" data-scene="infra">
       <Section id="playground" scene="infra">
-        <div className="mb-16 grid gap-6 border-y border-black/20 py-5 font-mono text-[9px] uppercase tracking-[.16em] md:grid-cols-3">
+        <div className="mb-16 grid gap-6 border-y border-black/20 py-5 text-[11px] font-semibold md:grid-cols-3">
           <span>Outputs · live model</span><span>Timing · measured server-side</span><span>Purpose · interaction study</span>
         </div>
         <PromptPlayground />
@@ -464,17 +464,17 @@ function Certifications() {
   const [all, setAll] = useState(false);
   const visible = all ? certifications : certifications.slice(0, 6);
   return (
-    <Section id="certifications" scene="identity">
+    <Section id="certifications" scene="identity" quiet>
       <div className="border-t border-[var(--border-strong)]">
         {visible.map(([name, meta, url], index) => {
           const unavailable = url.includes("leapsdata.analyttica.com");
           const content = <>
-            <span className="font-mono text-[9px] uppercase tracking-[.14em]" style={{ color: index === 0 ? "var(--accent-2)" : index === 1 ? "var(--accent)" : "var(--faint)" }}>{index === 0 ? "Latest · IBM / Coursera" : index === 1 ? "Primary · Great Learning" : `Credential ${String(index + 1).padStart(2, "0")}`}</span>
+            <span className="text-[11px] font-semibold" style={{ color: index === 0 ? "var(--accent)" : "var(--faint)" }}>{index === 0 ? "Primary · UT Austin / Great Learning" : `Credential ${String(index + 1).padStart(2, "0")}`}</span>
             <div>
-              <h3 className={index < 2 ? "text-xl font-medium" : "text-sm font-medium"}>{name}</h3>
+              <h3 className={index === 0 ? "text-xl font-semibold" : "text-sm font-medium"}>{name}</h3>
               <p className="mt-1 text-xs text-[var(--faint)]">{meta}</p>
             </div>
-            {unavailable ? <span className="font-mono text-[9px] uppercase tracking-[.12em] text-[var(--faint)]">Verification host unavailable</span> : <ExternalLink className="h-4 w-4 shrink-0 text-[var(--accent)]" />}
+            {unavailable ? <span className="text-[11px] text-[var(--faint)]">Verification host unavailable</span> : <ExternalLink className="h-4 w-4 shrink-0 text-[var(--accent)]" />}
           </>;
           const reveal = { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: staggerChild(index % 6) };
           return unavailable ? (
@@ -569,10 +569,10 @@ function Contact() {
             </label>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            <label className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--muted)]">Name<input name="name" autoComplete="name" placeholder="Your name" maxLength={80} required className="field mt-2" /></label>
-            <label className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--muted)]">Email<input name="email" type="email" autoComplete="email" placeholder="Email address" maxLength={254} required className="field mt-2" /></label>
+            <label className="text-[11px] font-semibold text-[var(--muted)]">Name<input name="name" autoComplete="name" placeholder="Your name" maxLength={80} required className="field mt-2" /></label>
+            <label className="text-[11px] font-semibold text-[var(--muted)]">Email<input name="email" type="email" autoComplete="email" placeholder="Email address" maxLength={254} required className="field mt-2" /></label>
           </div>
-          <label className="mt-5 block font-mono text-[9px] uppercase tracking-[.14em] text-[var(--muted)]">Message<textarea name="message" placeholder="Tell me about your project or role" rows={5} minLength={10} maxLength={3000} required className="field mt-2 resize-none" /></label>
+          <label className="mt-5 block text-[11px] font-semibold text-[var(--muted)]">Message<textarea name="message" placeholder="Tell me about your project or role" rows={5} minLength={10} maxLength={3000} required className="field mt-2 resize-none" /></label>
           <div className="mt-7 flex flex-wrap items-center gap-4">
             <Magnetic>
               <motion.button whileTap={sending ? undefined : { scale: 0.97 }} transition={spring} disabled={sending} className="btn-pill btn-pill--solid">
@@ -614,7 +614,7 @@ export function Portfolio() {
       <footer className="relative z-10 border-t border-[var(--border)] px-5 py-10 sm:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-xs text-[var(--faint)] sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Gopalakrishna · Generative AI Engineer</p>
-          <nav aria-label="Site meta links" className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-[.08em]">
+          <nav aria-label="Site meta links" className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-semibold">
             <Link href="/changelog" className="hover:text-[var(--accent)]">Changelog</Link>
             <Link href="/api-docs" className="hover:text-[var(--accent)]">API</Link>
             <Link href="/security" className="hover:text-[var(--accent)]">Security</Link>

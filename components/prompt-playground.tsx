@@ -108,7 +108,7 @@ export function PromptPlayground() {
   return (
     <div>
       <div className="mb-5 flex items-center justify-between gap-4">
-        <p className="font-mono text-[10px] uppercase tracking-[.1em] text-[var(--faint)]">Status: {status}</p>
+        <p className="text-[11px] font-semibold text-[var(--faint)]">Status: {status}</p>
         <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }} transition={spring} onClick={reset} className="btn-pill btn-pill--outline">
           <RotateCcw className="h-3 w-3" />
           Reset
@@ -214,7 +214,7 @@ export function PromptPlayground() {
             <p className="mt-2 font-mono text-[9px] text-[#c96a6a]">{errorMessage} Showing a static example instead.</p>
           )}
           <footer className="mt-4 border-t border-[var(--border)] pt-3">
-            <p className="mb-2 font-mono text-[8px] uppercase tracking-[.14em] text-[var(--faint)]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
+            <p className="mb-2 text-[11px] font-semibold text-[var(--faint)]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
             <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 font-mono text-[9px]">
               <span className="text-[var(--muted)]">LATENCY: {latency > 0 ? `${latency.toFixed(0)}ms` : "—"}</span>
               <span className="text-[var(--muted)]">TOKENS: {tokens > 0 ? tokens : "—"}</span>

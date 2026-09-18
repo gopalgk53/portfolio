@@ -78,7 +78,7 @@ button,input,textarea{font:inherit}
 button{cursor:pointer}
 a{transition:color .25s ease,border-color .25s ease,opacity .25s ease}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-.skip-link{position:fixed;left:1rem;top:1rem;z-index:300;transform:translateY(-200%);background:var(--accent);padding:.8rem 1rem;color:#fff;font:600 11px "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.08em}
+.skip-link{position:fixed;left:1rem;top:1rem;z-index:300;transform:translateY(-200%);background:var(--accent);padding:.8rem 1rem;color:#fff;font:600 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em}
 .skip-link:focus{transform:translateY(0);color:#fff}
 ::selection{color:#fff;background:var(--accent)}
 h1,h2,h3{margin:0;text-wrap:balance}
@@ -163,7 +163,7 @@ p{text-wrap:pretty}
 .cinematic-hero::after{content:"";position:absolute;inset:0;z-index:80;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")}
 #webgl-canvas{display:block;width:100%;height:100%;transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
 .node-label-host{position:absolute;inset:0;pointer-events:none}
-.node-label{position:absolute;left:0;top:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#fff;opacity:0;white-space:nowrap;will-change:transform,opacity;text-shadow:0 0 12px rgba(15,23,42,.85)}
+.node-label{position:absolute;left:0;top:0;font-family:"Inter",ui-sans-serif,sans-serif;font-weight:500;font-size:11px;letter-spacing:.02em;color:#fff;opacity:0;white-space:nowrap;will-change:transform,opacity;text-shadow:0 0 12px rgba(15,23,42,.85)}
 
 /* Was a dark vignette for legibility over the (formerly full-page) dark
    network — every section on the light page is plain light-on-dark-text
@@ -183,6 +183,11 @@ p{text-wrap:pretty}
    an overlay this light only dims the ambient dots slightly, it does
    not require boosting their own opacity to compensate. */
 .chapter{background:rgba(255,255,255,.7)}
+/* Long reading surfaces (the credentials list, the case-study bodies) sit
+   the ambient network further back. It stays present, but at .7 it competes
+   with a wall of small text in a way it doesn't behind the hero or the
+   project cards. */
+.chapter--quiet{background:rgba(255,255,255,.88)}
 .manifesto{background:rgba(255,255,255,.7)}
 .manifesto::before{content:"";position:absolute;left:55%;top:50%;width:60vw;height:60vw;border:1px solid rgba(37,99,235,.14);transform:translate(-50%,-50%) rotate(25deg);pointer-events:none}
 
@@ -216,7 +221,7 @@ p{text-wrap:pretty}
 .field::placeholder{color:var(--faint)}
 .field:focus{border-color:var(--accent);background:var(--surface)}
 
-.btn-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:var(--radius-pill);padding:.85rem 1.6rem;font:600 10.5px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s cubic-bezier(.4,0,.2,1),background-color .3s ease,background-position .5s ease,color .3s ease,border-color .3s ease}
+.btn-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:var(--radius-pill);padding:.85rem 1.6rem;font:600 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em;white-space:nowrap;transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s cubic-bezier(.4,0,.2,1),background-color .3s ease,background-position .5s ease,color .3s ease,border-color .3s ease}
 /* White text on the gradient: both ends now clear WCAG AA (5.17:1 /
    5.63:1) with the darker blue/violet chosen for the light theme. */
 .btn-pill--solid{border:1px solid transparent;background:var(--gradient-accent);background-size:160% 160%;background-position:0% 50%;color:#fff;box-shadow:0 10px 28px -12px var(--glow)}

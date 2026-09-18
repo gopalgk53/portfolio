@@ -38,7 +38,7 @@ export function GithubActivity() {
   if (!label) return null;
 
   return (
-    <span className="ml-2 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[.12em] text-[var(--faint)]">
+    <span className="ml-2 inline-flex items-center gap-1.5 text-[11px] font-semibold text-[var(--faint)]">
       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#8fae90]" />
       Last commit activity {label}
     </span>

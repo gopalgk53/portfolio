@@ -8,7 +8,7 @@ export function PrintButton({ label = "Print / Save as PDF" }: { label?: string 
     <button
       type="button"
       onClick={() => window.print()}
-      className="no-print inline-flex items-center rounded-[var(--radius-pill)] border border-[var(--border-strong)] px-[1.3rem] py-[.65rem] font-mono text-[10px] uppercase tracking-[.12em] text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+      className="no-print inline-flex items-center rounded-[var(--radius-pill)] border border-[var(--border-strong)] px-[1.3rem] py-[.65rem] text-[11px] font-semibold text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
     >
       {label}
     </button>

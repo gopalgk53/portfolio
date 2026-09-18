@@ -28,7 +28,7 @@ export function AudienceHighlight() {
   return (
     <div className="surface-card mt-10 p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">Viewing as</p>
+        <p className="text-[11px] font-semibold text-[var(--faint)]">Viewing as</p>
         <div role="tablist" aria-label="Audience" className="flex gap-1 rounded-[var(--radius-pill)] border border-[var(--border)] p-1">
           {(["recruiter", "engineer"] as const).map((a) => (
             <button
@@ -36,7 +36,7 @@ export function AudienceHighlight() {
               role="tab"
               aria-selected={audience === a}
               onClick={() => choose(a)}
-              className={`rounded-[var(--radius-pill)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[.06em] transition-colors ${audience === a ? "bg-[var(--accent-soft)] text-[var(--accent)]" : "text-[var(--faint)] hover:text-[var(--muted)]"}`}
+              className={`rounded-[var(--radius-pill)] px-3 py-1.5 text-[11px] font-semibold transition-colors ${audience === a ? "bg-[var(--accent-soft)] text-[var(--accent)]" : "text-[var(--faint)] hover:text-[var(--muted)]"}`}
             >
               {a === "recruiter" ? "Recruiter" : "Engineer"}
             </button>
