@@ -76,15 +76,15 @@ export function SiteEnhancements() {
   const ActiveIcon = active.icon;
 
   return <div ref={controlRef} className="fixed bottom-5 left-4 z-[90] sm:left-6">
-    {open && <div id="effects-intensity-menu" role="menu" aria-label="3D intensity" className="card-elevated mb-2 w-40 bg-[var(--bg)] p-1.5">
+    {open && <div id="effects-intensity-menu" role="menu" aria-label="3D intensity" className="mb-2 w-40 rounded-[var(--radius-md)] border border-[var(--border)] bg-white p-1.5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_30px_70px_-32px_rgba(15,23,42,.16)]">
       {modes.map(item => {
         const Icon = item.icon;
-        return <button key={item.id} role="menuitemradio" aria-checked={mode === item.id} onClick={() => choose(item.id)} className={`flex w-full items-center gap-2 rounded-[var(--radius-sm)] px-3 py-2 text-left font-mono text-[10px] transition ${mode === item.id ? "bg-white/[.08] text-white" : "text-[var(--muted)] hover:bg-white/[.04] hover:text-white"}`}>
+        return <button key={item.id} role="menuitemradio" aria-checked={mode === item.id} onClick={() => choose(item.id)} className={`flex w-full items-center gap-2 rounded-[var(--radius-sm)] px-3 py-2 text-left text-[13px] transition ${mode === item.id ? "bg-[var(--accent-soft)] text-[var(--text)]" : "text-[var(--muted)] hover:bg-[var(--border)] hover:text-[var(--text)]"}`}>
           <Icon className="h-3.5 w-3.5"/><span>{item.label}</span>{mode === item.id && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[var(--accent)]"/>}
         </button>;
       })}
     </div>}
-    <button ref={triggerRef} onClick={() => setOpen(value => !value)} aria-controls="effects-intensity-menu" aria-expanded={open} aria-haspopup="menu" className="flex h-11 items-center gap-2 rounded-full border border-white/[.14] bg-[var(--bg)] px-4 font-mono text-[9px] text-[var(--muted)]">
+    <button ref={triggerRef} onClick={() => setOpen(value => !value)} aria-controls="effects-intensity-menu" aria-expanded={open} aria-haspopup="menu" className="flex h-11 items-center gap-2 rounded-full border border-[var(--border)] bg-white px-4 text-[11px] text-[var(--muted)] shadow-[0_1px_2px_rgba(15,23,42,.04),0_20px_45px_-22px_rgba(37,99,235,.16)]">
       <ActiveIcon className="h-4 w-4 text-[var(--accent)]"/><span className="hidden sm:inline">3D: {active.label.toUpperCase()}</span><span className="sr-only">Choose 3D animation intensity. Current setting: {active.label}</span>
     </button>
     <span className="sr-only" aria-live="polite">3D animation intensity set to {active.label}</span>

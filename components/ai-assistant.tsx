@@ -104,7 +104,7 @@ function highlightDiagramNodes(answer: string) {
 function inlineFormat(text: string): ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, index) =>
     part.startsWith("**") && part.endsWith("**")
-      ? <strong key={index} className="font-semibold text-white">{part.slice(2, -2)}</strong>
+      ? <strong key={index} className="font-semibold text-[var(--text)]">{part.slice(2, -2)}</strong>
       : <span key={index}>{part}</span>,
   );
 }
@@ -332,7 +332,7 @@ export function AIAssistant() {
             exit={{ opacity: 0, x: 12 }}
             transition={spring}
             onClick={() => setOpen(true)}
-            className="card-elevated absolute bottom-2 right-16 w-64 bg-[var(--bg)]/95 p-3 text-left font-mono text-[11px] leading-5 text-[var(--muted)]"
+            className="absolute bottom-2 right-16 w-64 rounded-[var(--radius-md)] border border-[var(--border)] bg-white p-3 text-left text-[13px] leading-5 text-[var(--muted)] shadow-[0_1px_2px_rgba(15,23,42,.04),0_30px_70px_-32px_rgba(15,23,42,.16)]"
           >
             System online. Ask me about Gopal&apos;s AI stack…
           </motion.button>
@@ -350,7 +350,7 @@ export function AIAssistant() {
             exit={{ scale: 0.7, opacity: 0 }}
             whileHover={{ scale: 1.06 }}
             transition={spring}
-            className="grid h-14 w-14 place-items-center rounded-full border border-white/[.16] bg-[var(--bg)] text-[var(--accent)]"
+            className="grid h-14 w-14 place-items-center rounded-full border border-[var(--border-strong)] bg-[var(--bg)] text-[var(--accent)]"
           >
             <Bot className="h-6 w-6" />
           </motion.button>
@@ -364,12 +364,12 @@ export function AIAssistant() {
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
             exit={{ opacity: 0, scale: 0.72, y: 38, x: 24 }}
             transition={spring}
-            className={`flex h-[min(640px,80dvh)] w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-[var(--radius-md)] border bg-[var(--bg)] shadow-[0_40px_100px_-30px_rgba(0,0,0,.85)] ${warning ? "border-[#c9a25a]/50" : "border-white/[.14]"}`}
+            className={`flex h-[min(640px,80dvh)] w-[min(380px,calc(100vw-24px))] flex-col overflow-hidden rounded-[var(--radius-md)] border bg-[var(--bg)] shadow-[0_40px_100px_-30px_rgba(0,0,0,.85)] ${warning ? "border-[#c9a25a]/50" : "border-[var(--border-strong)]"}`}
           >
-            <header className={`shrink-0 border-b px-4 pb-3 pt-3 ${warning ? "border-[#c9a25a]/35" : "border-white/[.12]"}`}>
+            <header className={`shrink-0 border-b px-4 pb-3 pt-3 ${warning ? "border-[#c9a25a]/35" : "border-[var(--border)]"}`}>
               <div className="flex h-10 items-center justify-between">
                 <div>
-                  <h2 id="gopal-assistant-title" className="font-mono text-xs text-white">
+                  <h2 id="gopal-assistant-title" className="font-mono text-xs text-[var(--text)]">
                     Gopal-Bot v1.0 <span className="text-[#8fae90]">[online]</span>
                   </h2>
                   <p id="gopal-assistant-description" className="mt-1 font-mono text-[9px] text-[var(--faint)]">Portfolio context assistant · streaming live</p>
@@ -390,14 +390,14 @@ export function AIAssistant() {
                   </button>
                 </div>
               </div>
-              <div role="tablist" aria-label="Assistant mode" className="mt-2 grid grid-cols-2 gap-1 rounded-[var(--radius-pill)] border border-white/[.1] p-1">
+              <div role="tablist" aria-label="Assistant mode" className="mt-2 grid grid-cols-2 gap-1 rounded-[var(--radius-pill)] border border-[var(--border)] p-1">
                 {(["chat", "consult"] as const).map((m) => (
                   <button
                     key={m}
                     role="tab"
                     aria-selected={mode === m}
                     onClick={() => setMode(m)}
-                    className={`rounded-[var(--radius-pill)] py-1.5 font-mono text-[10px] uppercase tracking-[.08em] transition-colors ${mode === m ? "bg-[var(--accent-soft)] text-[var(--accent)]" : "text-[var(--faint)] hover:text-[var(--muted)]"}`}
+                    className={`rounded-[var(--radius-pill)] py-1.5 text-[11px] font-semibold transition-colors ${mode === m ? "bg-[var(--accent-soft)] text-[var(--accent)]" : "text-[var(--faint)] hover:text-[var(--muted)]"}`}
                   >
                     {m === "chat" ? "Ask" : "Consult"}
                   </button>
@@ -413,13 +413,13 @@ export function AIAssistant() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={spring}
-                    className={`max-w-[90%] rounded-[var(--radius-sm)] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-white/[.14] bg-transparent text-[var(--muted)]" : "border-l-2 border-[var(--accent)] bg-white/[.02] text-[var(--muted)]"}`}
+                    className={`max-w-[90%] rounded-[var(--radius-sm)] p-3 text-xs leading-6 ${message.role === "user" ? "ml-auto border border-[var(--border-strong)] bg-transparent text-[var(--muted)]" : "border-l-2 border-[var(--accent)] bg-[var(--surface)] text-[var(--muted)]"}`}
                   >
                     {isLastAssistant && thinking && stage !== "generating" && <StageList stage={stage!} />}
                     {message.role === "assistant" ? <FormattedMessage text={message.text} /> : message.text}
                     {isLastAssistant && thinking && <span className="ml-1 animate-pulse text-[var(--accent)]">▮</span>}
                     {message.role === "assistant" && !!message.sources?.length && !(isLastAssistant && thinking) && (
-                      <div className="mt-3 flex flex-wrap gap-1.5 border-t border-white/[.08] pt-3">
+                      <div className="mt-3 flex flex-wrap gap-1.5 border-t border-[var(--border)] pt-3">
                         {message.sources.map((source) => {
                           const display = resolveSourceDisplay(source);
                           if (!display) return null;
@@ -429,7 +429,7 @@ export function AIAssistant() {
                               href={display.href}
                               target={display.external ? "_blank" : undefined}
                               rel={display.external ? "noreferrer" : undefined}
-                              className="inline-flex items-center gap-1.5 rounded-full border border-white/[.14] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[.08em] text-[var(--faint)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-strong)] px-2.5 py-1 text-[11px] font-semibold text-[var(--faint)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
                             >
                               <span className="text-[var(--accent)]">{TYPE_LABEL[source.type]}</span>
                               {display.title}
@@ -450,14 +450,14 @@ export function AIAssistant() {
               {messages.length <= 1 && !thinking && (
                 <div className="flex flex-wrap gap-2">
                   {quickPrompts.map((item) => (
-                    <button key={item} onClick={() => respond(item)} className="rounded-full border border-white/[.14] px-3 py-2 font-mono text-[10px] text-[var(--muted)] hover:border-[var(--accent)]">
+                    <button key={item} onClick={() => respond(item)} className="rounded-full border border-[var(--border-strong)] px-3 py-2 font-mono text-[10px] text-[var(--muted)] hover:border-[var(--accent)]">
                       {item}
                     </button>
                   ))}
                 </div>
               )}
             </div>
-            <form onSubmit={submit} className="flex shrink-0 gap-2 border-t border-white/[.12] p-3">
+            <form onSubmit={submit} className="flex shrink-0 gap-2 border-t border-[var(--border)] p-3">
               <input
                 ref={inputRef}
                 value={input}
@@ -465,7 +465,7 @@ export function AIAssistant() {
                 disabled={thinking}
                 aria-label={mode === "consult" ? "Describe a problem" : "Ask Gopal AI assistant"}
                 placeholder={thinking ? "Generating grounded answer…" : mode === "consult" ? "Describe a real problem you're solving…" : "Ask about stack, projects, or experience…"}
-                className="min-w-0 flex-1 rounded-[var(--radius-pill)] border border-white/[.14] bg-white/[.02] px-4 py-3 font-mono text-[11px] text-white outline-none focus:border-[var(--accent)]"
+                className="min-w-0 flex-1 rounded-[var(--radius-pill)] border border-[var(--border-strong)] bg-[var(--surface)] px-4 py-3 font-mono text-[11px] text-[var(--text)] outline-none focus:border-[var(--accent)]"
               />
               {voiceSupported && (
                 <button
@@ -474,12 +474,12 @@ export function AIAssistant() {
                   disabled={thinking}
                   aria-label={listening ? "Stop voice input" : "Start voice input"}
                   aria-pressed={listening}
-                  className={`grid w-11 shrink-0 place-items-center rounded-full border disabled:opacity-30 ${listening ? "border-[#c96a6a]/50 bg-[#c96a6a]/10 text-[#c96a6a]" : "border-white/[.14] text-[var(--muted)] hover:text-[var(--accent)]"}`}
+                  className={`grid w-11 shrink-0 place-items-center rounded-full border disabled:opacity-30 ${listening ? "border-[#c96a6a]/50 bg-[#c96a6a]/10 text-[#c96a6a]" : "border-[var(--border-strong)] text-[var(--muted)] hover:text-[var(--accent)]"}`}
                 >
                   <Mic className={`h-4 w-4 ${listening ? "animate-pulse" : ""}`} />
                 </button>
               )}
-              <button disabled={thinking || !input.trim()} aria-label="Send message" className="grid w-11 shrink-0 place-items-center rounded-full border border-white/[.14] bg-[var(--accent-soft)] text-[var(--accent)] disabled:opacity-30">
+              <button disabled={thinking || !input.trim()} aria-label="Send message" className="grid w-11 shrink-0 place-items-center rounded-full border border-[var(--border-strong)] bg-[var(--accent-soft)] text-[var(--accent)] disabled:opacity-30">
                 <Send className="h-4 w-4" />
               </button>
             </form>

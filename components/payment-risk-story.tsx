@@ -99,7 +99,7 @@ function RiskQueueVisual({ isActive, paused, reducedMotion }: ChapterVisualProps
 
   return (
     <div className="glass-panel p-6 sm:p-8">
-      <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[var(--faint)]">
+      <p className="text-[11px] font-semibold text-[var(--faint)]">
         Illustrative synthetic scenario — for demonstration only, not real project data
       </p>
       <div className="mt-6 flex flex-col gap-5">
@@ -108,12 +108,12 @@ function RiskQueueVisual({ isActive, paused, reducedMotion }: ChapterVisualProps
           return (
             <div key={item.label}>
               <div className="flex items-baseline justify-between gap-3">
-                <span className="font-mono text-[11px] uppercase tracking-[.06em] text-[var(--muted)]">{item.label}</span>
-                <span className="font-mono text-[10px] uppercase tracking-[.06em]" style={{ color: status.color }}>
+                <span className="text-[12px] font-semibold text-[var(--muted)]">{item.label}</span>
+                <span className="text-[11px] font-semibold" style={{ color: status.color }}>
                   {status.label}
                 </span>
               </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/[.06]">
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--border)]">
                 <motion.div
                   className="h-full rounded-full"
                   style={{ background: status.color, transformOrigin: "left" }}
@@ -156,7 +156,7 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
   return (
     <div className="glass-panel p-6 sm:p-8">
       <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--border-strong)] p-4 sm:p-6">
-        <p className="mb-4 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.16em] text-[var(--faint)]">
+        <p className="mb-4 flex items-center gap-2 text-[11px] font-semibold text-[var(--faint)]">
           <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           IAM — security boundary, governs access to every stage below
         </p>
@@ -183,13 +183,13 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
                   >
                     <stage.Icon className="h-4 w-4" />
                   </span>
-                  <span className={`mt-2 block font-mono text-[10px] uppercase tracking-[.06em] ${isStageActive ? "text-white" : "text-[var(--muted)]"}`}>
+                  <span className={`mt-2 block text-[11px] font-semibold ${isStageActive ? "text-[var(--text)]" : "text-[var(--muted)]"}`}>
                     {stage.name}
                   </span>
                 </button>
                 {index < PIPELINE_STAGES.length - 1 && (
                   <div className="my-1 flex items-center justify-center lg:my-0 lg:w-6 lg:shrink-0" aria-hidden="true">
-                    <span className="h-4 w-px bg-white/[.14] lg:h-px lg:w-4" />
+                    <span className="h-4 w-px bg-[var(--border-strong)] lg:h-px lg:w-4" />
                   </div>
                 )}
               </div>
@@ -197,7 +197,7 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
           })}
         </div>
       </div>
-      <div className="mt-4 flex items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-white/[.02] p-3">
+      <div className="mt-4 flex items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--surface)] p-3">
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-[var(--faint)]">
           <Activity className="h-4 w-4" />
         </span>
@@ -206,7 +206,7 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
         </p>
       </div>
       <p className="mt-4 max-w-lg text-sm leading-6 text-[var(--muted)]">
-        Currently highlighting <strong className="text-white">{PIPELINE_STAGES[active].name}</strong> — {PIPELINE_STAGES[active].detail.toLowerCase()}
+        Currently highlighting <strong className="text-[var(--text)]">{PIPELINE_STAGES[active].name}</strong> — {PIPELINE_STAGES[active].detail.toLowerCase()}
       </p>
     </div>
   );
@@ -242,14 +242,14 @@ function DecisionGateVisual({ isActive, paused, reducedMotion }: ChapterVisualPr
 
   return (
     <div className="glass-panel p-6 sm:p-8">
-      <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[var(--faint)]">
+      <p className="text-[11px] font-semibold text-[var(--faint)]">
         Illustrative synthetic scenario — for demonstration only, not real project data
       </p>
       <div className="relative mt-10 h-16">
-        <div className="absolute left-0 right-0 top-1/2 h-px bg-white/[.14]" />
+        <div className="absolute left-0 right-0 top-1/2 h-px bg-[var(--border-strong)]" />
         <div className="absolute top-0 h-full w-px" style={{ left: `${DECISION_THRESHOLD * 100}%`, background: "var(--accent-gold)" }} />
         <span
-          className="absolute top-full mt-1 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] uppercase tracking-[.06em]"
+          className="absolute top-full mt-1 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold"
           style={{ left: `${DECISION_THRESHOLD * 100}%`, color: "var(--accent-gold)" }}
         >
           0.20 threshold
@@ -262,7 +262,7 @@ function DecisionGateVisual({ isActive, paused, reducedMotion }: ChapterVisualPr
         >
           <span className="absolute -left-1.5 -top-1.5 block h-3 w-3 rounded-full" style={{ background: status.color }} />
           <span
-            className="absolute -top-8 left-0 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] uppercase tracking-[.06em]"
+            className="absolute -top-8 left-0 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold"
             style={{ color: status.color }}
           >
             {score.toFixed(2)} · {status.label}
@@ -271,9 +271,9 @@ function DecisionGateVisual({ isActive, paused, reducedMotion }: ChapterVisualPr
       </div>
       <div className="mt-10 grid gap-6 sm:grid-cols-[minmax(10rem,.7fr)_minmax(14rem,1.3fr)]">
         <div>
-          <p className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">Production champion</p>
-          <p className="mt-2 text-lg font-semibold text-white">Logistic Regression v1</p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[.06em] text-[var(--faint)]">0.20 frozen operational threshold</p>
+          <p className="text-[11px] font-semibold text-[var(--faint)]">Production champion</p>
+          <p className="mt-2 text-lg font-semibold text-[var(--text)]">Logistic Regression v1</p>
+          <p className="mt-1 text-[11px] font-semibold text-[var(--faint)]">0.20 frozen operational threshold</p>
         </div>
         <ul className="m-0 list-none border-t border-[var(--border)] p-0">
           {DECISION_REASONS.map((reason, index) => (
@@ -308,7 +308,7 @@ const VALIDATION_SCORES = [
 function BenchmarkVisual({ isActive, reducedMotion }: ChapterVisualProps) {
   return (
     <div className="glass-panel p-6 sm:p-8">
-      <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[var(--faint)]">
+      <p className="text-[11px] font-semibold text-[var(--faint)]">
         DataRobot holdout ROC-AUC · higher is better · scale begins at 0.65
       </p>
       <ol className="m-0 mt-6 list-none p-0">
@@ -316,7 +316,7 @@ function BenchmarkVisual({ isActive, reducedMotion }: ChapterVisualProps) {
           <li key={model.name} className="grid grid-cols-[2rem_minmax(9rem,12rem)_1fr_4rem] items-center gap-3 border-t border-[var(--border)] py-3">
             <span className="font-mono text-[10px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
             <span className="text-sm text-[var(--muted)]">{model.name}</span>
-            <span className="h-2 overflow-hidden rounded-full bg-white/[.06]" aria-hidden="true">
+            <span className="h-2 overflow-hidden rounded-full bg-[var(--border)]" aria-hidden="true">
               <motion.span
                 className="block h-full rounded-full"
                 style={{ background: index === 0 ? "var(--gradient-accent)" : "var(--accent)", transformOrigin: "left" }}
@@ -325,7 +325,7 @@ function BenchmarkVisual({ isActive, reducedMotion }: ChapterVisualProps) {
                 transition={reducedMotion ? { duration: 0 } : { duration: 0.9, delay: index * 0.06, ease: "easeOut" }}
               />
             </span>
-            <strong className="text-right font-mono text-xs text-white">{model.auc.toFixed(4)}</strong>
+            <strong className="text-right font-mono text-xs text-[var(--text)]">{model.auc.toFixed(4)}</strong>
           </li>
         ))}
       </ol>
@@ -336,7 +336,7 @@ function BenchmarkVisual({ isActive, reducedMotion }: ChapterVisualProps) {
             className="flex flex-col p-4"
             style={score.accent ? { background: "var(--gradient-accent)", color: "var(--bg)" } : { background: "var(--bg)" }}
           >
-            <span className="font-mono text-[9px] uppercase tracking-[.08em]">{score.label}</span>
+            <span className="text-[11px] font-semibold">{score.label}</span>
             <strong className="mt-3 text-2xl font-semibold">{score.value}</strong>
             <small className={score.accent ? "text-[rgba(5,5,5,.65)]" : "text-[var(--faint)]"}>Elastic-Net α=0.5</small>
           </div>
@@ -371,7 +371,7 @@ function ExplainabilityVisual({ isActive, paused, reducedMotion }: ChapterVisual
         {(["increase", "decrease"] as const).map((direction) => (
           <div key={direction}>
             <p
-              className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[.1em]"
+              className="flex items-center gap-2 text-[11px] font-semibold"
               style={{ color: direction === "increase" ? "var(--accent-gold)" : "var(--accent)" }}
             >
               {direction === "increase" ? <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" /> : <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />}
@@ -488,7 +488,7 @@ export function PaymentRiskStory() {
             ))}
           </div>
           <p
-            className="hidden min-w-0 flex-1 font-mono text-[10px] uppercase tracking-[.1em] text-[var(--muted)] sm:block"
+            className="hidden min-w-0 flex-1 text-[11px] font-semibold text-[var(--muted)] sm:block"
             style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
           >
             {CHAPTERS[active].eyebrow}

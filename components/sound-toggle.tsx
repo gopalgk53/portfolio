@@ -30,7 +30,7 @@ export function SoundToggle({ className = "" }: { className?: string }) {
   return (
     <button onClick={toggle} aria-pressed={enabled} aria-label={enabled ? "Mute interface sound" : "Enable interface sound"} className={`flex items-center gap-1.5 ${className}`}>
       {enabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
-      <span className="hidden font-mono text-[10px] uppercase tracking-[.1em] sm:inline">Sound</span>
+      <span className="hidden text-[11px] font-semibold sm:inline">Sound</span>
     </button>
   );
 }

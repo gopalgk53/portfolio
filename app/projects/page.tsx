@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { projects } from "../../lib/data";
+import { Reveal } from "../../components/reveal";
 
 export const metadata: Metadata = {
   title: "Generative AI Project Case Studies",
@@ -10,9 +11,9 @@ export const metadata: Metadata = {
 
 export default function ProjectsIndex() {
   return (
-    <main id="main-content" tabIndex={-1} className="case-archive min-h-screen bg-[#050505] text-white">
+    <main id="main-content" tabIndex={-1} className="case-archive min-h-screen bg-[var(--bg)]/70 text-[var(--text)]">
       <nav className="case-nav" aria-label="Case study navigation">
-        <Link href="/">GK / AI systems</Link>
+        <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Archive · 09 systems</span>
       </nav>
       <header className="case-index-hero">
@@ -25,16 +26,18 @@ export default function ProjectsIndex() {
       </header>
       <section className="case-index-list" aria-label="Project case studies">
         {projects.map((project, index) => (
-          <Link key={project.id} href={`/projects/${project.id}`} className="case-index-row">
-            <span className="case-index-number">{String(index + 1).padStart(2, "0")}</span>
-            <span className="case-index-copy">
-              <span className="case-index-category">{project.category}</span>
-              <strong>{project.title}</strong>
-              <small>{project.goal}</small>
-            </span>
-            <span className="case-index-impact">{project.impact}</span>
-            <span className="case-index-arrow" aria-hidden="true">↗</span>
-          </Link>
+          <Reveal key={project.id} delay={Math.min(index, 5) * 0.05}>
+            <Link href={`/projects/${project.id}`} className="case-index-row">
+              <span className="case-index-number">{String(index + 1).padStart(2, "0")}</span>
+              <span className="case-index-copy">
+                <span className="case-index-category">{project.category}</span>
+                <strong>{project.title}</strong>
+                <small>{project.goal}</small>
+              </span>
+              <span className="case-index-impact">{project.impact}</span>
+              <span className="case-index-arrow" aria-hidden="true">↗</span>
+            </Link>
+          </Reveal>
         ))}
       </section>
       <footer className="case-footer">

@@ -1,10 +1,10 @@
 export const projects = [
   { id: "payment-risk", category: "Machine Learning", title: "Construction Payment Risk Prediction", goal: "Prioritize construction payment-protection workflows before delay or escalation becomes harder to manage.", impact: "Human-reviewed operational prioritization", stack: ["Python", "FastAPI", "AWS", "DataRobot", "SHAP"], flow: "S3 → Glue → Athena → SageMaker → ECS → CloudWatch" },
+  { id: "multi-agent", category: "Agentic AI", title: "Autonomous Work Order Intelligence & Operations Platform", goal: "An evidence-aware, multi-agent architecture for construction payment-protection operations — processing work orders through specialist agents for intake, research, evidence, and discrepancy detection, with controlled correction and human-in-the-loop escalation for complex cases.", impact: "~99% target evaluation baseline", stack: ["Microsoft Foundry", "Python", "FastAPI", "MCP", "AWS", "Azure Container Apps"], flow: "Intake → Foundry planner → Specialist agents → MCP tools → Human review → Audit" },
   { id: "document-ai", category: "Document AI", title: "Construction Document Intelligence", goal: "Extract structured, reviewable information from complex legal PDFs.", impact: "Reduced manual document processing", stack: ["Textract", "PaddleOCR", "spaCy", "PostgreSQL", "FastAPI"], flow: "PDF → OCR → NER → JSON → Database" },
   { id: "lien-engine", category: "Machine Learning", title: "Lien Recommendation Engine", goal: "Recommend notices, deadlines, and the next appropriate legal action.", impact: "Faster compliance decisions", stack: ["Python", "Machine Learning", "Rules Engine", "FastAPI"], flow: "Project data → Risk model → Rules → Recommendation" },
   { id: "lakehouse", category: "Data Engineering", title: "Construction Data Lakehouse", goal: "Create a governed source of truth for operational and executive analytics.", impact: "Unified reporting foundation", stack: ["PySpark", "AWS Glue", "Athena", "Redshift", "Power BI"], flow: "CRM → S3 → Glue → Athena → Dashboards" },
   { id: "legal-rag", category: "Generative AI", title: "AI Legal Assistant", goal: "Answer construction-law questions with grounded, source-aware retrieval.", impact: "95% retrieval accuracy target", stack: ["LangChain", "AWS Bedrock", "FAISS", "FastAPI"], flow: "Documents → Embeddings → Vector DB → Rerank → LLM" },
-  { id: "multi-agent", category: "Agentic AI", title: "Multi-Agent Construction AI", goal: "Coordinate specialist agents across compliance, risk, and communication workflows.", impact: "40% task automation target", stack: ["LangGraph", "CrewAI", "Bedrock", "Redis"], flow: "Planner → Specialists → Tools → Human approval" },
   { id: "claims", category: "Document AI", title: "Claims & Contract Intelligence", goal: "Analyze claims and contracts for obligations, risks, and missing evidence.", impact: "Accelerated contract review", stack: ["OCR", "Transformers", "RAG", "AWS"], flow: "Contract → Extraction → Risk analysis → Evidence" },
   { id: "explainable-risk", category: "Machine Learning", title: "Explainable Payment Intelligence", goal: "Turn payment predictions into clear, defensible business explanations.", impact: "Transparent risk decisions", stack: ["XGBoost", "SHAP", "LLMs", "Power BI"], flow: "ERP → ML → Explanation → Dashboard" },
   { id: "compliance-copilot", category: "Agentic AI", title: "Construction Compliance Copilot", goal: "Deliver end-to-end assistance across documents, deadlines, and communication.", impact: "Auditable human-AI collaboration", stack: ["LangGraph", "MCP", "CrewAI", "FastAPI"], flow: "Intake → Plan → Tools → Review → Audit trail" },
@@ -19,7 +19,6 @@ export const skills = [
 ];
 
 export const certifications = [
-  ["Generative AI for Data Analysts", "IBM · Coursera Specialization · Sep 2026", "https://coursera.org/share/e453902c46df4de213d408ab7f725a56"],
   ["Post Graduate Program in Artificial Intelligence and Machine Learning", "McCombs School of Business, The University of Texas at Austin · Great Learning · Jan 2021", "https://www.mygreatlearning.com/certificate/YKRZCXMO"],
   ["Statistical Methods for Decision Making", "Great Learning · May 2020", "https://olympus1.greatlearning.in/course_certificate/GWSUYGPZ"],
   ["Machine Learning Engineering for Production (MLOps) Specialization", "Coursera · Nov 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/JM8WZRKMAZJW"],
@@ -43,4 +42,30 @@ export const certifications = [
   ["Statistics Foundations: 1", "LinkedIn Learning · Sep 2019", "https://www.linkedin.com/learning/certificates/84b4349bdf33df26e4e41d1f49632a0f57dd7bf41be649dca7e2a766987098a0/?trk=backfilled_certificate"],
   ["Programming Foundations: Fundamentals", "LinkedIn Learning · Sep 2019", "https://www.linkedin.com/learning/certificates/b14cd2708db9821047fcf9109245aa533eae7423949e03cb5af954d19e6ddf66/?trk=backfilled_certificate"],
   ["Introduction to Geometric Dimensioning and Tolerancing", "LinkedIn Learning · Aug 2019", "https://www.linkedin.com/learning/certificates/3fa9e657f5994bbb0431b541b43458e39ab5a0f564466a928efb8e4ef1bdf022/?trk=backfilled_certificate"],
+];
+
+// Credly-issued digital badges. Unlike the certificate list above, each of
+// these is independently verifiable against the issuer's record, which is
+// the reason they're presented separately rather than folded in.
+// `url` uses Credly's public badge form, not the /earner/earned/ links from
+// the badge wallet — those require the visitor to sign in to Credly, which
+// defeats the point of publishing them as evidence. Each id below was
+// confirmed against the badge page's own title before being mapped here.
+// A badge without a url renders as unlinked evidence rather than pointing
+// somewhere unverifiable.
+export type CredlyBadge = { name: string; issuer: string; issued: string; kind: "specialization" | "course"; url?: string };
+
+const credlyBadgeUrl = (id: string) => `https://www.credly.com/badges/${id}/public_url`;
+
+export const credlyBadges: CredlyBadge[] = [
+  { name: "Generative AI for Data Analysts Specialization", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "specialization", url: credlyBadgeUrl("324b128c-1df0-4be7-9994-7be3a632f214") },
+  { name: "Generative AI Essentials for Data Analytics", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "course", url: credlyBadgeUrl("0f76ae43-08b7-411e-9737-8db2877bf7f2") },
+  { name: "Generative AI Essentials", issuer: "IBM · Coursera", issued: "Sep 9, 2026", kind: "course", url: credlyBadgeUrl("75ea6e72-aac0-427b-82a0-88a2d8d947f1") },
+  { name: "Generative AI: Prompt Engineering", issuer: "IBM · Coursera", issued: "Sep 9, 2026", kind: "course", url: credlyBadgeUrl("84d1d619-d1cb-41c9-97f2-c9bbfd55bc7a") },
+  { name: "Artificial Intelligence Essentials V2", issuer: "IBM · Coursera", issued: "Sep 7, 2026", kind: "course", url: credlyBadgeUrl("352efbfd-a5c3-44a4-9f3d-2f0e2108012d") },
+  { name: "Python Project for AI and Application Development", issuer: "IBM · Coursera", issued: "Jul 22, 2026", kind: "course" },
+  { name: "Python for Data Science and AI", issuer: "IBM · Coursera", issued: "Jul 18, 2026", kind: "course", url: credlyBadgeUrl("62b1458f-915c-43e3-a775-9a3c393da74e") },
+  { name: "Git and GitHub Essentials", issuer: "IBM · Coursera", issued: "Jul 9, 2026", kind: "course", url: credlyBadgeUrl("3cabc6f4-036e-4ca6-b028-3cec0cc7caa2") },
+  { name: "Linux Commands & Shell Scripting Essentials V2", issuer: "IBM · Coursera", issued: "Jul 9, 2026", kind: "course", url: credlyBadgeUrl("14a4bb21-7fea-4a1f-955e-732a9532b86b") },
+  { name: "Software Engineering Essentials", issuer: "IBM · Coursera", issued: "Jul 9, 2026", kind: "course", url: credlyBadgeUrl("2f0bcf18-7f9d-46f9-9770-c49824d26826") },
 ];

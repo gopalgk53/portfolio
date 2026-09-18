@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Reveal } from "../../components/reveal";
 
 export const metadata: Metadata = {
   title: "Security & Privacy",
@@ -40,9 +41,9 @@ const sections = [
 
 export default function SecurityPage() {
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/70 text-[var(--text)]">
       <nav className="case-nav" aria-label="Security and privacy navigation">
-        <Link href="/">GK / AI systems</Link>
+        <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Security &amp; privacy</span>
       </nav>
       <header className="px-5 pt-20 sm:px-10 sm:pt-28">
@@ -56,11 +57,13 @@ export default function SecurityPage() {
         </p>
       </header>
       <section className="mx-auto mt-16 max-w-3xl space-y-6 border-t border-[var(--border)] px-5 pb-32 pt-12 sm:px-10">
-        {sections.map((section) => (
-          <article key={section.title} className="glass-panel p-5 sm:p-6">
-            <h2 className="text-base font-semibold text-white">{section.title}</h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{section.body}</p>
-          </article>
+        {sections.map((section, index) => (
+          <Reveal key={section.title} delay={Math.min(index, 5) * 0.05}>
+            <article className="glass-panel p-5 sm:p-6">
+              <h2 className="text-base font-semibold text-[var(--text)]">{section.title}</h2>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{section.body}</p>
+            </article>
+          </Reveal>
         ))}
         <p className="pt-4 text-xs leading-6 text-[var(--faint)]">
           Questions about any of this? Reach out via the{" "}

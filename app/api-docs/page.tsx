@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Reveal } from "../../components/reveal";
 import { certifications, projects, skills } from "../../lib/data";
 
 export const metadata: Metadata = {
@@ -37,9 +38,9 @@ const endpoints = [
 
 export default function ApiDocsPage() {
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/70 text-[var(--text)]">
       <nav className="case-nav" aria-label="API documentation navigation">
-        <Link href="/">GK / AI systems</Link>
+        <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>API · {endpoints.length} endpoints</span>
       </nav>
       <header className="px-5 pt-20 sm:px-10 sm:pt-28">
@@ -57,19 +58,21 @@ export default function ApiDocsPage() {
         <p className="mt-4 max-w-2xl font-mono text-[11px] text-[var(--faint)]">Base URL: {BASE}</p>
       </header>
       <section className="mx-auto mt-16 max-w-3xl space-y-6 border-t border-[var(--border)] px-5 pb-32 pt-12 sm:px-10">
-        {endpoints.map((endpoint) => (
-          <article key={endpoint.path} className="glass-panel p-5 sm:p-6">
+        {endpoints.map((endpoint, index) => (
+          <Reveal key={endpoint.path} delay={Math.min(index, 5) * 0.06}>
+          <article className="glass-panel p-5 sm:p-6">
             <div className="flex flex-wrap items-center gap-3">
               <span className="rounded-full border border-[var(--accent)]/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--accent)]">
                 {endpoint.method}
               </span>
-              <code className="font-mono text-sm text-white">{endpoint.path}</code>
+              <code className="font-mono text-sm text-[var(--text)]">{endpoint.path}</code>
             </div>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{endpoint.description}</p>
-            <pre className="mt-4 overflow-x-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-black/40 p-4 font-mono text-[11px] leading-6 text-[var(--muted)]">
+            <pre className="mt-4 overflow-x-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] p-4 font-mono text-[11px] leading-6 text-[var(--muted)]">
               {endpoint.example}
             </pre>
           </article>
+          </Reveal>
         ))}
       </section>
       <footer className="case-footer">

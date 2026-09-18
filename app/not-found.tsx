@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col bg-[var(--bg)] text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col bg-[var(--bg)]/70 text-[var(--text)]">
       <nav className="case-nav" aria-label="404 navigation">
-        <Link href="/">GK / AI systems</Link>
+        <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Error · 404</span>
       </nav>
       <div className="flex flex-1 flex-col justify-center px-5 py-24 sm:px-10">
@@ -26,7 +26,7 @@ export default function NotFound() {
           <Link href="/projects" className="btn-pill btn-pill--outline">Browse case studies</Link>
           <Link href="/changelog" className="btn-pill btn-pill--outline">View changelog</Link>
         </div>
-        <p className="mt-10 font-mono text-[10px] uppercase tracking-[.1em] text-[var(--faint)]">
+        <p className="mt-10 text-[13px] text-[var(--faint)]">
           Tip: press ⌘K (or Ctrl+K) on the homepage to jump anywhere.
         </p>
       </div>

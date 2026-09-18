@@ -9,176 +9,242 @@
 @import "@fontsource/space-grotesk/700.css";
 
 @theme {
-  --color-ground: #050505;
-  --color-surface: #0b0b0b;
-  --color-accent: #63b3ff;
-  --color-text: #ffffff;
-  --color-muted: #a8a8a8;
+  --color-ground: #f8fafc;
+  --color-surface: #ffffff;
+  --color-accent: #2563eb;
+  --color-text: #0f172a;
+  --color-muted: #475569;
 }
 :root {
-  color-scheme: dark;
-  --bg: #050505;
-  --surface: #0b0b0b;
-  --surface-raised: #131313;
-  --text: #ffffff;
-  --muted: #a8a8a8;
-  --faint: #7a7a7a;
-  --accent: #63b3ff;
-  /* Desaturated from the reference's literal #a855f7 (Tailwind purple-500,
-     92% saturation) to 62% saturation, lightness nudged up to keep AA
-     contrast (4.56:1 against --bg) — reads as this site's own muted accent
-     evolving into a second color, not a different product's bright violet
-     dropped in next to it. */
-  --accent-2: #975ad1;
-  --signal: #63b3ff;
-  /* Third color, used only for time/deadline meaning (never decorative).
-     9.06:1 against --bg and identical when reversed as a fill with --bg
-     text, so it works both as label text and as a solid badge fill. */
-  --accent-gold: #d9a441;
-  --accent-soft: rgba(99, 179, 255, .12);
-  --accent-2-soft: rgba(151, 90, 209, .12);
-  --accent-gold-soft: rgba(217, 164, 65, .12);
+  color-scheme: light;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --text: #0f172a;
+  /* Both tiers are set against the WORST case the page can produce — body
+     text sitting directly over a full-strength node of the animated
+     background — not against flat white. Measured there: muted 6.86:1,
+     faint 5.02:1. The previous faint (#64748b) came to 3.15:1 there and
+     failed AA once the background was strengthened. */
+  --muted: #334155;
+  --faint: #374151;
+  /* Blue-600, not the lighter reference blue: as text/icon color on a
+     light background it needs to clear 4.5:1, which the brighter hue
+     does not. 4.94:1 as text, 5.17:1 with white text on a solid fill. */
+  --accent: #2563eb;
+  --accent-2: #8b3fd1;
+  --signal: #2563eb;
+  /* Repurposed as the text-safe amber (was tuned for a dark --bg only).
+     4.80:1 as text on the new --bg, 5.02:1 with white text on a fill. */
+  --accent-gold: #b45309;
+  --accent-soft: rgba(37, 99, 235, .1);
+  --accent-2-soft: rgba(139, 63, 209, .1);
+  --accent-gold-soft: rgba(180, 83, 9, .1);
   --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-2));
-  --border: rgba(255, 255, 255, 0.10);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --glass: rgba(255, 255, 255, .05);
-  --glow: rgba(134, 132, 251, .30);
+  --border: rgba(15, 23, 42, .13);
+  --border-strong: rgba(15, 23, 42, .2);
+  --glass: rgba(255, 255, 255, .38);
+  --glow: rgba(37, 99, 235, .18);
   --radius-sm: 10px;
   --radius-md: 20px;
   --radius-pill: 999px;
+
+  /* Dark-navy band tokens — used only for the hero and footer (and the
+     homepage's cinematic project reel), which stay intentionally dark
+     within an otherwise light site: glow/neon visual effects read as
+     "dark mode" techniques and don't translate to a light background,
+     the same reasoning already applied to keeping the 3D hero scene. */
+  --navy: #0f172a;
+  --navy-raised: #152238;
+  --navy-text: #ffffff;
+  /* 11.64:1 on --navy, up from 8.67:1 at the previous .68 — the hero and
+     footer sit over the 3D scene, so their body copy needs the headroom. */
+  --navy-muted: rgba(255, 255, 255, .8);
+  --navy-border: rgba(255, 255, 255, .14);
+
+  /* Brighter, dark-bg-safe versions of the same two hues — used only
+     inside .cinematic-hero/.band-navy, where --accent/--accent-2's
+     light-bg-safe (darker) values would fail contrast against --navy.
+     8.01:1 / 5.22:1 against --navy respectively. */
+  --navy-accent: #63b3ff;
+  --navy-accent-2: #a873db;
 }
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--bg)}
-body{margin:0;color:var(--text);background:var(--bg);font-family:"Inter",ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;color:var(--text);background:radial-gradient(circle at 12% 8%,rgba(37,99,235,.05),transparent 32%),radial-gradient(circle at 90% 28%,rgba(37,99,235,.045),transparent 38%),radial-gradient(circle at 30% 92%,rgba(37,99,235,.04),transparent 34%),radial-gradient(circle at 75% 82%,rgba(37,99,235,.035),transparent 30%),var(--bg);background-attachment:fixed;font-family:"Inter",ui-sans-serif,system-ui,sans-serif;font-weight:500;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 button,a{-webkit-tap-highlight-color:transparent}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 a{transition:color .25s ease,border-color .25s ease,opacity .25s ease}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-.skip-link{position:fixed;left:1rem;top:1rem;z-index:300;transform:translateY(-200%);background:var(--accent);padding:.8rem 1rem;color:var(--bg);font:600 11px "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.08em}
-.skip-link:focus{transform:translateY(0);color:var(--bg)}
-::selection{color:var(--bg);background:var(--accent)}
+.skip-link{position:fixed;left:1rem;top:1rem;z-index:300;transform:translateY(-200%);background:var(--accent);padding:.8rem 1rem;color:#fff;font:600 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em}
+.skip-link:focus{transform:translateY(0);color:#fff}
+::selection{color:#fff;background:var(--accent)}
 h1,h2,h3{margin:0;text-wrap:balance}
 .text-gradient-accent{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
-/* Was a soft circular glow-fill lifted straight from the SaaS reference —
-   read as a different product's vocabulary next to this site's own
-   outline-first, hard-cornered idiom (.btn-pill--outline, .case-repository).
-   Re-expressed in that idiom instead: near-transparent dark fill, a plain
-   solid border (no translucent wash), sharp corners set by the caller via
-   var(--radius-sm) rather than full rounding. */
-.icon-badge{background:rgba(255,255,255,.02);border:1px solid var(--border-strong)}
-/* A quote-style treatment for an existing statement re-presented with
-   emphasis — a gradient left border and decorative opening mark, not new
-   copy. */
+/* Credly badge emblem — a rendered mark rather than the issuer's own
+   artwork: the CSP allows images from 'self' only, and hotlinking the
+   badge PNGs would put a third-party host in the critical render path.
+   Specializations get the filled treatment, single courses the outline. */
+.badge-emblem{display:grid;width:2.75rem;height:2.75rem;flex-shrink:0;place-items:center;border-radius:50%;border:1px solid var(--border-strong);background:var(--surface);color:var(--accent)}
+.badge-emblem[data-kind="specialization"]{border-color:transparent;background:var(--gradient-accent);color:#fff}
+
+.icon-badge{background:var(--surface);border:1px solid var(--border-strong);transition:transform .35s cubic-bezier(.4,0,.2,1),border-color .3s ease}
+.icon-badge:hover{transform:rotate(8deg) scale(1.06);border-color:var(--accent)}
 .quote-panel{position:relative;border-left:3px solid transparent;border-image:var(--gradient-accent);border-image-slice:1;padding-left:1.5rem}
-/* Was a decorative serif curly-quote — the one typographic voice this
-   site never uses anywhere else (everything else is JetBrains Mono
-   uppercase). Swapped for the exact "›" prompt marker
-   components/prompt-playground.tsx already uses for its input line, so
-   this reads as "a terminal printing a real statement," matching the
-   site's own idiom, not a borrowed one. */
 .quote-panel::before{content:"›";position:absolute;left:-.05em;top:-.05em;font-size:1.6em;line-height:1;font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--accent-2);opacity:.7}
 @supports not (background-clip:text){.text-gradient-accent{color:var(--accent);background:none}}
 p{text-wrap:pretty}
 .font-mono,code,pre{font-family:"JetBrains Mono",ui-monospace,monospace}
 
-/* Layered stage: fixed 3D network behind, scroll content above it. */
+/* ---------------------------------------------------------------------
+   New primitives — the reusable card/badge/pill/flow-diagram vocabulary
+   introduced for the light+navy redesign. Global classes (not CSS-in-JS)
+   to match this file's existing convention (.glass-panel, .btn-pill).
+   --------------------------------------------------------------------- */
+/* Glass, not flat white — a translucent surface over the page's own
+   faint blue wash (.premium-wash) rather than a solid card, plus a
+   hover lift that responds to the cursor instead of an idle animation. */
+.surface-card{background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.75);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.06),0 20px 45px -22px rgba(37,99,235,.2);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
+.surface-card:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.28);box-shadow:0 1px 2px rgba(15,23,42,.05),0 30px 60px -22px rgba(37,99,235,.26)}
+@media(prefers-reduced-motion:reduce){.surface-card{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
+.premium-wash{background:radial-gradient(circle at 12% 15%,rgba(37,99,235,.06),transparent 35%),radial-gradient(circle at 88% 55%,rgba(37,99,235,.05),transparent 40%),radial-gradient(circle at 45% 92%,rgba(37,99,235,.045),transparent 35%),rgba(248,250,252,.65)}
+/* Number, thin colored rule, label — the same editorial treatment the
+   site's own About stats already use (a plain <b>/<p> pair with a
+   divider), not a circular icon-chip above a number. That icon+number
+   combination is a generic template pattern; this site never used it. */
+.stat-tile{display:flex;flex-direction:column;gap:.6rem;padding-top:.9rem;border-top:2px solid var(--border-strong)}
+.stat-tile strong{font-size:clamp(1.7rem,2.8vw,2.3rem);font-weight:600;letter-spacing:-.025em;color:var(--text)}
+.stat-tile span{font-size:.78rem;color:var(--muted);line-height:1.4}
+.pill-tag{display:inline-flex;align-items:center;gap:.4rem;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--surface);padding:.35rem .85rem;font-size:.75rem;color:var(--muted)}
+.pill-tag--status-good{border-color:var(--border-strong);background:var(--surface);color:var(--text);font-weight:600}
+.pill-tag--status-bad{border-color:transparent;background:var(--accent);color:#fff;font-weight:600}
+.flow-diagram{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.5rem}
+.flow-column{position:relative;display:flex;flex-direction:column;gap:.9rem}
+.flow-column-head{display:flex;align-items:center;gap:.65rem;padding-bottom:.85rem;border-bottom:1px solid var(--border)}
+.flow-column-head strong{font-size:.82rem;font-weight:600;color:var(--text);line-height:1.25}
+.flow-row{display:flex;align-items:flex-start;gap:.65rem;font-size:.8rem}
+.flow-row strong{display:block;font-size:.82rem;font-weight:600;color:var(--text)}
+.flow-row span{display:block;margin-top:.1rem;font-size:.72rem;color:var(--faint)}
+.flow-arrow{display:none;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0}
+@media(min-width:900px){.flow-arrow{display:flex}}
+.scenario-card{position:relative;display:flex;flex-direction:column;gap:.9rem}
+.scenario-badge{display:inline-flex;width:2rem;height:2rem;flex-shrink:0;align-items:center;justify-content:center;border-radius:50%;font:700 .8rem "JetBrains Mono",monospace;color:#fff;background:var(--accent)}
+.scenario-id{font:.7rem "JetBrains Mono",monospace;color:var(--faint);letter-spacing:.04em}
+.scenario-steps{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-size:.72rem;color:var(--muted)}
+.scenario-steps i{font-style:normal;color:var(--faint)}
+.doc-link-row{display:flex;align-items:center;gap:.9rem;padding:1.1rem 0;border-bottom:1px solid var(--border);color:inherit;transition:color .25s ease}
+.doc-link-row:last-child{border-bottom:0}
+.doc-link-row strong{display:block;font-size:.88rem;font-weight:600;color:var(--text)}
+.doc-link-row span{display:block;margin-top:.15rem;font-size:.76rem;color:var(--faint)}
+.doc-link-row svg:last-child{margin-left:auto;flex-shrink:0;color:var(--faint);transition:transform .25s ease}
+.doc-link-row:hover svg:last-child{transform:translateX(3px);color:var(--accent)}
+
+/* Dark-navy band — scoped override for the hero, footer, and the
+   homepage's cinematic project reel, which stay intentionally dark. */
+.band-navy{--muted:var(--navy-muted);--faint:var(--navy-muted);--accent:var(--navy-accent);--accent-2:var(--navy-accent-2);background:var(--navy);color:var(--navy-text)}
+.band-navy .eyebrow,.band-navy p{color:var(--navy-muted)}
+.band-navy .surface-card{background:var(--navy-raised);border-color:var(--navy-border);color:var(--navy-text)}
+
+/* Layered stage: fixed 3D network behind, scroll content above it —
+   stays dark by design (see .band-navy comment above). */
 #main-content{position:relative;z-index:10;width:100%;min-height:100vh;overflow-x:clip;outline:none}
 .three-stage{position:fixed;inset:0;z-index:1;width:100vw;height:100vh;pointer-events:none;overflow:hidden;isolation:isolate}
-.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 65% 55% at var(--cursor-x, 62%) var(--cursor-y, 42%),rgba(99,179,255,.16),transparent 68%);animation:ambient-breathe 6s ease-in-out infinite}
-.three-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 460px at var(--cursor-x, 50%) var(--cursor-y, 50%),rgba(99,179,255,.10),transparent 72%);animation:ambient-breathe 4.2s ease-in-out infinite reverse}
-.ambient-drift{position:absolute;inset:-20%;pointer-events:none;background:radial-gradient(circle 34vw at 30% 30%,rgba(99,179,255,.12),transparent 60%),radial-gradient(circle 26vw at 75% 70%,rgba(99,179,255,.08),transparent 62%);animation:ambient-drift 22s ease-in-out infinite;will-change:transform}
+.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 65% 55% at var(--cursor-x, 62%) var(--cursor-y, 42%),rgba(37,99,235,.20),transparent 68%);animation:ambient-breathe 6s ease-in-out infinite}
+.three-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 460px at var(--cursor-x, 50%) var(--cursor-y, 50%),rgba(37,99,235,.14),transparent 72%);animation:ambient-breathe 4.2s ease-in-out infinite reverse}
+.ambient-drift{position:absolute;inset:-20%;pointer-events:none;background:radial-gradient(circle 34vw at 30% 30%,rgba(37,99,235,.16),transparent 60%),radial-gradient(circle 26vw at 75% 70%,rgba(37,99,235,.11),transparent 62%);animation:ambient-drift 22s ease-in-out infinite;will-change:transform}
 @keyframes ambient-breathe{0%,100%{opacity:.55}50%{opacity:1.3}}
 @keyframes ambient-drift{0%{transform:translate(0,0) scale(1)}25%{transform:translate(4%,-6%) scale(1.08)}50%{transform:translate(-3%,4%) scale(0.96)}75%{transform:translate(-5%,-3%) scale(1.05)}100%{transform:translate(0,0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.three-stage::before,.three-stage::after,.ambient-drift{animation:none}}
-/* Filmic grain over the whole experience: barely-there, but it removes the
-   flat digital-black feel and ties type, network, and surfaces together. */
-body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")}
+/* Filmic grain — kept only over the dark hero band now, not the whole
+   (now light) page: a visible grain overlay reads very differently on
+   white than the barely-there texture it was tuned for on near-black. */
+.cinematic-hero::after{content:"";position:absolute;inset:0;z-index:80;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")}
 #webgl-canvas{display:block;width:100%;height:100%;transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
 .node-label-host{position:absolute;inset:0;pointer-events:none}
-.node-label{position:absolute;left:0;top:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text);opacity:0;white-space:nowrap;will-change:transform,opacity;text-shadow:0 0 12px rgba(5,5,5,.85)}
+.node-label{position:absolute;left:0;top:0;font-family:"Inter",ui-sans-serif,sans-serif;font-weight:500;font-size:11px;letter-spacing:.02em;color:#fff;opacity:0;white-space:nowrap;will-change:transform,opacity;text-shadow:0 0 12px rgba(15,23,42,.85)}
 
-/* A soft radial vignette behind headline text keeps it legible over the
-   network without boxing it in a card. */
+/* Was a dark vignette for legibility over the (formerly full-page) dark
+   network — every section on the light page is plain light-on-dark-text
+   now, which needs no vignette; harmless no-op class kept only so the
+   existing className on every Section header doesn't need to change. */
 .typography-shield{position:relative;isolation:isolate}
-.typography-shield::before{content:"";position:absolute;z-index:-1;inset:-2.5rem -3rem;background:radial-gradient(ellipse at center,rgba(5,5,5,.9) 0%,rgba(5,5,5,.6) 52%,transparent 78%);pointer-events:none}
 
-.eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{font-family:"Inter",ui-sans-serif,sans-serif;font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .hero-title{overflow:hidden;font-size:clamp(3.9rem,12.2vw,13.8rem);font-weight:700;line-height:.76;letter-spacing:-.04em;text-transform:uppercase}
-
-/* Signature name treatment — a distinct display face (the site's own former
-   identity font, scoped to just this line) against the small mono meta
-   lines beneath it, instead of a same-weight uppercase label. */
 .hero-name{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;font-weight:700;font-size:clamp(2.4rem,5.2vw,3.6rem);line-height:1.02;letter-spacing:-.02em;text-transform:none;max-width:min(90vw,32rem)}
 .hero-title>span{will-change:transform}
-.cinematic-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(5,5,5,.5),transparent 35%,transparent 68%,rgba(5,5,5,.3))}
-.chapter{background:linear-gradient(180deg,rgba(5,5,5,.92),rgba(5,5,5,.75) 50%,rgba(5,5,5,.92))}
-.manifesto{background:var(--surface)}
-.manifesto::before{content:"";position:absolute;left:55%;top:50%;width:60vw;height:60vw;border:1px solid rgba(99,179,255,.2);transform:translate(-50%,-50%) rotate(25deg);pointer-events:none}
-.project-showcase{--showcase-accent:#63b3ff;position:relative;z-index:10;min-height:100svh;overflow:hidden;padding:clamp(5rem,9vw,9rem) clamp(1.25rem,4vw,4rem) 3rem;border-top:1px solid var(--border);background:#060708;isolation:isolate}.project-showcase--gold{--showcase-accent:#e8b95f}.project-showcase--violet{--showcase-accent:#aa87ff}.showcase-atmosphere{position:absolute;inset:0;z-index:-2;overflow:hidden;background:radial-gradient(circle at 72% 50%,color-mix(in srgb,var(--showcase-accent) 18%,transparent),transparent 32%),linear-gradient(110deg,#050505 15%,#0b0f13 55%,#050505)}.showcase-atmosphere::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 49.8%,rgba(255,255,255,.04) 50%,transparent 50.2%);background-size:9vw 100%;transform:perspective(800px) rotateX(62deg) scale(1.5);transform-origin:bottom;opacity:.4}.showcase-atmosphere i{position:absolute;width:38vw;height:1px;right:-8vw;top:calc(28% + var(--n,0)*18%);background:linear-gradient(90deg,transparent,var(--showcase-accent),transparent);box-shadow:0 0 24px var(--showcase-accent);animation:showcase-stream 4s linear infinite}.showcase-atmosphere i:nth-child(2){top:50%;animation-delay:-1.3s}.showcase-atmosphere i:nth-child(3){top:72%;animation-delay:-2.6s}@keyframes showcase-stream{from{transform:translateX(20%);opacity:0}30%{opacity:.8}to{transform:translateX(-120%);opacity:0}}
-.showcase-header{display:flex;justify-content:space-between;gap:3rem;align-items:start}.showcase-header h2{max-width:15ch;margin-top:1rem;font-size:clamp(2.5rem,5.5vw,6rem);font-weight:500;line-height:.92;letter-spacing:-.045em}.showcase-controls{display:flex;align-items:center;gap:.6rem;font:10px "JetBrains Mono",monospace;color:var(--muted)}.showcase-controls>span{margin-right:.8rem}.showcase-controls button{display:grid;width:2.7rem;height:2.7rem;place-items:center;border:1px solid var(--border-strong);border-radius:50%;background:rgba(255,255,255,.03);color:var(--text)}.showcase-controls svg{width:14px;height:14px}
-.showcase-stage{position:relative;min-height:48vh;margin-top:clamp(3rem,6vw,6rem);border-block:1px solid var(--border);overflow:hidden}.showcase-horizon{position:absolute;inset:0;perspective:900px}.showcase-horizon i{position:absolute;left:48%;top:50%;width:70%;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--showcase-accent) 55%,transparent),transparent);transform:rotate(calc((var(--i,0))*15deg));transform-origin:left}.showcase-horizon i:nth-child(1){transform:rotate(0deg)}.showcase-horizon i:nth-child(2){transform:rotate(15deg)}.showcase-horizon i:nth-child(3){transform:rotate(30deg)}.showcase-horizon i:nth-child(4){transform:rotate(45deg)}.showcase-horizon i:nth-child(5){transform:rotate(60deg)}.showcase-horizon i:nth-child(6){transform:rotate(75deg)}.showcase-horizon i:nth-child(7){transform:rotate(90deg)}.showcase-horizon i:nth-child(8){transform:rotate(105deg)}.showcase-horizon i:nth-child(9){transform:rotate(120deg)}.showcase-horizon i:nth-child(10){transform:rotate(135deg)}.showcase-horizon i:nth-child(11){transform:rotate(150deg)}.showcase-horizon i:nth-child(12){transform:rotate(165deg)}
-.showcase-copy{position:absolute;z-index:2;left:0;top:50%;max-width:min(45rem,56%);transform:translateY(-50%);animation:showcase-copy-in .8s cubic-bezier(.16,1,.3,1)}@keyframes showcase-copy-in{from{opacity:0;transform:translate(-3rem,-50%)}to{opacity:1;transform:translate(0,-50%)}}.showcase-copy p{font:10px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--showcase-accent)}.showcase-copy h3{margin-top:1rem;font-size:clamp(2.2rem,5vw,5.8rem);font-weight:600;line-height:.9;letter-spacing:-.05em}.showcase-copy strong{display:block;margin-top:2rem;font-size:clamp(1rem,1.8vw,1.5rem);font-weight:500}.showcase-copy>span{display:block;margin-top:.65rem;color:var(--muted);font-size:.82rem}
-.showcase-architecture{position:absolute;right:4%;top:50%;width:min(36vw,34rem);aspect-ratio:1;transform:translateY(-50%);animation:showcase-drift 7s ease-in-out infinite}.showcase-core{position:absolute;inset:35%;border:1px solid var(--showcase-accent);border-radius:50%;background:radial-gradient(circle,var(--showcase-accent),transparent 65%);box-shadow:0 0 80px color-mix(in srgb,var(--showcase-accent) 65%,transparent)}.showcase-module{position:absolute;width:18%;aspect-ratio:1;border:1px solid color-mix(in srgb,var(--showcase-accent) 65%,transparent);background:rgba(5,5,5,.75);box-shadow:inset 0 0 20px color-mix(in srgb,var(--showcase-accent) 14%,transparent)}.showcase-module::after{content:"";position:absolute;left:50%;top:50%;width:180%;height:1px;background:linear-gradient(90deg,var(--showcase-accent),transparent);transform-origin:left}.showcase-module--1{left:4%;top:16%}.showcase-module--2{right:8%;top:8%}.showcase-module--3{right:0;top:42%}.showcase-module--4{right:14%;bottom:4%}.showcase-module--5{left:18%;bottom:0}.showcase-module--6{left:0;top:52%}.showcase-module--7{left:34%;top:2%}@keyframes showcase-drift{50%{transform:translate(1rem,calc(-50% - 1rem)) rotate(2deg)}}
+.cinematic-hero{--muted:var(--navy-muted);--faint:var(--navy-muted);--accent:var(--navy-accent);--accent-2:var(--navy-accent-2);position:relative;background:var(--navy);color:var(--navy-text)}
+.cinematic-hero::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:linear-gradient(90deg,rgba(15,23,42,.55),transparent 35%,transparent 68%,rgba(15,23,42,.35))}
+/* rgba, not var(--surface): a solid fill would sit at z-10, fully
+   painting over the fixed z-2 DataScatterBackground canvas beneath
+   every section. Kept opaque enough that text contrast is unaffected —
+   an overlay this light only dims the ambient dots slightly, it does
+   not require boosting their own opacity to compensate. */
+.chapter{background:rgba(255,255,255,.65)}
+.manifesto{background:rgba(255,255,255,.65)}
+.manifesto::before{content:"";position:absolute;left:55%;top:50%;width:60vw;height:60vw;border:1px solid rgba(37,99,235,.14);transform:translate(-50%,-50%) rotate(25deg);pointer-events:none}
+
+/* ProjectShowcase's cinematic per-project reel — kept intentionally dark
+   (see .band-navy comment): nine bespoke glow/neon micro-animations that
+   are a dark-background visual language by construction. The outer
+   section now sits as a dark "stage" card within the light page, rather
+   than filling the viewport edge-to-edge as a full dark chapter. */
+.project-showcase{--showcase-accent:#2563eb;position:relative;z-index:10;display:grid;grid-template-columns:minmax(13rem,18vw) 1fr;margin:clamp(3rem,6vw,5rem) auto;max-width:100rem;min-height:44rem;overflow:hidden;padding:0;border-radius:var(--radius-md);background:var(--navy);color:var(--navy-text);isolation:isolate}.project-showcase--gold{--showcase-accent:#d9a441}.project-showcase--violet{--showcase-accent:#a855f7}
+.project-showcase .eyebrow,.project-showcase p{color:var(--navy-muted)}
+.showcase-atmosphere{position:absolute;inset:0;z-index:-2;overflow:hidden;border-radius:inherit;background:radial-gradient(circle at 72% 50%,color-mix(in srgb,var(--showcase-accent) 18%,transparent),transparent 32%),linear-gradient(110deg,#0f172a 15%,#111c30 55%,#0f172a)}.showcase-atmosphere::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 49.8%,rgba(255,255,255,.04) 50%,transparent 50.2%);background-size:9vw 100%;transform:perspective(800px) rotateX(62deg) scale(1.5);transform-origin:bottom;opacity:.4}.showcase-atmosphere i{position:absolute;width:38vw;height:1px;right:-8vw;top:calc(28% + var(--n,0)*18%);background:linear-gradient(90deg,transparent,var(--showcase-accent),transparent);box-shadow:0 0 24px var(--showcase-accent);animation:showcase-stream 4s linear infinite}.showcase-atmosphere i:nth-child(2){top:50%;animation-delay:-1.3s}.showcase-atmosphere i:nth-child(3){top:72%;animation-delay:-2.6s}@keyframes showcase-stream{from{transform:translateX(20%);opacity:0}30%{opacity:.8}to{transform:translateX(-120%);opacity:0}}
+.showcase-header{display:flex;justify-content:space-between;gap:3rem;align-items:start}.showcase-header h2{max-width:15ch;margin-top:1rem;font-size:clamp(2.5rem,5.5vw,6rem);font-weight:500;line-height:.92;letter-spacing:-.045em;color:var(--navy-text)}.showcase-controls{display:flex;align-items:center;gap:.6rem;font:10px "JetBrains Mono",monospace;color:var(--navy-muted)}.showcase-controls>span{margin-right:.8rem}.showcase-controls button{display:grid;width:2.7rem;height:2.7rem;place-items:center;border:1px solid var(--navy-border);border-radius:50%;background:rgba(255,255,255,.06);color:var(--navy-text)}.showcase-controls svg{width:14px;height:14px}
+.showcase-stage{position:relative;min-height:48vh;margin-top:clamp(3rem,6vw,6rem);border-block:1px solid var(--navy-border);overflow:hidden}.showcase-horizon{position:absolute;inset:0;perspective:900px}.showcase-horizon i{position:absolute;left:48%;top:50%;width:70%;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--showcase-accent) 55%,transparent),transparent);transform:rotate(calc((var(--i,0))*15deg));transform-origin:left}.showcase-horizon i:nth-child(1){transform:rotate(0deg)}.showcase-horizon i:nth-child(2){transform:rotate(15deg)}.showcase-horizon i:nth-child(3){transform:rotate(30deg)}.showcase-horizon i:nth-child(4){transform:rotate(45deg)}.showcase-horizon i:nth-child(5){transform:rotate(60deg)}.showcase-horizon i:nth-child(6){transform:rotate(75deg)}.showcase-horizon i:nth-child(7){transform:rotate(90deg)}.showcase-horizon i:nth-child(8){transform:rotate(105deg)}.showcase-horizon i:nth-child(9){transform:rotate(120deg)}.showcase-horizon i:nth-child(10){transform:rotate(135deg)}.showcase-horizon i:nth-child(11){transform:rotate(150deg)}.showcase-horizon i:nth-child(12){transform:rotate(165deg)}
+.showcase-copy{position:absolute;z-index:2;left:0;top:50%;max-width:min(45rem,56%);transform:translateY(-50%);animation:showcase-copy-in .8s cubic-bezier(.16,1,.3,1)}@keyframes showcase-copy-in{from{opacity:0;transform:translate(-3rem,-50%)}to{opacity:1;transform:translate(0,-50%)}}.showcase-copy p{font:10px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--showcase-accent)}.showcase-copy h3{margin-top:1rem;font-size:clamp(2.2rem,5vw,5.8rem);font-weight:600;line-height:.9;letter-spacing:-.05em;color:var(--navy-text)}.showcase-copy strong{display:block;margin-top:2rem;font-size:clamp(1rem,1.8vw,1.5rem);font-weight:500;color:var(--navy-text)}.showcase-copy>span{display:block;margin-top:.65rem;color:var(--navy-muted);font-size:.82rem}
+.showcase-architecture{position:absolute;right:4%;top:50%;width:min(36vw,34rem);aspect-ratio:1;transform:translateY(-50%);animation:showcase-drift 7s ease-in-out infinite}.showcase-core{position:absolute;inset:35%;border:1px solid var(--showcase-accent);border-radius:50%;background:radial-gradient(circle,var(--showcase-accent),transparent 65%);box-shadow:0 0 80px color-mix(in srgb,var(--showcase-accent) 65%,transparent)}.showcase-module{position:absolute;width:18%;aspect-ratio:1;border:1px solid color-mix(in srgb,var(--showcase-accent) 65%,transparent);background:rgba(15,23,42,.75);box-shadow:inset 0 0 20px color-mix(in srgb,var(--showcase-accent) 14%,transparent)}.showcase-module::after{content:"";position:absolute;left:50%;top:50%;width:180%;height:1px;background:linear-gradient(90deg,var(--showcase-accent),transparent);transform-origin:left}.showcase-module--1{left:4%;top:16%}.showcase-module--2{right:8%;top:8%}.showcase-module--3{right:0;top:42%}.showcase-module--4{right:14%;bottom:4%}.showcase-module--5{left:18%;bottom:0}.showcase-module--6{left:0;top:52%}.showcase-module--7{left:34%;top:2%}@keyframes showcase-drift{50%{transform:translate(1rem,calc(-50% - 1rem)) rotate(2deg)}}
 .showcase-orbit{position:absolute;right:7%;top:50%;width:min(31vw,29rem);aspect-ratio:1;transform:translateY(-50%)}.showcase-orbit span{position:absolute;inset:0;border:1px solid color-mix(in srgb,var(--showcase-accent) 30%,transparent);border-radius:50%;animation:showcase-orbit 12s linear infinite}.showcase-orbit span:nth-child(2){inset:12%;animation-direction:reverse;animation-duration:9s}.showcase-orbit span:nth-child(3){inset:25%;animation-duration:6s}@keyframes showcase-orbit{to{transform:rotate(360deg)}}
-.showcase-timeline{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));margin-top:1.5rem}.showcase-timeline button{min-width:0;padding:.7rem .45rem;border:0;border-top:1px solid var(--border);background:none;text-align:left;color:var(--faint)}.showcase-timeline button span{display:block;font:9px "JetBrains Mono",monospace}.showcase-timeline button i{display:block;margin-top:.5rem;overflow:hidden;text-overflow:ellipsis;font-style:normal;font-size:9px;white-space:nowrap}.showcase-timeline button[aria-current="step"]{border-color:var(--showcase-accent);color:var(--showcase-accent)}.showcase-progress{height:2px;margin-top:1rem;background:var(--border)}.showcase-progress span{display:block;height:100%;width:0;background:var(--showcase-accent)}.showcase-progress span.is-playing{animation:showcase-progress 4.5s linear forwards}@keyframes showcase-progress{to{width:100%}}.showcase-boundary{margin-top:1rem;font:9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.showcase-timeline{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));margin-top:1.5rem}.showcase-timeline button{min-width:0;padding:.7rem .45rem;border:0;border-top:1px solid var(--navy-border);background:none;text-align:left;color:var(--navy-muted)}.showcase-timeline button span{display:block;font:9px "JetBrains Mono",monospace}.showcase-timeline button i{display:block;margin-top:.5rem;overflow:hidden;text-overflow:ellipsis;font-style:normal;font-size:9px;white-space:nowrap}.showcase-timeline button[aria-current="step"]{border-color:var(--showcase-accent);color:var(--showcase-accent)}.showcase-progress{height:2px;margin-top:1rem;background:var(--navy-border)}.showcase-progress span{display:block;height:100%;width:0;background:var(--showcase-accent)}.showcase-progress span.is-playing{animation:showcase-progress 4.5s linear forwards}@keyframes showcase-progress{to{width:100%}}.showcase-boundary{margin-top:1rem;font:9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-muted)}
 .model-lab{color:var(--text);background:var(--bg)}
-.model-lab .chapter{background:var(--bg)}
+.model-lab .chapter{background:rgba(248,250,252,.65)}
 .model-lab .eyebrow,.model-lab p{color:var(--muted)}
 .model-lab h2,.model-lab h3,.model-lab label{color:var(--text)}
-.model-lab input,.model-lab textarea,.model-lab select{color:var(--text);background:rgba(255,255,255,.02);border-color:var(--border)}
+.model-lab input,.model-lab textarea,.model-lab select{color:var(--text);background:var(--surface);border-color:var(--border)}
 
-/* Nav — a hairline, no blur pill, no chrome. */
-.site-nav{position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid transparent;transition:border-color .4s ease,background-color .4s ease,backdrop-filter .4s ease}
-.site-nav[data-scrolled="true"]{border-color:var(--border);background:rgba(5,5,5,.72);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3)}
+/* Nav — light, always (independent of the dark hero band beneath it). */
+/* Reset the navy-scoped tokens .cinematic-hero sets above it: the nav
+   itself always stays light, independent of the dark hero band beneath. */
+.site-nav{--muted:#334155;--faint:#374151;--accent:#2563eb;--accent-2:#8b3fd1;position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid transparent;background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);color:var(--text);transition:border-color .4s ease,background-color .4s ease}
+.site-nav[data-scrolled="true"]{border-color:var(--border);background:rgba(255,255,255,.94)}
 
-.field{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);background:rgba(255,255,255,.02);padding:1rem;color:var(--text);outline:none;transition:border-color .25s ease,background-color .25s ease}
+.field{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);padding:1rem;color:var(--text);outline:none;transition:border-color .25s ease,background-color .25s ease}
 .field::placeholder{color:var(--faint)}
-.field:focus{border-color:var(--accent);background:rgba(255,255,255,.035)}
+.field:focus{border-color:var(--accent);background:var(--surface)}
 
-/* Pill buttons — a solid variant for primary actions, an outline variant for
-   secondary ones. Both lift and glow gently on hover instead of a flat,
-   hard-edge button. */
-.btn-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:var(--radius-pill);padding:.85rem 1.6rem;font:600 10.5px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s cubic-bezier(.4,0,.2,1),background-color .3s ease,background-position .5s ease,color .3s ease,border-color .3s ease}
-/* The primary CTA is gradient-filled by default now (was a flat white
-   pill that only picked up the gradient on hover) — dark text, not
-   white: white-on-gradient measures 2.23:1 at the blue end and 3.96:1 at
-   the violet end, both under WCAG AA's 4.5:1 for this text size; the
-   near-black text already used for every other gradient-filled surface
-   on the site (.case-signal, .benchmark-score--accent) clears 5.3–9.4:1
-   on both ends. The gradient itself is oversized and slides on hover for
-   a subtle shimmer, and the button lifts a couple pixels instead of
-   just recoloring. */
-.btn-pill--solid{border:1px solid transparent;background:var(--gradient-accent);background-size:160% 160%;background-position:0% 50%;color:var(--bg);box-shadow:0 10px 28px -12px var(--glow)}
+.btn-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:var(--radius-pill);padding:.85rem 1.6rem;font:600 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em;white-space:nowrap;transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s cubic-bezier(.4,0,.2,1),background-color .3s ease,background-position .5s ease,color .3s ease,border-color .3s ease}
+/* White text on the gradient: both ends now clear WCAG AA (5.17:1 /
+   5.63:1) with the darker blue/violet chosen for the light theme. */
+.btn-pill--solid{border:1px solid transparent;background:var(--gradient-accent);background-size:160% 160%;background-position:0% 50%;color:#fff;box-shadow:0 10px 28px -12px var(--glow)}
 .btn-pill--solid:hover{background-position:100% 50%;box-shadow:0 16px 36px -10px var(--glow);transform:translateY(-2px)}
 .btn-pill--solid:active{transform:translateY(0) scale(.97)}
-.btn-pill--outline{border:1px solid var(--border-strong);color:var(--text);background:rgba(255,255,255,.02)}
+.btn-pill--outline{border:1px solid var(--border-strong);color:var(--text);background:var(--surface)}
 .btn-pill--outline:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 10px 28px -10px var(--glow);transform:translateY(-2px)}
 .btn-pill--outline:active{transform:translateY(0) scale(.97)}
 .btn-pill:disabled{cursor:wait;opacity:.55;transform:none!important;box-shadow:none!important}
 
-/* Elevated card surface — rounded, hairline border, soft ambient shadow.
-   Used for anything that should read as a floating panel rather than a
-   flat editorial block. */
-.card-elevated{border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface);box-shadow:0 30px 70px -32px rgba(0,0,0,.7);transition:border-color .35s ease,box-shadow .35s ease,transform .35s cubic-bezier(.4,0,.2,1)}
-.card-elevated:hover{border-color:rgba(99,179,255,.32);box-shadow:0 34px 80px -28px var(--glow),0 30px 70px -32px rgba(0,0,0,.7)}
+.card-elevated{border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);box-shadow:0 1px 2px rgba(15,23,42,.04),0 30px 70px -32px rgba(15,23,42,.16);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
+.card-elevated:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.28);box-shadow:0 34px 80px -28px var(--glow),0 30px 70px -32px rgba(15,23,42,.16)}
+@media(prefers-reduced-motion:reduce){.card-elevated{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 
-/* Frosted glass surface — the premium translucent panel used for anything
-   that should read as floating "glass" (skills, quotes, hero console). */
-.glass-panel{background:var(--glass);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid var(--border);border-radius:var(--radius-md)}
+/* Matched to .surface-card so the pages still using this older class
+   (security, api-docs, the search and palette overlays) carry the same
+   glass as the rest of the site instead of a flatter earlier version.
+   Kept as its own class because several consumers set their own padding
+   and hover behaviour on top of it. */
+.glass-panel{background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 20px 45px -22px rgba(37,99,235,.16)}
 @media(prefers-reduced-motion:reduce){.glass-panel{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 
-/* Pointer-tracked glow — a soft accent highlight that follows the cursor
-   inside a card, set via --mx/--my from lib/use-glow-pointer.ts. Falls back
-   to a static top-lit glow with no JS listener for touch/reduced-motion. */
 .glow-card{position:relative;overflow:hidden}
 .glow-card::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .4s ease;background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),var(--glow),transparent 70%)}
 .glow-card:hover::before{opacity:1}
 .glow-card>*{position:relative;z-index:1}
 @media(prefers-reduced-motion:reduce),(hover:none){.glow-card::before{opacity:.6;background:radial-gradient(60% 50% at 50% 0%,var(--glow),transparent 75%)}}
 
-/* "Technical lab" disclosure — kept, restyled to the neutral system. */
 .lab-disclosure{position:relative;z-index:10;margin:1rem auto;max-width:80rem;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
 .lab-disclosure>summary{cursor:pointer;list-style:none;padding:1.25rem 2rem;font:.68rem "JetBrains Mono",monospace;letter-spacing:.08em;color:var(--muted)}
 .lab-disclosure>summary::-webkit-details-marker{display:none}
@@ -186,57 +252,59 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 .lab-disclosure[open]>summary::before{content:"\2212"}
 .lab-disclosure>section{border-top:1px solid var(--border)}
 
-/* Minimalist scroll-wheel indicator — a small pulsing dot traveling inside
-   a capsule outline, the classic premium "scroll to continue" affordance.
-   Neutralized automatically by the global prefers-reduced-motion rule below. */
-.scroll-cue{position:relative;display:inline-block;width:13px;height:20px;flex-shrink:0;border:1px solid var(--border-strong);border-radius:var(--radius-pill)}
-.scroll-cue::before{content:"";position:absolute;left:50%;top:3px;width:3px;height:5px;border-radius:2px;background:var(--accent);transform:translateX(-50%);animation:scroll-cue-move 1.8s ease-in-out infinite}
+.scroll-cue{position:relative;display:inline-block;width:13px;height:20px;flex-shrink:0;border:1px solid var(--navy-border);border-radius:var(--radius-pill)}
+.scroll-cue::before{content:"";position:absolute;left:50%;top:3px;width:3px;height:5px;border-radius:2px;background:#fff;transform:translateX(-50%);animation:scroll-cue-move 1.8s ease-in-out infinite}
 @keyframes scroll-cue-move{0%,100%{top:3px;opacity:1}60%{top:11px;opacity:.35}}
 
 .trace-caret{animation:trace-blink 1s step-end infinite}
 @keyframes trace-blink{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
 
-/* Floating hero console — an elevated glass card docked over the 3D scene,
-   the site's product-surface centerpiece rather than a flat screenshot. */
-/* No position here deliberately — the element already carries Tailwind's
-   `absolute` utility class, and a same-specificity `position` declaration
-   here would win the cascade by source order and silently break that. */
-.hero-console{border-radius:var(--radius-md);border:1px solid rgba(99,179,255,.25);background:rgba(11,11,11,.7);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 40px 100px -30px rgba(0,0,0,.85);overflow:hidden}
-.hero-console::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(99,179,255,.14),transparent 55%)}
+/* Floating hero console — stays dark (it's docked over the 3D scene
+   inside the dark hero band), just retuned to the new accent hue. */
+.hero-console{border-radius:var(--radius-md);border:1px solid rgba(37,99,235,.3);background:rgba(21,34,56,.75);color:#fff;backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);box-shadow:0 40px 100px -30px rgba(0,0,0,.5);overflow:hidden}
+.hero-console::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(37,99,235,.18),transparent 55%)}
 @media(prefers-reduced-motion:reduce){.hero-console{backdrop-filter:none;-webkit-backdrop-filter:none}}
 
 /* Editorial archive and spatial case-study narratives. */
-.case-nav{display:flex;align-items:center;justify-content:space-between;min-height:72px;padding:0 clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);font:500 10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+/* Inter, sentence case: this nav sits on every secondary page, and the
+   old mono/uppercase/wide-tracked treatment was the single most visible
+   instance of the machine-generated look we removed from the homepage. */
+.case-nav{display:flex;align-items:center;justify-content:space-between;min-height:72px;padding:0 clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);font:500 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em;color:var(--muted)}
+.case-nav a{font-weight:600;color:var(--text)}
 .case-index-hero{min-height:82svh;padding:clamp(8rem,16vw,13rem) clamp(1.25rem,4vw,4rem) 5rem}
 .case-index-hero h1{max-width:11ch;margin-top:2rem;font-size:clamp(4.5rem,12vw,12rem);font-weight:700;line-height:.75;letter-spacing:-.045em;text-transform:uppercase}.case-index-hero h1 span{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
 .case-index-intro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem;max-width:54rem;margin:clamp(3rem,8vw,7rem) 0 0 auto;color:var(--muted);font-size:clamp(.95rem,1.4vw,1.15rem);line-height:1.7}
 .case-index-list{border-top:1px solid var(--border)}
 .case-index-row{display:grid;grid-template-columns:5rem minmax(0,1.5fr) minmax(10rem,.75fr) 2rem;align-items:center;gap:2rem;min-height:11rem;padding:2rem clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);color:inherit}
-.case-index-number,.case-index-category{font:10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+/* The index numeral stays mono — it reads as data and that's intentional.
+   The category beside it is a label, so it follows the sentence-case
+   treatment used everywhere else rather than wide-tracked mono caps. */
+.case-index-number{font:500 11px "JetBrains Mono",monospace;letter-spacing:.06em;color:var(--faint)}
+.case-index-category{font:600 11px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--faint)}
 .case-index-copy{display:flex;flex-direction:column;gap:.65rem}.case-index-copy strong{font-size:clamp(1.45rem,3vw,3rem);font-weight:600;line-height:1.05;letter-spacing:-.02em}.case-index-copy small,.case-index-impact{max-width:34rem;color:var(--muted);font-size:.85rem;line-height:1.6}
 .case-index-arrow{font-size:1.5rem;color:var(--accent);transition:transform .3s ease}.case-index-row:hover .case-index-arrow{transform:translate(5px,-5px)}
-.case-footer{display:flex;justify-content:space-between;padding:5rem clamp(1.25rem,4vw,4rem);font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.case-footer a{color:var(--accent)}
+.case-footer{display:flex;justify-content:space-between;padding:5rem clamp(1.25rem,4vw,4rem);font:500 13px "Inter",ui-sans-serif,sans-serif;color:var(--muted)}.case-footer a{color:var(--accent)}
 .case-study-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(18rem,3fr);column-gap:clamp(2rem,7vw,8rem);min-height:calc(100svh - 72px);padding:clamp(6rem,12vw,10rem) clamp(1.25rem,4vw,4rem) 4rem}
-.case-study-meta{font:10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.case-study-meta p+p{margin-top:.6rem;color:var(--faint)}
-.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:700;line-height:.82;letter-spacing:-.04em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:var(--muted)}.case-repository{border:1px solid var(--accent);border-radius:var(--radius-pill);padding:.65rem 1.3rem;font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);transition:background-color .3s ease,color .3s ease,box-shadow .3s ease}.case-repository:hover{background:var(--gradient-accent);color:var(--bg);box-shadow:0 10px 28px -10px var(--glow)}
+.case-study-meta{font:600 12px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--muted)}.case-study-meta p+p{margin-top:.6rem;color:var(--faint)}
+.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:700;line-height:.82;letter-spacing:-.04em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:var(--muted)}.case-repository{border:1px solid var(--accent);border-radius:var(--radius-pill);padding:.65rem 1.3rem;font:600 12px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--accent);transition:background-color .3s ease,color .3s ease,box-shadow .3s ease}.case-repository:hover{background:var(--gradient-accent);color:#fff;box-shadow:0 10px 28px -10px var(--glow)}
 .case-repository-row{grid-column:2;justify-self:start;margin-top:3rem;display:flex;flex-wrap:wrap;gap:1rem}
-.case-signal{display:grid;grid-template-columns:minmax(10rem,1fr) minmax(18rem,3fr);gap:clamp(2rem,7vw,8rem);padding:4rem clamp(1.25rem,4vw,4rem);background:var(--gradient-accent);color:var(--bg)}.case-signal .eyebrow{color:rgba(5,5,5,.6)}.case-signal>p:last-child{max-width:56rem;font-size:clamp(1.15rem,2.3vw,2rem);line-height:1.45}
+.case-signal{display:grid;grid-template-columns:minmax(10rem,1fr) minmax(18rem,3fr);gap:clamp(2rem,7vw,8rem);padding:4rem clamp(1.25rem,4vw,4rem);background:var(--gradient-accent);color:#fff}.case-signal .eyebrow{color:rgba(255,255,255,.75)}.case-signal>p:last-child{max-width:56rem;font-size:clamp(1.15rem,2.3vw,2rem);line-height:1.45}
 .case-architecture,.case-engineering{display:grid;grid-template-columns:minmax(15rem,1fr) minmax(18rem,2fr);gap:clamp(3rem,8vw,10rem);padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}
 .case-section-heading h2,.case-engineering h2{margin-top:1.5rem;font-size:clamp(2.5rem,5vw,5.5rem);font-weight:600;line-height:.95;letter-spacing:-.03em}.case-flow{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.case-flow li{display:grid;grid-template-columns:4rem 1fr;align-items:center;min-height:6.5rem;border-bottom:1px solid var(--border)}.case-flow span,.case-engineering li span{font:10px "JetBrains Mono",monospace;color:var(--faint)}.case-flow strong{font-size:clamp(1.15rem,2vw,1.65rem);font-weight:600}
 .case-outcome{min-height:70svh;padding:clamp(7rem,14vw,14rem) clamp(1.25rem,4vw,4rem);background:var(--bg);color:var(--text);border-top:1px solid var(--border)}.case-outcome .eyebrow{color:var(--muted)}.case-outcome>p:last-child{max-width:14ch;margin-top:3rem;font-size:clamp(4rem,10vw,10rem);font-weight:700;line-height:.84;letter-spacing:-.04em;text-transform:uppercase;background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
 .case-engineering{background:var(--surface)}.case-engineering ul{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.case-engineering li{display:grid;grid-template-columns:4rem 1fr;padding:1.4rem 0;border-bottom:1px solid var(--border);font-size:clamp(1.1rem,2vw,1.5rem)}
 .case-evidence{padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}.case-evidence h2{max-width:18ch;margin-top:2rem;font-size:clamp(2.5rem,6vw,6.5rem);font-weight:600;line-height:.94;letter-spacing:-.03em}.case-evidence ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 4rem;max-width:64rem;margin:5rem 0 0 auto;padding:0;list-style:none;counter-reset:evidence}.case-evidence li{counter-increment:evidence;padding:2rem 0;border-top:1px solid var(--border);color:var(--muted);line-height:1.65}.case-evidence li::before{content:"0" counter(evidence);display:block;margin-bottom:1rem;font:10px "JetBrains Mono",monospace;color:var(--accent)}
-.case-next{padding:5rem clamp(1.25rem,4vw,4rem);border-top:1px solid var(--border)}.case-next p{font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}.case-next a{display:flex;justify-content:space-between;gap:2rem;margin-top:1.5rem;font-size:clamp(2.2rem,6vw,6rem);font-weight:700;line-height:1;letter-spacing:-.03em}.case-next a span{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
-.benchmark-playground{padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem);border-top:1px solid var(--border);background:radial-gradient(circle at 85% 15%,rgba(99,179,255,.12),transparent 30%),var(--surface)}
+.case-next{padding:5rem clamp(1.25rem,4vw,4rem);border-top:1px solid var(--border)}.case-next p{font:600 12px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--faint)}.case-next a{display:flex;justify-content:space-between;gap:2rem;margin-top:1.5rem;font-size:clamp(2.2rem,6vw,6rem);font-weight:700;line-height:1;letter-spacing:-.03em}.case-next a span{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+.benchmark-playground{padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem);border-top:1px solid var(--border);background:radial-gradient(circle at 85% 15%,rgba(37,99,235,.08),transparent 30%),var(--surface)}
 .benchmark-heading{display:grid;grid-template-columns:minmax(18rem,1.6fr) minmax(16rem,.7fr);gap:clamp(3rem,8vw,10rem);align-items:end}.benchmark-heading h2{max-width:12ch;margin-top:1.5rem;font-size:clamp(3rem,6vw,7rem);font-weight:600;line-height:.9;letter-spacing:-.04em}.benchmark-heading>p{color:var(--muted);line-height:1.7}
 .benchmark-tabs{display:flex;gap:.6rem;margin-top:5rem;border-bottom:1px solid var(--border)}.benchmark-tabs button{padding:1rem 1.3rem;border:0;border-bottom:2px solid transparent;background:none;color:var(--faint);font:10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}.benchmark-tabs button[aria-selected="true"]{border-bottom-color:var(--accent);color:var(--text)}
-.benchmark-panel{min-height:34rem;padding:clamp(2rem,5vw,4rem);border:1px solid var(--border);border-top:0;background:rgba(5,5,5,.65)}.benchmark-panel-intro{display:flex;justify-content:space-between;gap:2rem;margin-bottom:2.5rem}.benchmark-panel-intro p{font-size:1.1rem}.benchmark-panel-intro span,.benchmark-note{font:10px "JetBrains Mono",monospace;color:var(--faint)}
-.benchmark-bars{margin:0;padding:0;list-style:none}.benchmark-bars li{display:grid;grid-template-columns:2rem minmax(9rem,12rem) 1fr 4rem;gap:1rem;align-items:center;padding:1rem 0;border-top:1px solid var(--border)}.benchmark-rank{font:10px "JetBrains Mono",monospace;color:var(--faint)}.benchmark-name{font-size:.86rem}.benchmark-track{height:8px;background:rgba(255,255,255,.06)}.benchmark-track span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#fff)}.benchmark-bars strong{font:500 12px "JetBrains Mono",monospace;text-align:right}.benchmark-note{margin-top:1.5rem;line-height:1.6}
-.benchmark-validation{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--border)}.benchmark-score{display:flex;min-height:15rem;flex-direction:column;padding:1.5rem;background:var(--bg)}.benchmark-score--accent{background:var(--gradient-accent);color:var(--bg)}.benchmark-score span{font:10px "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.08em}.benchmark-score strong{margin:auto 0 .8rem;font-size:clamp(2.5rem,5vw,5rem);font-weight:600;letter-spacing:-.05em}.benchmark-score small{color:var(--faint)}.benchmark-score--accent small{color:rgba(5,5,5,.65)}.benchmark-context{grid-column:1/-1;padding:2rem;background:var(--bg);color:var(--muted);line-height:1.7}
+.benchmark-panel{min-height:34rem;padding:clamp(2rem,5vw,4rem);border:1px solid var(--border);border-top:0;background:var(--surface)}.benchmark-panel-intro{display:flex;justify-content:space-between;gap:2rem;margin-bottom:2.5rem}.benchmark-panel-intro p{font-size:1.1rem}.benchmark-panel-intro span,.benchmark-note{font:10px "JetBrains Mono",monospace;color:var(--faint)}
+.benchmark-bars{margin:0;padding:0;list-style:none}.benchmark-bars li{display:grid;grid-template-columns:2rem minmax(9rem,12rem) 1fr 4rem;gap:1rem;align-items:center;padding:1rem 0;border-top:1px solid var(--border)}.benchmark-rank{font:10px "JetBrains Mono",monospace;color:var(--faint)}.benchmark-name{font-size:.86rem}.benchmark-track{height:8px;background:var(--border)}.benchmark-track span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))}.benchmark-bars strong{font:500 12px "JetBrains Mono",monospace;text-align:right}.benchmark-note{margin-top:1.5rem;line-height:1.6}
+.benchmark-validation{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--border)}.benchmark-score{display:flex;min-height:15rem;flex-direction:column;padding:1.5rem;background:var(--surface)}.benchmark-score--accent{background:var(--gradient-accent);color:#fff}.benchmark-score span{font:10px "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.08em}.benchmark-score strong{margin:auto 0 .8rem;font-size:clamp(2.5rem,5vw,5rem);font-weight:600;letter-spacing:-.05em}.benchmark-score small{color:var(--faint)}.benchmark-score--accent small{color:rgba(255,255,255,.8)}.benchmark-context{grid-column:1/-1;padding:2rem;background:var(--surface);color:var(--muted);line-height:1.7}
 .benchmark-decision{display:grid;grid-template-columns:minmax(16rem,.8fr) minmax(18rem,1.4fr);gap:clamp(3rem,8vw,8rem)}.benchmark-decision h3{margin-top:1rem;font-size:clamp(2rem,4vw,4.5rem);line-height:1}.benchmark-decision>div>strong{display:block;margin-top:4rem;font-size:clamp(5rem,10vw,10rem);font-weight:600;line-height:.8;background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}.benchmark-decision>div>span{display:block;margin-top:1rem;color:var(--muted)}.benchmark-decision ul{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.benchmark-decision li{display:grid;grid-template-columns:3rem 1fr;gap:1rem;padding:1.5rem 0;border-bottom:1px solid var(--border);color:var(--muted);line-height:1.6}.benchmark-decision li span{font:10px "JetBrains Mono",monospace;color:var(--accent)}
 .benchmark-explainability{display:grid;grid-template-columns:minmax(12rem,.6fr) 1.4fr;gap:2rem;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}.benchmark-explainability>div p{padding:1rem 0;border-bottom:1px solid var(--border);color:var(--muted);line-height:1.6}.benchmark-explainability>div span{display:block;margin-bottom:.4rem;font:10px "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}.benchmark-explainability small{grid-column:2;font:10px "JetBrains Mono",monospace;color:var(--faint)}
 .datarobot-evidence{margin-top:clamp(6rem,10vw,10rem);padding-top:clamp(4rem,7vw,7rem);border-top:1px solid var(--border)}.datarobot-evidence-heading{display:grid;grid-template-columns:minmax(18rem,1fr) minmax(16rem,.7fr);gap:clamp(2rem,7vw,8rem);align-items:end}.datarobot-evidence-heading h3{max-width:12ch;margin-top:1rem;font-size:clamp(2.8rem,5.5vw,6rem);font-weight:600;line-height:.92;letter-spacing:-.04em}.datarobot-evidence-heading>p{color:var(--muted);line-height:1.7}
-.datarobot-evidence-layout{display:grid;grid-template-columns:minmax(13rem,.42fr) minmax(0,1.58fr);gap:1px;margin-top:4rem;background:var(--border);border:1px solid var(--border)}.datarobot-evidence-nav{display:flex;flex-direction:column;background:var(--bg)}.datarobot-evidence-nav button{display:grid;grid-template-columns:2.5rem 1fr;gap:.75rem;padding:1.15rem;border:0;border-bottom:1px solid var(--border);background:transparent;color:var(--muted);text-align:left;font-size:.82rem}.datarobot-evidence-nav button span{font:10px "JetBrains Mono",monospace;color:var(--faint)}.datarobot-evidence-nav button[aria-selected="true"]{background:var(--gradient-accent);color:var(--bg)}.datarobot-evidence-nav button[aria-selected="true"] span{color:rgba(5,5,5,.55)}.datarobot-evidence-layout figure{display:flex;min-width:0;flex-direction:column;margin:0;padding:1.5rem;background:#101518}.datarobot-evidence-layout img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain}.datarobot-evidence-layout figcaption{display:flex;justify-content:space-between;gap:2rem;padding:1.25rem 0 0;border-top:1px solid var(--border)}.datarobot-evidence-layout figcaption strong{font-size:.9rem}.datarobot-evidence-layout figcaption span{max-width:36rem;color:var(--muted);font-size:.78rem;line-height:1.6}.datarobot-evidence-disclaimer{margin-top:1rem;font:9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.datarobot-evidence-layout{display:grid;grid-template-columns:minmax(13rem,.42fr) minmax(0,1.58fr);gap:1px;margin-top:4rem;background:var(--border);border:1px solid var(--border)}.datarobot-evidence-nav{display:flex;flex-direction:column;background:var(--surface)}.datarobot-evidence-nav button{display:grid;grid-template-columns:2.5rem 1fr;gap:.75rem;padding:1.15rem;border:0;border-bottom:1px solid var(--border);background:transparent;color:var(--muted);text-align:left;font-size:.82rem}.datarobot-evidence-nav button span{font:10px "JetBrains Mono",monospace;color:var(--faint)}.datarobot-evidence-nav button[aria-selected="true"]{background:var(--gradient-accent);color:#fff}.datarobot-evidence-nav button[aria-selected="true"] span{color:rgba(255,255,255,.8)}.datarobot-evidence-layout figure{display:flex;min-width:0;flex-direction:column;margin:0;padding:1.5rem;background:#eef2f7}.datarobot-evidence-layout img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain}.datarobot-evidence-layout figcaption{display:flex;justify-content:space-between;gap:2rem;padding:1.25rem 0 0;border-top:1px solid var(--border)}.datarobot-evidence-layout figcaption strong{font-size:.9rem}.datarobot-evidence-layout figcaption span{max-width:36rem;color:var(--muted);font-size:.78rem;line-height:1.6}.datarobot-evidence-disclaimer{margin-top:1rem;font:9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
 
 @media(hover:hover){
   a:hover{color:var(--accent)}
@@ -246,7 +314,6 @@ body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;opa
 }
 
 @media(max-width:760px){
-  .typography-shield::before{inset:-1.5rem;background:rgba(5,5,5,.78)}
   .node-label--secondary{display:none}
   .hero-name{font-size:clamp(1.9rem,9vw,2.6rem);max-width:80vw}
   .hero-title{font-size:clamp(3.5rem,18vw,6rem);line-height:.82}
@@ -274,18 +341,16 @@ html[data-effects="immersive"] #webgl-canvas{opacity:1}
   .showcase-atmosphere i,.showcase-copy,.showcase-architecture,.showcase-orbit span,.showcase-progress span{animation:none!important}.showcase-progress span{width:100%}
 }
 
-/* Print: a readable document, not a screenshot of the cinematic site.
-   .no-print marks the floating/decorative UI (3D canvas, cursor glow,
-   page-transition curtain, AI assistant, command palette) that has no
-   place on paper; everything else keeps its real content, just re-themed
-   to black-on-white with animation and blur stripped out. */
+/* Print: the base page is already light, so this block only needs to
+   strip animation/blur/shadow chrome and hide floating UI — not invert
+   a dark theme to light anymore. */
 @media print{
   .no-print,#webgl-canvas,.site-nav,.scroll-cue,.hero-console{display:none!important}
   *,*::before,*::after{animation:none!important;transition:none!important;box-shadow:none!important;text-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
   html,body{background:#fff!important}
   body{color:#111!important}
-  .glass-panel,.card-elevated,.case-outcome,.case-engineering,.case-signal{background:#fff!important;border-color:#ccc!important;color:#111!important}
-  .case-signal{color:#111!important}
+  .glass-panel,.card-elevated,.surface-card,.case-engineering{background:#fff!important;border-color:#ccc!important;color:#111!important}
+  .case-outcome,.case-signal{background:#fff!important;color:#111!important}
   .case-outcome>p:last-child,.case-index-hero h1 span,.case-next a span{color:#111!important;background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important}
   a{color:#111!important;text-decoration:underline}
   h1,h2,h3,strong,b{color:#000!important}
@@ -293,27 +358,33 @@ html[data-effects="immersive"] #webgl-canvas{opacity:1}
   section,article,.case-flow li,.case-evidence li{break-inside:avoid}
 }
 
-/* Product-film layout. */
-.project-showcase{display:grid;grid-template-columns:minmax(13rem,18vw) 1fr;min-height:100svh;padding:0;background:#05080d}.project-showcase:fullscreen{width:100vw;height:100vh}.showcase-rail{position:relative;z-index:5;padding:clamp(2rem,4vw,4rem) 1.5rem;border-right:1px solid var(--border);background:linear-gradient(180deg,rgba(12,18,29,.96),rgba(5,8,13,.92));backdrop-filter:blur(18px)}
-.showcase-mark{display:flex;align-items:center;gap:.75rem}.showcase-mark span{display:grid;width:2.8rem;height:2.8rem;place-items:center;border:1px solid var(--showcase-accent);border-radius:.7rem;color:var(--showcase-accent);font:700 12px "JetBrains Mono",monospace;box-shadow:0 0 24px color-mix(in srgb,var(--showcase-accent) 20%,transparent)}.showcase-mark b{font-size:.78rem;font-weight:600;letter-spacing:.04em}.showcase-rail>p{margin:2.5rem 0 1rem;font:9px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
-.showcase-rail nav{display:grid;gap:.25rem}.showcase-rail button{position:relative;display:grid;grid-template-columns:1.6rem 1fr auto;align-items:center;gap:.55rem;width:100%;padding:.72rem .55rem;border:0;border-radius:.45rem;background:transparent;color:var(--muted);text-align:left;transition:background .25s,color .25s}.showcase-rail button span{font:8px "JetBrains Mono",monospace;color:var(--faint)}.showcase-rail button i{font-style:normal;font-size:.7rem}.showcase-rail button b{width:.35rem;height:.35rem;border-radius:50%;background:transparent}.showcase-rail button[aria-current="step"]{background:color-mix(in srgb,var(--showcase-accent) 10%,transparent);color:var(--text)}.showcase-rail button[aria-current="step"] b{background:var(--showcase-accent);box-shadow:0 0 12px var(--showcase-accent)}
-.showcase-film{position:relative;z-index:2;display:flex;min-width:0;min-height:100svh;flex-direction:column;padding:clamp(2rem,4vw,4rem)}.showcase-header{flex:0 0 auto}.showcase-header h2{font-size:clamp(2rem,4vw,4.7rem)}.showcase-count{font:10px "JetBrains Mono",monospace;color:var(--muted)}
-.showcase-stage{flex:1;min-height:28rem;margin-top:2.5rem;border:1px solid var(--border);border-radius:1rem;background:linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,255,255,.008));box-shadow:inset 0 0 80px rgba(0,0,0,.36)}.showcase-scene{position:absolute;inset:0;animation:showcase-scene-in .75s cubic-bezier(.16,1,.3,1)}@keyframes showcase-scene-in{from{opacity:0;transform:translateX(2rem) scale(.985)}to{opacity:1;transform:none}}.showcase-copy{left:clamp(1.5rem,4vw,4rem);max-width:51%}.showcase-copy h3{font-size:clamp(2rem,4.2vw,5.2rem)}
-.showcase-visual{position:absolute;right:3%;top:50%;width:min(40vw,36rem);aspect-ratio:1.25;transform:translateY(-50%);perspective:900px}.showcase-visual::before{content:"";position:absolute;inset:9%;border:1px solid color-mix(in srgb,var(--showcase-accent) 25%,transparent);border-radius:50%;transform:rotateX(66deg);box-shadow:0 0 80px color-mix(in srgb,var(--showcase-accent) 12%,transparent)}.showcase-core{position:absolute;left:38%;top:32%;width:25%;aspect-ratio:1;border:1px solid var(--showcase-accent);border-radius:1rem;background:linear-gradient(145deg,color-mix(in srgb,var(--showcase-accent) 22%,#080b10),#080b10);box-shadow:0 0 60px color-mix(in srgb,var(--showcase-accent) 30%,transparent);transform:rotateX(58deg) rotateZ(-24deg);animation:showcase-float 5s ease-in-out infinite}.showcase-core i{position:absolute;inset:27%;border:1px solid var(--showcase-accent);border-radius:50%;box-shadow:inset 0 0 18px var(--showcase-accent)}
-.showcase-node{position:absolute;min-width:8.5rem;padding:.8rem 1rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 38%,transparent);border-radius:.65rem;background:rgba(6,10,16,.88);box-shadow:0 16px 40px rgba(0,0,0,.35);font:9px "JetBrains Mono",monospace;color:var(--text);backdrop-filter:blur(10px)}.showcase-node::after{content:"";position:absolute;top:50%;width:7rem;height:1px;background:linear-gradient(90deg,var(--showcase-accent),transparent)}.showcase-node i{display:block;width:65%;height:2px;margin-top:.65rem;background:var(--showcase-accent);box-shadow:0 0 10px var(--showcase-accent)}.showcase-node--1{left:0;top:8%}.showcase-node--1::after{left:100%}.showcase-node--2{right:0;top:34%}.showcase-node--2::after{right:100%;transform:rotate(180deg)}.showcase-node--3{left:8%;bottom:5%}.showcase-node--3::after{left:100%;transform:rotate(-24deg);transform-origin:left}.showcase-scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0 47%,color-mix(in srgb,var(--showcase-accent) 24%,transparent) 50%,transparent 53%);animation:showcase-scan 3s linear infinite}@keyframes showcase-float{50%{transform:translateY(-.7rem) rotateX(58deg) rotateZ(-20deg)}}@keyframes showcase-scan{from{transform:translateY(-45%)}to{transform:translateY(45%)}}
-.showcase-player{display:grid;grid-template-columns:auto auto minmax(8rem,1fr) auto auto;align-items:center;gap:.7rem;width:min(42rem,85%);margin:-1.4rem auto 0;padding:.65rem .8rem;border:1px solid var(--border-strong);border-radius:2rem;background:rgba(13,20,31,.94);box-shadow:0 18px 50px rgba(0,0,0,.42);backdrop-filter:blur(18px)}.showcase-player button{display:grid;width:2rem;height:2rem;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--text)}.showcase-player button:hover{background:rgba(255,255,255,.08)}.showcase-player svg{width:14px;height:14px}.showcase-player output{font:9px "JetBrains Mono",monospace;color:var(--muted);white-space:nowrap}.showcase-scrub{height:3px;overflow:hidden;border-radius:2px;background:rgba(255,255,255,.12)}.showcase-scrub span{display:block;height:100%;background:linear-gradient(90deg,#479df0,var(--showcase-accent));box-shadow:0 0 12px var(--showcase-accent);transition:width .1s linear}.showcase-shortcuts{text-align:center;margin-top:.7rem;font:8px "JetBrains Mono",monospace;color:var(--faint)}.showcase-boundary{text-align:center}
-@media(max-width:900px){.project-showcase{display:block}.showcase-rail{padding:1.2rem;border-right:0;border-bottom:1px solid var(--border)}.showcase-mark b,.showcase-rail>p{display:none}.showcase-rail nav{display:flex;margin-top:1rem;overflow-x:auto}.showcase-rail button{flex:0 0 auto;width:auto;grid-template-columns:auto auto;padding:.55rem .7rem}.showcase-rail button b{display:none}.showcase-film{min-height:auto;padding:3rem 1.25rem}.showcase-stage{min-height:38rem}.showcase-copy{top:3rem;left:1.5rem;max-width:calc(100% - 3rem);transform:none}.showcase-visual{right:50%;top:auto;bottom:1rem;width:min(90%,28rem);transform:translateX(50%)}.showcase-player{width:94%}.showcase-shortcuts{display:none}}
+/* Product-film layout — stays dark (nested cinematic stage, see the
+   .project-showcase comment above); this is the fullscreen variant used
+   when a showcase panel is expanded. */
+.project-showcase:fullscreen{width:100vw;height:100vh;border-radius:0}
+.showcase-rail{position:relative;z-index:5;padding:clamp(2rem,4vw,4rem) 1.5rem;border-right:1px solid var(--navy-border);background:linear-gradient(180deg,rgba(21,34,56,.96),rgba(15,23,42,.92));backdrop-filter:blur(18px)}
+.showcase-mark{display:flex;align-items:center;gap:.75rem}.showcase-mark span{display:grid;width:2.8rem;height:2.8rem;place-items:center;border:1px solid var(--showcase-accent);border-radius:.7rem;color:var(--showcase-accent);font:700 12px "JetBrains Mono",monospace;box-shadow:0 0 24px color-mix(in srgb,var(--showcase-accent) 20%,transparent)}.showcase-mark b{font-size:.78rem;font-weight:600;letter-spacing:.04em;color:var(--navy-text)}.showcase-rail>p{margin:2.5rem 0 1rem;font:9px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-muted)}
+.showcase-rail nav{display:grid;gap:.25rem}.showcase-rail button{position:relative;display:grid;grid-template-columns:1.6rem 1fr auto;align-items:center;gap:.55rem;width:100%;padding:.72rem .55rem;border:0;border-radius:.45rem;background:transparent;color:var(--navy-muted);text-align:left;transition:background .25s,color .25s}.showcase-rail button span{font:8px "JetBrains Mono",monospace;color:var(--navy-muted)}.showcase-rail button i{font-style:normal;font-size:.7rem}.showcase-rail button b{width:.35rem;height:.35rem;border-radius:50%;background:transparent}.showcase-rail button[aria-current="step"]{background:color-mix(in srgb,var(--showcase-accent) 14%,transparent);color:var(--navy-text)}.showcase-rail button[aria-current="step"] b{background:var(--showcase-accent);box-shadow:0 0 12px var(--showcase-accent)}
+.showcase-film{position:relative;z-index:2;display:flex;min-width:0;min-height:100%;flex-direction:column;padding:clamp(2rem,4vw,4rem)}.showcase-count{font:10px "JetBrains Mono",monospace;color:var(--navy-muted)}
+.showcase-scene{position:absolute;inset:0;animation:showcase-scene-in .75s cubic-bezier(.16,1,.3,1)}@keyframes showcase-scene-in{from{opacity:0;transform:translateX(2rem) scale(.985)}to{opacity:1;transform:none}}
+.showcase-visual{position:absolute;right:3%;top:50%;width:min(40vw,36rem);aspect-ratio:1.25;transform:translateY(-50%);perspective:900px}.showcase-visual::before{content:"";position:absolute;inset:9%;border:1px solid color-mix(in srgb,var(--showcase-accent) 25%,transparent);border-radius:50%;transform:rotateX(66deg);box-shadow:0 0 80px color-mix(in srgb,var(--showcase-accent) 12%,transparent)}.showcase-core{position:absolute;left:38%;top:32%;width:25%;aspect-ratio:1;border:1px solid var(--showcase-accent);border-radius:1rem;background:linear-gradient(145deg,color-mix(in srgb,var(--showcase-accent) 22%,#0f172a),#0f172a);box-shadow:0 0 60px color-mix(in srgb,var(--showcase-accent) 30%,transparent);transform:rotateX(58deg) rotateZ(-24deg);animation:showcase-float 5s ease-in-out infinite}.showcase-core i{position:absolute;inset:27%;border:1px solid var(--showcase-accent);border-radius:50%;box-shadow:inset 0 0 18px var(--showcase-accent)}
+.showcase-node{position:absolute;min-width:8.5rem;padding:.8rem 1rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 38%,transparent);border-radius:.65rem;background:rgba(15,23,42,.88);box-shadow:0 16px 40px rgba(0,0,0,.35);font:9px "JetBrains Mono",monospace;color:var(--navy-text);backdrop-filter:blur(10px)}.showcase-node::after{content:"";position:absolute;top:50%;width:7rem;height:1px;background:linear-gradient(90deg,var(--showcase-accent),transparent)}.showcase-node i{display:block;width:65%;height:2px;margin-top:.65rem;background:var(--showcase-accent);box-shadow:0 0 10px var(--showcase-accent)}.showcase-node--1{left:0;top:8%}.showcase-node--1::after{left:100%}.showcase-node--2{right:0;top:34%}.showcase-node--2::after{right:100%;transform:rotate(180deg)}.showcase-node--3{left:8%;bottom:5%}.showcase-node--3::after{left:100%;transform:rotate(-24deg);transform-origin:left}.showcase-scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0 47%,color-mix(in srgb,var(--showcase-accent) 24%,transparent) 50%,transparent 53%);animation:showcase-scan 3s linear infinite}@keyframes showcase-float{50%{transform:translateY(-.7rem) rotateX(58deg) rotateZ(-20deg)}}@keyframes showcase-scan{from{transform:translateY(-45%)}to{transform:translateY(45%)}}
+.showcase-player{display:grid;grid-template-columns:auto auto minmax(8rem,1fr) auto auto;align-items:center;gap:.7rem;width:min(42rem,85%);margin:-1.4rem auto 0;padding:.65rem .8rem;border:1px solid var(--navy-border);border-radius:2rem;background:rgba(15,23,42,.94);box-shadow:0 18px 50px rgba(0,0,0,.42);backdrop-filter:blur(18px)}.showcase-player button{display:grid;width:2rem;height:2rem;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--navy-text)}.showcase-player button:hover{background:rgba(255,255,255,.1)}.showcase-player svg{width:14px;height:14px}.showcase-player output{font:9px "JetBrains Mono",monospace;color:var(--navy-muted);white-space:nowrap}.showcase-scrub{height:3px;overflow:hidden;border-radius:2px;background:rgba(255,255,255,.16)}.showcase-scrub span{display:block;height:100%;background:linear-gradient(90deg,#60a5fa,var(--showcase-accent));box-shadow:0 0 12px var(--showcase-accent);transition:width .1s linear}.showcase-shortcuts{text-align:center;margin-top:.7rem;font:8px "JetBrains Mono",monospace;color:var(--navy-muted)}.showcase-boundary{text-align:center}
+@media(max-width:900px){.project-showcase{display:block}.showcase-rail{padding:1.2rem;border-right:0;border-bottom:1px solid var(--navy-border)}.showcase-mark b,.showcase-rail>p{display:none}.showcase-rail nav{display:flex;margin-top:1rem;overflow-x:auto}.showcase-rail button{flex:0 0 auto;width:auto;grid-template-columns:auto auto;padding:.55rem .7rem}.showcase-rail button b{display:none}.showcase-film{min-height:auto;padding:3rem 1.25rem}.showcase-stage{min-height:38rem}.showcase-copy{top:3rem;left:1.5rem;max-width:calc(100% - 3rem);transform:none}.showcase-visual{right:50%;top:auto;bottom:1rem;width:min(90%,28rem);transform:translateX(50%)}.showcase-player{width:94%}.showcase-shortcuts{display:none}}
 @media(prefers-reduced-motion:reduce){.showcase-scene,.showcase-core,.showcase-scan{animation:none!important}.showcase-scrub span{transition:none}}
 
-/* Nine visual languages for nine different systems. */
-.unique-visual{position:absolute;inset:0;color:var(--showcase-accent);font:10px "JetBrains Mono",monospace}.risk-visual{display:grid;place-items:center}.risk-ring{display:grid;width:12rem;aspect-ratio:1;place-content:center;text-align:center;border:1px solid var(--showcase-accent);border-radius:50%;background:conic-gradient(var(--showcase-accent) 0 20%,rgba(255,255,255,.04) 20%);box-shadow:0 0 60px color-mix(in srgb,var(--showcase-accent) 30%,transparent);animation:risk-pulse 2.2s ease-in-out infinite}.risk-ring::before{content:"";position:absolute;inset:calc(50% - 5rem);border-radius:50%;background:#08101a}.risk-ring>*{position:relative}.risk-ring b{font-size:2rem}.risk-ring span{display:block;margin-top:.35rem;color:var(--muted)}.risk-bars{position:absolute;right:3%;bottom:16%;display:flex;align-items:end;gap:.35rem;height:6rem}.risk-bars i{width:.55rem;height:var(--h);background:var(--showcase-accent);animation:risk-bars 1.4s ease-in-out infinite alternate}.risk-bars i:nth-child(1){--h:32%}.risk-bars i:nth-child(2){--h:58%;animation-delay:-.2s}.risk-bars i:nth-child(3){--h:44%;animation-delay:-.4s}.risk-bars i:nth-child(4){--h:82%;animation-delay:-.6s}.risk-bars i:nth-child(5){--h:68%;animation-delay:-.8s}.risk-visual>p{position:absolute;left:3%;top:15%;color:var(--muted)}@keyframes risk-pulse{50%{transform:scale(1.035);box-shadow:0 0 90px color-mix(in srgb,var(--showcase-accent) 45%,transparent)}}@keyframes risk-bars{to{filter:brightness(1.7);transform:scaleY(.8)}}
-.deadline-visual{perspective:900px}.state-grid{position:absolute;inset:14% 27% 22% 3%;display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;transform:rotateX(58deg) rotateZ(-18deg)}.state-grid i{border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);background:color-mix(in srgb,var(--showcase-accent) 7%,transparent);animation:state-light 2.4s ease-in-out infinite}.state-grid i:nth-child(2n){animation-delay:-1.2s}.calendar-card{position:absolute;right:2%;top:16%;display:grid;width:9rem;padding:1rem;border:1px solid var(--showcase-accent);border-radius:.8rem;background:#10100c;box-shadow:0 0 40px color-mix(in srgb,var(--showcase-accent) 28%,transparent);text-align:center;animation:calendar-lock 4.5s cubic-bezier(.16,1,.3,1)}.calendar-card b{font-size:.55rem;letter-spacing:.18em}.calendar-card strong{font-size:3.6rem;line-height:1}.calendar-card span{color:var(--muted)}.deadline-path{position:absolute;left:10%;bottom:9%;display:flex;gap:3rem}.deadline-path i{width:.6rem;aspect-ratio:1;border-radius:50%;background:var(--showcase-accent);box-shadow:0 0 14px var(--showcase-accent)}@keyframes state-light{50%{background:color-mix(in srgb,var(--showcase-accent) 35%,transparent)}}@keyframes calendar-lock{from{opacity:0;transform:translateY(-2rem) rotateY(12deg)}to{opacity:1;transform:none}}
-.shap-visual{display:grid;align-content:center;gap:1.2rem;padding:8%}.shap-visual>p{margin-bottom:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.shap-visual>div:not(.shap-axis){display:grid;grid-template-columns:9rem 1fr;align-items:center;gap:1rem}.shap-visual div>span{color:var(--text)}.shap-visual div>i{display:block;width:0;height:.55rem;background:linear-gradient(90deg,var(--showcase-accent),#b971ff);box-shadow:0 0 16px color-mix(in srgb,var(--showcase-accent) 45%,transparent);animation:shap-grow 1.4s cubic-bezier(.16,1,.3,1) forwards}.shap-axis{display:flex;justify-content:space-between;padding-top:.8rem;border-top:1px solid var(--border);color:var(--faint)}.shap-axis b{color:var(--showcase-accent)}@keyframes shap-grow{to{width:var(--value)}}
-.workflow-visual{display:flex;align-items:center;justify-content:center;gap:.65rem}.workflow-visual>div{display:grid;width:6.5rem;aspect-ratio:1;place-content:center;gap:.35rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);border-radius:50%;background:#090d12;text-align:center;animation:workflow-step 4.5s ease-in-out infinite}.workflow-visual>div:nth-of-type(2){animation-delay:.6s}.workflow-visual>div:nth-of-type(3){animation-delay:1.2s}.workflow-visual>div:nth-of-type(4){animation-delay:1.8s}.workflow-visual>i{width:2rem;height:1px;background:linear-gradient(90deg,var(--showcase-accent),transparent);animation:flow-line 1.2s linear infinite}.workflow-visual span{font-size:.55rem;color:var(--muted)}.workflow-visual .human-gate{border-style:double;border-width:3px}@keyframes workflow-step{15%{border-color:var(--showcase-accent);box-shadow:0 0 36px color-mix(in srgb,var(--showcase-accent) 35%,transparent)}}@keyframes flow-line{to{filter:brightness(2);transform:scaleX(.7)}}
-.document-visual{perspective:900px}.document-page{position:absolute;left:8%;top:8%;display:grid;gap:1rem;width:15rem;height:19rem;padding:2rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);border-radius:.5rem;background:linear-gradient(150deg,#131b25,#080b10);transform:rotateY(12deg) rotateX(4deg);box-shadow:1.4rem 1.4rem 0 rgba(255,255,255,.025)}.document-page i{height:3px;background:rgba(255,255,255,.18)}.document-page i:nth-child(2){width:70%}.document-page i:nth-child(4){width:82%}.document-page em{height:4rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 35%,transparent);background:color-mix(in srgb,var(--showcase-accent) 8%,transparent)}.scan-beam{position:absolute;left:4%;top:8%;width:17rem;height:2px;background:var(--showcase-accent);box-shadow:0 0 22px var(--showcase-accent);animation:document-scan 2.6s ease-in-out infinite}.entity-stack{position:absolute;right:4%;top:17%;display:grid;gap:1rem}.entity-stack span{padding:.8rem 1.2rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 42%,transparent);border-radius:.4rem;background:#08101a;animation:entity-pop 2.6s ease-in-out infinite}.entity-stack span:nth-child(2){animation-delay:.3s}.entity-stack span:nth-child(3){animation-delay:.6s}.entity-stack span:nth-child(4){animation-delay:.9s}@keyframes document-scan{50%{transform:translateY(18rem)}}@keyframes entity-pop{20%{transform:translateX(-.6rem);box-shadow:0 0 20px color-mix(in srgb,var(--showcase-accent) 25%,transparent)}}
-.contract-visual{display:grid;grid-template-columns:1fr .85fr;gap:1.5rem;align-items:center;padding:8%}.contract-sheet{display:grid;gap:.8rem;padding:2rem;border:1px solid var(--border-strong);border-radius:.6rem;background:#0c1016;transform:rotate(-3deg)}.contract-sheet i{height:5px;background:rgba(255,255,255,.15)}.contract-sheet .flagged{background:linear-gradient(90deg,var(--showcase-accent) 65%,rgba(255,255,255,.12) 65%);animation:clause-flag 1.8s ease-in-out infinite}.obligation-matrix{display:grid;grid-template-columns:1fr;gap:.55rem}.obligation-matrix>*{padding:.7rem;border-left:2px solid var(--showcase-accent);background:color-mix(in srgb,var(--showcase-accent) 8%,transparent)}.obligation-matrix b{color:var(--text)}@keyframes clause-flag{50%{box-shadow:0 0 18px color-mix(in srgb,var(--showcase-accent) 45%,transparent)}}
-.lakehouse-visual{display:flex;align-items:center;justify-content:center;gap:1.2rem}.data-source{display:grid;gap:.6rem}.data-source i{width:3rem;height:2.2rem;border:1px solid var(--showcase-accent);border-radius:50%}.data-flow{width:3rem;height:1px;background:linear-gradient(90deg,var(--showcase-accent),transparent);animation:data-flow 1s linear infinite}.lake-stack{display:grid;gap:.35rem;perspective:700px}.lake-stack i{display:grid;width:8rem;height:3rem;place-items:center;border:1px solid var(--showcase-accent);background:color-mix(in srgb,var(--showcase-accent) 9%,#080b10);font-style:normal;transform:rotateX(58deg);box-shadow:0 .7rem 24px rgba(0,0,0,.4)}.analytics-bars{display:flex;align-items:end;gap:.4rem;height:8rem}.analytics-bars i{width:1rem;height:var(--h);background:var(--showcase-accent);animation:analytics-rise 2s ease-in-out infinite alternate}.analytics-bars i:nth-child(1){--h:30%}.analytics-bars i:nth-child(2){--h:70%}.analytics-bars i:nth-child(3){--h:52%}.analytics-bars i:nth-child(4){--h:92%}@keyframes data-flow{to{transform:translateX(.6rem);opacity:.35}}@keyframes analytics-rise{to{transform:scaleY(.75);filter:brightness(1.7)}}
-.rag-visual{display:flex;align-items:center;justify-content:center;gap:.8rem}.rag-visual>i{width:2rem;height:1px;background:var(--showcase-accent)}.rag-query,.rag-answer{padding:1.2rem;border:1px solid var(--showcase-accent);border-radius:.7rem;background:#0b0a13;box-shadow:0 0 25px color-mix(in srgb,var(--showcase-accent) 18%,transparent)}.rag-search{display:grid;gap:.45rem;width:7rem}.rag-search span{display:block;height:2rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);background:color-mix(in srgb,var(--showcase-accent) 8%,transparent);animation:retrieve 2.2s ease-in-out infinite}.rag-search span:nth-child(2){animation-delay:.35s}.rag-search span:nth-child(3){animation-delay:.7s}.rag-answer{display:grid;gap:.55rem}.rag-answer span{color:var(--showcase-accent)}@keyframes retrieve{25%{transform:translateX(.5rem);border-color:var(--showcase-accent)}}
-.agents-visual{display:grid;place-items:center}.agent-planner{position:relative;z-index:3;display:grid;width:7rem;aspect-ratio:1;place-items:center;border:1px solid var(--showcase-accent);border-radius:50%;background:#100b19;box-shadow:0 0 55px color-mix(in srgb,var(--showcase-accent) 40%,transparent)}.agent-orbit{position:absolute;inset:9%;border:1px solid color-mix(in srgb,var(--showcase-accent) 35%,transparent);border-radius:50%;animation:agent-spin 14s linear infinite}.agent-orbit span{position:absolute;padding:.65rem .8rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);border-radius:.5rem;background:#0b0811;color:var(--text)}.agent-orbit span:nth-child(1){left:40%;top:-1rem}.agent-orbit span:nth-child(2){right:-2rem;top:42%}.agent-orbit span:nth-child(3){left:35%;bottom:-1rem}.agent-orbit span:nth-child(4){left:-1.5rem;top:42%}.agent-pulse{position:absolute;inset:31%;border:1px solid var(--showcase-accent);border-radius:50%;animation:agent-pulse 2s ease-out infinite}@keyframes agent-spin{to{transform:rotate(360deg)}}@keyframes agent-pulse{to{transform:scale(2.2);opacity:0}}
+/* Nine visual languages for nine different systems — dark stage visuals
+   nested inside the (now-light-chrome) showcase card; unchanged in
+   substance, just retuned off the old near-black literals to the new
+   --navy-based ones. */
+.unique-visual{position:absolute;inset:0;color:var(--showcase-accent);font:10px "JetBrains Mono",monospace}.risk-visual{display:grid;place-items:center}.risk-ring{display:grid;width:12rem;aspect-ratio:1;place-content:center;text-align:center;border:1px solid var(--showcase-accent);border-radius:50%;background:conic-gradient(var(--showcase-accent) 0 20%,rgba(255,255,255,.06) 20%);box-shadow:0 0 60px color-mix(in srgb,var(--showcase-accent) 30%,transparent);animation:risk-pulse 2.2s ease-in-out infinite}.risk-ring::before{content:"";position:absolute;inset:calc(50% - 5rem);border-radius:50%;background:#0f172a}.risk-ring>*{position:relative}.risk-ring b{font-size:2rem;color:var(--navy-text)}.risk-ring span{display:block;margin-top:.35rem;color:var(--navy-muted)}.risk-bars{position:absolute;right:3%;bottom:16%;display:flex;align-items:end;gap:.35rem;height:6rem}.risk-bars i{width:.55rem;height:var(--h);background:var(--showcase-accent);animation:risk-bars 1.4s ease-in-out infinite alternate}.risk-bars i:nth-child(1){--h:32%}.risk-bars i:nth-child(2){--h:58%;animation-delay:-.2s}.risk-bars i:nth-child(3){--h:44%;animation-delay:-.4s}.risk-bars i:nth-child(4){--h:82%;animation-delay:-.6s}.risk-bars i:nth-child(5){--h:68%;animation-delay:-.8s}.risk-visual>p{position:absolute;left:3%;top:15%;color:var(--navy-muted)}@keyframes risk-pulse{50%{transform:scale(1.035);box-shadow:0 0 90px color-mix(in srgb,var(--showcase-accent) 45%,transparent)}}@keyframes risk-bars{to{filter:brightness(1.7);transform:scaleY(.8)}}
+.deadline-visual{perspective:900px}.state-grid{position:absolute;inset:14% 27% 22% 3%;display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;transform:rotateX(58deg) rotateZ(-18deg)}.state-grid i{border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);background:color-mix(in srgb,var(--showcase-accent) 7%,transparent);animation:state-light 2.4s ease-in-out infinite}.state-grid i:nth-child(2n){animation-delay:-1.2s}.calendar-card{position:absolute;right:2%;top:16%;display:grid;width:9rem;padding:1rem;border:1px solid var(--showcase-accent);border-radius:.8rem;background:#152238;box-shadow:0 0 40px color-mix(in srgb,var(--showcase-accent) 28%,transparent);text-align:center;animation:calendar-lock 4.5s cubic-bezier(.16,1,.3,1)}.calendar-card b{font-size:.55rem;letter-spacing:.18em;color:var(--navy-muted)}.calendar-card strong{font-size:3.6rem;line-height:1;color:var(--navy-text)}.calendar-card span{color:var(--navy-muted)}.deadline-path{position:absolute;left:10%;bottom:9%;display:flex;gap:3rem}.deadline-path i{width:.6rem;aspect-ratio:1;border-radius:50%;background:var(--showcase-accent);box-shadow:0 0 14px var(--showcase-accent)}@keyframes state-light{50%{background:color-mix(in srgb,var(--showcase-accent) 35%,transparent)}}@keyframes calendar-lock{from{opacity:0;transform:translateY(-2rem) rotateY(12deg)}to{opacity:1;transform:none}}
+.shap-visual{display:grid;align-content:center;gap:1.2rem;padding:8%}.shap-visual>p{margin-bottom:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-muted)}.shap-visual>div:not(.shap-axis){display:grid;grid-template-columns:9rem 1fr;align-items:center;gap:1rem}.shap-visual div>span{color:var(--navy-text)}.shap-visual div>i{display:block;width:0;height:.55rem;background:linear-gradient(90deg,var(--showcase-accent),#c084fc);box-shadow:0 0 16px color-mix(in srgb,var(--showcase-accent) 45%,transparent);animation:shap-grow 1.4s cubic-bezier(.16,1,.3,1) forwards}.shap-axis{display:flex;justify-content:space-between;padding-top:.8rem;border-top:1px solid var(--navy-border);color:var(--navy-muted)}.shap-axis b{color:var(--showcase-accent)}@keyframes shap-grow{to{width:var(--value)}}
+.workflow-visual{display:flex;align-items:center;justify-content:center;gap:.65rem}.workflow-visual>div{display:grid;width:6.5rem;aspect-ratio:1;place-content:center;gap:.35rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);border-radius:50%;background:#111c30;text-align:center;animation:workflow-step 4.5s ease-in-out infinite}.workflow-visual>div:nth-of-type(2){animation-delay:.6s}.workflow-visual>div:nth-of-type(3){animation-delay:1.2s}.workflow-visual>div:nth-of-type(4){animation-delay:1.8s}.workflow-visual>i{width:2rem;height:1px;background:linear-gradient(90deg,var(--showcase-accent),transparent);animation:flow-line 1.2s linear infinite}.workflow-visual span{font-size:.55rem;color:var(--navy-muted)}.workflow-visual .human-gate{border-style:double;border-width:3px}@keyframes workflow-step{15%{border-color:var(--showcase-accent);box-shadow:0 0 36px color-mix(in srgb,var(--showcase-accent) 35%,transparent)}}@keyframes flow-line{to{filter:brightness(2);transform:scaleX(.7)}}
+.document-visual{perspective:900px}.document-page{position:absolute;left:8%;top:8%;display:grid;gap:1rem;width:15rem;height:19rem;padding:2rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);border-radius:.5rem;background:linear-gradient(150deg,#1c2942,#0f172a);transform:rotateY(12deg) rotateX(4deg);box-shadow:1.4rem 1.4rem 0 rgba(255,255,255,.03)}.document-page i{height:3px;background:rgba(255,255,255,.22)}.document-page i:nth-child(2){width:70%}.document-page i:nth-child(4){width:82%}.document-page em{height:4rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 35%,transparent);background:color-mix(in srgb,var(--showcase-accent) 8%,transparent)}.scan-beam{position:absolute;left:4%;top:8%;width:17rem;height:2px;background:var(--showcase-accent);box-shadow:0 0 22px var(--showcase-accent);animation:document-scan 2.6s ease-in-out infinite}.entity-stack{position:absolute;right:4%;top:17%;display:grid;gap:1rem}.entity-stack span{padding:.8rem 1.2rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 42%,transparent);border-radius:.4rem;background:#152238;animation:entity-pop 2.6s ease-in-out infinite}.entity-stack span:nth-child(2){animation-delay:.3s}.entity-stack span:nth-child(3){animation-delay:.6s}.entity-stack span:nth-child(4){animation-delay:.9s}@keyframes document-scan{50%{transform:translateY(18rem)}}@keyframes entity-pop{20%{transform:translateX(-.6rem);box-shadow:0 0 20px color-mix(in srgb,var(--showcase-accent) 25%,transparent)}}
+.contract-visual{display:grid;grid-template-columns:1fr .85fr;gap:1.5rem;align-items:center;padding:8%}.contract-sheet{display:grid;gap:.8rem;padding:2rem;border:1px solid var(--navy-border);border-radius:.6rem;background:#152238;transform:rotate(-3deg)}.contract-sheet i{height:5px;background:rgba(255,255,255,.18)}.contract-sheet .flagged{background:linear-gradient(90deg,var(--showcase-accent) 65%,rgba(255,255,255,.14) 65%);animation:clause-flag 1.8s ease-in-out infinite}.obligation-matrix{display:grid;grid-template-columns:1fr;gap:.55rem}.obligation-matrix>*{padding:.7rem;border-left:2px solid var(--showcase-accent);background:color-mix(in srgb,var(--showcase-accent) 8%,transparent)}.obligation-matrix b{color:var(--navy-text)}@keyframes clause-flag{50%{box-shadow:0 0 18px color-mix(in srgb,var(--showcase-accent) 45%,transparent)}}
+.lakehouse-visual{display:flex;align-items:center;justify-content:center;gap:1.2rem}.data-source{display:grid;gap:.6rem}.data-source i{width:3rem;height:2.2rem;border:1px solid var(--showcase-accent);border-radius:50%}.data-flow{width:3rem;height:1px;background:linear-gradient(90deg,var(--showcase-accent),transparent);animation:data-flow 1s linear infinite}.lake-stack{display:grid;gap:.35rem;perspective:700px}.lake-stack i{display:grid;width:8rem;height:3rem;place-items:center;border:1px solid var(--showcase-accent);background:color-mix(in srgb,var(--showcase-accent) 9%,#0f172a);font-style:normal;transform:rotateX(58deg);box-shadow:0 .7rem 24px rgba(0,0,0,.4)}.analytics-bars{display:flex;align-items:end;gap:.4rem;height:8rem}.analytics-bars i{width:1rem;height:var(--h);background:var(--showcase-accent);animation:analytics-rise 2s ease-in-out infinite alternate}.analytics-bars i:nth-child(1){--h:30%}.analytics-bars i:nth-child(2){--h:70%}.analytics-bars i:nth-child(3){--h:52%}.analytics-bars i:nth-child(4){--h:92%}@keyframes data-flow{to{transform:translateX(.6rem);opacity:.35}}@keyframes analytics-rise{to{transform:scaleY(.75);filter:brightness(1.7)}}
+.rag-visual{display:flex;align-items:center;justify-content:center;gap:.8rem}.rag-visual>i{width:2rem;height:1px;background:var(--showcase-accent)}.rag-query,.rag-answer{padding:1.2rem;border:1px solid var(--showcase-accent);border-radius:.7rem;background:#152238;box-shadow:0 0 25px color-mix(in srgb,var(--showcase-accent) 18%,transparent)}.rag-search{display:grid;gap:.45rem;width:7rem}.rag-search span{display:block;height:2rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);background:color-mix(in srgb,var(--showcase-accent) 8%,transparent);animation:retrieve 2.2s ease-in-out infinite}.rag-search span:nth-child(2){animation-delay:.35s}.rag-search span:nth-child(3){animation-delay:.7s}.rag-answer{display:grid;gap:.55rem}.rag-answer span{color:var(--showcase-accent)}@keyframes retrieve{25%{transform:translateX(.5rem);border-color:var(--showcase-accent)}}
+.agents-visual{display:grid;place-items:center}.agent-planner{position:relative;z-index:3;display:grid;width:7rem;aspect-ratio:1;place-items:center;border:1px solid var(--showcase-accent);border-radius:50%;background:#1c2036;box-shadow:0 0 55px color-mix(in srgb,var(--showcase-accent) 40%,transparent)}.agent-orbit{position:absolute;inset:9%;border:1px solid color-mix(in srgb,var(--showcase-accent) 35%,transparent);border-radius:50%;animation:agent-spin 14s linear infinite}.agent-orbit span{position:absolute;padding:.65rem .8rem;border:1px solid color-mix(in srgb,var(--showcase-accent) 45%,transparent);border-radius:.5rem;background:#181c2e;color:var(--navy-text)}.agent-orbit span:nth-child(1){left:40%;top:-1rem}.agent-orbit span:nth-child(2){right:-2rem;top:42%}.agent-orbit span:nth-child(3){left:35%;bottom:-1rem}.agent-orbit span:nth-child(4){left:-1.5rem;top:42%}.agent-pulse{position:absolute;inset:31%;border:1px solid var(--showcase-accent);border-radius:50%;animation:agent-pulse 2s ease-out infinite}@keyframes agent-spin{to{transform:rotate(360deg)}}@keyframes agent-pulse{to{transform:scale(2.2);opacity:0}}
 @media(max-width:900px){.showcase-visual{height:18rem}.workflow-visual{transform:scale(.7)}.document-page{width:11rem;height:14rem;padding:1.2rem}.scan-beam{width:13rem}.contract-visual{padding:3%}.lakehouse-visual,.rag-visual{transform:scale(.75)}.agents-visual{inset:4%}}
 @media(prefers-reduced-motion:reduce){.unique-visual *{animation:none!important}}

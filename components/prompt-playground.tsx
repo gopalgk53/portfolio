@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { spring } from "../lib/motion";
 
 type Status = "idle" | "ready" | "computing" | "streaming" | "complete" | "error";
-const panel = "rounded-[var(--radius-md)] border border-white/[.12] bg-white/[.015]";
+const panel = "rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)]";
 const FALLBACK_ANSWER = "The live model is temporarily unavailable, so this is a static example: a production-ready RAG response should ground every claim in retrieved evidence, apply explicit refusal rules, preserve source attribution, and return a predictable structure for downstream systems.";
 
 export function PromptPlayground() {
@@ -108,7 +108,7 @@ export function PromptPlayground() {
   return (
     <div>
       <div className="mb-5 flex items-center justify-between gap-4">
-        <p className="font-mono text-[10px] uppercase tracking-[.1em] text-[var(--faint)]">Status: {status}</p>
+        <p className="text-[11px] font-semibold text-[var(--faint)]">Status: {status}</p>
         <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }} transition={spring} onClick={reset} className="btn-pill btn-pill--outline">
           <RotateCcw className="h-3 w-3" />
           Reset
@@ -131,7 +131,7 @@ export function PromptPlayground() {
               }}
               rows={8}
               placeholder={status === "error" ? "Add a prompt to inspect model behavior." : "Enter a prompt to inspect model behavior…"}
-              className="w-full resize-none rounded-[var(--radius-sm)] border border-white/[.12] bg-black/40 py-3 pl-8 pr-3 font-mono text-xs leading-6 text-[var(--muted)] outline-none focus:border-[var(--accent)]"
+              className="w-full resize-none rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] py-3 pl-8 pr-3 font-mono text-xs leading-6 text-[var(--muted)] outline-none focus:border-[var(--accent)]"
             />
           </div>
           <div className="mt-2 flex gap-4 font-mono text-[9px] text-[var(--faint)]">
@@ -141,11 +141,11 @@ export function PromptPlayground() {
           </div>
           <div className="mt-6 space-y-5">
             <label className="block font-mono text-[10px] text-[var(--muted)]">
-              TEMPERATURE <b className="float-right text-white">{temperature.toFixed(1)}</b>
+              TEMPERATURE <b className="float-right text-[var(--text)]">{temperature.toFixed(1)}</b>
               <input type="range" min="0" max="1.5" step=".1" value={temperature} disabled={status === "computing" || status === "streaming"} onChange={(e) => setTemperature(Number(e.target.value))} className="mt-3 w-full accent-[var(--accent)]" />
             </label>
             <label className="block font-mono text-[10px] text-[var(--muted)]">
-              TOP-P <b className="float-right text-white">{topP.toFixed(1)}</b>
+              TOP-P <b className="float-right text-[var(--text)]">{topP.toFixed(1)}</b>
               <input type="range" min=".1" max="1" step=".1" value={topP} disabled={status === "computing" || status === "streaming"} onChange={(e) => setTopP(Number(e.target.value))} className="mt-3 w-full accent-[var(--accent)]" />
             </label>
           </div>
@@ -159,14 +159,14 @@ export function PromptPlayground() {
             <span className="font-medium text-[var(--muted)]">Compare approaches</span>
             <span className="text-[var(--faint)]">Basic ↔ structured</span>
           </header>
-          <div className="relative mt-5 h-[390px] overflow-hidden rounded-[var(--radius-sm)] border border-white/[.1] bg-black/40">
+          <div className="relative mt-5 h-[390px] overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)]">
             <div className="absolute inset-0 p-5 font-mono text-[10px] leading-6 text-[var(--faint)]">
               <b className="text-[var(--muted)]">NAIVE PROMPT</b>
               <p className="mt-5">Answer my question about this document. Make the answer useful.</p>
-              <p className="mt-8 text-[#c96a6a]/70">RISK: HIGH AMBIGUITY</p>
+              <p className="mt-8 text-[#c96a6a]">RISK: HIGH AMBIGUITY</p>
             </div>
-            <div style={{ clipPath: `inset(0 0 0 ${divider}%)` }} className="absolute inset-0 bg-[var(--bg)] p-5 font-mono text-[10px] leading-6 text-[var(--muted)]">
-              <b className="text-white">OPTIMIZED SYSTEM PROMPT</b>
+            <div style={{ clipPath: `inset(0 0 0 ${divider}%)` }} className="absolute inset-0 bg-[var(--surface)] p-5 font-mono text-[10px] leading-6 text-[var(--muted)]">
+              <b className="text-[var(--text)]">OPTIMIZED SYSTEM PROMPT</b>
               <p className="mt-5">
                 <span className="text-[var(--accent)]">ROLE:</span> Evidence-grounded legal assistant
                 <br />
@@ -182,7 +182,7 @@ export function PromptPlayground() {
             </div>
             <div style={{ left: `${divider}%` }} className="pointer-events-none absolute inset-y-0 w-px bg-[var(--accent)]" />
             <input aria-label="Compare naive and optimized prompt" type="range" min="5" max="95" value={divider} onChange={(e) => setDivider(Number(e.target.value))} className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0" />
-            <div style={{ left: `calc(${divider}% - 18px)` }} className="pointer-events-none absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/[.2] bg-[var(--bg)] font-mono text-[9px] text-[var(--muted)]">
+            <div style={{ left: `calc(${divider}% - 18px)` }} className="pointer-events-none absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[var(--border-strong)] bg-[var(--surface)] font-mono text-[9px] text-[var(--muted)]">
               ↔
             </div>
           </div>
@@ -193,7 +193,7 @@ export function PromptPlayground() {
             <span className="font-medium text-[var(--muted)]">Example output</span>
             <span className="text-[var(--muted)]">{status === "idle" || status === "ready" || status === "error" ? "Waiting" : status}</span>
           </header>
-          <div ref={outputRef} className="relative mt-5 flex-1 overflow-y-auto rounded-[var(--radius-sm)] border border-white/[.1] bg-black/40 p-5 font-mono text-xs leading-7 text-[var(--muted)]">
+          <div ref={outputRef} className="relative mt-5 flex-1 overflow-y-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] p-5 font-mono text-xs leading-7 text-[var(--muted)]">
             {(status === "idle" || status === "ready" || status === "error") && <p className="text-[var(--faint)]">Awaiting execution. Enter a prompt and run it.</p>}
             {status === "computing" && (
               <div className="grid h-full place-items-center text-center text-[var(--muted)]">
@@ -213,8 +213,8 @@ export function PromptPlayground() {
           {errorMessage && (status === "streaming" || status === "complete") && (
             <p className="mt-2 font-mono text-[9px] text-[#c96a6a]">{errorMessage} Showing a static example instead.</p>
           )}
-          <footer className="mt-4 border-t border-white/[.1] pt-3">
-            <p className="mb-2 font-mono text-[8px] uppercase tracking-[.14em] text-[var(--faint)]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
+          <footer className="mt-4 border-t border-[var(--border)] pt-3">
+            <p className="mb-2 text-[11px] font-semibold text-[var(--faint)]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
             <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 font-mono text-[9px]">
               <span className="text-[var(--muted)]">LATENCY: {latency > 0 ? `${latency.toFixed(0)}ms` : "—"}</span>
               <span className="text-[var(--muted)]">TOKENS: {tokens > 0 ? tokens : "—"}</span>

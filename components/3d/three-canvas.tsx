@@ -54,13 +54,13 @@ const domainEmphasis: Record<SceneDomain, Partial<Record<NodeGroup, number>>> = 
   close: {},
 };
 
-const ACCENT = 0x63b3ff;
+const ACCENT = 0x2563eb;
 // The site's second theme color (matches --accent-2 in globals.css exactly)
 // — used to tint the retrieval-vs-agentic split that already exists in the
 // data (NodeGroup, CapabilityId) rather than introducing an arbitrary
 // color rule. Dots and ambient dust stay neutral; only the connecting
 // lines/pulses that actually form the "network" carry the two-tone split.
-const ACCENT_2 = 0x975ad1;
+const ACCENT_2 = 0x8b3fd1;
 const DOT_BASE = 0xd7d8dc;
 const GROUP_COLOR: Record<NodeGroup, number> = { retrieval: ACCENT, agents: ACCENT_2, infra: ACCENT_2 };
 
@@ -648,8 +648,14 @@ export function ThreeCanvas() {
     };
   }, []);
 
+  // Only the hero band ("identity") stays dark in the redesign — every
+  // section below it is now a light page, so the fixed network fades out
+  // once scroll carries it past the hero rather than bleeding dark under
+  // light content the way it did when the whole site was dark.
+  const inHero = activeDomain === "identity";
+
   return (
-    <div className="three-stage" aria-hidden="true">
+    <div className="three-stage" aria-hidden="true" style={{ opacity: inHero ? 1 : 0, transition: "opacity .6s ease" }}>
       <div className="ambient-drift" />
       <canvas ref={canvasRef} id="webgl-canvas" />
       <div ref={labelHostRef} className="node-label-host" />

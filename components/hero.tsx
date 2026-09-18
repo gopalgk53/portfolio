@@ -15,7 +15,7 @@ import { nav } from "../lib/nav";
 const heroBadges = [
   { Icon: Brain, label: "LLMs & fine-tuning", color: "var(--accent)" },
   { Icon: Database, label: "RAG & vector search", color: "var(--accent)" },
-  { Icon: Workflow, label: "Agent orchestration", color: "var(--accent-2)" },
+  { Icon: Workflow, label: "Agent orchestration", color: "var(--accent)" },
 ];
 
 export function Hero() {
@@ -76,7 +76,7 @@ export function Hero() {
     <div ref={sectionRef} data-scene="identity" className="cinematic-hero relative min-h-[145svh] overflow-clip">
       <nav className="site-nav" data-scrolled={scrolled} aria-label="Primary navigation">
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 sm:px-8">
-          <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`font-mono text-[10px] uppercase tracking-[.28em] ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>GK / AI systems</a>
+          <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`text-[13px] font-semibold tracking-tight ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>Gopalakrishna · AI Systems</a>
           <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[.12em] text-[var(--muted)] md:flex">
             {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} className={activeId === id ? "text-[var(--accent)]" : undefined}>{label}</a>)}
             <SoundToggle className="text-[var(--muted)]" />
@@ -84,14 +84,14 @@ export function Hero() {
           </div>
           <div className="flex items-center gap-3 md:hidden">
             <SoundToggle className="text-[var(--muted)]" />
-            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center rounded-full border border-white/15">
+            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center rounded-full border border-[var(--border-strong)]">
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
         </div>
         <AnimatePresence>{menuOpen && (
-          <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-white/10 bg-[var(--bg)] px-5 py-5 md:hidden">
-            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-white/10 py-4 text-sm uppercase tracking-wider ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
+          <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-[var(--border)] bg-[var(--bg)] px-5 py-5 md:hidden">
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-[var(--border)] py-4 text-sm uppercase tracking-wider ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
           </motion.div>
         )}</AnimatePresence>
@@ -101,11 +101,11 @@ export function Hero() {
       <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
         <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 sm:left-8">
           <p className="hero-name text-white">Gopalakrishna Maddipalli</p>
-          <p className="mt-2 font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">AI Engineer</p>
-          <p className="font-mono text-[9px] uppercase leading-5 tracking-[.18em] text-[var(--muted)]">India · 2026</p>
+          <p className="mt-2 text-[13px] font-medium leading-5 text-[var(--muted)]">AI Engineer</p>
+          <p className="text-[13px] font-medium leading-5 text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
-          <p className="mb-4 text-right font-mono text-[9px] uppercase tracking-[.28em] text-[var(--accent-2)]">Systems that reason with context</p>
+          <p className="mb-4 text-right text-[11px] font-semibold text-[var(--accent-2)]">Systems that reason with context</p>
           <h1 className="hero-title" aria-label="Generative intelligence">
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Generative</motion.span>
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="text-gradient-accent block text-right">Intelligence</motion.span>
@@ -114,24 +114,28 @@ export function Hero() {
             {heroBadges.map(({ Icon, label, color }, i) => (
               <motion.div
                 key={label}
-                initial={reducedMotion ? false : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.4, rotate: -35 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.6 + i * 0.1 }}
               >
-                {/* Was a continuous idle float plus a scroll-tied rotation —
-                    cut the idle float. It ran forever regardless of what the
-                    visitor did, one more always-on motion competing with the
-                    3D background, the section rise/scale, and the scroll bar.
-                    The scroll-tied rotation stays: it responds to something
-                    real (how far you've scrolled — the same pageProgress
-                    value already driving the nav's progress underline), so
-                    it's one of the few motions actually worth keeping. */}
+                {/* Three layers, each answering to something different: the
+                    wrapper above pops the badge in, this one floats it
+                    continuously, and the inner one rotates with scroll
+                    position (the same pageProgress driving the nav
+                    underline). Durations are deliberately mismatched and
+                    offset per badge so the three never sync into a single
+                    bouncing row. */}
                 <motion.div
-                  title={label}
-                  style={reducedMotion ? undefined : { rotate: badgeRotate }}
-                  className="icon-badge grid h-11 w-11 place-items-center rounded-[var(--radius-sm)]"
+                  animate={reducedMotion ? undefined : { y: [0, -8, 0] }}
+                  transition={{ duration: 3.1 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
                 >
-                  <Icon className="h-5 w-5" style={{ color }} />
+                  <motion.div
+                    title={label}
+                    style={reducedMotion ? undefined : { rotate: badgeRotate }}
+                    className="icon-badge grid h-11 w-11 place-items-center rounded-[var(--radius-sm)]"
+                  >
+                    <Icon className="h-5 w-5" style={{ color }} />
+                  </motion.div>
                 </motion.div>
               </motion.div>
             ))}
@@ -140,7 +144,7 @@ export function Hero() {
             <p className="max-w-md text-sm leading-6 text-[var(--muted)]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
             <p className="max-w-sm text-sm leading-6 text-[var(--muted)]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-              <a href="#projects" className="flex items-center gap-3 text-xs uppercase tracking-[.16em]">Enter systems <ArrowDown className="h-4 w-4" /></a>
+              <a href="#projects" className="flex items-center gap-3 text-[13px] font-semibold">Enter systems <ArrowDown className="h-4 w-4" /></a>
             </div>
           </div>
         </motion.div>
@@ -153,23 +157,23 @@ export function Hero() {
           className="hero-console absolute right-5 top-28 z-20 hidden w-[19rem] px-5 py-4 sm:right-8 lg:block"
         >
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] uppercase tracking-[.18em] text-[var(--muted)]">Agent status</span>
-            <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--accent)]">
+            <span className="text-[11px] font-semibold text-[var(--muted)]">Agent status</span>
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--accent)]">
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
               Online
             </span>
           </div>
           <HeroAgentTrace />
-          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">
+          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 text-[11px] font-semibold text-[var(--faint)]">
             <span>Stack · RAG + Agents</span>
             <span>Mode · Grounded</span>
           </div>
         </motion.div>
-        <div className="absolute bottom-20 left-5 hidden items-center gap-2.5 font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)] sm:left-8 sm:flex">
+        <div className="absolute bottom-20 left-5 hidden items-center gap-2.5 text-[11px] font-semibold text-[var(--faint)] sm:left-8 sm:flex">
           <span className="scroll-cue" aria-hidden="true" />
           Scroll / camera enabled
         </div>
-        <div className="absolute bottom-20 right-5 hidden font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)] sm:right-8 sm:block">LLMs · RAG · Agents · AWS</div>
+        <div className="absolute bottom-20 right-5 hidden text-[11px] font-semibold text-[var(--faint)] sm:right-8 sm:block">LLMs · RAG · Agents · AWS</div>
       </section>
     </div>
   );
