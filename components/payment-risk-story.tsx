@@ -113,7 +113,7 @@ function RiskQueueVisual({ isActive, paused, reducedMotion }: ChapterVisualProps
                   {status.label}
                 </span>
               </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/[.06]">
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--border)]">
                 <motion.div
                   className="h-full rounded-full"
                   style={{ background: status.color, transformOrigin: "left" }}
@@ -183,13 +183,13 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
                   >
                     <stage.Icon className="h-4 w-4" />
                   </span>
-                  <span className={`mt-2 block font-mono text-[10px] uppercase tracking-[.06em] ${isStageActive ? "text-white" : "text-[var(--muted)]"}`}>
+                  <span className={`mt-2 block font-mono text-[10px] uppercase tracking-[.06em] ${isStageActive ? "text-[var(--text)]" : "text-[var(--muted)]"}`}>
                     {stage.name}
                   </span>
                 </button>
                 {index < PIPELINE_STAGES.length - 1 && (
                   <div className="my-1 flex items-center justify-center lg:my-0 lg:w-6 lg:shrink-0" aria-hidden="true">
-                    <span className="h-4 w-px bg-white/[.14] lg:h-px lg:w-4" />
+                    <span className="h-4 w-px bg-[var(--border-strong)] lg:h-px lg:w-4" />
                   </div>
                 )}
               </div>
@@ -197,7 +197,7 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
           })}
         </div>
       </div>
-      <div className="mt-4 flex items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-white/[.02] p-3">
+      <div className="mt-4 flex items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--surface)] p-3">
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-[var(--faint)]">
           <Activity className="h-4 w-4" />
         </span>
@@ -206,7 +206,7 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
         </p>
       </div>
       <p className="mt-4 max-w-lg text-sm leading-6 text-[var(--muted)]">
-        Currently highlighting <strong className="text-white">{PIPELINE_STAGES[active].name}</strong> — {PIPELINE_STAGES[active].detail.toLowerCase()}
+        Currently highlighting <strong className="text-[var(--text)]">{PIPELINE_STAGES[active].name}</strong> — {PIPELINE_STAGES[active].detail.toLowerCase()}
       </p>
     </div>
   );
@@ -246,7 +246,7 @@ function DecisionGateVisual({ isActive, paused, reducedMotion }: ChapterVisualPr
         Illustrative synthetic scenario — for demonstration only, not real project data
       </p>
       <div className="relative mt-10 h-16">
-        <div className="absolute left-0 right-0 top-1/2 h-px bg-white/[.14]" />
+        <div className="absolute left-0 right-0 top-1/2 h-px bg-[var(--border-strong)]" />
         <div className="absolute top-0 h-full w-px" style={{ left: `${DECISION_THRESHOLD * 100}%`, background: "var(--accent-gold)" }} />
         <span
           className="absolute top-full mt-1 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] uppercase tracking-[.06em]"
@@ -272,7 +272,7 @@ function DecisionGateVisual({ isActive, paused, reducedMotion }: ChapterVisualPr
       <div className="mt-10 grid gap-6 sm:grid-cols-[minmax(10rem,.7fr)_minmax(14rem,1.3fr)]">
         <div>
           <p className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">Production champion</p>
-          <p className="mt-2 text-lg font-semibold text-white">Logistic Regression v1</p>
+          <p className="mt-2 text-lg font-semibold text-[var(--text)]">Logistic Regression v1</p>
           <p className="mt-1 font-mono text-[10px] uppercase tracking-[.06em] text-[var(--faint)]">0.20 frozen operational threshold</p>
         </div>
         <ul className="m-0 list-none border-t border-[var(--border)] p-0">
@@ -316,7 +316,7 @@ function BenchmarkVisual({ isActive, reducedMotion }: ChapterVisualProps) {
           <li key={model.name} className="grid grid-cols-[2rem_minmax(9rem,12rem)_1fr_4rem] items-center gap-3 border-t border-[var(--border)] py-3">
             <span className="font-mono text-[10px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
             <span className="text-sm text-[var(--muted)]">{model.name}</span>
-            <span className="h-2 overflow-hidden rounded-full bg-white/[.06]" aria-hidden="true">
+            <span className="h-2 overflow-hidden rounded-full bg-[var(--border)]" aria-hidden="true">
               <motion.span
                 className="block h-full rounded-full"
                 style={{ background: index === 0 ? "var(--gradient-accent)" : "var(--accent)", transformOrigin: "left" }}
@@ -325,7 +325,7 @@ function BenchmarkVisual({ isActive, reducedMotion }: ChapterVisualProps) {
                 transition={reducedMotion ? { duration: 0 } : { duration: 0.9, delay: index * 0.06, ease: "easeOut" }}
               />
             </span>
-            <strong className="text-right font-mono text-xs text-white">{model.auc.toFixed(4)}</strong>
+            <strong className="text-right font-mono text-xs text-[var(--text)]">{model.auc.toFixed(4)}</strong>
           </li>
         ))}
       </ol>

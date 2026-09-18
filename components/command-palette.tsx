@@ -117,7 +117,7 @@ export function CommandPalette() {
             onClick={(event) => event.stopPropagation()}
             onKeyDown={onListKeyDown}
           >
-            <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
+            <div className="flex items-center gap-3 border-b border-[var(--border)] px-5 py-4">
               <Search className="h-4 w-4 shrink-0 text-[var(--accent)]" />
               <input
                 ref={inputRef}
@@ -125,7 +125,7 @@ export function CommandPalette() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Jump to a section or run a command…"
                 aria-label="Search commands"
-                className="min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-[var(--faint)]"
+                className="min-w-0 flex-1 bg-transparent text-[15px] text-[var(--text)] outline-none placeholder:text-[var(--faint)]"
               />
               <kbd className="font-mono text-[10px] tracking-[.1em] text-[var(--faint)]">ESC</kbd>
             </div>
@@ -145,7 +145,7 @@ export function CommandPalette() {
                           key={command.id}
                           onMouseEnter={() => setSelected(index)}
                           onClick={() => activate(command)}
-                          className={`flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-left text-sm transition-colors ${isSelected ? "bg-[var(--accent-soft)] text-white" : "text-[var(--muted)]"}`}
+                          className={`flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-left text-sm transition-colors ${isSelected ? "bg-[var(--accent-soft)] text-[var(--text)]" : "text-[var(--muted)]"}`}
                         >
                           <span>{command.label}</span>
                           <span className="ml-auto font-mono text-[10px] text-[var(--faint)]">{command.hint}</span>
@@ -158,7 +158,7 @@ export function CommandPalette() {
               {!filtered.length && <p className="px-3 py-6 text-center text-sm text-[var(--faint)]">No matches.</p>}
             </div>
 
-            <div className="flex items-center gap-5 border-t border-white/10 px-5 py-3 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--faint)]">
+            <div className="flex items-center gap-5 border-t border-[var(--border)] px-5 py-3 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--faint)]">
               <span>↑↓ navigate</span>
               <span>↵ select</span>
               <span className="ml-auto">⌘K toggle</span>

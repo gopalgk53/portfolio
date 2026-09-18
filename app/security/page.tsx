@@ -58,7 +58,7 @@ export default function SecurityPage() {
       <section className="mx-auto mt-16 max-w-3xl space-y-6 border-t border-[var(--border)] px-5 pb-32 pt-12 sm:px-10">
         {sections.map((section) => (
           <article key={section.title} className="glass-panel p-5 sm:p-6">
-            <h2 className="text-base font-semibold text-white">{section.title}</h2>
+            <h2 className="text-base font-semibold text-[var(--text)]">{section.title}</h2>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{section.body}</p>
           </article>
         ))}

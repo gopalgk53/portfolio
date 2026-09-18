@@ -16,7 +16,7 @@ export function ScrollProgress() {
   if (reduced) return null;
 
   return (
-    <div aria-hidden="true" className="no-print fixed left-0 top-0 z-[250] h-[3px] w-full bg-white/[.06]">
+    <div aria-hidden="true" className="no-print fixed left-0 top-0 z-[250] h-[3px] w-full bg-[var(--border)]">
       <motion.div className="h-full w-full" style={{ scaleX: smoothed, transformOrigin: "0% 50%", background: "var(--gradient-accent)" }} />
     </div>
   );

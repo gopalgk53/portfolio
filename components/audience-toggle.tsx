@@ -26,10 +26,10 @@ export function AudienceHighlight() {
   }
 
   return (
-    <div className="mt-10 rounded-[var(--radius-md)] border border-white/[.12] bg-white/[.02] p-5 sm:p-6">
+    <div className="surface-card mt-10 p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-mono text-[9px] uppercase tracking-[.14em] text-[var(--faint)]">Viewing as</p>
-        <div role="tablist" aria-label="Audience" className="flex gap-1 rounded-[var(--radius-pill)] border border-white/[.1] p-1">
+        <div role="tablist" aria-label="Audience" className="flex gap-1 rounded-[var(--radius-pill)] border border-[var(--border)] p-1">
           {(["recruiter", "engineer"] as const).map((a) => (
             <button
               key={a}

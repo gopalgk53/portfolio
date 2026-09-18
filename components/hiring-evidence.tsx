@@ -11,7 +11,7 @@ function EvidenceCard({ n, title, copy }: { n: string; title: string; copy: stri
   return (
     <div ref={glowRef} className="glass-panel glow-card p-6">
       <span className="font-mono text-xs text-[var(--faint)]">{n}</span>
-      <h3 className="mt-5 text-xl font-semibold text-white">{title}</h3>
+      <h3 className="mt-5 text-xl font-semibold text-[var(--text)]">{title}</h3>
       <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{copy}</p>
     </div>
   );
@@ -19,7 +19,7 @@ function EvidenceCard({ n, title, copy }: { n: string; title: string; copy: stri
 
 export function HiringEvidence() {
   return (
-    <section className="relative z-10 border-t border-white/[.1] px-5 py-24 sm:px-8">
+    <section className="relative z-10 border-t border-[var(--border)] px-5 py-24 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <p className="eyebrow">What I bring</p>
         <h2 className="mt-3 max-w-3xl text-4xl font-semibold tracking-[-.03em] sm:text-6xl">Technical work grounded in domain experience.</h2>

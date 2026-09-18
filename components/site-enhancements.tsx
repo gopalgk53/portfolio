@@ -79,12 +79,12 @@ export function SiteEnhancements() {
     {open && <div id="effects-intensity-menu" role="menu" aria-label="3D intensity" className="card-elevated mb-2 w-40 bg-[var(--bg)] p-1.5">
       {modes.map(item => {
         const Icon = item.icon;
-        return <button key={item.id} role="menuitemradio" aria-checked={mode === item.id} onClick={() => choose(item.id)} className={`flex w-full items-center gap-2 rounded-[var(--radius-sm)] px-3 py-2 text-left font-mono text-[10px] transition ${mode === item.id ? "bg-white/[.08] text-white" : "text-[var(--muted)] hover:bg-white/[.04] hover:text-white"}`}>
+        return <button key={item.id} role="menuitemradio" aria-checked={mode === item.id} onClick={() => choose(item.id)} className={`flex w-full items-center gap-2 rounded-[var(--radius-sm)] px-3 py-2 text-left font-mono text-[10px] transition ${mode === item.id ? "bg-[var(--accent-soft)] text-[var(--text)]" : "text-[var(--muted)] hover:bg-[var(--border)] hover:text-[var(--text)]"}`}>
           <Icon className="h-3.5 w-3.5"/><span>{item.label}</span>{mode === item.id && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[var(--accent)]"/>}
         </button>;
       })}
     </div>}
-    <button ref={triggerRef} onClick={() => setOpen(value => !value)} aria-controls="effects-intensity-menu" aria-expanded={open} aria-haspopup="menu" className="flex h-11 items-center gap-2 rounded-full border border-white/[.14] bg-[var(--bg)] px-4 font-mono text-[9px] text-[var(--muted)]">
+    <button ref={triggerRef} onClick={() => setOpen(value => !value)} aria-controls="effects-intensity-menu" aria-expanded={open} aria-haspopup="menu" className="surface-card flex h-11 items-center gap-2 rounded-full px-4 font-mono text-[9px] text-[var(--muted)]">
       <ActiveIcon className="h-4 w-4 text-[var(--accent)]"/><span className="hidden sm:inline">3D: {active.label.toUpperCase()}</span><span className="sr-only">Choose 3D animation intensity. Current setting: {active.label}</span>
     </button>
     <span className="sr-only" aria-live="polite">3D animation intensity set to {active.label}</span>

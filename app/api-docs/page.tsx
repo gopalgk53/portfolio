@@ -63,10 +63,10 @@ export default function ApiDocsPage() {
               <span className="rounded-full border border-[var(--accent)]/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--accent)]">
                 {endpoint.method}
               </span>
-              <code className="font-mono text-sm text-white">{endpoint.path}</code>
+              <code className="font-mono text-sm text-[var(--text)]">{endpoint.path}</code>
             </div>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{endpoint.description}</p>
-            <pre className="mt-4 overflow-x-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-black/40 p-4 font-mono text-[11px] leading-6 text-[var(--muted)]">
+            <pre className="mt-4 overflow-x-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] p-4 font-mono text-[11px] leading-6 text-[var(--muted)]">
               {endpoint.example}
             </pre>
           </article>

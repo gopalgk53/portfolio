@@ -135,11 +135,11 @@ export function SiteSearch() {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ ...spring, delay: index * 0.04 }}
-                  className="glow-card flex items-center justify-between gap-4 rounded-[var(--radius-sm)] border border-white/[.1] px-4 py-3 text-sm"
+                  className="glow-card flex items-center justify-between gap-4 rounded-[var(--radius-sm)] border border-[var(--border)] px-4 py-3 text-sm"
                 >
                   <span>
                     <span className="mr-2 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--accent)]">{TYPE_LABEL[result.type]}</span>
-                    <span className="font-medium text-white">{display.title}</span>
+                    <span className="font-medium text-[var(--text)]">{display.title}</span>
                     <span className="ml-2 text-[var(--muted)]">{display.subtitle}</span>
                   </span>
                   <ArrowUpRight className="h-4 w-4 shrink-0 text-[var(--accent)]" />

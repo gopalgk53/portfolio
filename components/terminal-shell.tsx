@@ -161,8 +161,8 @@ export function TerminalShell() {
   }
 
   return (
-    <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col bg-black text-[#c7f7c7]" onClick={() => inputRef.current?.focus()}>
-      <header className="flex items-center justify-between border-b border-white/10 px-5 py-3 font-mono text-[10px] uppercase tracking-[.12em] text-[var(--faint)]">
+    <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col bg-[var(--bg)] text-[var(--text)]" onClick={() => inputRef.current?.focus()}>
+      <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3 font-mono text-[10px] uppercase tracking-[.12em] text-[var(--faint)]">
         <Link href="/" className="text-[var(--muted)] hover:text-[var(--accent)]">
           ← back to gopalakrishnagenai.in
         </Link>
@@ -170,13 +170,13 @@ export function TerminalShell() {
       </header>
       <div ref={feedRef} className="flex-1 overflow-y-auto px-5 py-6 font-mono text-[13px] leading-6">
         {lines.map((line, index) => (
-          <div key={index} className={`whitespace-pre-wrap ${line.type === "input" ? "text-white" : line.type === "error" ? "text-[#e08787]" : "text-[#8fdc8f]"}`}>
+          <div key={index} className={`whitespace-pre-wrap ${line.type === "input" ? "text-[var(--accent)]" : line.type === "error" ? "text-[#c0392b]" : "text-[var(--muted)]"}`}>
             {line.type === "input" ? `$ ${line.text}` : line.text}
           </div>
         ))}
       </div>
-      <form onSubmit={submit} className="flex items-center gap-2 border-t border-white/10 px-5 py-4 font-mono text-[13px]">
-        <span className="text-white">$</span>
+      <form onSubmit={submit} className="flex items-center gap-2 border-t border-[var(--border)] px-5 py-4 font-mono text-[13px]">
+        <span className="text-[var(--accent)]">$</span>
         <input
           ref={inputRef}
           value={input}
@@ -185,7 +185,7 @@ export function TerminalShell() {
           aria-label="Terminal command input"
           autoComplete="off"
           spellCheck={false}
-          className="min-w-0 flex-1 bg-transparent text-[#c7f7c7] outline-none placeholder:text-[var(--faint)]"
+          className="min-w-0 flex-1 bg-transparent text-[var(--text)] outline-none placeholder:text-[var(--faint)]"
           placeholder="type a command…"
         />
       </form>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ProjectsIndex() {
   return (
-    <main id="main-content" tabIndex={-1} className="case-archive min-h-screen bg-[#050505] text-white">
+    <main id="main-content" tabIndex={-1} className="case-archive min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <nav className="case-nav" aria-label="Case study navigation">
         <Link href="/">GK / AI systems</Link>
         <span>Archive · 09 systems</span>
