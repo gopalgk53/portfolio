@@ -84,14 +84,14 @@ export function Hero() {
           </div>
           <div className="flex items-center gap-3 md:hidden">
             <SoundToggle className="text-[var(--muted)]" />
-            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center rounded-full border border-white/15">
+            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center rounded-full border border-[var(--border-strong)]">
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
         </div>
         <AnimatePresence>{menuOpen && (
-          <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-white/10 bg-[var(--bg)] px-5 py-5 md:hidden">
-            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-white/10 py-4 text-sm uppercase tracking-wider ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
+          <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-[var(--border)] bg-[var(--bg)] px-5 py-5 md:hidden">
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-[var(--border)] py-4 text-sm uppercase tracking-wider ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
           </motion.div>
         )}</AnimatePresence>

@@ -21,15 +21,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "dark",
-  themeColor: "#050505",
+  colorScheme: "light",
+  themeColor: "#f8fafc",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head><JsonLd /></head>
-      <body className="bg-[#050505] text-white antialiased font-sans">
+      <body className="bg-[var(--bg)] text-[var(--text)] antialiased font-sans">
         <a href="#main-content" className="skip-link">Skip to main content</a>
         {children}<ScrollProgress/><PageTransition/><Analytics/><SpeedInsights/>
       </body>

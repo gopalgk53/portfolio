@@ -5,6 +5,7 @@ import { projects } from "../../../lib/data";
 import { PrintButton } from "../../../components/print-button";
 import { PaymentRiskBenchmark } from "../../../components/payment-risk-benchmark";
 import { PaymentRiskStory } from "../../../components/payment-risk-story";
+import { MultiAgentShowcase } from "../../../components/multi-agent-showcase";
 
 export const dynamicParams = false;
 export function generateStaticParams() { return projects.map((project) => ({ slug: project.id })); }
@@ -24,9 +25,22 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   const nodes = project.flow.split(" → ");
   const nextProject = projects[(projectIndex + 1) % projects.length];
   const isPaymentRisk = project.id === "payment-risk";
+  const isMultiAgent = project.id === "multi-agent";
+
+  if (isMultiAgent) {
+    return (
+      <MultiAgentShowcase
+        goal={project.goal}
+        projectIndex={projectIndex}
+        totalProjects={projects.length}
+        nextProjectId={nextProject.id}
+        nextProjectTitle={nextProject.title}
+      />
+    );
+  }
 
   return (
-    <main id="main-content" tabIndex={-1} className="case-study min-h-screen bg-[#050505] text-white">
+    <main id="main-content" tabIndex={-1} className="case-study min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <nav className="case-nav" aria-label="Case study navigation"><Link href="/projects">← Architecture archive</Link><span>Case {String(projectIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></nav>
       <article>
         <header className="case-study-hero">

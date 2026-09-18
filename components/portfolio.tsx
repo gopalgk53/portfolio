@@ -85,7 +85,7 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
       id={id}
       data-scene={scene}
       style={reducedMotion ? undefined : { scale, y, opacity }}
-      className="chapter relative z-10 scroll-mt-20 border-t border-white/[.1] px-5 py-28 sm:px-8 sm:py-44"
+      className="chapter relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-28 sm:px-8 sm:py-44"
     >
       <div className="mx-auto max-w-[1600px]">
         <header className="typography-shield mb-16 grid gap-7 lg:grid-cols-[10rem_1fr_.65fr] lg:items-start">
@@ -111,20 +111,20 @@ function About() {
           <div className="card-elevated aspect-[4/5] overflow-hidden bg-[var(--surface)]">
             <img src="/gopalakrishna.jpg" alt="Gopalakrishna, Generative AI Engineer" loading="lazy" className="h-full w-full object-cover" />
           </div>
-          <div className="mt-4 flex justify-between border-t border-white/[.14] pt-3 text-xs">
+          <div className="mt-4 flex justify-between border-t border-[var(--border-strong)] pt-3 text-xs">
             <span>Gopalakrishna</span>
             <span className="text-[var(--muted)]">India · Available</span>
           </div>
         </motion.div>
         <div>
-          <p className="quote-panel max-w-3xl text-[clamp(1.45rem,2.7vw,2.55rem)] leading-[1.35] tracking-[-.03em] text-white">
+          <p className="quote-panel max-w-3xl text-[clamp(1.45rem,2.7vw,2.55rem)] leading-[1.35] tracking-[-.03em] text-[var(--text)]">
             I focus on prompt engineering, advanced RAG topologies, autonomous multi-agent workflows, and the evaluation systems required to make
             them reliable — spanning Data Science, Generative AI, LLM applications, Machine Learning, and AWS.
           </p>
           <AudienceHighlight />
-          <div className="mt-14 grid border-y border-white/[.14] sm:grid-cols-3">
+          <div className="mt-14 grid border-y border-[var(--border-strong)] sm:grid-cols-3">
             {[["7+", "Years domain experience"], [String(projects.length), "Blueprint systems"], [String(certifications.length), "Credentials retained"]].map(([n, l]) => (
-              <div key={l} className="border-b border-white/[.12] py-6 sm:border-b-0 sm:border-r sm:px-6 first:pl-0 last:border-r-0">
+              <div key={l} className="border-b border-[var(--border)] py-6 sm:border-b-0 sm:border-r sm:px-6 first:pl-0 last:border-r-0">
                 <b className="text-4xl font-medium tracking-[-.03em]">{n}</b>
                 <p className="mt-2 text-xs text-[var(--faint)]">{l}</p>
               </div>
@@ -132,7 +132,7 @@ function About() {
           </div>
           <p className="mb-2 mt-12 font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)]">Current focus</p>
           {["Evaluation-led RAG", "Stateful agent orchestration", "Low-latency model serving"].map((x) => (
-            <motion.div key={x} whileHover={{ x: 5 }} transition={spring} className="flex items-center gap-3 border-b border-white/[.12] py-5">
+            <motion.div key={x} whileHover={{ x: 5 }} transition={spring} className="flex items-center gap-3 border-b border-[var(--border)] py-5">
               <CheckCircle2 className="h-4 w-4 text-[var(--accent)]" />
               {x}
             </motion.div>
@@ -189,9 +189,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <p className="font-mono text-[9px] uppercase tracking-[.18em]" style={{ color: categoryColor(project.category) }}>{project.category}</p>
       <h3 className="mt-5 max-w-2xl text-[clamp(1.8rem,4vw,4.5rem)] font-medium leading-[.98] tracking-[-.045em]">{project.title}</h3>
       <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.impact}</p>
-      <div className="mt-7 flex gap-6 border-b border-white/[.12] md:hidden">
+      <div className="mt-7 flex gap-6 border-b border-[var(--border)] md:hidden">
         {(["overview", "architecture"] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)} className={`relative pb-3 text-xs capitalize ${tab === t ? "text-white" : "text-[var(--faint)]"}`}>
+          <button key={t} onClick={() => setTab(t)} className={`relative pb-3 text-xs capitalize ${tab === t ? "text-[var(--text)]" : "text-[var(--faint)]"}`}>
             {tab === t && <motion.span layoutId={`tab-${project.id}`} transition={spring} className="absolute inset-x-0 bottom-[-1px] h-px bg-[var(--accent)]" />}
             {t}
           </button>
@@ -226,9 +226,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </span>
         ))}
       </div></div>
-      <div className="relative z-10 flex flex-col justify-between border-l border-white/10 pl-6">
+      <div className="relative z-10 flex flex-col justify-between border-l border-[var(--border)] pl-6">
         <div><p className="font-mono text-[9px] uppercase tracking-[.18em] text-[var(--faint)]">System flow</p><p className="mt-4 text-sm leading-7 text-[var(--muted)]">{project.flow}</p></div>
-        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-white/[.12] pt-5 text-xs">
+        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-[var(--border)] pt-5 text-xs">
           <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
             Read case study <ArrowUpRight className="h-3 w-3" />
           </a>
@@ -255,11 +255,11 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
   const numberOpacity = useTransform(scrollYProgress, [0, 1], [0, 0.16]);
 
   return (
-    <div ref={ref} data-scene={scene} className="flagship-chapter relative min-h-[130svh] border-t border-white/[.14] py-20 sm:py-28">
+    <div ref={ref} data-scene={scene} className="flagship-chapter relative min-h-[130svh] border-t border-[var(--border-strong)] py-20 sm:py-28">
       <motion.span
         aria-hidden="true"
         style={reducedMotion ? { opacity: 0.16 } : { x: numberX, opacity: numberOpacity }}
-        className="pointer-events-none absolute -top-4 right-0 text-[clamp(6rem,16vw,13rem)] font-semibold leading-none tracking-[-.04em] text-white"
+        className="pointer-events-none absolute -top-4 right-0 text-[clamp(6rem,16vw,13rem)] font-semibold leading-none tracking-[-.04em] text-[var(--text)]"
       >
         {String(index + 1).padStart(2, "0")}
       </motion.span>
@@ -268,7 +268,7 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
       <p className="eyebrow relative">Flagship system · Case {String(index + 1).padStart(2, "0")}</p>
       <h3 className="relative mt-5 max-w-5xl text-[clamp(3rem,7vw,8rem)] font-medium leading-[.9] tracking-[-.055em]">{project.title}</h3>
 
-      <div className="relative mt-10 grid gap-8 border-y border-white/[.12] py-8 sm:grid-cols-3">
+      <div className="relative mt-10 grid gap-8 border-y border-[var(--border)] py-8 sm:grid-cols-3">
         <div>
           <p className="font-mono text-[9px] uppercase tracking-[.16em] text-[var(--faint)]">Problem</p>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.goal}</p>
@@ -310,7 +310,7 @@ function Projects() {
 
   return (
     <Section id="projects" scene="retrieval">
-      <div className="mb-10 grid border-y border-white/[.1] py-4 text-xs text-[var(--muted)] sm:grid-cols-3">
+      <div className="mb-10 grid border-y border-[var(--border)] py-4 text-xs text-[var(--muted)] sm:grid-cols-3">
         <span>TTFT target · &lt;150ms</span>
         <span>Orchestration · LangGraph</span>
         <span>Vector stores · Qdrant / FAISS</span>
@@ -326,7 +326,7 @@ function Projects() {
           <ProjectCard key={p.id} project={p} index={projects.indexOf(p)} />
         ))}
       </div>
-      <div className="mt-16 flex justify-end border-t border-white/[.14] pt-8">
+      <div className="mt-16 flex justify-end border-t border-[var(--border-strong)] pt-8">
         <a href="/projects" className="group flex items-center gap-4 text-sm text-[var(--muted)]">
           Explore all nine case studies
           <ArrowUpRight className="h-4 w-4 text-[var(--accent)] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
@@ -348,7 +348,7 @@ function SkillCard({ group, items, index }: { group: string; items: string[]; in
       className="glass-panel glow-card grid gap-5 p-7 md:grid-cols-[2rem_17rem_1fr] md:items-center"
     >
       <span className="font-mono text-[10px]" style={{ color: group === "Orchestration & Agents" ? "var(--accent-2)" : "var(--faint)" }}>{String(index + 1).padStart(2, "0")}</span>
-      <h3 className="font-medium text-white">{group}</h3>
+      <h3 className="font-medium text-[var(--text)]">{group}</h3>
       <div className="flex flex-wrap gap-x-5 gap-y-2">
         {items.map((x) => (
           <motion.span key={x} whileHover={{ x: 3 }} transition={spring} className="font-mono text-[10px] text-[var(--muted)]">
@@ -405,9 +405,9 @@ function Experience() {
   ];
   return (
     <Section id="experience" scene="identity">
-      <div className="border-t border-white/[.14]">
+      <div className="border-t border-[var(--border-strong)]">
         {rows.map(([period, title, copy]) => (
-          <div key={period} className="grid gap-3 border-b border-white/[.14] py-8 sm:grid-cols-[12rem_1fr]">
+          <div key={period} className="grid gap-3 border-b border-[var(--border-strong)] py-8 sm:grid-cols-[12rem_1fr]">
             <span className="text-xs text-[var(--faint)]">{period}</span>
             <div>
               <h3 className="text-xl font-medium">{title}</h3>
@@ -425,7 +425,7 @@ function Certifications() {
   const visible = all ? certifications : certifications.slice(0, 6);
   return (
     <Section id="certifications" scene="identity">
-      <div className="border-t border-white/[.14]">
+      <div className="border-t border-[var(--border-strong)]">
         {visible.map(([name, meta, url], index) => {
           const unavailable = url.includes("leapsdata.analyttica.com");
           const content = <>
@@ -438,9 +438,9 @@ function Certifications() {
           </>;
           const reveal = { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: staggerChild(index % 6) };
           return unavailable ? (
-            <motion.div key={name} {...reveal} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.div>
+            <motion.div key={name} {...reveal} className="grid items-center gap-3 border-b border-[var(--border-strong)] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.div>
           ) : (
-            <motion.a key={name} href={url} target="_blank" rel="noreferrer" {...reveal} whileHover={{ x: 5, transition: spring }} className="grid items-center gap-3 border-b border-white/[.14] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.a>
+            <motion.a key={name} href={url} target="_blank" rel="noreferrer" {...reveal} whileHover={{ x: 5, transition: spring }} className="grid items-center gap-3 border-b border-[var(--border-strong)] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.a>
           );
         })}
       </div>
@@ -485,7 +485,7 @@ function Contact() {
     <Section id="contact" scene="close">
       <div className="grid gap-5 lg:grid-cols-[.8fr_1.2fr]">
         <div className="glass-panel p-7 sm:p-10">
-          <p className="max-w-sm text-lg leading-8 text-white">Open to thoughtful conversations about GenAI engineering, AI architecture, and applied research.</p>
+          <p className="max-w-sm text-lg leading-8 text-[var(--text)]">Open to thoughtful conversations about GenAI engineering, AI architecture, and applied research.</p>
           <div className="mt-12">
             {[
               ["GitHub", "https://github.com/gopalgk53", Github],
@@ -496,7 +496,7 @@ function Contact() {
               const badgeColor = contactIndex % 2 === 0 ? "var(--accent)" : "var(--accent-2)";
               return (
                 <Magnetic key={label as string} className="block w-full">
-                  <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} rel={String(url).startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between border-b border-white/[.12] py-4 text-sm text-[var(--muted)]">
+                  <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} rel={String(url).startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between border-b border-[var(--border)] py-4 text-sm text-[var(--muted)]">
                     <span className="flex flex-wrap items-center gap-2 break-all">
                       <span className="icon-badge grid h-7 w-7 shrink-0 place-items-center rounded-[var(--radius-sm)]">
                         <IconComp className="h-3.5 w-3.5" style={{ color: badgeColor }} />
@@ -564,7 +564,7 @@ export function Portfolio() {
       <Certifications />
       <HiringEvidence />
       <Contact />
-      <footer className="relative z-10 border-t border-white/[.1] px-5 py-10 sm:px-8">
+      <footer className="relative z-10 border-t border-[var(--border)] px-5 py-10 sm:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-xs text-[var(--faint)] sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Gopalakrishna · Generative AI Engineer</p>
           <nav aria-label="Site meta links" className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-[.08em]">
