@@ -37,7 +37,7 @@ const endpoints = [
 
 export default function ApiDocsPage() {
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/85 text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/75 text-[var(--text)]">
       <nav className="case-nav" aria-label="API documentation navigation">
         <Link href="/">GK / AI systems</Link>
         <span>API · {endpoints.length} endpoints</span>

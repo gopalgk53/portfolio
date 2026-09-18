@@ -104,7 +104,7 @@ p{text-wrap:pretty}
 .surface-card{background:rgba(255,255,255,.4);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 20px 45px -22px rgba(37,99,235,.16);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
 .surface-card:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.28);box-shadow:0 1px 2px rgba(15,23,42,.05),0 30px 60px -22px rgba(37,99,235,.26)}
 @media(prefers-reduced-motion:reduce){.surface-card{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
-.premium-wash{background:radial-gradient(circle at 12% 15%,rgba(37,99,235,.06),transparent 35%),radial-gradient(circle at 88% 55%,rgba(37,99,235,.05),transparent 40%),radial-gradient(circle at 45% 92%,rgba(37,99,235,.045),transparent 35%),rgba(248,250,252,.82)}
+.premium-wash{background:radial-gradient(circle at 12% 15%,rgba(37,99,235,.06),transparent 35%),radial-gradient(circle at 88% 55%,rgba(37,99,235,.05),transparent 40%),radial-gradient(circle at 45% 92%,rgba(37,99,235,.045),transparent 35%),rgba(248,250,252,.7)}
 /* Number, thin colored rule, label — the same editorial treatment the
    site's own About stats already use (a plain <b>/<p> pair with a
    divider), not a circular icon-chip above a number. That icon+number
@@ -177,8 +177,8 @@ p{text-wrap:pretty}
    every section. Kept opaque enough that text contrast is unaffected —
    an overlay this light only dims the ambient dots slightly, it does
    not require boosting their own opacity to compensate. */
-.chapter{background:rgba(255,255,255,.82)}
-.manifesto{background:rgba(255,255,255,.82)}
+.chapter{background:rgba(255,255,255,.7)}
+.manifesto{background:rgba(255,255,255,.7)}
 .manifesto::before{content:"";position:absolute;left:55%;top:50%;width:60vw;height:60vw;border:1px solid rgba(37,99,235,.14);transform:translate(-50%,-50%) rotate(25deg);pointer-events:none}
 
 /* ProjectShowcase's cinematic per-project reel — kept intentionally dark
@@ -196,7 +196,7 @@ p{text-wrap:pretty}
 .showcase-orbit{position:absolute;right:7%;top:50%;width:min(31vw,29rem);aspect-ratio:1;transform:translateY(-50%)}.showcase-orbit span{position:absolute;inset:0;border:1px solid color-mix(in srgb,var(--showcase-accent) 30%,transparent);border-radius:50%;animation:showcase-orbit 12s linear infinite}.showcase-orbit span:nth-child(2){inset:12%;animation-direction:reverse;animation-duration:9s}.showcase-orbit span:nth-child(3){inset:25%;animation-duration:6s}@keyframes showcase-orbit{to{transform:rotate(360deg)}}
 .showcase-timeline{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));margin-top:1.5rem}.showcase-timeline button{min-width:0;padding:.7rem .45rem;border:0;border-top:1px solid var(--navy-border);background:none;text-align:left;color:var(--navy-muted)}.showcase-timeline button span{display:block;font:9px "JetBrains Mono",monospace}.showcase-timeline button i{display:block;margin-top:.5rem;overflow:hidden;text-overflow:ellipsis;font-style:normal;font-size:9px;white-space:nowrap}.showcase-timeline button[aria-current="step"]{border-color:var(--showcase-accent);color:var(--showcase-accent)}.showcase-progress{height:2px;margin-top:1rem;background:var(--navy-border)}.showcase-progress span{display:block;height:100%;width:0;background:var(--showcase-accent)}.showcase-progress span.is-playing{animation:showcase-progress 4.5s linear forwards}@keyframes showcase-progress{to{width:100%}}.showcase-boundary{margin-top:1rem;font:9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-muted)}
 .model-lab{color:var(--text);background:var(--bg)}
-.model-lab .chapter{background:rgba(248,250,252,.82)}
+.model-lab .chapter{background:rgba(248,250,252,.7)}
 .model-lab .eyebrow,.model-lab p{color:var(--muted)}
 .model-lab h2,.model-lab h3,.model-lab label{color:var(--text)}
 .model-lab input,.model-lab textarea,.model-lab select{color:var(--text);background:var(--surface);border-color:var(--border)}

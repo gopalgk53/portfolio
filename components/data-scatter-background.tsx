@@ -32,13 +32,13 @@ export function DataScatterBackground() {
     let points: Point[] = [];
 
     function seed() {
-      const count = Math.max(24, Math.min(60, Math.round((width * height) / 32000)));
+      const count = Math.max(34, Math.min(84, Math.round((width * height) / 22000)));
       points = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.12,
         vy: (Math.random() - 0.5) * 0.12,
-        r: Math.random() < 0.15 ? 3 : 1.6,
+        r: Math.random() < 0.2 ? 5 : 3,
       }));
     }
 
@@ -62,7 +62,7 @@ export function DataScatterBackground() {
       for (const p of points) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT},.45)`;
+        ctx.fillStyle = `rgba(${ACCENT},.9)`;
         ctx.fill();
       }
     }
@@ -94,18 +94,21 @@ export function DataScatterBackground() {
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(${ACCENT},${0.16 * (1 - dist / LINK_DISTANCE)})`;
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(${ACCENT},${0.5 * (1 - dist / LINK_DISTANCE)})`;
+            ctx.lineWidth = 2.2;
             ctx.stroke();
           }
         }
       }
+      ctx.shadowColor = `rgba(${ACCENT},.55)`;
+      ctx.shadowBlur = 12;
       for (const p of points) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT},.5)`;
+        ctx.fillStyle = `rgba(${ACCENT},.95)`;
         ctx.fill();
       }
+      ctx.shadowBlur = 0;
       frameId = requestAnimationFrame(tick);
     }
     tick();
