@@ -41,7 +41,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   }
 
   return (
-    <main id="main-content" tabIndex={-1} className="case-study min-h-screen bg-[var(--bg)]/70 text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="case-study min-h-screen bg-[var(--bg)]/80 text-[var(--text)]">
       <nav className="case-nav" aria-label="Case study navigation"><Link href="/projects">← Architecture archive</Link><span>Case {String(projectIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></nav>
       <article>
         <header className="case-study-hero">
