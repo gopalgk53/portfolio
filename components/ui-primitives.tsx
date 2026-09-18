@@ -1,29 +1,11 @@
 import { ChevronRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
-export type ChipColor = "blue" | "green" | "amber" | "purple" | "red";
-
-const CHIP_VAR: Record<ChipColor, string> = {
-  blue: "var(--chip-blue)",
-  green: "var(--chip-green)",
-  amber: "var(--chip-amber)",
-  purple: "var(--chip-purple)",
-  red: "var(--chip-red)",
-};
-
-function chipStyle(color: ChipColor): CSSProperties {
-  return { "--chip-color": CHIP_VAR[color] } as CSSProperties;
-}
-
-function statStyle(color?: ChipColor): CSSProperties {
-  return color ? ({ "--stat-color": CHIP_VAR[color] } as CSSProperties) : {};
-}
-
-export function IconBadge({ icon: Icon, color = "blue" }: { icon: LucideIcon; color?: ChipColor }) {
+export function IconBadge({ icon: Icon }: { icon: LucideIcon }) {
   return (
-    <span className="icon-badge-chip" style={chipStyle(color)}>
-      <Icon aria-hidden="true" />
+    <span className="icon-badge grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] text-[var(--accent)]">
+      <Icon className="h-4 w-4" aria-hidden="true" />
     </span>
   );
 }
@@ -32,9 +14,9 @@ export function SurfaceCard({ className = "", children }: { className?: string; 
   return <div className={`surface-card ${className}`}>{children}</div>;
 }
 
-export function StatTile({ color, value, label }: { color?: ChipColor; value: string; label: string }) {
+export function StatTile({ value, label }: { value: string; label: string }) {
   return (
-    <div className="stat-tile" style={statStyle(color)}>
+    <div className="stat-tile">
       <strong>{value}</strong>
       <span>{label}</span>
     </div>
@@ -48,19 +30,17 @@ export function PillTag({ children, status }: { children: ReactNode; status?: "g
 
 export function FlowColumn({
   icon: Icon,
-  color = "blue",
   title,
   rows,
 }: {
   icon: LucideIcon;
-  color?: ChipColor;
   title: string;
   rows: { icon: LucideIcon; label: string; sublabel: string }[];
 }) {
   return (
     <SurfaceCard className="flow-column p-5">
       <div className="flow-column-head">
-        <IconBadge icon={Icon} color={color} />
+        <IconBadge icon={Icon} />
         <strong>{title}</strong>
       </div>
       {rows.map((row) => (
@@ -91,7 +71,6 @@ export function DocLinkRow({ icon: Icon, title, sublabel, href }: { icon: Lucide
 
 export function ScenarioCard({
   index,
-  color,
   title,
   id,
   steps,
@@ -99,7 +78,6 @@ export function ScenarioCard({
   corrections,
 }: {
   index: number;
-  color: ChipColor;
   title: string;
   id: string;
   steps: string[];
@@ -108,10 +86,8 @@ export function ScenarioCard({
 }) {
   return (
     <SurfaceCard className="scenario-card p-6">
-      <span className="scenario-badge" style={chipStyle(color)}>
-        {String(index).padStart(2, "0")}
-      </span>
-      <strong style={{ color: CHIP_VAR[color], fontSize: "1.05rem", fontWeight: 600 }}>{title}</strong>
+      <span className="scenario-badge">{String(index).padStart(2, "0")}</span>
+      <strong style={{ fontSize: "1.05rem", fontWeight: 600, color: "var(--text)" }}>{title}</strong>
       <span className="scenario-id">{id}</span>
       <p className="scenario-steps">
         {steps.map((step, i) => (

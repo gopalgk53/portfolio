@@ -18,32 +18,30 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import type { ChipColor } from "./ui-primitives";
 import { DocLinkRow, FlowColumn, IconBadge, PillTag, ScenarioCard, StatTile, SurfaceCard } from "./ui-primitives";
 
 const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite";
 
-const STATS: { color: ChipColor; value: string; label: string }[] = [
-  { color: "blue", value: "120", label: "Illustrative work order volume — design target" },
-  { color: "purple", value: "24", label: "Scenario families — design target" },
-  { color: "green", value: "~99%", label: "Target evaluation baseline" },
-  { color: "amber", value: "75", label: "Automated tests — design target" },
-  { color: "blue", value: "Design target", label: "Azure Container Apps deployment" },
+const STATS: { value: string; label: string }[] = [
+  { value: "120", label: "Illustrative work order volume — design target" },
+  { value: "24", label: "Scenario families — design target" },
+  { value: "~99%", label: "Target evaluation baseline" },
+  { value: "75", label: "Automated tests — design target" },
+  { value: "Design target", label: "Azure Container Apps deployment" },
 ];
 
-const CAPABILITIES: { icon: typeof Users; color: ChipColor; title: string; detail: string }[] = [
-  { icon: Users, color: "blue", title: "Multi-agent AI", detail: "Specialist agents for intake, research, evidence, and discrepancy detection." },
-  { icon: Database, color: "purple", title: "Evidence provenance", detail: "Separate customer claims from independently researched information." },
-  { icon: ShieldCheck, color: "green", title: "Controlled autonomy", detail: "A deterministic Python control plane holds workflow authority, not the model." },
-  { icon: FileCode2, color: "amber", title: "Immutable corrections", detail: "Proposes corrections without modifying original source records." },
-  { icon: Users, color: "red", title: "Human-in-the-loop", detail: "Safe escalation for cases with unresolved material conflicts." },
-  { icon: Cloud, color: "blue", title: "Deployment target", detail: "Designed for Azure Container Apps, with CI/CD via GitHub Actions." },
+const CAPABILITIES: { icon: typeof Users; title: string; detail: string }[] = [
+  { icon: Users, title: "Multi-agent AI", detail: "Specialist agents for intake, research, evidence, and discrepancy detection." },
+  { icon: Database, title: "Evidence provenance", detail: "Separate customer claims from independently researched information." },
+  { icon: ShieldCheck, title: "Controlled autonomy", detail: "A deterministic Python control plane holds workflow authority, not the model." },
+  { icon: FileCode2, title: "Immutable corrections", detail: "Proposes corrections without modifying original source records." },
+  { icon: Users, title: "Human-in-the-loop", detail: "Safe escalation for cases with unresolved material conflicts." },
+  { icon: Cloud, title: "Deployment target", detail: "Designed for Azure Container Apps, with CI/CD via GitHub Actions." },
 ];
 
 const ARCHITECTURE = [
   {
     icon: Database,
-    color: "blue" as ChipColor,
     title: "Synthetic data layer (AWS)",
     rows: [
       { icon: Boxes, label: "S3", sublabel: "Document storage" },
@@ -53,7 +51,6 @@ const ARCHITECTURE = [
   },
   {
     icon: Layers,
-    color: "purple" as ChipColor,
     title: "MCP integration",
     rows: [
       { icon: Boxes, label: "MCP adapter", sublabel: "Tool integration" },
@@ -63,7 +60,6 @@ const ARCHITECTURE = [
   },
   {
     icon: Brain,
-    color: "blue" as ChipColor,
     title: "Multi-agent system (Microsoft Foundry)",
     rows: [
       { icon: Users, label: "Intake agent", sublabel: "Understand work-order input" },
@@ -75,7 +71,6 @@ const ARCHITECTURE = [
   },
   {
     icon: ShieldCheck,
-    color: "green" as ChipColor,
     title: "Deterministic control plane (Python/FastAPI)",
     rows: [
       { icon: CheckCircle2, label: "Structured parsing", sublabel: "Validate agent outputs" },
@@ -86,7 +81,6 @@ const ARCHITECTURE = [
   },
   {
     icon: Server,
-    color: "amber" as ChipColor,
     title: "Frontend & deployment",
     rows: [
       { icon: LayoutGrid, label: "Next.js", sublabel: "Operations console" },
@@ -97,10 +91,10 @@ const ARCHITECTURE = [
   },
 ];
 
-const SCENARIOS: { index: number; color: ChipColor; title: string; id: string; steps: string[]; humanReview: boolean; corrections: number }[] = [
-  { index: 1, color: "green", title: "Straight-through autonomy", id: "SYN-WO-000001", steps: ["Intake", "Research", "Evidence", "Discrepancy", "QC", "Complete"], humanReview: false, corrections: 0 },
-  { index: 2, color: "blue", title: "Controlled autonomous correction", id: "SYN-WO-000116", steps: ["Intake", "Research", "Evidence", "Discrepancy", "Correction", "Research", "QC", "Complete"], humanReview: false, corrections: 1 },
-  { index: 3, color: "red", title: "Safety escalation", id: "SYN-WO-000111", steps: ["Intake", "Research", "Evidence", "Discrepancy", "QC", "Human review"], humanReview: true, corrections: 0 },
+const SCENARIOS: { index: number; title: string; id: string; steps: string[]; humanReview: boolean; corrections: number }[] = [
+  { index: 1, title: "Straight-through autonomy", id: "SYN-WO-000001", steps: ["Intake", "Research", "Evidence", "Discrepancy", "QC", "Complete"], humanReview: false, corrections: 0 },
+  { index: 2, title: "Controlled autonomous correction", id: "SYN-WO-000116", steps: ["Intake", "Research", "Evidence", "Discrepancy", "Correction", "Research", "QC", "Complete"], humanReview: false, corrections: 1 },
+  { index: 3, title: "Safety escalation", id: "SYN-WO-000111", steps: ["Intake", "Research", "Evidence", "Discrepancy", "QC", "Human review"], humanReview: true, corrections: 0 },
 ];
 
 const PERFORMANCE: { value: string; label: string }[] = [
@@ -150,7 +144,7 @@ export function MultiAgentShowcase({
       <section id="ma-hero" className="band-navy relative overflow-hidden px-5 py-16 sm:px-8 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-[var(--radius-pill)] border border-[rgba(180,83,9,.4)] bg-[rgba(180,83,9,.18)] px-3 py-1 font-mono text-[10px] uppercase tracking-[.1em] text-[#fbbf6f]">
+            <span className="inline-flex items-center gap-2 rounded-[var(--radius-pill)] border border-[var(--navy-border)] px-3 py-1 font-mono text-[10px] uppercase tracking-[.1em] text-[var(--navy-text)]">
               <Crown className="h-3.5 w-3.5" aria-hidden="true" />
               Flagship blueprint
             </span>
@@ -175,7 +169,7 @@ export function MultiAgentShowcase({
               <span className="h-2.5 w-2.5 rounded-full bg-[#4ade80]" />
             </div>
             <div className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5 text-xs text-[var(--muted)]">
-              <span className="h-2 w-2 rounded-full bg-[var(--chip-amber)]" />
+              <span className="h-2 w-2 rounded-full bg-[var(--faint)]" />
               Concept preview — not a live application
             </div>
             <div className="p-5">
@@ -195,7 +189,7 @@ export function MultiAgentShowcase({
                 ].map((row) => (
                   <div key={row.id} className="flex items-center justify-between rounded-[var(--radius-sm)] border border-[var(--border)] px-3 py-2 text-xs">
                     <span className="font-mono text-[var(--faint)]">{row.id}</span>
-                    <span className="rounded-[var(--radius-pill)] bg-[color-mix(in_srgb,var(--chip-blue)_12%,white)] px-2 py-0.5 text-[10px] font-medium text-[var(--chip-blue)]">{row.tag}</span>
+                    <span className="rounded-[var(--radius-pill)] bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] font-medium text-[var(--accent)]">{row.tag}</span>
                   </div>
                 ))}
               </div>
@@ -207,7 +201,7 @@ export function MultiAgentShowcase({
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-5">
           {STATS.map((stat) => (
-            <StatTile key={stat.label} color={stat.color} value={stat.value} label={stat.label} />
+            <StatTile key={stat.label} value={stat.value} label={stat.label} />
           ))}
         </div>
         <p className="mt-6 max-w-2xl text-xs leading-5 text-[var(--faint)]">
@@ -217,7 +211,7 @@ export function MultiAgentShowcase({
         <div className="mt-20 grid gap-12 lg:grid-cols-[1fr_1.3fr]">
           <div>
             <div className="flex items-center gap-3">
-              <IconBadge icon={FileText} color="blue" />
+              <IconBadge icon={FileText} />
               <h2 className="text-2xl font-semibold tracking-tight">Project overview</h2>
             </div>
             <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
@@ -233,13 +227,13 @@ export function MultiAgentShowcase({
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <IconBadge icon={LayoutGrid} color="purple" />
+              <IconBadge icon={LayoutGrid} />
               <h2 className="text-2xl font-semibold tracking-tight">Key capabilities</h2>
             </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {CAPABILITIES.map((cap) => (
                 <SurfaceCard key={cap.title} className="p-4">
-                  <IconBadge icon={cap.icon} color={cap.color} />
+                  <IconBadge icon={cap.icon} />
                   <p className="mt-3 text-sm font-semibold text-[var(--text)]">{cap.title}</p>
                   <p className="mt-1 text-xs leading-5 text-[var(--faint)]">{cap.detail}</p>
                 </SurfaceCard>
@@ -263,7 +257,7 @@ export function MultiAgentShowcase({
           <div className="mt-10 flow-diagram">
             {ARCHITECTURE.map((column, index) => (
               <div key={column.title} className="contents lg:flex lg:items-start" style={{ display: "contents" }}>
-                <FlowColumn icon={column.icon} color={column.color} title={column.title} rows={column.rows} />
+                <FlowColumn icon={column.icon} title={column.title} rows={column.rows} />
                 {index < ARCHITECTURE.length - 1 && (
                   <div className="flow-arrow" aria-hidden="true">
                     <ArrowUpRight className="h-4 w-4 rotate-45" />

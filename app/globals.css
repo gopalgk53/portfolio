@@ -57,16 +57,6 @@
   --navy-muted: rgba(255, 255, 255, .68);
   --navy-border: rgba(255, 255, 255, .14);
 
-  /* Icon-badge chip palette — five hues, each already contrast-checked
-     as text/icon color on --bg (>=4.5:1) and as white-on-fill (>=4.5:1),
-     so the same token works whether it colors an icon on a tinted
-     background or fills a solid badge. */
-  --chip-blue: #2563eb;
-  --chip-green: #15803d;
-  --chip-amber: #b45309;
-  --chip-purple: #8b3fd1;
-  --chip-red: #dc2626;
-
   /* Brighter, dark-bg-safe versions of the same two hues — used only
      inside .cinematic-hero/.band-navy, where --accent/--accent-2's
      light-bg-safe (darker) values would fail contrast against --navy.
@@ -101,18 +91,16 @@ p{text-wrap:pretty}
    to match this file's existing convention (.glass-panel, .btn-pill).
    --------------------------------------------------------------------- */
 .surface-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 28px -12px rgba(15,23,42,.10)}
-.icon-badge-chip{display:grid;width:2.5rem;height:2.5rem;flex-shrink:0;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--chip-color,var(--accent)) 12%,white);color:var(--chip-color,var(--accent))}
-.icon-badge-chip svg{width:1.15rem;height:1.15rem}
 /* Number, thin colored rule, label — the same editorial treatment the
    site's own About stats already use (a plain <b>/<p> pair with a
    divider), not a circular icon-chip above a number. That icon+number
    combination is a generic template pattern; this site never used it. */
-.stat-tile{display:flex;flex-direction:column;gap:.6rem;padding-top:.9rem;border-top:2px solid var(--stat-color,var(--border-strong))}
+.stat-tile{display:flex;flex-direction:column;gap:.6rem;padding-top:.9rem;border-top:2px solid var(--border-strong)}
 .stat-tile strong{font-size:clamp(1.7rem,2.8vw,2.3rem);font-weight:600;letter-spacing:-.025em;color:var(--text)}
 .stat-tile span{font-size:.78rem;color:var(--muted);line-height:1.4}
 .pill-tag{display:inline-flex;align-items:center;gap:.4rem;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--surface);padding:.35rem .85rem;font-size:.75rem;color:var(--muted)}
-.pill-tag--status-good{border-color:transparent;background:color-mix(in srgb,var(--chip-green) 12%,white);color:var(--chip-green);font-weight:600}
-.pill-tag--status-bad{border-color:transparent;background:color-mix(in srgb,var(--chip-red) 12%,white);color:var(--chip-red);font-weight:600}
+.pill-tag--status-good{border-color:var(--border-strong);background:var(--surface);color:var(--text);font-weight:600}
+.pill-tag--status-bad{border-color:transparent;background:var(--accent);color:#fff;font-weight:600}
 .flow-diagram{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.5rem}
 .flow-column{position:relative;display:flex;flex-direction:column;gap:.9rem}
 .flow-column-head{display:flex;align-items:center;gap:.65rem;padding-bottom:.85rem;border-bottom:1px solid var(--border)}
@@ -123,7 +111,7 @@ p{text-wrap:pretty}
 .flow-arrow{display:none;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0}
 @media(min-width:900px){.flow-arrow{display:flex}}
 .scenario-card{position:relative;display:flex;flex-direction:column;gap:.9rem}
-.scenario-badge{display:inline-flex;width:2rem;height:2rem;flex-shrink:0;align-items:center;justify-content:center;border-radius:50%;font:700 .8rem "JetBrains Mono",monospace;color:#fff;background:var(--chip-color,var(--accent))}
+.scenario-badge{display:inline-flex;width:2rem;height:2rem;flex-shrink:0;align-items:center;justify-content:center;border-radius:50%;font:700 .8rem "JetBrains Mono",monospace;color:#fff;background:var(--accent)}
 .scenario-id{font:.7rem "JetBrains Mono",monospace;color:var(--faint);letter-spacing:.04em}
 .scenario-steps{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-size:.72rem;color:var(--muted)}
 .scenario-steps i{font-style:normal;color:var(--faint)}
