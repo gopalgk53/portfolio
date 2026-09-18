@@ -103,8 +103,12 @@ p{text-wrap:pretty}
 .surface-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 28px -12px rgba(15,23,42,.10)}
 .icon-badge-chip{display:grid;width:2.5rem;height:2.5rem;flex-shrink:0;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--chip-color,var(--accent)) 12%,white);color:var(--chip-color,var(--accent))}
 .icon-badge-chip svg{width:1.15rem;height:1.15rem}
-.stat-tile{display:flex;flex-direction:column;gap:.75rem}
-.stat-tile strong{font-size:clamp(1.4rem,2.4vw,1.9rem);font-weight:700;letter-spacing:-.02em;color:var(--text)}
+/* Number, thin colored rule, label — the same editorial treatment the
+   site's own About stats already use (a plain <b>/<p> pair with a
+   divider), not a circular icon-chip above a number. That icon+number
+   combination is a generic template pattern; this site never used it. */
+.stat-tile{display:flex;flex-direction:column;gap:.6rem;padding-top:.9rem;border-top:2px solid var(--stat-color,var(--border-strong))}
+.stat-tile strong{font-size:clamp(1.7rem,2.8vw,2.3rem);font-weight:600;letter-spacing:-.025em;color:var(--text)}
 .stat-tile span{font-size:.78rem;color:var(--muted);line-height:1.4}
 .pill-tag{display:inline-flex;align-items:center;gap:.4rem;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--surface);padding:.35rem .85rem;font-size:.75rem;color:var(--muted)}
 .pill-tag--status-good{border-color:transparent;background:color-mix(in srgb,var(--chip-green) 12%,white);color:var(--chip-green);font-weight:600}

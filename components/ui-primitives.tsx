@@ -16,6 +16,10 @@ function chipStyle(color: ChipColor): CSSProperties {
   return { "--chip-color": CHIP_VAR[color] } as CSSProperties;
 }
 
+function statStyle(color?: ChipColor): CSSProperties {
+  return color ? ({ "--stat-color": CHIP_VAR[color] } as CSSProperties) : {};
+}
+
 export function IconBadge({ icon: Icon, color = "blue" }: { icon: LucideIcon; color?: ChipColor }) {
   return (
     <span className="icon-badge-chip" style={chipStyle(color)}>
@@ -28,10 +32,9 @@ export function SurfaceCard({ className = "", children }: { className?: string; 
   return <div className={`surface-card ${className}`}>{children}</div>;
 }
 
-export function StatTile({ icon: Icon, color = "blue", value, label }: { icon?: LucideIcon; color?: ChipColor; value: string; label: string }) {
+export function StatTile({ color, value, label }: { color?: ChipColor; value: string; label: string }) {
   return (
-    <div className="stat-tile">
-      {Icon && <IconBadge icon={Icon} color={color} />}
+    <div className="stat-tile" style={statStyle(color)}>
       <strong>{value}</strong>
       <span>{label}</span>
     </div>

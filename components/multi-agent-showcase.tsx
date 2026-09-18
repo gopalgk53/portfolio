@@ -15,7 +15,6 @@ import {
   Server,
   ShieldCheck,
   Terminal,
-  TrendingUp,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -24,12 +23,12 @@ import { DocLinkRow, FlowColumn, IconBadge, PillTag, ScenarioCard, StatTile, Sur
 
 const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite";
 
-const STATS: { icon: typeof FileText; color: ChipColor; value: string; label: string }[] = [
-  { icon: FileText, color: "blue", value: "120", label: "Illustrative work order volume — design target" },
-  { icon: LayoutGrid, color: "purple", value: "24", label: "Scenario families — design target" },
-  { icon: TrendingUp, color: "green", value: "~99%", label: "Target evaluation baseline" },
-  { icon: CheckCircle2, color: "amber", value: "75", label: "Automated tests — design target" },
-  { icon: Cloud, color: "blue", value: "Design target", label: "Azure Container Apps deployment" },
+const STATS: { color: ChipColor; value: string; label: string }[] = [
+  { color: "blue", value: "120", label: "Illustrative work order volume — design target" },
+  { color: "purple", value: "24", label: "Scenario families — design target" },
+  { color: "green", value: "~99%", label: "Target evaluation baseline" },
+  { color: "amber", value: "75", label: "Automated tests — design target" },
+  { color: "blue", value: "Design target", label: "Azure Container Apps deployment" },
 ];
 
 const CAPABILITIES: { icon: typeof Users; color: ChipColor; title: string; detail: string }[] = [
@@ -208,7 +207,7 @@ export function MultiAgentShowcase({
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-5">
           {STATS.map((stat) => (
-            <StatTile key={stat.label} icon={stat.icon} color={stat.color} value={stat.value} label={stat.label} />
+            <StatTile key={stat.label} color={stat.color} value={stat.value} label={stat.label} />
           ))}
         </div>
         <p className="mt-6 max-w-2xl text-xs leading-5 text-[var(--faint)]">
