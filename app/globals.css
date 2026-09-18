@@ -21,10 +21,13 @@
   --surface: #ffffff;
   --surface-raised: #ffffff;
   --text: #0f172a;
-  --muted: #475569;
-  /* 4.55:1 against --bg — verified via a Node contrast script before use,
-     same discipline as every other color choice on this site. */
-  --faint: #64748b;
+  /* Both tiers are set against the WORST case the page can produce — body
+     text sitting directly over a full-strength node of the animated
+     background — not against flat white. Measured there: muted 6.86:1,
+     faint 5.02:1. The previous faint (#64748b) came to 3.15:1 there and
+     failed AA once the background was strengthened. */
+  --muted: #334155;
+  --faint: #475569;
   /* Blue-600, not the lighter reference blue: as text/icon color on a
      light background it needs to clear 4.5:1, which the brighter hue
      does not. 4.94:1 as text, 5.17:1 with white text on a solid fill. */
@@ -54,7 +57,9 @@
   --navy: #0f172a;
   --navy-raised: #152238;
   --navy-text: #ffffff;
-  --navy-muted: rgba(255, 255, 255, .68);
+  /* 11.64:1 on --navy, up from 8.67:1 at the previous .68 — the hero and
+     footer sit over the 3D scene, so their body copy needs the headroom. */
+  --navy-muted: rgba(255, 255, 255, .8);
   --navy-border: rgba(255, 255, 255, .14);
 
   /* Brighter, dark-bg-safe versions of the same two hues — used only
@@ -67,7 +72,7 @@
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--bg)}
-body{margin:0;color:var(--text);background:radial-gradient(circle at 12% 8%,rgba(37,99,235,.05),transparent 32%),radial-gradient(circle at 90% 28%,rgba(37,99,235,.045),transparent 38%),radial-gradient(circle at 30% 92%,rgba(37,99,235,.04),transparent 34%),radial-gradient(circle at 75% 82%,rgba(37,99,235,.035),transparent 30%),var(--bg);background-attachment:fixed;font-family:"Inter",ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;color:var(--text);background:radial-gradient(circle at 12% 8%,rgba(37,99,235,.05),transparent 32%),radial-gradient(circle at 90% 28%,rgba(37,99,235,.045),transparent 38%),radial-gradient(circle at 30% 92%,rgba(37,99,235,.04),transparent 34%),radial-gradient(circle at 75% 82%,rgba(37,99,235,.035),transparent 30%),var(--bg);background-attachment:fixed;font-family:"Inter",ui-sans-serif,system-ui,sans-serif;font-weight:500;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 button,a{-webkit-tap-highlight-color:transparent}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
