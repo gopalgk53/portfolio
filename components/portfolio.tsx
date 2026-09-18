@@ -67,7 +67,7 @@ const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; descripti
 // into view — the scene-to-scene morph the brief asks for, rather than a
 // hard cut between stacked blocks. The eyebrow label drifts at a slightly
 // different rate than the rest of the header for a touch of spatial depth.
-function Section({ id, scene, quiet, children }: { id: string; scene: SceneId; quiet?: boolean; children: ReactNode }) {
+function Section({ id, scene, children }: { id: string; scene: SceneId; children: ReactNode }) {
   const copy = naturalCopy[id];
   const ref = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
@@ -87,7 +87,7 @@ function Section({ id, scene, quiet, children }: { id: string; scene: SceneId; q
       id={id}
       data-scene={scene}
       style={reducedMotion ? undefined : { scale, y, opacity }}
-      className={`chapter ${quiet ? "chapter--quiet" : ""} relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-28 sm:px-8 sm:py-44`}
+      className="chapter relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-28 sm:px-8 sm:py-44"
     >
       <div className="mx-auto max-w-[1600px]">
         <header className="typography-shield mb-16 grid gap-7 lg:grid-cols-[10rem_1fr_.65fr] lg:items-start">
@@ -464,7 +464,7 @@ function Certifications() {
   const [all, setAll] = useState(false);
   const visible = all ? certifications : certifications.slice(0, 6);
   return (
-    <Section id="certifications" scene="identity" quiet>
+    <Section id="certifications" scene="identity">
       <div className="border-t border-[var(--border-strong)]">
         {visible.map(([name, meta, url], index) => {
           const unavailable = url.includes("leapsdata.analyttica.com");

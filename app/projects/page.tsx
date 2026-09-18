@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ProjectsIndex() {
   return (
-    <main id="main-content" tabIndex={-1} className="case-archive min-h-screen bg-[var(--bg)]/75 text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="case-archive min-h-screen bg-[var(--bg)]/70 text-[var(--text)]">
       <nav className="case-nav" aria-label="Case study navigation">
         <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Archive · 09 systems</span>

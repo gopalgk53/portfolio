@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col bg-[var(--bg)]/75 text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col bg-[var(--bg)]/70 text-[var(--text)]">
       <nav className="case-nav" aria-label="404 navigation">
         <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Error · 404</span>

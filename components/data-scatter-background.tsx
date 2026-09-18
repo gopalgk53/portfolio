@@ -12,7 +12,7 @@ import { useEffect, useRef } from "react";
 type Point = { x: number; y: number; vx: number; vy: number; r: number; phase: number };
 
 const ACCENT = "37,99,235";
-const LINK_DISTANCE = 150;
+const LINK_DISTANCE = 185;
 // Links closer than this fraction of LINK_DISTANCE carry a travelling
 // pulse. Running one on every link at once reads as noise.
 const PULSE_RANGE = 0.62;
@@ -35,7 +35,7 @@ export function DataScatterBackground() {
     let points: Point[] = [];
 
     function seed() {
-      const count = Math.max(34, Math.min(84, Math.round((width * height) / 22000)));
+      const count = Math.max(46, Math.min(115, Math.round((width * height) / 15000)));
       points = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
@@ -44,7 +44,7 @@ export function DataScatterBackground() {
         // image however long you look at it.
         vx: (Math.random() - 0.5) * 1.1,
         vy: (Math.random() - 0.5) * 1.1,
-        r: Math.random() < 0.2 ? 5 : 3,
+        r: Math.random() < 0.22 ? 7.5 : 4.5,
         phase: Math.random() * Math.PI * 2,
       }));
     }
@@ -69,7 +69,7 @@ export function DataScatterBackground() {
       for (const p of points) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT},.9)`;
+        ctx.fillStyle = `rgba(${ACCENT},1)`;
         ctx.fill();
       }
     }
@@ -110,8 +110,8 @@ export function DataScatterBackground() {
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(${ACCENT},${0.5 * strength})`;
-          ctx.lineWidth = 2.2;
+          ctx.strokeStyle = `rgba(${ACCENT},${0.78 * strength})`;
+          ctx.lineWidth = 3.4;
           ctx.stroke();
           if (strength > 1 - PULSE_RANGE) {
             // Offset per pair so the pulses don't march in lockstep.
@@ -121,19 +121,19 @@ export function DataScatterBackground() {
         }
       }
 
-      ctx.shadowColor = `rgba(${ACCENT},.55)`;
-      ctx.shadowBlur = 12;
+      ctx.shadowColor = `rgba(${ACCENT},.7)`;
+      ctx.shadowBlur = 18;
       for (const pulse of pulses) {
         ctx.beginPath();
-        ctx.arc(pulse.x, pulse.y, 2.4, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT},${0.9 * pulse.strength})`;
+        ctx.arc(pulse.x, pulse.y, 3.4, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${ACCENT},${pulse.strength})`;
         ctx.fill();
       }
       for (const p of points) {
         const breathe = 1 + Math.sin(now * 1.7 + p.phase) * 0.28;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r * breathe, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT},.95)`;
+        ctx.fillStyle = `rgba(${ACCENT},1)`;
         ctx.fill();
       }
       ctx.shadowBlur = 0;
