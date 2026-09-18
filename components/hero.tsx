@@ -118,20 +118,24 @@ export function Hero() {
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.6 + i * 0.1 }}
               >
-                {/* Was a continuous idle float plus a scroll-tied rotation —
-                    cut the idle float. It ran forever regardless of what the
-                    visitor did, one more always-on motion competing with the
-                    3D background, the section rise/scale, and the scroll bar.
-                    The scroll-tied rotation stays: it responds to something
-                    real (how far you've scrolled — the same pageProgress
-                    value already driving the nav's progress underline), so
-                    it's one of the few motions actually worth keeping. */}
+                {/* Three layers, each answering to something different: the
+                    wrapper above pops the badge in, this one floats it
+                    continuously, and the inner one rotates with scroll
+                    position (the same pageProgress driving the nav
+                    underline). Durations are deliberately mismatched and
+                    offset per badge so the three never sync into a single
+                    bouncing row. */}
                 <motion.div
-                  title={label}
-                  style={reducedMotion ? undefined : { rotate: badgeRotate }}
-                  className="icon-badge grid h-11 w-11 place-items-center rounded-[var(--radius-sm)]"
+                  animate={reducedMotion ? undefined : { y: [0, -8, 0] }}
+                  transition={{ duration: 3.1 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
                 >
-                  <Icon className="h-5 w-5" style={{ color }} />
+                  <motion.div
+                    title={label}
+                    style={reducedMotion ? undefined : { rotate: badgeRotate }}
+                    className="icon-badge grid h-11 w-11 place-items-center rounded-[var(--radius-sm)]"
+                  >
+                    <Icon className="h-5 w-5" style={{ color }} />
+                  </motion.div>
                 </motion.div>
               </motion.div>
             ))}

@@ -231,7 +231,12 @@ p{text-wrap:pretty}
 .card-elevated:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.28);box-shadow:0 34px 80px -28px var(--glow),0 30px 70px -32px rgba(15,23,42,.16)}
 @media(prefers-reduced-motion:reduce){.card-elevated{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 
-.glass-panel{background:var(--glass);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid var(--border);border-radius:var(--radius-md)}
+/* Matched to .surface-card so the pages still using this older class
+   (security, api-docs, the search and palette overlays) carry the same
+   glass as the rest of the site instead of a flatter earlier version.
+   Kept as its own class because several consumers set their own padding
+   and hover behaviour on top of it. */
+.glass-panel{background:rgba(255,255,255,.4);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 20px 45px -22px rgba(37,99,235,.16)}
 @media(prefers-reduced-motion:reduce){.glass-panel{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 
 .glow-card{position:relative;overflow:hidden}
@@ -261,19 +266,27 @@ p{text-wrap:pretty}
 @media(prefers-reduced-motion:reduce){.hero-console{backdrop-filter:none;-webkit-backdrop-filter:none}}
 
 /* Editorial archive and spatial case-study narratives. */
-.case-nav{display:flex;align-items:center;justify-content:space-between;min-height:72px;padding:0 clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);font:500 10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+/* Inter, sentence case: this nav sits on every secondary page, and the
+   old mono/uppercase/wide-tracked treatment was the single most visible
+   instance of the machine-generated look we removed from the homepage. */
+.case-nav{display:flex;align-items:center;justify-content:space-between;min-height:72px;padding:0 clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);font:500 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em;color:var(--muted)}
+.case-nav a{font-weight:600;color:var(--text)}
 .case-index-hero{min-height:82svh;padding:clamp(8rem,16vw,13rem) clamp(1.25rem,4vw,4rem) 5rem}
 .case-index-hero h1{max-width:11ch;margin-top:2rem;font-size:clamp(4.5rem,12vw,12rem);font-weight:700;line-height:.75;letter-spacing:-.045em;text-transform:uppercase}.case-index-hero h1 span{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
 .case-index-intro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem;max-width:54rem;margin:clamp(3rem,8vw,7rem) 0 0 auto;color:var(--muted);font-size:clamp(.95rem,1.4vw,1.15rem);line-height:1.7}
 .case-index-list{border-top:1px solid var(--border)}
 .case-index-row{display:grid;grid-template-columns:5rem minmax(0,1.5fr) minmax(10rem,.75fr) 2rem;align-items:center;gap:2rem;min-height:11rem;padding:2rem clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);color:inherit}
-.case-index-number,.case-index-category{font:10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+/* The index numeral stays mono — it reads as data and that's intentional.
+   The category beside it is a label, so it follows the sentence-case
+   treatment used everywhere else rather than wide-tracked mono caps. */
+.case-index-number{font:500 11px "JetBrains Mono",monospace;letter-spacing:.06em;color:var(--faint)}
+.case-index-category{font:600 11px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--faint)}
 .case-index-copy{display:flex;flex-direction:column;gap:.65rem}.case-index-copy strong{font-size:clamp(1.45rem,3vw,3rem);font-weight:600;line-height:1.05;letter-spacing:-.02em}.case-index-copy small,.case-index-impact{max-width:34rem;color:var(--muted);font-size:.85rem;line-height:1.6}
 .case-index-arrow{font-size:1.5rem;color:var(--accent);transition:transform .3s ease}.case-index-row:hover .case-index-arrow{transform:translate(5px,-5px)}
-.case-footer{display:flex;justify-content:space-between;padding:5rem clamp(1.25rem,4vw,4rem);font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.case-footer a{color:var(--accent)}
+.case-footer{display:flex;justify-content:space-between;padding:5rem clamp(1.25rem,4vw,4rem);font:500 13px "Inter",ui-sans-serif,sans-serif;color:var(--muted)}.case-footer a{color:var(--accent)}
 .case-study-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(18rem,3fr);column-gap:clamp(2rem,7vw,8rem);min-height:calc(100svh - 72px);padding:clamp(6rem,12vw,10rem) clamp(1.25rem,4vw,4rem) 4rem}
-.case-study-meta{font:10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.case-study-meta p+p{margin-top:.6rem;color:var(--faint)}
-.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:700;line-height:.82;letter-spacing:-.04em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:var(--muted)}.case-repository{border:1px solid var(--accent);border-radius:var(--radius-pill);padding:.65rem 1.3rem;font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);transition:background-color .3s ease,color .3s ease,box-shadow .3s ease}.case-repository:hover{background:var(--gradient-accent);color:#fff;box-shadow:0 10px 28px -10px var(--glow)}
+.case-study-meta{font:600 12px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--muted)}.case-study-meta p+p{margin-top:.6rem;color:var(--faint)}
+.case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:700;line-height:.82;letter-spacing:-.04em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:var(--muted)}.case-repository{border:1px solid var(--accent);border-radius:var(--radius-pill);padding:.65rem 1.3rem;font:600 12px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--accent);transition:background-color .3s ease,color .3s ease,box-shadow .3s ease}.case-repository:hover{background:var(--gradient-accent);color:#fff;box-shadow:0 10px 28px -10px var(--glow)}
 .case-repository-row{grid-column:2;justify-self:start;margin-top:3rem;display:flex;flex-wrap:wrap;gap:1rem}
 .case-signal{display:grid;grid-template-columns:minmax(10rem,1fr) minmax(18rem,3fr);gap:clamp(2rem,7vw,8rem);padding:4rem clamp(1.25rem,4vw,4rem);background:var(--gradient-accent);color:#fff}.case-signal .eyebrow{color:rgba(255,255,255,.75)}.case-signal>p:last-child{max-width:56rem;font-size:clamp(1.15rem,2.3vw,2rem);line-height:1.45}
 .case-architecture,.case-engineering{display:grid;grid-template-columns:minmax(15rem,1fr) minmax(18rem,2fr);gap:clamp(3rem,8vw,10rem);padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}
@@ -281,7 +294,7 @@ p{text-wrap:pretty}
 .case-outcome{min-height:70svh;padding:clamp(7rem,14vw,14rem) clamp(1.25rem,4vw,4rem);background:var(--bg);color:var(--text);border-top:1px solid var(--border)}.case-outcome .eyebrow{color:var(--muted)}.case-outcome>p:last-child{max-width:14ch;margin-top:3rem;font-size:clamp(4rem,10vw,10rem);font-weight:700;line-height:.84;letter-spacing:-.04em;text-transform:uppercase;background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
 .case-engineering{background:var(--surface)}.case-engineering ul{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.case-engineering li{display:grid;grid-template-columns:4rem 1fr;padding:1.4rem 0;border-bottom:1px solid var(--border);font-size:clamp(1.1rem,2vw,1.5rem)}
 .case-evidence{padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}.case-evidence h2{max-width:18ch;margin-top:2rem;font-size:clamp(2.5rem,6vw,6.5rem);font-weight:600;line-height:.94;letter-spacing:-.03em}.case-evidence ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 4rem;max-width:64rem;margin:5rem 0 0 auto;padding:0;list-style:none;counter-reset:evidence}.case-evidence li{counter-increment:evidence;padding:2rem 0;border-top:1px solid var(--border);color:var(--muted);line-height:1.65}.case-evidence li::before{content:"0" counter(evidence);display:block;margin-bottom:1rem;font:10px "JetBrains Mono",monospace;color:var(--accent)}
-.case-next{padding:5rem clamp(1.25rem,4vw,4rem);border-top:1px solid var(--border)}.case-next p{font:10px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}.case-next a{display:flex;justify-content:space-between;gap:2rem;margin-top:1.5rem;font-size:clamp(2.2rem,6vw,6rem);font-weight:700;line-height:1;letter-spacing:-.03em}.case-next a span{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+.case-next{padding:5rem clamp(1.25rem,4vw,4rem);border-top:1px solid var(--border)}.case-next p{font:600 12px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--faint)}.case-next a{display:flex;justify-content:space-between;gap:2rem;margin-top:1.5rem;font-size:clamp(2.2rem,6vw,6rem);font-weight:700;line-height:1;letter-spacing:-.03em}.case-next a span{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
 .benchmark-playground{padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem);border-top:1px solid var(--border);background:radial-gradient(circle at 85% 15%,rgba(37,99,235,.08),transparent 30%),var(--surface)}
 .benchmark-heading{display:grid;grid-template-columns:minmax(18rem,1.6fr) minmax(16rem,.7fr);gap:clamp(3rem,8vw,10rem);align-items:end}.benchmark-heading h2{max-width:12ch;margin-top:1.5rem;font-size:clamp(3rem,6vw,7rem);font-weight:600;line-height:.9;letter-spacing:-.04em}.benchmark-heading>p{color:var(--muted);line-height:1.7}
 .benchmark-tabs{display:flex;gap:.6rem;margin-top:5rem;border-bottom:1px solid var(--border)}.benchmark-tabs button{padding:1rem 1.3rem;border:0;border-bottom:2px solid transparent;background:none;color:var(--faint);font:10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}.benchmark-tabs button[aria-selected="true"]{border-bottom-color:var(--accent);color:var(--text)}

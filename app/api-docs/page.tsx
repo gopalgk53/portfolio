@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Reveal } from "../../components/reveal";
 import { certifications, projects, skills } from "../../lib/data";
 
 export const metadata: Metadata = {
@@ -39,7 +40,7 @@ export default function ApiDocsPage() {
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/75 text-[var(--text)]">
       <nav className="case-nav" aria-label="API documentation navigation">
-        <Link href="/">GK / AI systems</Link>
+        <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>API · {endpoints.length} endpoints</span>
       </nav>
       <header className="px-5 pt-20 sm:px-10 sm:pt-28">
@@ -57,8 +58,9 @@ export default function ApiDocsPage() {
         <p className="mt-4 max-w-2xl font-mono text-[11px] text-[var(--faint)]">Base URL: {BASE}</p>
       </header>
       <section className="mx-auto mt-16 max-w-3xl space-y-6 border-t border-[var(--border)] px-5 pb-32 pt-12 sm:px-10">
-        {endpoints.map((endpoint) => (
-          <article key={endpoint.path} className="glass-panel p-5 sm:p-6">
+        {endpoints.map((endpoint, index) => (
+          <Reveal key={endpoint.path} delay={Math.min(index, 5) * 0.06}>
+          <article className="glass-panel p-5 sm:p-6">
             <div className="flex flex-wrap items-center gap-3">
               <span className="rounded-full border border-[var(--accent)]/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--accent)]">
                 {endpoint.method}
@@ -70,6 +72,7 @@ export default function ApiDocsPage() {
               {endpoint.example}
             </pre>
           </article>
+          </Reveal>
         ))}
       </section>
       <footer className="case-footer">

@@ -14,6 +14,7 @@ import Link from "next/link";
 import { certifications, credlyBadges, projects, skills } from "../lib/data";
 import { spring, staggerChild } from "../lib/motion";
 import { useGlowPointer } from "../lib/use-glow-pointer";
+import { Reveal } from "./reveal";
 import { RevealText } from "./motion/reveal-text";
 import { Magnetic } from "./motion/magnetic";
 import { RagFlow } from "./visualizations/rag-flow";
@@ -443,17 +444,15 @@ function Badges() {
             </span>
             {badge.url && <ExternalLink className="ml-auto h-4 w-4 shrink-0 text-[var(--accent)]" />}
           </>;
-          const reveal = {
-            initial: { opacity: 0, y: 18 },
-            whileInView: { opacity: 1, y: 0 },
-            viewport: { once: true, amount: 0.3 },
-            transition: staggerChild(index % 6),
-          };
-          const className = "surface-card flex items-start gap-3 p-4";
-          return badge.url ? (
-            <motion.a key={badge.name} href={badge.url} target="_blank" rel="noreferrer" {...reveal} whileHover={{ y: -4, transition: spring }} className={className}>{body}</motion.a>
-          ) : (
-            <motion.div key={badge.name} {...reveal} className={className}>{body}</motion.div>
+          const className = "surface-card flex h-full items-start gap-3 p-4";
+          return (
+            <Reveal key={badge.name} delay={Math.min(index, 5) * 0.05}>
+              {badge.url ? (
+                <motion.a href={badge.url} target="_blank" rel="noreferrer" whileHover={{ y: -4, transition: spring }} className={className}>{body}</motion.a>
+              ) : (
+                <div className={className}>{body}</div>
+              )}
+            </Reveal>
           );
         })}
       </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Reveal } from "../../components/reveal";
 import { changelog } from "../../lib/changelog";
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export default function ChangelogPage() {
   return (
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/75 text-[var(--text)]">
       <nav className="case-nav" aria-label="Changelog navigation">
-        <Link href="/">GK / AI systems</Link>
+        <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Changelog · {changelog.length} entries</span>
       </nav>
       <header className="px-5 pt-20 sm:px-10 sm:pt-28">
@@ -32,26 +33,27 @@ export default function ChangelogPage() {
           A real record pulled from this site&apos;s own merged pull requests — not marketing copy. Each entry
           links to the actual PR on GitHub.
         </p>
-        <a href="/changelog/feed.xml" className="mt-4 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.1em] text-[var(--faint)] hover:text-[var(--accent)]">
+        <a href="/changelog/feed.xml" className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--faint)] hover:text-[var(--accent)]">
           RSS feed ↗
         </a>
       </header>
       <section className="mx-auto mt-16 max-w-3xl border-t border-[var(--border)] px-5 pb-32 sm:px-10">
-        {changelog.map((entry) => (
+        {changelog.map((entry, index) => (
+          <Reveal key={entry.pr} delay={Math.min(index, 6) * 0.04}>
           <a
-            key={entry.pr}
             href={`https://github.com/gopalgk53/portfolio/pull/${entry.pr}`}
             target="_blank"
             rel="noreferrer"
             className="glow-card flex flex-col gap-3 border-b border-[var(--border)] py-6 sm:flex-row sm:items-center sm:gap-6"
           >
-            <span className="shrink-0 font-mono text-[10px] uppercase tracking-[.12em] text-[var(--faint)] sm:w-28">{entry.date}</span>
-            <span className={`inline-flex w-fit shrink-0 items-center rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[.1em] sm:w-24 sm:justify-center ${TAG_COLOR[entry.tag] || "text-[var(--muted)] border-[var(--border-strong)]"}`}>
+            <span className="shrink-0 text-[13px] text-[var(--faint)] sm:w-28">{entry.date}</span>
+            <span className={`inline-flex w-fit shrink-0 items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold sm:w-24 sm:justify-center ${TAG_COLOR[entry.tag] || "text-[var(--muted)] border-[var(--border-strong)]"}`}>
               {entry.tag}
             </span>
             <span className="flex-1 text-sm leading-6 text-[var(--text)]">{entry.title}</span>
-            <span className="shrink-0 font-mono text-[10px] text-[var(--faint)]">PR #{entry.pr} ↗</span>
+            <span className="shrink-0 text-[13px] text-[var(--faint)]">PR #{entry.pr} ↗</span>
           </a>
+          </Reveal>
         ))}
       </section>
       <footer className="case-footer">
