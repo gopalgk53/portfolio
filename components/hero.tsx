@@ -15,7 +15,7 @@ import { nav } from "../lib/nav";
 const heroBadges = [
   { Icon: Brain, label: "LLMs & fine-tuning", color: "var(--accent)" },
   { Icon: Database, label: "RAG & vector search", color: "var(--accent)" },
-  { Icon: Workflow, label: "Agent orchestration", color: "var(--accent-2)" },
+  { Icon: Workflow, label: "Agent orchestration", color: "var(--accent)" },
 ];
 
 export function Hero() {

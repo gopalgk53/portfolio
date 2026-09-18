@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   Boxes,
@@ -18,7 +21,9 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ConceptNetwork } from "./concept-network-loader";
+import { spring } from "../lib/motion";
 import { DocLinkRow, FlowColumn, IconBadge, PillTag, ScenarioCard, StatTile, SurfaceCard } from "./ui-primitives";
 
 const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite";
@@ -120,6 +125,20 @@ const DOCS = [
   { icon: Layers, title: "Portfolio case study", sublabel: "Complete project narrative", href: "#ma-hero" },
 ];
 
+function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ ...spring, delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export function MultiAgentShowcase({
   goal,
   projectIndex,
@@ -134,7 +153,7 @@ export function MultiAgentShowcase({
   nextProjectTitle: string;
 }) {
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="premium-wash min-h-screen text-[var(--text)]">
       <nav className="case-nav" aria-label="Case study navigation">
         <Link href="/projects">← Architecture archive</Link>
         <span>
@@ -144,7 +163,7 @@ export function MultiAgentShowcase({
 
       <section id="ma-hero" className="band-navy relative overflow-hidden px-5 py-16 sm:px-8 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
-          <div>
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={spring}>
             <span className="inline-flex items-center gap-2 rounded-[var(--radius-pill)] border border-[var(--navy-border)] px-3 py-1 font-mono text-[10px] uppercase tracking-[.1em] text-[var(--navy-text)]">
               <Crown className="h-3.5 w-3.5" aria-hidden="true" />
               Flagship blueprint
@@ -161,31 +180,36 @@ export function MultiAgentShowcase({
                 View architecture
               </a>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--border)] bg-white shadow-[0_30px_70px_-32px_rgba(0,0,0,.45)]">
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ ...spring, delay: 0.12 }}
+            className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--border)] bg-white shadow-[0_30px_70px_-32px_rgba(0,0,0,.45)]"
+          >
             <div className="h-[360px] sm:h-[420px]">
               <ConceptNetwork />
             </div>
-            <p className="border-t border-[var(--border)] px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[.08em] text-[var(--faint)]">
+            <p className="border-t border-[var(--border)] px-4 py-3 text-center text-xs text-[var(--faint)]">
               Statistics · ML models · deep learning · AI models · AI agents · multi-agents
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-5">
+        <Reveal className="grid grid-cols-2 gap-6 sm:grid-cols-5">
           {STATS.map((stat) => (
             <StatTile key={stat.label} value={stat.value} label={stat.label} />
           ))}
-        </div>
+        </Reveal>
         <p className="mt-6 max-w-2xl text-xs leading-5 text-[var(--faint)]">
           These figures describe design targets for this architecture and its evaluation harness. They are not measured results from a deployed system.
         </p>
 
         <div className="mt-20 grid gap-12 lg:grid-cols-[1fr_1.3fr]">
-          <div>
+          <Reveal>
             <div className="flex items-center gap-3">
               <IconBadge icon={FileText} />
               <h2 className="text-2xl font-semibold tracking-tight">Project overview</h2>
@@ -200,8 +224,8 @@ export function MultiAgentShowcase({
               The key architectural question isn&apos;t connecting multiple agents — it&apos;s deciding where AI
               autonomy should stop, and where deterministic software should take control.
             </div>
-          </div>
-          <div>
+          </Reveal>
+          <Reveal delay={0.08}>
             <div className="flex items-center gap-3">
               <IconBadge icon={LayoutGrid} />
               <h2 className="text-2xl font-semibold tracking-tight">Key capabilities</h2>
@@ -215,22 +239,24 @@ export function MultiAgentShowcase({
                 </SurfaceCard>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
 
         <section id="ma-architecture" className="mt-24 scroll-mt-24">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">System architecture</p>
-              <h2 className="mt-2 max-w-xl text-2xl font-semibold tracking-tight sm:text-3xl">
-                Cross-cloud architecture, from work order to operational recommendation.
-              </h2>
+          <Reveal>
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow">System architecture</p>
+                <h2 className="mt-2 max-w-xl text-2xl font-semibold tracking-tight sm:text-3xl">
+                  Cross-cloud architecture, from work order to operational recommendation.
+                </h2>
+              </div>
+              <a href={REPO_URL} target="_blank" rel="noreferrer" className="btn-pill btn-pill--outline">
+                View architecture in repository <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
             </div>
-            <a href={REPO_URL} target="_blank" rel="noreferrer" className="btn-pill btn-pill--outline">
-              View architecture in repository <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          </div>
-          <div className="mt-10 flow-diagram">
+          </Reveal>
+          <Reveal delay={0.1} className="mt-10 flow-diagram">
             {ARCHITECTURE.map((column, index) => (
               <div key={column.title} className="contents lg:flex lg:items-start" style={{ display: "contents" }}>
                 <FlowColumn icon={column.icon} title={column.title} rows={column.rows} />
@@ -241,73 +267,79 @@ export function MultiAgentShowcase({
                 )}
               </div>
             ))}
-          </div>
+          </Reveal>
         </section>
 
         <section className="mt-24">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">Golden path scenarios</p>
-              <h2 className="mt-2 max-w-xl text-2xl font-semibold tracking-tight sm:text-3xl">
-                Three illustrative scenarios demonstrate the system&apos;s intended safety boundaries.
-              </h2>
+          <Reveal>
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow">Golden path scenarios</p>
+                <h2 className="mt-2 max-w-xl text-2xl font-semibold tracking-tight sm:text-3xl">
+                  Three illustrative scenarios demonstrate the system&apos;s intended safety boundaries.
+                </h2>
+              </div>
             </div>
-          </div>
-          <p className="mt-4 max-w-2xl text-xs leading-5 text-[var(--faint)]">
-            Illustrative synthetic scenarios — for demonstration only, not measured results from a deployed system.
-          </p>
-          <div className="mt-8 grid gap-6 sm:grid-cols-3">
+            <p className="mt-4 max-w-2xl text-xs leading-5 text-[var(--faint)]">
+              Illustrative synthetic scenarios — for demonstration only, not measured results from a deployed system.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1} className="mt-8 grid gap-6 sm:grid-cols-3">
             {SCENARIOS.map((scenario) => (
               <ScenarioCard key={scenario.id} {...scenario} />
             ))}
-          </div>
+          </Reveal>
         </section>
 
-        <section id="ma-performance" className="mt-24 scroll-mt-24 grid gap-10 lg:grid-cols-3">
-          <div>
-            <p className="eyebrow">Performance &amp; evaluation</p>
-            <h3 className="mt-2 text-lg font-semibold tracking-tight">Illustrative evaluation targets</h3>
-            <div className="mt-5 grid grid-cols-2 gap-5">
-              {PERFORMANCE.map((row) => (
-                <StatTile key={row.label} value={row.value} label={row.label} />
-              ))}
+        <Reveal>
+          <section id="ma-performance" className="mt-24 scroll-mt-24 grid gap-10 lg:grid-cols-3">
+            <div>
+              <p className="eyebrow">Performance &amp; evaluation</p>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight">Illustrative evaluation targets</h3>
+              <div className="mt-5 grid grid-cols-2 gap-5">
+                {PERFORMANCE.map((row) => (
+                  <StatTile key={row.label} value={row.value} label={row.label} />
+                ))}
+              </div>
+              <p className="mt-5 text-xs leading-5 text-[var(--faint)]">
+                These figures describe design targets for this architecture&apos;s evaluation harness. They are not
+                measured results from a deployed system.
+              </p>
             </div>
-            <p className="mt-5 text-xs leading-5 text-[var(--faint)]">
-              These figures describe design targets for this architecture&apos;s evaluation harness. They are not
-              measured results from a deployed system.
-            </p>
-          </div>
-          <div>
-            <p className="eyebrow">Tech stack</p>
-            <h3 className="mt-2 text-lg font-semibold tracking-tight">Built with</h3>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {TECH_STACK.map((tech) => (
-                <span key={tech} className="pill-tag">
-                  {tech}
-                </span>
-              ))}
+            <div>
+              <p className="eyebrow">Tech stack</p>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight">Built with</h3>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {TECH_STACK.map((tech) => (
+                  <span key={tech} className="pill-tag">
+                    {tech}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="eyebrow">Project documentation</p>
-            <h3 className="mt-2 text-lg font-semibold tracking-tight">Read more</h3>
-            <div className="mt-3">
-              {DOCS.map((doc) => (
-                <DocLinkRow key={doc.title} icon={doc.icon} title={doc.title} sublabel={doc.sublabel} href={doc.href} />
-              ))}
+            <div>
+              <p className="eyebrow">Project documentation</p>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight">Read more</h3>
+              <div className="mt-3">
+                {DOCS.map((doc) => (
+                  <DocLinkRow key={doc.title} icon={doc.icon} title={doc.title} sublabel={doc.sublabel} href={doc.href} />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </Reveal>
 
-        <section className="mt-24 border-t border-[var(--border)] pt-10">
-          <p className="eyebrow">Assumptions &amp; limitations</p>
-          <ol className="mt-4 grid gap-4 text-sm leading-6 text-[var(--muted)] sm:grid-cols-2">
-            <li>This is an architecture blueprint and its intended design, not a monitored, running production deployment with live metrics.</li>
-            <li>Every number on this page is a design target for the evaluation harness this architecture is designed to reach, not a measured result from real usage.</li>
-            <li>No live application or dedicated public repository exists for this project yet — the repository link above is the same shared repository used across this portfolio&apos;s case studies.</li>
-            <li>Implementation-level specifics not published here — exact agent prompts, evaluation datasets, latency under real load — are the next evidence to publish as this moves from blueprint to implementation.</li>
-          </ol>
-        </section>
+        <Reveal>
+          <section className="mt-24 border-t border-[var(--border)] pt-10">
+            <p className="eyebrow">Assumptions &amp; limitations</p>
+            <ol className="mt-4 grid gap-4 text-sm leading-6 text-[var(--muted)] sm:grid-cols-2">
+              <li>This is an architecture blueprint and its intended design, not a monitored, running production deployment with live metrics.</li>
+              <li>Every number on this page is a design target for the evaluation harness this architecture is designed to reach, not a measured result from real usage.</li>
+              <li>No live application or dedicated public repository exists for this project yet — the repository link above is the same shared repository used across this portfolio&apos;s case studies.</li>
+              <li>Implementation-level specifics not published here — exact agent prompts, evaluation datasets, latency under real load — are the next evidence to publish as this moves from blueprint to implementation.</li>
+            </ol>
+          </section>
+        </Reveal>
       </div>
 
       <footer className="case-next">

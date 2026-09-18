@@ -118,9 +118,8 @@ export function ConceptNetwork() {
       el.style.position = "absolute";
       el.style.left = "0";
       el.style.top = "0";
-      el.style.font = '10px "JetBrains Mono", ui-monospace, monospace';
-      el.style.letterSpacing = ".07em";
-      el.style.textTransform = "uppercase";
+      el.style.font = '500 12px "Inter", ui-sans-serif, sans-serif';
+      el.style.letterSpacing = "-.005em";
       el.style.color = "var(--accent)";
       el.style.whiteSpace = "nowrap";
       el.style.willChange = "transform";
