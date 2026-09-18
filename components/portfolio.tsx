@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { ArrowUpRight, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play } from "lucide-react";
+import { ArrowUpRight, Award, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play, ShieldCheck } from "lucide-react";
 
 // lucide-react@1.31.0 (pinned in package.json) doesn't ship brand marks, so
 // GitHub/LinkedIn reuse the closest neutral technical glyphs — same
@@ -11,7 +11,7 @@ const Linkedin = Link2;
 import { FormEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { certifications, projects, skills } from "../lib/data";
+import { certifications, credlyBadges, projects, skills } from "../lib/data";
 import { spring, staggerChild } from "../lib/motion";
 import { useGlowPointer } from "../lib/use-glow-pointer";
 import { RevealText } from "./motion/reveal-text";
@@ -57,8 +57,9 @@ const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; descripti
   skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
   playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
   experience: { eyebrow: "05 / Experience", title: "From operations to data and AI." },
-  certifications: { eyebrow: "06 / Credentials", title: "Formal training behind the practice." },
-  contact: { eyebrow: "07 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
+  badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
+  certifications: { eyebrow: "07 / Credentials", title: "Formal training behind the practice." },
+  contact: { eyebrow: "08 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
 };
 
 // Each section "arrives" with a slow scale/opacity settle as it scrolls
@@ -420,6 +421,46 @@ function Experience() {
   );
 }
 
+function Badges() {
+  return (
+    <Section id="badges" scene="identity">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {credlyBadges.map((badge, index) => {
+          const emblem = (
+            <span className="badge-emblem" data-kind={badge.kind} aria-hidden="true">
+              <Award className="h-5 w-5" />
+            </span>
+          );
+          const body = <>
+            {emblem}
+            <span className="min-w-0">
+              <strong className="block text-sm font-semibold leading-snug text-[var(--text)]">{badge.name}</strong>
+              <span className="mt-1 block text-xs text-[var(--muted)]">{badge.issuer}</span>
+              <span className="mt-2 flex items-center gap-1.5 text-[11px] text-[var(--faint)]">
+                <ShieldCheck className="h-3.5 w-3.5 text-[var(--accent)]" />
+                Issued {badge.issued}
+              </span>
+            </span>
+            {badge.url && <ExternalLink className="ml-auto h-4 w-4 shrink-0 text-[var(--accent)]" />}
+          </>;
+          const reveal = {
+            initial: { opacity: 0, y: 18 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true, amount: 0.3 },
+            transition: staggerChild(index % 6),
+          };
+          const className = "surface-card flex items-start gap-3 p-4";
+          return badge.url ? (
+            <motion.a key={badge.name} href={badge.url} target="_blank" rel="noreferrer" {...reveal} whileHover={{ y: -4, transition: spring }} className={className}>{body}</motion.a>
+          ) : (
+            <motion.div key={badge.name} {...reveal} className={className}>{body}</motion.div>
+          );
+        })}
+      </div>
+    </Section>
+  );
+}
+
 function Certifications() {
   const [all, setAll] = useState(false);
   const visible = all ? certifications : certifications.slice(0, 6);
@@ -567,6 +608,7 @@ export function Portfolio() {
       </details>
       <Experience />
       <Skills />
+      <Badges />
       <Certifications />
       <HiringEvidence />
       <Contact />

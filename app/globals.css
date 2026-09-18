@@ -78,6 +78,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 ::selection{color:#fff;background:var(--accent)}
 h1,h2,h3{margin:0;text-wrap:balance}
 .text-gradient-accent{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Credly badge emblem — a rendered mark rather than the issuer's own
+   artwork: the CSP allows images from 'self' only, and hotlinking the
+   badge PNGs would put a third-party host in the critical render path.
+   Specializations get the filled treatment, single courses the outline. */
+.badge-emblem{display:grid;width:2.75rem;height:2.75rem;flex-shrink:0;place-items:center;border-radius:50%;border:1px solid var(--border-strong);background:var(--surface);color:var(--accent)}
+.badge-emblem[data-kind="specialization"]{border-color:transparent;background:var(--gradient-accent);color:#fff}
+
 .icon-badge{background:var(--surface);border:1px solid var(--border-strong);transition:transform .35s cubic-bezier(.4,0,.2,1),border-color .3s ease}
 .icon-badge:hover{transform:rotate(8deg) scale(1.06);border-color:var(--accent)}
 .quote-panel{position:relative;border-left:3px solid transparent;border-image:var(--gradient-accent);border-image-slice:1;padding-left:1.5rem}

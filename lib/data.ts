@@ -44,3 +44,29 @@ export const certifications = [
   ["Programming Foundations: Fundamentals", "LinkedIn Learning · Sep 2019", "https://www.linkedin.com/learning/certificates/b14cd2708db9821047fcf9109245aa533eae7423949e03cb5af954d19e6ddf66/?trk=backfilled_certificate"],
   ["Introduction to Geometric Dimensioning and Tolerancing", "LinkedIn Learning · Aug 2019", "https://www.linkedin.com/learning/certificates/3fa9e657f5994bbb0431b541b43458e39ab5a0f564466a928efb8e4ef1bdf022/?trk=backfilled_certificate"],
 ];
+
+// Credly-issued digital badges. Unlike the certificate list above, each of
+// these is independently verifiable against the issuer's record, which is
+// the reason they're presented separately rather than folded in.
+// `url` uses Credly's public badge form, not the /earner/earned/ links from
+// the badge wallet — those require the visitor to sign in to Credly, which
+// defeats the point of publishing them as evidence. Each id below was
+// confirmed against the badge page's own title before being mapped here.
+// A badge without a url renders as unlinked evidence rather than pointing
+// somewhere unverifiable.
+export type CredlyBadge = { name: string; issuer: string; issued: string; kind: "specialization" | "course"; url?: string };
+
+const credlyBadgeUrl = (id: string) => `https://www.credly.com/badges/${id}/public_url`;
+
+export const credlyBadges: CredlyBadge[] = [
+  { name: "Generative AI for Data Analysts Specialization", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "specialization", url: credlyBadgeUrl("324b128c-1df0-4be7-9994-7be3a632f214") },
+  { name: "Generative AI Essentials for Data Analytics", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "course", url: credlyBadgeUrl("0f76ae43-08b7-411e-9737-8db2877bf7f2") },
+  { name: "Generative AI Essentials", issuer: "IBM · Coursera", issued: "Sep 9, 2026", kind: "course", url: credlyBadgeUrl("75ea6e72-aac0-427b-82a0-88a2d8d947f1") },
+  { name: "Generative AI: Prompt Engineering", issuer: "IBM · Coursera", issued: "Sep 9, 2026", kind: "course", url: credlyBadgeUrl("84d1d619-d1cb-41c9-97f2-c9bbfd55bc7a") },
+  { name: "Artificial Intelligence Essentials V2", issuer: "IBM · Coursera", issued: "Sep 7, 2026", kind: "course", url: credlyBadgeUrl("352efbfd-a5c3-44a4-9f3d-2f0e2108012d") },
+  { name: "Python Project for AI and Application Development", issuer: "IBM · Coursera", issued: "Jul 22, 2026", kind: "course" },
+  { name: "Python for Data Science and AI", issuer: "IBM · Coursera", issued: "Jul 18, 2026", kind: "course", url: credlyBadgeUrl("62b1458f-915c-43e3-a775-9a3c393da74e") },
+  { name: "Git and GitHub Essentials", issuer: "IBM · Coursera", issued: "Jul 9, 2026", kind: "course", url: credlyBadgeUrl("3cabc6f4-036e-4ca6-b028-3cec0cc7caa2") },
+  { name: "Linux Commands & Shell Scripting Essentials V2", issuer: "IBM · Coursera", issued: "Jul 9, 2026", kind: "course", url: credlyBadgeUrl("14a4bb21-7fea-4a1f-955e-732a9532b86b") },
+  { name: "Software Engineering Essentials", issuer: "IBM · Coursera", issued: "Jul 9, 2026", kind: "course", url: credlyBadgeUrl("2f0bcf18-7f9d-46f9-9770-c49824d26826") },
+];
