@@ -41,7 +41,7 @@ const sections = [
 
 export default function SecurityPage() {
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/70 text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/80 text-[var(--text)]">
       <nav className="case-nav" aria-label="Security and privacy navigation">
         <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Security &amp; privacy</span>
