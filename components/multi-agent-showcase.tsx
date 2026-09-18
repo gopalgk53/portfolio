@@ -18,6 +18,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { ConceptNetwork } from "./concept-network-loader";
 import { DocLinkRow, FlowColumn, IconBadge, PillTag, ScenarioCard, StatTile, SurfaceCard } from "./ui-primitives";
 
 const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite";
@@ -162,38 +163,13 @@ export function MultiAgentShowcase({
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--border)] bg-white text-[var(--text)] shadow-[0_30px_70px_-32px_rgba(0,0,0,.45)]">
-            <div className="flex items-center gap-1.5 border-b border-[var(--border)] bg-[#f1f5f9] px-4 py-2.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#f87171]" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#fbbf24]" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#4ade80]" />
+          <div className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--border)] bg-white shadow-[0_30px_70px_-32px_rgba(0,0,0,.45)]">
+            <div className="h-[360px] sm:h-[420px]">
+              <ConceptNetwork />
             </div>
-            <div className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5 text-xs text-[var(--muted)]">
-              <span className="h-2 w-2 rounded-full bg-[var(--faint)]" />
-              Concept preview — not a live application
-            </div>
-            <div className="p-5">
-              <p className="text-sm font-semibold text-[var(--text)]">Work Order Intelligence</p>
-              <p className="mt-1 text-xs text-[var(--faint)]">Multi-agent AI for construction payment-protection operations</p>
-              <div className="mt-4 grid grid-cols-3 gap-2">
-                {["Explore scenarios", "Run work order", "View results"].map((label) => (
-                  <span key={label} className="rounded-[var(--radius-sm)] border border-[var(--border)] px-2 py-2 text-center text-[10px] font-medium text-[var(--muted)]">
-                    {label}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-4 flex flex-col gap-2">
-                {[
-                  { id: "SYN-WO-000001", tag: "Straight-through" },
-                  { id: "SYN-WO-000116", tag: "Correction" },
-                ].map((row) => (
-                  <div key={row.id} className="flex items-center justify-between rounded-[var(--radius-sm)] border border-[var(--border)] px-3 py-2 text-xs">
-                    <span className="font-mono text-[var(--faint)]">{row.id}</span>
-                    <span className="rounded-[var(--radius-pill)] bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] font-medium text-[var(--accent)]">{row.tag}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <p className="border-t border-[var(--border)] px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[.08em] text-[var(--faint)]">
+              Statistics · ML models · deep learning · AI models · AI agents · multi-agents
+            </p>
           </div>
         </div>
       </section>
