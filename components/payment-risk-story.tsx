@@ -465,29 +465,40 @@ export function PaymentRiskStory() {
           Scroll through, jump to a chapter directly, or step through with the arrow keys. Every number here is a verified result — nothing in this section is a legal decision.
         </p>
 
-        <nav aria-label="Chapters" className="sticky top-0 z-10 mt-10 flex flex-wrap items-center gap-2 border-y border-[var(--border)] bg-[var(--surface)]/95 py-3 backdrop-blur">
-          {CHAPTERS.map((chapter) => (
-            <button
-              key={chapter.id}
-              ref={(el) => {
-                navButtonRefs.current[chapter.id] = el;
-              }}
-              type="button"
-              aria-current={active === chapter.id ? "true" : undefined}
-              onClick={() => goTo(chapter.id)}
-              className={`rounded-[var(--radius-pill)] border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[.06em] transition-colors ${
-                active === chapter.id ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]" : "border-[var(--border-strong)] text-[var(--faint)] hover:text-[var(--muted)]"
-              }`}
-            >
-              {chapter.eyebrow}
-            </button>
-          ))}
+        <nav aria-label="Chapters" className="sticky top-0 z-10 mt-10 flex flex-wrap items-center gap-4 border-y border-[var(--border)] bg-[var(--surface)]/95 px-1 py-2.5 backdrop-blur">
+          <div className="flex items-center gap-1.5">
+            {CHAPTERS.map((chapter) => (
+              <button
+                key={chapter.id}
+                ref={(el) => {
+                  navButtonRefs.current[chapter.id] = el;
+                }}
+                type="button"
+                title={chapter.eyebrow}
+                aria-current={active === chapter.id ? "true" : undefined}
+                onClick={() => goTo(chapter.id)}
+                className={`grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] border font-mono text-[11px] transition-colors ${
+                  active === chapter.id ? "border-transparent text-[var(--bg)]" : "border-[var(--border-strong)] text-[var(--faint)] hover:text-[var(--muted)]"
+                }`}
+                style={active === chapter.id ? { background: "var(--gradient-accent)" } : undefined}
+              >
+                {String(chapter.id + 1).padStart(2, "0")}
+                <span className="sr-only">{chapter.eyebrow}</span>
+              </button>
+            ))}
+          </div>
+          <p
+            className="hidden min-w-0 flex-1 font-mono text-[10px] uppercase tracking-[.1em] text-[var(--muted)] sm:block"
+            style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+          >
+            {CHAPTERS[active].eyebrow}
+          </p>
           <div className="ml-auto flex items-center gap-2">
             <button
               type="button"
               onClick={() => setPaused((v) => !v)}
               aria-pressed={paused}
-              className="grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-[var(--faint)] transition-colors hover:text-[var(--muted)]"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-[var(--faint)] transition-colors hover:text-[var(--muted)]"
             >
               {paused ? <Play className="h-3.5 w-3.5" aria-hidden="true" /> : <Pause className="h-3.5 w-3.5" aria-hidden="true" />}
               <span className="sr-only">{paused ? "Resume chapter animation" : "Pause chapter animation"}</span>
@@ -495,7 +506,7 @@ export function PaymentRiskStory() {
             <button
               type="button"
               onClick={() => setReplayTick((v) => v + 1)}
-              className="grid h-8 w-8 place-items-center rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-[var(--faint)] transition-colors hover:text-[var(--muted)]"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-[var(--faint)] transition-colors hover:text-[var(--muted)]"
             >
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
               <span className="sr-only">Replay this chapter's animation</span>
