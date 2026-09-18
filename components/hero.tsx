@@ -114,9 +114,9 @@ export function Hero() {
             {heroBadges.map(({ Icon, label, color }, i) => (
               <motion.div
                 key={label}
-                initial={reducedMotion ? false : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.4, rotate: -35 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.6 + i * 0.1 }}
               >
                 {/* Was a continuous idle float plus a scroll-tied rotation —
                     cut the idle float. It ran forever regardless of what the

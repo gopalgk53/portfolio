@@ -38,7 +38,7 @@ export function DataScatterBackground() {
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.12,
         vy: (Math.random() - 0.5) * 0.12,
-        r: Math.random() < 0.15 ? 2.2 : 1.2,
+        r: Math.random() < 0.15 ? 3 : 1.6,
       }));
     }
 
@@ -62,7 +62,7 @@ export function DataScatterBackground() {
       for (const p of points) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT},.22)`;
+        ctx.fillStyle = `rgba(${ACCENT},.45)`;
         ctx.fill();
       }
     }
@@ -94,7 +94,7 @@ export function DataScatterBackground() {
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(${ACCENT},${0.08 * (1 - dist / LINK_DISTANCE)})`;
+            ctx.strokeStyle = `rgba(${ACCENT},${0.16 * (1 - dist / LINK_DISTANCE)})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -103,7 +103,7 @@ export function DataScatterBackground() {
       for (const p of points) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT},.28)`;
+        ctx.fillStyle = `rgba(${ACCENT},.5)`;
         ctx.fill();
       }
       frameId = requestAnimationFrame(tick);

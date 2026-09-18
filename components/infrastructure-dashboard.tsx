@@ -38,7 +38,7 @@ export function InfrastructureDashboard() {
   const logs = ["Embedding node loaded", "Vector space synchronized", "Reranker health check passed", "KV cache allocation stable"];
 
   return (
-    <section ref={root} id="infrastructure" className="relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-24 sm:px-8 sm:py-32">
+    <section ref={root} id="infrastructure" className="chapter relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-7xl">
         <header className="mb-12">
           <p className="eyebrow">Infrastructure observability</p>

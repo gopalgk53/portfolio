@@ -161,7 +161,7 @@ export function TerminalShell() {
   }
 
   return (
-    <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col bg-[var(--bg)] text-[var(--text)]" onClick={() => inputRef.current?.focus()}>
+    <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col bg-[var(--bg)]/85 text-[var(--text)]" onClick={() => inputRef.current?.focus()}>
       <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3 font-mono text-[10px] uppercase tracking-[.12em] text-[var(--faint)]">
         <Link href="/" className="text-[var(--muted)] hover:text-[var(--accent)]">
           ← back to gopalakrishnagenai.in

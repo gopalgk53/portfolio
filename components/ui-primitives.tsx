@@ -1,12 +1,21 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 export function IconBadge({ icon: Icon }: { icon: LucideIcon }) {
   return (
-    <span className="icon-badge grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] text-[var(--accent)]">
+    <motion.span
+      initial={{ opacity: 0, scale: 0.4, rotate: -35 }}
+      whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+      viewport={{ once: true, amount: 0.6 }}
+      transition={{ type: "spring", stiffness: 320, damping: 18 }}
+      className="icon-badge grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] text-[var(--accent)]"
+    >
       <Icon className="h-4 w-4" aria-hidden="true" />
-    </span>
+    </motion.span>
   );
 }
 

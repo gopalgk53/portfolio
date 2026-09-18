@@ -19,7 +19,7 @@ function EvidenceCard({ n, title, copy }: { n: string; title: string; copy: stri
 
 export function HiringEvidence() {
   return (
-    <section className="relative z-10 border-t border-[var(--border)] px-5 py-24 sm:px-8">
+    <section className="chapter relative z-10 border-t border-[var(--border)] px-5 py-24 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <p className="eyebrow">What I bring</p>
         <h2 className="mt-3 max-w-3xl text-4xl font-semibold tracking-[-.03em] sm:text-6xl">Technical work grounded in domain experience.</h2>

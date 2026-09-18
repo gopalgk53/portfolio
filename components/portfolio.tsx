@@ -318,8 +318,8 @@ function Projects() {
 
       <SiteSearch />
 
-      <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
       <FlagshipProject project={multiAgent} index={multiAgentIndex} scene="agents" viz={<AgentFlow flow={multiAgent.flow} domains={AGENT_DOMAINS} />} />
+      <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
 
       <div className="mt-24 flex flex-col gap-6">
         {rest.map((p) => (
@@ -498,9 +498,15 @@ function Contact() {
                 <Magnetic key={label as string} className="block w-full">
                   <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} rel={String(url).startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between border-b border-[var(--border)] py-4 text-sm text-[var(--muted)]">
                     <span className="flex flex-wrap items-center gap-2 break-all">
-                      <span className="icon-badge grid h-7 w-7 shrink-0 place-items-center rounded-[var(--radius-sm)]">
+                      <motion.span
+                        initial={{ opacity: 0, scale: 0.4, rotate: -35 }}
+                        whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                        viewport={{ once: true, amount: 0.6 }}
+                        transition={{ type: "spring", stiffness: 320, damping: 18, delay: contactIndex * 0.06 }}
+                        className="icon-badge grid h-7 w-7 shrink-0 place-items-center rounded-[var(--radius-sm)]"
+                      >
                         <IconComp className="h-3.5 w-3.5" style={{ color: badgeColor }} />
-                      </span>
+                      </motion.span>
                       {label as string}
                       {label === "GitHub" && <GithubActivity />}
                     </span>
