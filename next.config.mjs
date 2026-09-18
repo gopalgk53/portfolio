@@ -31,15 +31,6 @@ const nextConfig = {
     return [
       { source: "/(.*)", headers: securityHeaders },
       {
-        // Actively iterating on design right now — no caching on any
-        // route, so a preview reload always reflects the latest build
-        // rather than a stale cached page. Revisit before a real
-        // production deploy, where some page-level caching is normally
-        // worth having back.
-        source: "/(.*)",
-        headers: [{ key: "Cache-Control", value: "no-store, max-age=0, must-revalidate" }],
-      },
-      {
         source: "/api/:path*",
         headers: [
           { key: "Cache-Control", value: "no-store, max-age=0" },
