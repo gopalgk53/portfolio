@@ -27,7 +27,7 @@
      faint 5.02:1. The previous faint (#64748b) came to 3.15:1 there and
      failed AA once the background was strengthened. */
   --muted: #334155;
-  --faint: #475569;
+  --faint: #374151;
   /* Blue-600, not the lighter reference blue: as text/icon color on a
      light background it needs to clear 4.5:1, which the brighter hue
      does not. 4.94:1 as text, 5.17:1 with white text on a solid fill. */
@@ -41,8 +41,8 @@
   --accent-2-soft: rgba(139, 63, 209, .1);
   --accent-gold-soft: rgba(180, 83, 9, .1);
   --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-2));
-  --border: rgba(15, 23, 42, .08);
-  --border-strong: rgba(15, 23, 42, .14);
+  --border: rgba(15, 23, 42, .13);
+  --border-strong: rgba(15, 23, 42, .2);
   --glass: rgba(255, 255, 255, .38);
   --glow: rgba(37, 99, 235, .18);
   --radius-sm: 10px;
@@ -106,7 +106,7 @@ p{text-wrap:pretty}
 /* Glass, not flat white — a translucent surface over the page's own
    faint blue wash (.premium-wash) rather than a solid card, plus a
    hover lift that responds to the cursor instead of an idle animation. */
-.surface-card{background:rgba(255,255,255,.4);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 20px 45px -22px rgba(37,99,235,.16);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
+.surface-card{background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.75);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.06),0 20px 45px -22px rgba(37,99,235,.2);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
 .surface-card:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.28);box-shadow:0 1px 2px rgba(15,23,42,.05),0 30px 60px -22px rgba(37,99,235,.26)}
 @media(prefers-reduced-motion:reduce){.surface-card{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 .premium-wash{background:radial-gradient(circle at 12% 15%,rgba(37,99,235,.06),transparent 35%),radial-gradient(circle at 88% 55%,rgba(37,99,235,.05),transparent 40%),radial-gradient(circle at 45% 92%,rgba(37,99,235,.045),transparent 35%),rgba(248,250,252,.65)}
@@ -209,7 +209,7 @@ p{text-wrap:pretty}
 /* Nav — light, always (independent of the dark hero band beneath it). */
 /* Reset the navy-scoped tokens .cinematic-hero sets above it: the nav
    itself always stays light, independent of the dark hero band beneath. */
-.site-nav{--muted:#475569;--faint:#64748b;--accent:#2563eb;--accent-2:#8b3fd1;position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid transparent;background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);color:var(--text);transition:border-color .4s ease,background-color .4s ease}
+.site-nav{--muted:#334155;--faint:#374151;--accent:#2563eb;--accent-2:#8b3fd1;position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid transparent;background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);color:var(--text);transition:border-color .4s ease,background-color .4s ease}
 .site-nav[data-scrolled="true"]{border-color:var(--border);background:rgba(255,255,255,.94)}
 
 .field{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);padding:1rem;color:var(--text);outline:none;transition:border-color .25s ease,background-color .25s ease}
@@ -227,7 +227,7 @@ p{text-wrap:pretty}
 .btn-pill--outline:active{transform:translateY(0) scale(.97)}
 .btn-pill:disabled{cursor:wait;opacity:.55;transform:none!important;box-shadow:none!important}
 
-.card-elevated{border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.4);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);box-shadow:0 1px 2px rgba(15,23,42,.04),0 30px 70px -32px rgba(15,23,42,.16);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
+.card-elevated{border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);box-shadow:0 1px 2px rgba(15,23,42,.04),0 30px 70px -32px rgba(15,23,42,.16);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
 .card-elevated:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.28);box-shadow:0 34px 80px -28px var(--glow),0 30px 70px -32px rgba(15,23,42,.16)}
 @media(prefers-reduced-motion:reduce){.card-elevated{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 
@@ -236,7 +236,7 @@ p{text-wrap:pretty}
    glass as the rest of the site instead of a flatter earlier version.
    Kept as its own class because several consumers set their own padding
    and hover behaviour on top of it. */
-.glass-panel{background:rgba(255,255,255,.4);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 20px 45px -22px rgba(37,99,235,.16)}
+.glass-panel{background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 20px 45px -22px rgba(37,99,235,.16)}
 @media(prefers-reduced-motion:reduce){.glass-panel{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 
 .glow-card{position:relative;overflow:hidden}

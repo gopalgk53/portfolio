@@ -94,7 +94,7 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
           <motion.p style={reducedMotion ? undefined : { y: eyebrowY }} className="eyebrow pt-2">
             {copy.eyebrow}
           </motion.p>
-          <h2 className="max-w-5xl overflow-hidden text-[clamp(2.8rem,6.5vw,7rem)] font-medium leading-[.92] tracking-[-.055em]">
+          <h2 className="max-w-5xl overflow-hidden text-[clamp(2.8rem,6.5vw,7rem)] font-semibold leading-[.92] tracking-[-.055em]">
             <RevealText as="span">{copy.title}</RevealText>
           </h2>
           {copy.description && <p className="max-w-xl leading-7 text-[var(--muted)]">{copy.description}</p>}
