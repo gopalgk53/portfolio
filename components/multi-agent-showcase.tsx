@@ -21,12 +21,14 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { ConceptNetwork } from "./concept-network-loader";
 import { spring } from "../lib/motion";
+import { Reveal } from "./reveal";
 import { DocLinkRow, FlowColumn, IconBadge, PillTag, ScenarioCard, StatTile, SurfaceCard } from "./ui-primitives";
 
-const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite";
+const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite/tree/main/wo-agent-orchestrator";
+const LIVE_APP_URL = "https://wo-intelligence-web.victoriousmoss-788bd572.southeastasia.azurecontainerapps.io/";
+const DOC_BASE = "https://github.com/gopalgk53/construction-legal-ai-suite/blob/main/wo-agent-orchestrator/docs";
 
 const STATS: { value: string; label: string }[] = [
   { value: "120", label: "Illustrative work order volume — design target" },
@@ -118,26 +120,16 @@ const TECH_STACK = [
   "Azure Container Apps", "GitHub Actions", "OIDC", "pytest",
 ];
 
+// Every entry points at the real document in the repository rather than
+// scrolling to a section of this page — the whole value of listing them is
+// that a reader can open the actual artefact.
 const DOCS = [
-  { icon: FileText, title: "Architecture documentation", sublabel: "System design and technical details", href: "#ma-architecture" },
-  { icon: CheckCircle2, title: "Production acceptance", sublabel: "Validation results and evidence", href: "#ma-performance" },
-  { icon: Terminal, title: "Operations runbook", sublabel: "Deployment and troubleshooting", href: REPO_URL },
-  { icon: Layers, title: "Portfolio case study", sublabel: "Complete project narrative", href: "#ma-hero" },
+  { icon: FileText, title: "Architecture documentation", sublabel: "System design and technical details", href: `${DOC_BASE}/ARCHITECTURE.md` },
+  { icon: CheckCircle2, title: "Production acceptance", sublabel: "Validation results and evidence", href: `${DOC_BASE}/PRODUCTION_ACCEPTANCE.md` },
+  { icon: Terminal, title: "Operations runbook", sublabel: "Deployment and troubleshooting", href: `${DOC_BASE}/RUNBOOK.md` },
+  { icon: Layers, title: "Portfolio case study", sublabel: "Complete project narrative", href: `${DOC_BASE}/PORTFOLIO_CASE_STUDY.md` },
 ];
 
-function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ ...spring, delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 export function MultiAgentShowcase({
   goal,
@@ -176,8 +168,11 @@ export function MultiAgentShowcase({
               <a href={REPO_URL} target="_blank" rel="noreferrer" className="btn-pill btn-pill--solid">
                 Inspect repository <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
-              <a href="#ma-architecture" className="btn-pill btn-pill--outline" style={{ borderColor: "var(--navy-border)", color: "#fff", background: "transparent" }}>
-                View architecture
+              <a href={LIVE_APP_URL} target="_blank" rel="noreferrer" className="btn-pill btn-pill--outline" style={{ borderColor: "var(--navy-border)", color: "#fff", background: "transparent" }}>
+                Open live app <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+              <a href={`${DOC_BASE}/ARCHITECTURE.md`} target="_blank" rel="noreferrer" className="btn-pill btn-pill--outline" style={{ borderColor: "var(--navy-border)", color: "#fff", background: "transparent" }}>
+                View architecture <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             </div>
           </motion.div>
@@ -192,7 +187,7 @@ export function MultiAgentShowcase({
               <ConceptNetwork />
             </div>
             <p className="border-t border-[var(--border)] px-4 py-3 text-center text-xs text-[var(--faint)]">
-              Statistics · ML models · deep learning · AI models · AI agents · multi-agents
+              Work order flow · intake → research → evidence → discrepancy → QC → human review
             </p>
           </motion.div>
         </div>
