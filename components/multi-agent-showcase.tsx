@@ -158,7 +158,7 @@ export function MultiAgentShowcase({
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={spring}>
             <span className="inline-flex items-center gap-2 rounded-[var(--radius-pill)] border border-[var(--navy-border)] px-3 py-1 text-[11px] font-semibold text-[var(--navy-text)]">
               <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-              Flagship blueprint
+              Implemented flagship
             </span>
             <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
               Autonomous Work Order <span className="text-[#60a5fa]">Intelligence</span> &amp; Operations Platform
@@ -328,10 +328,10 @@ export function MultiAgentShowcase({
           <section className="mt-24 border-t border-[var(--border)] pt-10">
             <p className="eyebrow">Assumptions &amp; limitations</p>
             <ol className="mt-4 grid gap-4 text-sm leading-6 text-[var(--muted)] sm:grid-cols-2">
-              <li>This is an architecture blueprint and its intended design, not a monitored, running production deployment with live metrics.</li>
+              <li>The deployed application runs on synthetic work-order data. It demonstrates the architecture end to end; it is not serving real customer workloads under production monitoring.</li>
               <li>Every number on this page is a design target for the evaluation harness this architecture is designed to reach, not a measured result from real usage.</li>
-              <li>No live application or dedicated public repository exists for this project yet — the repository link above is the same shared repository used across this portfolio&apos;s case studies.</li>
-              <li>Implementation-level specifics not published here — exact agent prompts, evaluation datasets, latency under real load — are the next evidence to publish as this moves from blueprint to implementation.</li>
+              <li>The repository link points to this project&apos;s own directory and documentation inside the shared portfolio repository.</li>
+              <li>Implementation-level specifics not published here — exact agent prompts, evaluation datasets, latency under real load — are the next evidence to publish.</li>
             </ol>
           </section>
         </Reveal>
