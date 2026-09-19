@@ -41,6 +41,15 @@ const PipelineDeepDive = dynamic(() => import("./pipeline-deep-dive").then(modul
 type Project = (typeof projects)[number];
 type SceneId = "identity" | "retrieval" | "agents" | "infra" | "capabilities" | "close";
 
+const REPO_ROOT = "https://github.com/gopalgk53/construction-legal-ai-suite";
+// Only projects with their own directory in the repo get a deep link; the
+// rest fall back to the repository root rather than a guessed path.
+const PROJECT_REPO: Record<string, string> = {
+  "payment-risk": `${REPO_ROOT}/tree/main/payment-delay-predictor`,
+  "multi-agent": `${REPO_ROOT}/tree/main/wo-agent-orchestrator`,
+};
+const repoFor = (id: string) => PROJECT_REPO[id] ?? REPO_ROOT;
+
 const AGENT_DOMAINS = ["Compliance", "Risk", "Communication"];
 
 // The same retrieval-vs-agentic split used for the 3D scene's network
@@ -228,13 +237,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </span>
         ))}
       </div></div>
-      <div className="relative z-10 flex flex-col justify-between border-l border-[var(--border)] pl-6">
+      <div className="relative z-10 mt-8 flex flex-col justify-between border-t border-[var(--border)] pt-8 md:mt-0 md:border-l md:border-t-0 md:pl-6 md:pt-0">
         <div><p className="text-[11px] font-semibold text-[var(--faint)]">System flow</p><p className="mt-4 text-sm leading-7 text-[var(--muted)]">{project.flow}</p></div>
         <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-[var(--border)] pt-5 text-xs">
           <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
             Read case study <ArrowUpRight className="h-3 w-3" />
           </a>
-          <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[var(--muted)]">
+          <a href={repoFor(project.id)} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[var(--muted)]">
             Inspect code <Code2 className="h-3 w-3" />
           </a>
           <a href="#playground" className="flex items-center gap-1 text-[var(--faint)]">
@@ -291,7 +300,7 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
         <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
           Read case study <ArrowUpRight className="h-3 w-3" />
         </a>
-        <a href="https://github.com/gopalgk53/construction-legal-ai-suite" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[var(--muted)]">
+        <a href={repoFor(project.id)} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[var(--muted)]">
           Inspect code <Code2 className="h-3 w-3" />
         </a>
         <a href="#playground" className="flex items-center gap-1 text-[var(--faint)]">
