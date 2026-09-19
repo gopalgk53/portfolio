@@ -149,12 +149,25 @@ export function AIAssistant() {
       const saved = sessionStorage.getItem(STORE);
       if (saved) setMessages(JSON.parse(saved));
     } catch {}
-    const timer = setTimeout(() => {
-      if (!sessionStorage.getItem("gopal-bot-tooltip")) setTooltip(true);
+    // The nudge used to appear and then stay until the assistant was
+    // opened, and "seen" was only recorded on open — so it came back on
+    // every reload and, at 256px wide, covered most of a phone screen. It
+    // now times out on its own, is recorded as seen when shown, and is
+    // skipped entirely on small screens where the orb is nudge enough.
+    let hideTimer: ReturnType<typeof setTimeout> | undefined;
+    const showTimer = setTimeout(() => {
+      if (sessionStorage.getItem("gopal-bot-tooltip")) return;
+      if (!window.matchMedia("(min-width: 640px)").matches) return;
+      sessionStorage.setItem("gopal-bot-tooltip", "seen");
+      setTooltip(true);
+      hideTimer = setTimeout(() => setTooltip(false), 6000);
     }, 7000);
     setVoiceSupported(!!getSpeechRecognitionConstructor());
     setSpeechSupported(typeof window !== "undefined" && "speechSynthesis" in window);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
   }, []);
   useEffect(() => {
     if (messages.length) sessionStorage.setItem(STORE, JSON.stringify(messages));
