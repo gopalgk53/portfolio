@@ -6,6 +6,7 @@ import { PrintButton } from "../../../components/print-button";
 import { PaymentRiskBenchmark } from "../../../components/payment-risk-benchmark";
 import { PaymentRiskStory } from "../../../components/payment-risk-story";
 import { MultiAgentShowcase } from "../../../components/multi-agent-showcase";
+import { PaymentRiskShowcase } from "../../../components/payment-risk-showcase";
 import { Reveal } from "../../../components/reveal";
 
 export const dynamicParams = false;
@@ -27,6 +28,18 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   const nextProject = projects[(projectIndex + 1) % projects.length];
   const isPaymentRisk = project.id === "payment-risk";
   const isMultiAgent = project.id === "multi-agent";
+
+  if (isPaymentRisk) {
+    return (
+      <PaymentRiskShowcase
+        goal={project.goal}
+        projectIndex={projectIndex}
+        totalProjects={projects.length}
+        nextProjectId={nextProject.id}
+        nextProjectTitle={nextProject.title}
+      />
+    );
+  }
 
   if (isMultiAgent) {
     return (
