@@ -15,6 +15,8 @@ import { certifications, credlyBadges, projects, skills } from "../lib/data";
 import { spring, staggerChild } from "../lib/motion";
 import { useGlowPointer } from "../lib/use-glow-pointer";
 import { Reveal } from "./reveal";
+import { MobileDisclosure, MobileExpandable } from "./mobile-expandable";
+import { MobileContactCta } from "./mobile-contact-cta";
 import { RevealText } from "./motion/reveal-text";
 import { Magnetic } from "./motion/magnetic";
 import { RagFlow } from "./visualizations/rag-flow";
@@ -332,11 +334,11 @@ function Projects() {
       <FlagshipProject project={multiAgent} index={multiAgentIndex} scene="agents" viz={<AgentFlow flow={multiAgent.flow} domains={AGENT_DOMAINS} />} />
       <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
 
-      <div className="mt-24 flex flex-col gap-6">
+      <MobileExpandable limit={3} noun="projects" className="mt-24 flex flex-col gap-6">
         {rest.map((p) => (
           <ProjectCard key={p.id} project={p} index={projects.indexOf(p)} />
         ))}
-      </div>
+      </MobileExpandable>
       <div className="mt-16 flex justify-end border-t border-[var(--border-strong)] pt-8">
         <a href="/projects" className="group flex items-center gap-4 text-sm text-[var(--muted)]">
           Explore all nine case studies
@@ -390,7 +392,9 @@ function Playground() {
         <div className="mb-16 grid gap-6 border-y border-black/20 py-5 text-[11px] font-semibold md:grid-cols-3">
           <span>Outputs · live model</span><span>Timing · measured server-side</span><span>Purpose · interaction study</span>
         </div>
-        <PromptPlayground />
+        <MobileDisclosure label="Open the live playground">
+          <PromptPlayground />
+        </MobileDisclosure>
       </Section>
     </div>
   );
@@ -434,7 +438,7 @@ function Experience() {
 function Badges() {
   return (
     <Section id="badges" scene="identity">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <MobileExpandable limit={4} noun="badges" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {credlyBadges.map((badge, index) => {
           const emblem = (
             <span className="badge-emblem" data-kind={badge.kind} aria-hidden="true">
@@ -464,7 +468,7 @@ function Badges() {
             </Reveal>
           );
         })}
-      </div>
+      </MobileExpandable>
     </Section>
   );
 }
@@ -620,6 +624,7 @@ export function Portfolio() {
       <Certifications />
       <HiringEvidence />
       <Contact />
+      <MobileContactCta />
       <footer className="relative z-10 border-t border-[var(--border)] px-5 py-10 sm:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-xs text-[var(--faint)] sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Gopalakrishna · Generative AI Engineer</p>
