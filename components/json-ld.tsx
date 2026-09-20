@@ -20,6 +20,11 @@ export function JsonLd() {
         email: "mailto:gopalgk53@yahoo.com",
         jobTitle: "Generative AI Engineer",
         url: "https://gopalakrishnagenai.in",
+        // image and address feed Google's Person rich result; the photo is
+        // the same one the About section renders, and the country matches
+        // the "India" the hero already states.
+        image: "https://gopalakrishnagenai.in/gopalakrishna.jpg",
+        address: { "@type": "PostalAddress", addressCountry: "IN" },
         sameAs: [
           "https://github.com/gopalgk53",
           "https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b",
