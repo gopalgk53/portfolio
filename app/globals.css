@@ -1,11 +1,14 @@
 @import "tailwindcss";
-@import "@fontsource/inter/400.css";
+/* Weights are limited to those actually rendered (verified against the live
+   DOM): Inter 400 and JetBrains Mono 600 were imported but used by zero
+   elements, so they're dropped. Full subsets are kept deliberately — the UI
+   leans on → and · glyphs, which a latin-only subset would push to a system
+   fallback. */
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
 @import "@fontsource/inter/700.css";
 @import "@fontsource/jetbrains-mono/400.css";
 @import "@fontsource/jetbrains-mono/500.css";
-@import "@fontsource/jetbrains-mono/600.css";
 @import "@fontsource/space-grotesk/700.css";
 
 @theme {

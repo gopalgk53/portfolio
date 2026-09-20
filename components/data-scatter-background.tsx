@@ -28,6 +28,20 @@ export function DataScatterBackground() {
     if (!context) return;
     const ctx: CanvasRenderingContext2D = context;
 
+    // Everything below — seeding, the resize listener, and the rAF loop with
+    // its O(n²) link pass — is set up inside start(). It is gated behind
+    // requestIdleCallback so none of it competes with the critical loading
+    // window; the field is ambient and invisible for the first frame, so a
+    // one-idle-tick delay is imperceptible but keeps this off the main thread
+    // while the page paints. cleanup() cancels whichever phase is pending.
+    let started = false;
+    let frameId = 0;
+    let idleId = 0;
+    let removeResize = () => {};
+
+    function start() {
+      started = true;
+
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let width = window.innerWidth;
     let height = window.innerHeight;
@@ -63,6 +77,7 @@ export function DataScatterBackground() {
 
     resize();
     window.addEventListener("resize", resize);
+    removeResize = () => window.removeEventListener("resize", resize);
 
     function drawStatic() {
       ctx.clearRect(0, 0, width, height);
@@ -76,10 +91,9 @@ export function DataScatterBackground() {
 
     if (reduceMotion) {
       drawStatic();
-      return () => window.removeEventListener("resize", resize);
+      return;
     }
 
-    let frameId = 0;
     function tick() {
       const now = performance.now() / 1000;
       ctx.clearRect(0, 0, width, height);
@@ -139,11 +153,26 @@ export function DataScatterBackground() {
       ctx.shadowBlur = 0;
       frameId = requestAnimationFrame(tick);
     }
-    tick();
+      tick();
+    }
+
+    const win = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (win.requestIdleCallback) {
+      idleId = win.requestIdleCallback(start, { timeout: 1500 });
+    } else {
+      idleId = window.setTimeout(start, 400);
+    }
 
     return () => {
+      if (!started) {
+        if (win.cancelIdleCallback) win.cancelIdleCallback(idleId);
+        else window.clearTimeout(idleId);
+      }
       cancelAnimationFrame(frameId);
-      window.removeEventListener("resize", resize);
+      removeResize();
     };
   }, []);
 
