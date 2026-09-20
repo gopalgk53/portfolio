@@ -17,7 +17,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   alternates: { canonical: "/" },
   openGraph: { title: "Gopalakrishna — Generative AI Engineer", description: "Production-minded RAG, agentic systems, and LLM inference engineering.", url: "/", siteName: "Gopalakrishna GenAI", type: "profile", images:[{url:"/opengraph-image",width:1200,height:630,alt:"Gopalakrishna — Generative AI Engineer"}] },
-  twitter: { card: "summary_large_image", title: "Gopalakrishna — Generative AI Engineer", description: "RAG, autonomous agents, and optimized LLM systems.", images:["/opengraph-image"] },
+  // No explicit twitter.images: an explicit value here overrides Next's
+  // opengraph-image file convention for every descendant route, so a shared
+  // case-study link showed the homepage card on X. Omitting it lets each
+  // route's own opengraph-image populate twitter:image, the same way it
+  // already does for og:image.
+  twitter: { card: "summary_large_image", title: "Gopalakrishna — Generative AI Engineer", description: "RAG, autonomous agents, and optimized LLM systems." },
   robots: { index: true, follow: true },
 };
 
