@@ -89,7 +89,12 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
   // scale alone still read as static.
   const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
   const y = useTransform(scrollYProgress, [0, 1], [56, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.35, 1]);
+  // Floor is 0.75, not 0.35: below-fold sections sit at this value until
+  // scrolled to, and at 0.35 the composited text dropped to ~1.9:1 — a real
+  // WCAG failure that automated audits catch and that shows for an instant
+  // before the section animates in. At 0.75 the lightest body text stays at
+  // 4.8:1, and the scale + slide still carry the "arrive" motion.
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.75, 1]);
   const eyebrowY = useTransform(scrollYProgress, [0, 1], [18, 0]);
 
   return (
