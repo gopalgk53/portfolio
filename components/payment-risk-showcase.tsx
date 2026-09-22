@@ -27,7 +27,7 @@ import { PaymentRiskStory } from "./payment-risk-story";
 import { PaymentRiskBenchmark } from "./payment-risk-benchmark";
 
 const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite/tree/main/payment-delay-predictor";
-const DASHBOARD_URL = "http://payment-risk-dashboard-alb-dev-63000172.ap-southeast-2.elb.amazonaws.com/";
+const DASHBOARD_URL = "https://payment-risk.gopalakrishnagenai.in/";
 
 // Every figure here is either a property of the system (a frozen threshold,
 // a count of services) or explicitly labelled as what it is. Nothing is
