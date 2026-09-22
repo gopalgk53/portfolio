@@ -20,6 +20,8 @@ export const skills = [
 
 export const certifications = [
   ["Post Graduate Program in Artificial Intelligence and Machine Learning", "McCombs School of Business, The University of Texas at Austin · Great Learning · Jan 2021", "https://www.mygreatlearning.com/certificate/YKRZCXMO"],
+  ["Generative AI for Data Scientists", "IBM · Coursera Specialization · Sep 2026", "https://coursera.org/share/d608cb41bfbdd55f85b280772f6ebff9"],
+  ["Generative AI for Data Analysts", "IBM · Coursera Specialization · Sep 2026", "https://coursera.org/share/e453902c46df4de213d408ab7f725a56"],
   ["Statistical Methods for Decision Making", "Great Learning · May 2020", "https://olympus1.greatlearning.in/course_certificate/GWSUYGPZ"],
   ["Machine Learning Engineering for Production (MLOps) Specialization", "Coursera · Nov 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/JM8WZRKMAZJW"],
   ["Practical Data Science Specialization", "Coursera · Sep 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/7HAFEBY7E6S6"],
@@ -58,6 +60,7 @@ export type CredlyBadge = { name: string; issuer: string; issued: string; kind: 
 const credlyBadgeUrl = (id: string) => `https://www.credly.com/badges/${id}/public_url`;
 
 export const credlyBadges: CredlyBadge[] = [
+  { name: "Generative AI for Data Scientists Specialization", issuer: "IBM · Coursera", issued: "Sep 22, 2026", kind: "specialization", url: credlyBadgeUrl("9b56c51e-7942-4d6c-bd32-1f3a2cacdf34") },
   { name: "Generative AI for Data Analysts Specialization", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "specialization", url: credlyBadgeUrl("324b128c-1df0-4be7-9994-7be3a632f214") },
   { name: "Generative AI Essentials for Data Analytics", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "course", url: credlyBadgeUrl("0f76ae43-08b7-411e-9737-8db2877bf7f2") },
   { name: "Generative AI Essentials", issuer: "IBM · Coursera", issued: "Sep 9, 2026", kind: "course", url: credlyBadgeUrl("75ea6e72-aac0-427b-82a0-88a2d8d947f1") },
