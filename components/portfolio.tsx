@@ -365,13 +365,11 @@ function SkillCard({ group, items, index }: { group: string; items: string[]; in
       transition={staggerChild(index)}
       className="glass-panel glow-card grid gap-5 p-7 md:grid-cols-[2rem_17rem_1fr] md:items-center"
     >
-      <span className="font-mono text-[10px]" style={{ color: group === "Orchestration & Agents" ? "var(--accent-2)" : "var(--faint)" }}>{String(index + 1).padStart(2, "0")}</span>
-      <h3 className="font-medium text-[var(--text)]">{group}</h3>
-      <div className="flex flex-wrap gap-x-5 gap-y-2">
+      <span className="font-mono text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
+      <h3 className="text-[17px] font-semibold text-[var(--text)]">{group}</h3>
+      <div className="flex flex-wrap gap-2">
         {items.map((x) => (
-          <motion.span key={x} whileHover={{ x: 3 }} transition={spring} className="font-mono text-[10px] text-[var(--muted)]">
-            {x}
-          </motion.span>
+          <span key={x} className="tech-chip">{x}</span>
         ))}
       </div>
     </motion.div>
@@ -615,14 +613,16 @@ export function Portfolio() {
       <ProjectShowcase />
       <Projects />
       <Playground />
-      <details className="lab-disclosure">
-        <summary>Technical lab · Infrastructure observability</summary>
-        <InfrastructureDashboard />
-      </details>
-      <details className="lab-disclosure">
-        <summary>Technical lab · Production RAG pipeline</summary>
-        <PipelineDeepDive />
-      </details>
+      <div className="lab-band">
+        <details className="lab-disclosure">
+          <summary>Technical lab · Infrastructure observability</summary>
+          <InfrastructureDashboard />
+        </details>
+        <details className="lab-disclosure">
+          <summary>Technical lab · Production RAG pipeline</summary>
+          <PipelineDeepDive />
+        </details>
+      </div>
       <Experience />
       <Skills />
       <Badges />

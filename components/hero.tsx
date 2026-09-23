@@ -77,8 +77,8 @@ export function Hero() {
       <nav className="site-nav" data-scrolled={scrolled} aria-label="Primary navigation">
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 sm:px-8">
           <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`text-[13px] font-semibold tracking-tight ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>Gopalakrishna · AI Systems</a>
-          <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[.12em] text-[var(--muted)] md:flex">
-            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} className={activeId === id ? "text-[var(--accent)]" : undefined}>{label}</a>)}
+          <div className="hidden items-center gap-7 text-[13.5px] font-medium text-[var(--muted)] md:flex">
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} className={`transition-colors hover:text-[var(--text)] ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}</a>)}
             <SoundToggle className="text-[var(--muted)]" />
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--solid">Résumé <ArrowUpRight className="h-3 w-3" /></a>
           </div>
@@ -91,7 +91,7 @@ export function Hero() {
         </div>
         <AnimatePresence>{menuOpen && (
           <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-[var(--border)] bg-[var(--bg)] px-5 py-5 md:hidden">
-            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-[var(--border)] py-4 text-sm uppercase tracking-wider ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-[var(--border)] py-4 text-[15px] font-medium ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
           </motion.div>
         )}</AnimatePresence>
@@ -105,7 +105,7 @@ export function Hero() {
           <p className="text-[13px] font-medium leading-5 text-[var(--muted)]">India · 2026</p>
         </motion.div>
         <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
-          <p className="mb-4 text-right text-[11px] font-semibold text-[var(--accent-2)]">Systems that reason with context</p>
+          <p className="mb-4 text-right text-[12px] font-semibold text-[var(--accent-2)] lg:text-left">Systems that reason with context</p>
           <h1 className="hero-title" aria-label="Generative intelligence">
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Generative</motion.span>
             <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="text-gradient-accent block text-right">Intelligence</motion.span>

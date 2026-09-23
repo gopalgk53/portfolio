@@ -84,8 +84,11 @@ export function SiteEnhancements() {
         </button>;
       })}
     </div>}
-    <button ref={triggerRef} onClick={() => setOpen(value => !value)} aria-controls="effects-intensity-menu" aria-expanded={open} aria-haspopup="menu" className="flex h-11 items-center gap-2 rounded-full border border-[var(--border)] bg-white px-4 text-[11px] text-[var(--muted)] shadow-[0_1px_2px_rgba(15,23,42,.04),0_20px_45px_-22px_rgba(37,99,235,.16)]">
-      <ActiveIcon className="h-4 w-4 text-[var(--accent)]"/><span className="hidden sm:inline">3D: {active.label.toUpperCase()}</span><span className="sr-only">Choose 3D animation intensity. Current setting: {active.label}</span>
+    {/* Icon-only, matching the assistant orb opposite it. As a labelled
+        pill it was 176px wide and fixed over the bottom-left of every
+        section, covering card content as the page scrolled beneath it. */}
+    <button ref={triggerRef} onClick={() => setOpen(value => !value)} aria-controls="effects-intensity-menu" aria-expanded={open} aria-haspopup="menu" title={`3D intensity: ${active.label}`} className="grid h-11 w-11 place-items-center rounded-full border border-[var(--border)] bg-white text-[var(--accent)] shadow-[0_1px_2px_rgba(15,23,42,.04),0_20px_45px_-22px_rgba(37,99,235,.16)] transition-transform hover:scale-105">
+      <ActiveIcon className="h-4 w-4"/><span className="sr-only">Choose 3D animation intensity. Current setting: {active.label}</span>
     </button>
     <span className="sr-only" aria-live="polite">3D animation intensity set to {active.label}</span>
   </div>;
