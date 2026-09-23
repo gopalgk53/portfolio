@@ -11,11 +11,15 @@ export const projects = [
 ];
 
 export const skills = [
-  { group: "Models & Fine-Tuning", items: ["Llama 3", "Qwen", "DeepSeek", "LoRA / QLoRA", "Axolotl", "Unsloth", "Hugging Face"] },
+  { group: "Models & Fine-Tuning", items: ["Llama 3", "Qwen", "DeepSeek", "LoRA / QLoRA", "Axolotl", "Unsloth", "Hugging Face", "GPT-5-mini", "DataRobot AutoML", "SHAP", "scikit-learn"] },
   { group: "Inference & Optimization", items: ["vLLM", "TensorRT-LLM", "Ollama", "AWQ", "GGUF", "GPTQ", "FlashAttention"] },
-  { group: "Orchestration & Agents", items: ["LangChain", "LangGraph", "AutoGen", "CrewAI", "LlamaIndex", "DSPy"] },
+  { group: "Orchestration & Agents", items: ["LangChain", "LangGraph", "AutoGen", "CrewAI", "LlamaIndex", "DSPy", "Microsoft Foundry", "MCP"] },
   { group: "Vector Databases & RAG", items: ["Qdrant", "Pinecone", "Milvus", "Chroma", "Hybrid Search", "RRF"] },
-  { group: "Engineering & Infrastructure", items: ["PyTorch", "Python", "FastAPI", "Docker", "Ray", "Triton", "CUDA", "AWS / GCP"] },
+  { group: "Engineering & Infrastructure", items: ["PyTorch", "Python", "FastAPI", "Docker", "Ray", "Triton", "CUDA", "AWS / GCP", "AWS S3", "AWS Glue", "Amazon Athena", "AWS IAM", "Amazon SageMaker", "Amazon ECS", "Amazon CloudWatch", "AWS Lambda", "API Gateway"] },
+  // New: neither project's stack had a home in the five groups above —
+  // Next.js/React/TypeScript/Tailwind are the operations-console frontend
+  // for both case studies, and the rest is how they actually ship.
+  { group: "Frontend & Deployment", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Azure Container Apps", "GitHub Actions", "OIDC", "pytest"] },
 ];
 
 export const certifications = [
