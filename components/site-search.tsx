@@ -101,6 +101,10 @@ export function SiteSearch() {
 
   return (
     <div className="glass-panel mb-10 p-5 sm:p-6">
+      {/* .field and .btn-pill are unlayered CSS, so they beat Tailwind's
+          layered utilities regardless of specificity; the ! overrides below are
+          what let the icon and button sit inside the input rather than on top
+          of the placeholder and below it. */}
       <form onSubmit={submit} className="relative">
         <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--accent)]" />
         <input
@@ -108,9 +112,9 @@ export function SiteSearch() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search projects, skills, and credentials — e.g. “vector database experience”"
           aria-label="Search projects, skills, and credentials"
-          className="field w-full pl-11 pr-24 text-sm"
+          className="field w-full !pl-11 !pr-28 text-sm"
         />
-        <button type="submit" disabled={loading} className="btn-pill btn-pill--solid absolute right-1.5 top-1.5 !py-2" style={{ padding: "0.5rem 1rem" }}>
+        <button type="submit" disabled={loading} className="btn-pill btn-pill--solid !absolute right-1.5 top-1/2 -translate-y-1/2" style={{ padding: "0.55rem 1.1rem" }}>
           {loading ? "Searching…" : "Search"}
         </button>
       </form>

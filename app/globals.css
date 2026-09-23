@@ -166,7 +166,7 @@ p{text-wrap:pretty}
 .cinematic-hero::after{content:"";position:absolute;inset:0;z-index:80;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")}
 #webgl-canvas{display:block;width:100%;height:100%;transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
 .node-label-host{position:absolute;inset:0;pointer-events:none}
-.node-label{position:absolute;left:0;top:0;font-family:"Inter",ui-sans-serif,sans-serif;font-weight:500;font-size:11px;letter-spacing:.02em;color:#fff;opacity:0;white-space:nowrap;will-change:transform,opacity;text-shadow:0 0 12px rgba(15,23,42,.85)}
+.node-label{position:absolute;left:0;top:0;font-family:"Inter",ui-sans-serif,sans-serif;font-weight:500;font-size:11px;letter-spacing:.02em;color:rgba(226,232,240,.62);opacity:0;white-space:nowrap;will-change:transform,opacity;text-shadow:0 0 12px rgba(15,23,42,.85)}
 
 /* Was a dark vignette for legibility over the (formerly full-page) dark
    network — every section on the light page is plain light-on-dark-text
@@ -175,7 +175,7 @@ p{text-wrap:pretty}
 .typography-shield{position:relative;isolation:isolate}
 
 .eyebrow{font-family:"Inter",ui-sans-serif,sans-serif;font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.hero-title{overflow:hidden;font-size:clamp(3.9rem,12.2vw,13.8rem);font-weight:700;line-height:.76;letter-spacing:-.04em;text-transform:uppercase}
+.hero-title{overflow:hidden;font-size:clamp(2.5rem,12.2vw,13.8rem);font-weight:700;line-height:.76;letter-spacing:-.04em;text-transform:uppercase}
 .hero-name{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;font-weight:700;font-size:clamp(2.4rem,5.2vw,3.6rem);line-height:1.02;letter-spacing:-.02em;text-transform:none;max-width:min(90vw,32rem)}
 .hero-title>span{will-change:transform}
 .cinematic-hero{--muted:var(--navy-muted);--faint:var(--navy-muted);--accent:var(--navy-accent);--accent-2:var(--navy-accent-2);position:relative;background:var(--navy);color:var(--navy-text)}
@@ -212,8 +212,8 @@ p{text-wrap:pretty}
 /* Nav — light, always (independent of the dark hero band beneath it). */
 /* Reset the navy-scoped tokens .cinematic-hero sets above it: the nav
    itself always stays light, independent of the dark hero band beneath. */
-.site-nav{--muted:#334155;--faint:#374151;--accent:#2563eb;--accent-2:#8b3fd1;position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid transparent;background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);color:var(--text);transition:border-color .4s ease,background-color .4s ease}
-.site-nav[data-scrolled="true"]{border-color:var(--border);background:rgba(255,255,255,.94)}
+.site-nav{--muted:#334155;--faint:#374151;--accent:#2563eb;--accent-2:#8b3fd1;position:fixed;inset-inline:0;top:0;z-index:50;border-bottom:1px solid var(--border);background:rgba(255,255,255,.96);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);color:var(--text);transition:border-color .4s ease,background-color .4s ease}
+.site-nav[data-scrolled="true"]{border-color:var(--border);background:rgba(255,255,255,.97);box-shadow:0 8px 30px -18px rgba(15,23,42,.25)}
 
 .field{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);padding:1rem;color:var(--text);outline:none;transition:border-color .25s ease,background-color .25s ease}
 .field::placeholder{color:var(--faint)}
@@ -248,12 +248,18 @@ p{text-wrap:pretty}
 .glow-card>*{position:relative;z-index:1}
 @media(prefers-reduced-motion:reduce),(hover:none){.glow-card::before{opacity:.6;background:radial-gradient(60% 50% at 50% 0%,var(--glow),transparent 75%)}}
 
-.lab-disclosure{position:relative;z-index:10;margin:1rem auto;max-width:80rem;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
-.lab-disclosure>summary{cursor:pointer;list-style:none;padding:1.25rem 2rem;font:.68rem "JetBrains Mono",monospace;letter-spacing:.08em;color:var(--muted)}
+.lab-disclosure{position:relative;z-index:10;margin:0 auto;max-width:80rem;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);box-shadow:0 1px 2px rgba(15,23,42,.04),0 18px 40px -26px rgba(37,99,235,.22);transition:border-color .3s ease,box-shadow .3s ease}.lab-disclosure:hover{border-color:rgba(37,99,235,.3)}.lab-disclosure+.lab-disclosure{margin-top:.75rem}
+.lab-disclosure>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.15rem 1.5rem;font:600 14px "Inter",ui-sans-serif,sans-serif;color:var(--text)}
 .lab-disclosure>summary::-webkit-details-marker{display:none}
-.lab-disclosure>summary::before{content:"+";margin-right:.75rem;color:var(--accent)}
-.lab-disclosure[open]>summary::before{content:"\2212"}
+.lab-disclosure>summary::after{content:"+";display:grid;flex-shrink:0;width:1.75rem;height:1.75rem;place-items:center;border:1px solid var(--border-strong);border-radius:50%;font-size:1rem;font-weight:500;color:var(--accent);transition:transform .3s ease,background-color .3s ease}.lab-disclosure>summary:hover::after{background:var(--accent-soft)}
+.lab-disclosure[open]>summary::after{content:"\2212";background:var(--accent-soft)}
 .lab-disclosure>section{border-top:1px solid var(--border)}
+/* Holds the two technical-lab disclosures. Without it the gap between them
+   showed the ambient network at full strength, the only place on the page
+   it wasn't sitting behind a section. */
+.lab-band{position:relative;z-index:10;padding:clamp(2.5rem,5vw,4rem) 1.25rem;background:rgba(255,255,255,.76);border-top:1px solid var(--border)}
+/* Technology chips in the capabilities list */
+.tech-chip{display:inline-flex;align-items:center;border:1px solid var(--border-strong);border-radius:var(--radius-pill);background:rgba(255,255,255,.85);padding:.3rem .75rem;font:500 12.5px "Inter",ui-sans-serif,sans-serif;color:var(--muted);transition:border-color .25s ease,color .25s ease,background-color .25s ease}.tech-chip:hover{border-color:rgba(37,99,235,.4);color:var(--accent);background:var(--accent-soft)}
 
 .scroll-cue{position:relative;display:inline-block;width:13px;height:20px;flex-shrink:0;border:1px solid var(--navy-border);border-radius:var(--radius-pill)}
 .scroll-cue::before{content:"";position:absolute;left:50%;top:3px;width:3px;height:5px;border-radius:2px;background:#fff;transform:translateX(-50%);animation:scroll-cue-move 1.8s ease-in-out infinite}
@@ -319,7 +325,10 @@ p{text-wrap:pretty}
 @media(max-width:760px){
   .node-label--secondary{display:none}
   .hero-name{font-size:clamp(1.9rem,9vw,2.6rem);max-width:80vw}
-  .hero-title{font-size:clamp(3.5rem,18vw,6rem);line-height:.82}
+  /* 18vw put INTELLIGENCE ~120px past the edge of a 390px phone. 12.8vw is
+     the largest size where the widest word still fits inside the gutters
+     from 320px up. */
+  .hero-title{font-size:clamp(2.2rem,12.8vw,6rem);line-height:.86}
   .hero-title span:last-child{text-align:left}
   .flagship-chapter{min-height:auto}
   .flagship-chapter>.sticky{position:relative;top:auto}
