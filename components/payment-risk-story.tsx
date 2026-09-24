@@ -8,13 +8,16 @@ import {
   Boxes,
   Brain,
   Database,
+  GitBranch,
+  History,
+  LayoutDashboard,
+  Lightbulb,
   Pause,
   Play,
   RotateCcw,
   Search,
   Server,
   ShieldCheck,
-  Waypoints,
   Workflow,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -133,14 +136,31 @@ function RiskQueueVisual({ isActive, paused, reducedMotion }: ChapterVisualProps
   );
 }
 
+// The request-path stages only — solid-arrow runtime flow in the
+// architecture diagram. Glue, Athena, CloudWatch, model governance, CI/CD,
+// and testing are real parts of the system, but the diagram's own legend
+// draws them as dashed arrows: monitoring/governance/control flow that
+// wraps around this path rather than sitting inline in it. They're the
+// CONTROL_PLANE strip below, not stages here — putting them in this list
+// would misrepresent a request's actual path, which is what this animation
+// is for.
 const PIPELINE_STAGES = [
-  { name: "S3", Icon: Database, detail: "Raw payment and project records land here first." },
-  { name: "Glue", Icon: Workflow, detail: "ETL jobs clean and transform the raw records." },
-  { name: "Athena", Icon: Search, detail: "SQL queries the curated data lake directly." },
-  { name: "SageMaker", Icon: Brain, detail: "Trains and hosts the payment-risk scoring model." },
-  { name: "FastAPI", Icon: Boxes, detail: "Serves scoring requests behind a typed API contract." },
-  { name: "ALB", Icon: Waypoints, detail: "Routes and load-balances incoming API traffic." },
-  { name: "ECS", Icon: Server, detail: "Runs the containerized API behind the dashboard." },
+  { name: "S3", Icon: Database, detail: "Synthetic work order and payment records land here first." },
+  { name: "Feature engineering", Icon: Workflow, detail: "Validates, cleans, and engineers features from the raw records." },
+  { name: "SageMaker", Icon: Brain, detail: "Trains, evaluates, and versions the candidate models; the champion is selected here." },
+  { name: "SHAP", Icon: Lightbulb, detail: "Explains the served score — which features pushed it, and in which direction." },
+  { name: "FastAPI", Icon: Boxes, detail: "Serves the score and its explanation behind a typed, validated API contract." },
+  { name: "ECS / Fargate", Icon: Server, detail: "Runs the containerized API behind the load balancer." },
+  { name: "Dashboard", Icon: LayoutDashboard, detail: "Renders the risk score and its explanation for a human reviewer." },
+];
+
+// The dashed-arrow half of the diagram: real systems, but wrapped around
+// the request path rather than sitting inside it.
+const CONTROL_PLANE = [
+  { name: "CloudWatch", Icon: Activity, detail: "Logs, metrics, alarms, and feature-drift detection watch every stage continuously." },
+  { name: "Glue + Athena", Icon: Search, detail: "A separate analytics path catalogs and queries the same data for operational reporting." },
+  { name: "Model governance", Icon: History, detail: "Every prediction is stamped with model version, dataset version, and a trace ID for audit." },
+  { name: "CI/CD + pytest", Icon: GitBranch, detail: "Unit, integration, API, and model tests gate every build before GitHub Actions deploys it." },
 ];
 
 function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps) {
@@ -158,7 +178,7 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
       <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--border-strong)] p-4 sm:p-6">
         <p className="mb-4 flex items-center gap-2 text-[11px] font-semibold text-[var(--faint)]">
           <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          IAM — security boundary, governs access to every stage below
+          IAM + Secrets Manager — security boundary, least-privilege access, encrypted at rest and in transit
         </p>
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch lg:gap-0">
           {PIPELINE_STAGES.map((stage, index) => {
@@ -197,17 +217,25 @@ function PipelineVisual({ isActive, paused, reducedMotion }: ChapterVisualProps)
           })}
         </div>
       </div>
-      <div className="mt-4 flex items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--surface)] p-3">
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-[var(--faint)]">
-          <Activity className="h-4 w-4" />
-        </span>
-        <p className="text-xs leading-5 text-[var(--faint)]">
-          <strong className="text-[var(--muted)]">CloudWatch</strong> watches every stage inside the boundary continuously — it is a monitor, not a step in the request path.
-        </p>
-      </div>
       <p className="mt-4 max-w-lg text-sm leading-6 text-[var(--muted)]">
         Currently highlighting <strong className="text-[var(--text)]">{PIPELINE_STAGES[active].name}</strong> — {PIPELINE_STAGES[active].detail.toLowerCase()}
       </p>
+      {/* Dashed border, distinct from the solid-bordered stages above — the
+          same solid/dashed distinction the source architecture diagram
+          uses for runtime flow vs monitoring/governance/control flow. */}
+      <div className="mt-5 grid gap-3 border-t border-dashed border-[var(--border-strong)] pt-5 sm:grid-cols-2 lg:grid-cols-4">
+        {CONTROL_PLANE.map((item) => (
+          <div key={item.name} className="rounded-[var(--radius-sm)] border border-dashed border-[var(--border-strong)] p-3">
+            <div className="flex items-center gap-2">
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-[var(--faint)]">
+                <item.Icon className="h-3.5 w-3.5" />
+              </span>
+              <span className="text-[11px] font-semibold text-[var(--muted)]">{item.name}</span>
+            </div>
+            <p className="mt-2 text-[11px] leading-4 text-[var(--faint)]">{item.detail}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

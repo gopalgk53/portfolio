@@ -41,26 +41,30 @@ const AGENT_EDGES: [string, string][] = [
 
 // The payment-risk pipeline: the same governed path the case study
 // describes, from raw data in S3 through to a served, monitored score.
+// Matches the request's actual runtime path — the same solid-arrow chain
+// PaymentRiskStory's PipelineVisual animates below. Glue/Athena and
+// CloudWatch are real, but the source architecture diagram draws them as
+// dashed arrows (a separate analytics branch and a monitor watching every
+// stage, respectively) — not inline in this path. Keeping them out here
+// too, so this hero visual doesn't contradict the accurate one further
+// down the same page.
 const PIPELINE_NODES: AgentNode[] = [
   { id: "s3", label: "S3", position: new THREE.Vector3(-3.05, -0.2, 0), kind: "endpoint" },
-  { id: "glue", label: "Glue ETL", position: new THREE.Vector3(-1.95, 0.8, 0.25), kind: "agent" },
-  { id: "athena", label: "Athena", position: new THREE.Vector3(-0.85, -0.7, -0.3), kind: "agent" },
-  { id: "sagemaker", label: "SageMaker", position: new THREE.Vector3(0.25, 0.95, 0.3), kind: "agent" },
-  { id: "shap", label: "SHAP", position: new THREE.Vector3(0.7, -1.7, 0.2), kind: "agent" },
-  { id: "ecs", label: "ECS", position: new THREE.Vector3(1.6, -0.4, -0.25) , kind: "agent" },
-  { id: "cloudwatch", label: "CloudWatch", position: new THREE.Vector3(2.4, 0.8, 0.2), kind: "agent" },
-  { id: "review", label: "Human review", position: new THREE.Vector3(3.15, -0.6, 0), kind: "endpoint" },
+  { id: "features", label: "Feature engineering", position: new THREE.Vector3(-1.95, 0.8, 0.25), kind: "agent" },
+  { id: "sagemaker", label: "SageMaker", position: new THREE.Vector3(-0.7, -0.7, -0.3), kind: "agent" },
+  { id: "shap", label: "SHAP", position: new THREE.Vector3(0.4, 0.95, 0.3), kind: "agent" },
+  { id: "fastapi", label: "FastAPI", position: new THREE.Vector3(1.5, -0.4, -0.25), kind: "agent" },
+  { id: "ecs", label: "ECS / Fargate", position: new THREE.Vector3(2.4, 0.8, 0.2), kind: "agent" },
+  { id: "dashboard", label: "Dashboard", position: new THREE.Vector3(3.15, -0.6, 0), kind: "endpoint" },
 ];
 
 const PIPELINE_EDGES: [string, string][] = [
-  ["s3", "glue"],
-  ["glue", "athena"],
-  ["athena", "sagemaker"],
+  ["s3", "features"],
+  ["features", "sagemaker"],
   ["sagemaker", "shap"],
-  ["shap", "ecs"],
-  ["sagemaker", "ecs"],
-  ["ecs", "cloudwatch"],
-  ["cloudwatch", "review"],
+  ["shap", "fastapi"],
+  ["fastapi", "ecs"],
+  ["ecs", "dashboard"],
 ];
 
 const GRAPHS: Record<NetworkVariant, { nodes: AgentNode[]; edges: [string, string][] }> = {
