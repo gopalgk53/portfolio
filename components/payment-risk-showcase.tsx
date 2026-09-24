@@ -161,7 +161,7 @@ export function PaymentRiskShowcase({
               <ConceptNetwork variant="pipeline" />
             </div>
             <p className="border-t border-[var(--border)] px-4 py-3 text-center text-xs text-[var(--faint)]">
-              Served path · S3 → Glue → Athena → SageMaker → ECS → CloudWatch → review
+              Served path · S3 → Feature engineering → SageMaker → SHAP → FastAPI → ECS/Fargate → Dashboard
             </p>
           </motion.div>
         </div>
