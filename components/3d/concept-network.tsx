@@ -1,7 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createRoot, type Root } from "react-dom/client";
 import * as THREE from "three";
+import {
+  Boxes,
+  Brain,
+  Database,
+  LayoutDashboard,
+  Lightbulb,
+  Server,
+  Workflow,
+  type LucideIcon,
+} from "lucide-react";
 
 // The multi-agent case study's hero visual: this project's own agent
 // pipeline, not a generic ML concept cloud. Nodes and edges mirror the
@@ -11,7 +22,11 @@ import * as THREE from "three";
 // shows work orders moving through the system rather than a graph
 // spinning for its own sake.
 
-type AgentNode = { id: string; label: string; position: THREE.Vector3; kind: "endpoint" | "agent" };
+// icon is optional: the "agents" variant has none (its nodes read fine as
+// plain labeled dots), while "pipeline" gives every node the same icon
+// used for that exact stage in PaymentRiskStory's Chapter 2 animation, so
+// the hero visual and the detailed animation agree stage-for-stage.
+type AgentNode = { id: string; label: string; position: THREE.Vector3; kind: "endpoint" | "agent"; icon?: LucideIcon };
 
 export type NetworkVariant = "agents" | "pipeline";
 
@@ -49,13 +64,13 @@ const AGENT_EDGES: [string, string][] = [
 // too, so this hero visual doesn't contradict the accurate one further
 // down the same page.
 const PIPELINE_NODES: AgentNode[] = [
-  { id: "s3", label: "S3", position: new THREE.Vector3(-3.05, -0.2, 0), kind: "endpoint" },
-  { id: "features", label: "Feature engineering", position: new THREE.Vector3(-1.95, 0.8, 0.25), kind: "agent" },
-  { id: "sagemaker", label: "SageMaker", position: new THREE.Vector3(-0.7, -0.7, -0.3), kind: "agent" },
-  { id: "shap", label: "SHAP", position: new THREE.Vector3(0.4, 0.95, 0.3), kind: "agent" },
-  { id: "fastapi", label: "FastAPI", position: new THREE.Vector3(1.5, -0.4, -0.25), kind: "agent" },
-  { id: "ecs", label: "ECS / Fargate", position: new THREE.Vector3(2.4, 0.8, 0.2), kind: "agent" },
-  { id: "dashboard", label: "Dashboard", position: new THREE.Vector3(3.15, -0.6, 0), kind: "endpoint" },
+  { id: "s3", label: "S3", position: new THREE.Vector3(-3.05, -0.2, 0), kind: "endpoint", icon: Database },
+  { id: "features", label: "Feature engineering", position: new THREE.Vector3(-1.95, 0.8, 0.25), kind: "agent", icon: Workflow },
+  { id: "sagemaker", label: "SageMaker", position: new THREE.Vector3(-0.7, -0.7, -0.3), kind: "agent", icon: Brain },
+  { id: "shap", label: "SHAP", position: new THREE.Vector3(0.4, 0.95, 0.3), kind: "agent", icon: Lightbulb },
+  { id: "fastapi", label: "FastAPI", position: new THREE.Vector3(1.5, -0.4, -0.25), kind: "agent", icon: Boxes },
+  { id: "ecs", label: "ECS / Fargate", position: new THREE.Vector3(2.4, 0.8, 0.2), kind: "agent", icon: Server },
+  { id: "dashboard", label: "Dashboard", position: new THREE.Vector3(3.15, -0.6, 0), kind: "endpoint", icon: LayoutDashboard },
 ];
 
 const PIPELINE_EDGES: [string, string][] = [
@@ -177,6 +192,12 @@ export function ConceptNetwork({ variant = "agents" }: { variant?: NetworkVarian
     });
 
     const labelEls = new Map<string, HTMLDivElement>();
+    // Icon badges are real React roots mounted into imperatively-created
+    // DOM nodes — not hand-copied SVG paths — so they're pixel-identical
+    // to every other lucide icon on the site and stay correct if the
+    // icon set ever changes upstream. Only nodes that opt in (the
+    // "pipeline" variant) get one; "agents" renders exactly as before.
+    const iconEls = new Map<string, { el: HTMLDivElement; root: Root }>();
     for (const node of NODES) {
       const el = document.createElement("div");
       el.textContent = node.label;
@@ -191,6 +212,27 @@ export function ConceptNetwork({ variant = "agents" }: { variant?: NetworkVarian
       el.style.transition = "opacity .3s ease";
       labelHost.appendChild(el);
       labelEls.set(node.id, el);
+
+      if (node.icon) {
+        const badge = document.createElement("div");
+        badge.style.position = "absolute";
+        badge.style.left = "0";
+        badge.style.top = "0";
+        badge.style.display = "grid";
+        badge.style.placeItems = "center";
+        badge.style.width = "28px";
+        badge.style.height = "28px";
+        badge.style.borderRadius = "8px";
+        badge.style.background = "rgba(255,255,255,.94)";
+        badge.style.border = "1px solid rgba(255,255,255,.7)";
+        badge.style.boxShadow = "0 4px 14px -6px rgba(15,23,42,.5)";
+        badge.style.willChange = "transform";
+        badge.style.transition = "opacity .3s ease, transform .3s ease";
+        labelHost.appendChild(badge);
+        const root = createRoot(badge);
+        root.render(<node.icon size={14} color="var(--accent)" strokeWidth={2.25} />);
+        iconEls.set(node.id, { el: badge, root });
+      }
     }
 
     const worldPosition = new THREE.Vector3();
@@ -237,9 +279,19 @@ export function ConceptNetwork({ variant = "agents" }: { variant?: NetworkVarian
         const x = (worldPosition.x * 0.5 + 0.5) * width;
         const y = (-worldPosition.y * 0.5 + 0.5) * height;
         const el = labelEls.get(node.id);
+        const icon = iconEls.get(node.id);
+        // Icon above, label below it, node dot below that — vertically
+        // stacked so the icon reads as "this label's icon" rather than
+        // floating near a different node when several sit close together.
         if (el) {
-          el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y - 18}px)`;
+          const labelY = icon ? y - 25 : y - 18;
+          el.style.transform = `translate(-50%, -50%) translate(${x}px, ${labelY}px)`;
           el.style.opacity = String(0.72 + level * 0.28);
+        }
+        if (icon) {
+          const scale = 1 + level * 0.18;
+          icon.el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y - 52}px) scale(${scale})`;
+          icon.el.style.opacity = String(0.85 + level * 0.15);
         }
       }
 
@@ -265,6 +317,15 @@ export function ConceptNetwork({ variant = "agents" }: { variant?: NetworkVarian
       renderer.dispose();
       mount.removeChild(renderer.domElement);
       labelEls.forEach((el) => el.remove());
+      // Deferred a tick: unmounting a React root synchronously inside this
+      // effect's own cleanup — which itself can run during React's
+      // teardown of the parent — logs "Attempted to synchronously unmount
+      // a root while React was already rendering." Queuing it a tick out
+      // avoids that without changing what actually happens.
+      iconEls.forEach(({ el, root }) => {
+        queueMicrotask(() => root.unmount());
+        el.remove();
+      });
     };
   }, [variant]);
 
