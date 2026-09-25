@@ -13,6 +13,7 @@ const systems = [
   { zone: "Document intelligence", title: "Construction Data Lakehouse", short: "Lakehouse", signal: "Operations → governed data", detail: "S3 · Glue · Athena · executive analytics", tone: "blue" },
   { zone: "Grounded intelligence", title: "AI Legal Assistant", short: "Legal assistant", signal: "Sources → grounded answers", detail: "Retrieval · reranking · citations · abstention", tone: "violet" },
   { zone: "Grounded intelligence", title: "Multi-Agent Construction AI", short: "Agent network", signal: "Planner → specialist network", detail: "Compliance · risk · communication · audit", tone: "violet" },
+  { zone: "Grounded intelligence", title: "NTO Operations Copilot", short: "Research coach", signal: "Work-order evidence → next approved step", detail: "Read-only MCP · Answer · Why · Next step", tone: "blue" },
 ] as const;
 
 const FRAME_MS = 4500;
@@ -27,6 +28,7 @@ function ProjectVisual({ project }: { project: number }) {
   if (project === 5) return <div className="unique-visual contract-visual"><div className="contract-sheet"><i /><i className="flagged" /><i /><i className="flagged" /><i /></div><div className="obligation-matrix"><span>Obligation</span><b>Evidence linked</b><span>Risk</span><b>Review required</b></div></div>;
   if (project === 6) return <div className="unique-visual lakehouse-visual"><div className="data-source"><i /><i /><i /></div><span className="data-flow" /><div className="lake-stack"><i>S3</i><i>GLUE</i><i>ATHENA</i></div><span className="data-flow" /><div className="analytics-bars"><i /><i /><i /><i /></div></div>;
   if (project === 7) return <div className="unique-visual rag-visual"><div className="rag-query">Question</div><i /><div className="rag-search"><span /><span /><span /></div><i /><div className="rag-answer"><b>Grounded answer</b><span>[1] [2] [3]</span></div></div>;
+  if (project === 9) return <div className="unique-visual rag-visual"><div className="rag-query">Researcher question</div><i /><div className="rag-search"><span /><span /><span /></div><i /><div className="rag-answer"><b>Answer · Why</b><span>Next step</span></div></div>;
   return <div className="unique-visual agents-visual"><div className="agent-planner">Planner</div><div className="agent-orbit"><span>Risk</span><span>Compliance</span><span>Documents</span><span>Comms</span></div><div className="agent-pulse" /></div>;
 }
 
@@ -104,7 +106,7 @@ export function ProjectShowcase() {
 
       <div className="showcase-film">
         <header className="showcase-header">
-          <div><p className="eyebrow">Portfolio film / Nine connected systems</p><h2 id="showcase-title">From workflow friction<br />to governed intelligence.</h2></div>
+          <div><p className="eyebrow">Portfolio film / Ten connected systems</p><h2 id="showcase-title">From workflow friction<br />to governed intelligence.</h2></div>
           <span className="showcase-count">{String(active + 1).padStart(2, "0")} / {String(systems.length).padStart(2, "0")}</span>
         </header>
         <div className="showcase-stage">

@@ -6,6 +6,7 @@ import { PrintButton } from "../../../components/print-button";
 import { PaymentRiskBenchmark } from "../../../components/payment-risk-benchmark";
 import { PaymentRiskStory } from "../../../components/payment-risk-story";
 import { MultiAgentShowcase } from "../../../components/multi-agent-showcase";
+import { NtoCopilotShowcase } from "../../../components/nto-copilot-showcase";
 import { PaymentRiskShowcase } from "../../../components/payment-risk-showcase";
 import { Reveal } from "../../../components/reveal";
 
@@ -28,6 +29,7 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   const nextProject = projects[(projectIndex + 1) % projects.length];
   const isPaymentRisk = project.id === "payment-risk";
   const isMultiAgent = project.id === "multi-agent";
+  const isNtoCopilot = project.id === "nto-operations-copilot";
 
   if (isPaymentRisk) {
     return (
@@ -44,6 +46,18 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   if (isMultiAgent) {
     return (
       <MultiAgentShowcase
+        goal={project.goal}
+        projectIndex={projectIndex}
+        totalProjects={projects.length}
+        nextProjectId={nextProject.id}
+        nextProjectTitle={nextProject.title}
+      />
+    );
+  }
+
+  if (isNtoCopilot) {
+    return (
+      <NtoCopilotShowcase
         goal={project.goal}
         projectIndex={projectIndex}
         totalProjects={projects.length}

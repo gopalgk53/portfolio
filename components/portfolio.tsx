@@ -49,6 +49,7 @@ const REPO_ROOT = "https://github.com/gopalgk53/construction-legal-ai-suite";
 const PROJECT_REPO: Record<string, string> = {
   "payment-risk": `${REPO_ROOT}/tree/main/payment-delay-predictor`,
   "multi-agent": `${REPO_ROOT}/tree/main/wo-agent-orchestrator`,
+  "nto-operations-copilot": `${REPO_ROOT}/tree/feat/nto-operations-copilot/nto-operations-copilot`,
 };
 const repoFor = (id: string) => PROJECT_REPO[id] ?? REPO_ROOT;
 
@@ -65,7 +66,7 @@ function categoryColor(category: string): string {
 
 const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; description?: string }> = {
   about: { eyebrow: "01 / Profile", title: "I build AI systems that move from prototype → production.", description: "Seven years across construction operations and data science inform a workflow-first approach to Generative AI, RAG, and autonomous agents." },
-  projects: { eyebrow: "02 / Selected work", title: <>Selected AI <span className="text-gradient-accent">systems.</span></>, description: "Nine blueprint projects with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
+  projects: { eyebrow: "02 / Selected work", title: <>Selected AI <span className="text-gradient-accent">systems.</span></>, description: "Ten AI systems with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
   skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
   playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
   experience: { eyebrow: "05 / Experience", title: "From operations to data and AI." },
@@ -202,7 +203,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       style={tiltEnabled ? { rotateX: springRotateX, rotateY: springRotateY, transformPerspective: 1000 } : undefined}
       className="card-elevated glow-card group relative grid min-h-[360px] overflow-hidden px-6 py-10 md:grid-cols-[7rem_1fr_1fr] md:gap-10 md:px-8 md:py-14"
     >
-      <div className="text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")} / 09</div>
+      <div className="text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</div>
       <div className="relative z-10">
       <p className="text-[11px] font-semibold" style={{ color: categoryColor(project.category) }}>{project.category}</p>
       <h3 className="mt-5 max-w-2xl text-[clamp(1.8rem,4vw,4.5rem)] font-medium leading-[.98] tracking-[-.045em]">{project.title}</h3>
@@ -346,7 +347,7 @@ function Projects() {
       </MobileExpandable>
       <div className="mt-16 flex justify-end border-t border-[var(--border-strong)] pt-8">
         <a href="/projects" className="group flex items-center gap-4 text-sm text-[var(--muted)]">
-          Explore all nine case studies
+          Explore all ten case studies
           <ArrowUpRight className="h-4 w-4 text-[var(--accent)] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
         </a>
       </div>

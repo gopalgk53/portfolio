@@ -5,7 +5,7 @@ import { Reveal } from "../../components/reveal";
 
 export const metadata: Metadata = {
   title: "Generative AI Project Case Studies",
-  description: "Nine Generative AI, agentic AI, machine learning, document intelligence, and data engineering architecture blueprints.",
+  description: "Ten Generative AI, agentic AI, machine learning, document intelligence, and data engineering systems and architecture blueprints.",
   alternates: { canonical: "/projects" },
 };
 
@@ -14,13 +14,13 @@ export default function ProjectsIndex() {
     <main id="main-content" tabIndex={-1} className="case-archive min-h-screen bg-[var(--bg)]/80 text-[var(--text)]">
       <nav className="case-nav" aria-label="Case study navigation">
         <Link href="/">Gopalakrishna · AI Systems</Link>
-        <span>Archive · 09 systems</span>
+        <span>Archive · 10 systems</span>
       </nav>
       <header className="case-index-hero">
         <p className="eyebrow">Architecture archive · 2026</p>
         <h1>Systems<br /><span>in context.</span></h1>
         <div className="case-index-intro">
-          <p>Nine engineering blueprints spanning retrieval, agents, document intelligence, predictive systems, and data infrastructure.</p>
+          <p>Ten systems spanning retrieval, agents, operational copilots, document intelligence, predictive systems, and data infrastructure.</p>
           <p>Goals and target outcomes are labelled explicitly. No target is presented as a verified production result.</p>
         </div>
       </header>
@@ -41,7 +41,7 @@ export default function ProjectsIndex() {
         ))}
       </section>
       <footer className="case-footer">
-        <p>End of archive / nine systems</p>
+        <p>End of archive / ten systems</p>
         <Link href="/#contact">Discuss a system ↗</Link>
       </footer>
     </main>
