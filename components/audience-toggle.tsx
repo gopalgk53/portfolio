@@ -63,7 +63,7 @@ export function AudienceHighlight() {
       ) : (
         <div className="mt-5">
           <p className="text-sm leading-6 text-[var(--muted)]">
-            Llama 3 · LangGraph · vLLM · Qdrant · FastAPI · AWS — nine real architecture blueprints spanning RAG,
+            Llama 3 · LangGraph · vLLM · Qdrant · FastAPI · AWS — ten AI systems and architecture blueprints spanning RAG,
             multi-agent orchestration, document intelligence, and predictive ML, each with its own system flow.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
