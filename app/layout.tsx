@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: { default: "Gopalakrishna — Generative AI Engineer", template: "%s | Gopalakrishna" },
   description:
     "Generative AI Engineer building production RAG systems, autonomous agents, and intelligent workflows.",
-  metadataBase: new URL("https://gopalakrishnagenai.in"),
+  metadataBase: new URL("https://www.gopalakrishnagenai.in"),
   applicationName: "Gopalakrishna GenAI",
   manifest: "/manifest.webmanifest",
   alternates: { canonical: "/" },
