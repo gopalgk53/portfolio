@@ -12,6 +12,7 @@ import { FormEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, use
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { certifications, credlyBadges, projects, skills } from "../lib/data";
+import { posts } from "../lib/posts";
 import { spring, staggerChild } from "../lib/motion";
 import { useGlowPointer } from "../lib/use-glow-pointer";
 import { Reveal } from "./reveal";
@@ -72,7 +73,8 @@ const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; descripti
   experience: { eyebrow: "05 / Experience", title: "From operations to data and AI." },
   badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
   certifications: { eyebrow: "07 / Credentials", title: "Formal training behind the practice." },
-  contact: { eyebrow: "08 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
+  writing: { eyebrow: "08 / Writing", title: "Notes on system design.", description: "Agentic architecture, governed AI, and production ML, written from the systems I build." },
+  contact: { eyebrow: "09 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
 };
 
 // Each section "arrives" with a slow scale/opacity settle as it scrolls
@@ -508,6 +510,32 @@ function Certifications() {
   );
 }
 
+function Writing() {
+  const formatDate = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+  return (
+    <Section id="writing" scene="identity">
+      <div className="border-t border-[var(--border-strong)]">
+        {posts.map((post) => (
+          <Link key={post.slug} href={`/blog/${post.slug}`} className="group grid gap-3 border-b border-[var(--border-strong)] py-8 sm:grid-cols-[12rem_1fr_auto] sm:items-start">
+            <span className="text-xs text-[var(--faint)]">{formatDate(post.date)} · {post.readingTime}</span>
+            <div>
+              <h3 className="text-xl font-medium transition-colors group-hover:text-[var(--accent)]">{post.title}</h3>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">{post.description}</p>
+            </div>
+            <ArrowUpRight className="hidden h-4 w-4 text-[var(--accent)] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 sm:block" aria-hidden="true" />
+          </Link>
+        ))}
+      </div>
+      <div className="mt-10 flex justify-end">
+        <Link href="/blog" className="group flex items-center gap-4 text-sm text-[var(--muted)]">
+          All writing
+          <ArrowUpRight className="h-4 w-4 text-[var(--accent)] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </Link>
+      </div>
+    </Section>
+  );
+}
+
 function Contact() {
   const [status, setStatus] = useState("");
   const [sending, setSending] = useState(false);
@@ -629,12 +657,14 @@ export function Portfolio() {
       <Badges />
       <Certifications />
       <HiringEvidence />
+      <Writing />
       <Contact />
       <MobileContactCta />
       <footer className="relative z-10 border-t border-[var(--border)] px-5 py-10 sm:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-xs text-[var(--faint)] sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Gopalakrishna · Generative AI Engineer</p>
           <nav aria-label="Site meta links" className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-semibold">
+            <Link href="/blog" className="hover:text-[var(--accent)]">Writing</Link>
             <Link href="/changelog" className="hover:text-[var(--accent)]">Changelog</Link>
             <Link href="/api-docs" className="hover:text-[var(--accent)]">API</Link>
             <Link href="/security" className="hover:text-[var(--accent)]">Security</Link>

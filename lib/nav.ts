@@ -7,5 +7,6 @@ export const nav = [
   ["Model lab", "playground"],
   ["Experience", "experience"],
   ["Stack", "skills"],
+  ["Writing", "writing"],
   ["Contact", "contact"],
 ] as const;
