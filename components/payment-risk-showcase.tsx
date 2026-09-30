@@ -32,7 +32,6 @@ const DASHBOARD_URL = "https://payment-risk.gopalakrishnagenai.in/";
 const FILM = {
   src: "/media/payment-risk/payment-risk-film-1080p.mp4",
   poster: "/media/payment-risk/payment-risk-film-poster.jpg",
-  captions: "/media/payment-risk/payment-risk-film.en.vtt",
 };
 
 // Every figure here is either a property of the system (a frozen threshold,
@@ -155,7 +154,7 @@ export function PaymentRiskShowcase({
                 Open AWS dashboard <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
               <a href="#pr-film" className="btn-pill btn-pill--outline" style={{ borderColor: "var(--navy-border)", color: "#fff", background: "transparent" }}>
-                <Play className="h-3.5 w-3.5" aria-hidden="true" /> Watch the 3-min film
+                <Play className="h-3.5 w-3.5" aria-hidden="true" /> Watch the 2-min film
               </a>
             </div>
           </motion.div>
@@ -198,14 +197,15 @@ export function PaymentRiskShowcase({
       <section id="pr-film" className="scroll-mt-24 px-5 pb-16 sm:px-8">
         <div className="mx-auto max-w-[1400px]">
           <Reveal>
-            <p className="eyebrow">Project film · 3 min</p>
+            <p className="eyebrow">Project film · 2 min</p>
             <h2 className="mt-3 max-w-2xl text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               From data to human decision, in one walkthrough.
             </h2>
           </Reveal>
           <Reveal delay={0.05}>
-            {/* preload="none" keeps the 9 MB file off the network until the
-                visitor presses play; captions ship as a toggleable track. */}
+            {/* preload="none" keeps the 8 MB file off the network until the
+                visitor presses play. The film is music-only; every idea is
+                carried by on-screen text, so it works muted too. */}
             <video
               className="mt-8 aspect-video w-full rounded-[var(--radius-md)] border border-[var(--border)] bg-[#0F172A] shadow-[0_30px_70px_-32px_rgba(15,23,42,.45)]"
               controls
@@ -214,12 +214,11 @@ export function PaymentRiskShowcase({
               poster={FILM.poster}
             >
               <source src={FILM.src} type="video/mp4" />
-              <track kind="captions" src={FILM.captions} srcLang="en" label="English" />
               Your browser can&apos;t play this video. <a href={FILM.src}>Download the MP4</a>.
             </video>
             <p className="mt-4 max-w-3xl text-sm leading-6 text-[var(--muted)]">
               Business problem, temporal validation, model selection, explainability, AWS serving, monitoring, and the
-              human-review boundary. All work-order examples are synthetic; the narration is synthesized.
+              human-review boundary. Music only, with no narration; all work-order examples are synthetic.
             </p>
           </Reveal>
         </div>
