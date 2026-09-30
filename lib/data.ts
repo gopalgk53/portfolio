@@ -62,7 +62,7 @@ export const certifications = [
 // defeats the point of publishing them as evidence. Each id below was
 // confirmed against the badge page's own title before being mapped here.
 // A badge without a url renders as unlinked evidence rather than pointing
-// somewhere unverifiable.
+// somewhere unverifiable. Google Skills badges link to their public award page.
 export type CredlyBadge = { name: string; issuer: string; issued: string; kind: "specialization" | "course"; url?: string };
 
 const credlyBadgeUrl = (id: string) => `https://www.credly.com/badges/${id}/public_url`;
@@ -70,6 +70,7 @@ const credlyBadgeUrl = (id: string) => `https://www.credly.com/badges/${id}/publ
 export const credlyBadges: CredlyBadge[] = [
   { name: "Generative AI for Data Scientists Specialization", issuer: "IBM · Coursera", issued: "Sep 22, 2026", kind: "specialization", url: credlyBadgeUrl("9b56c51e-7942-4d6c-bd32-1f3a2cacdf34") },
   { name: "Generative AI for Data Analysts Specialization", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "specialization", url: credlyBadgeUrl("324b128c-1df0-4be7-9994-7be3a632f214") },
+  { name: "Engineer AI Agents with Agent Development Kit (ADK)", issuer: "Google Cloud · Google Skills", issued: "2026", kind: "course", url: "https://www.skills.google/public_profiles/877ca2c3-265c-48a7-bb04-69e812d68ce5/badges/28564205" },
   { name: "Generative AI Essentials for Software Developers V2", issuer: "IBM · Coursera", issued: "Sep 25, 2026", kind: "course", url: credlyBadgeUrl("c0be114e-6e2b-485f-a3c1-e5faee5fc90b") },
   { name: "Generative AI Essentials for Data Analytics", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "course", url: credlyBadgeUrl("0f76ae43-08b7-411e-9737-8db2877bf7f2") },
   { name: "Generative AI Essentials", issuer: "IBM · Coursera", issued: "Sep 9, 2026", kind: "course", url: credlyBadgeUrl("75ea6e72-aac0-427b-82a0-88a2d8d947f1") },
