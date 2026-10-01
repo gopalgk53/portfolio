@@ -23,6 +23,7 @@ import {
 import Link from "next/link";
 import { ConceptNetwork } from "./concept-network-loader";
 import { spring } from "../lib/motion";
+import { ProjectFilm } from "./project-film";
 import { Reveal } from "./reveal";
 import { DocLinkRow, FlowColumn, IconBadge, PillTag, ScenarioCard, StatTile, SurfaceCard } from "./ui-primitives";
 
@@ -31,11 +32,11 @@ const LIVE_APP_URL = "https://wo-intelligence-web.victoriousmoss-788bd572.southe
 const DOC_BASE = "https://github.com/gopalgk53/construction-legal-ai-suite/blob/main/wo-agent-orchestrator/docs";
 
 const STATS: { value: string; label: string }[] = [
-  { value: "120", label: "Illustrative work order volume — design target" },
-  { value: "24", label: "Scenario families — design target" },
-  { value: "~99%", label: "Target evaluation baseline" },
-  { value: "75", label: "Automated tests — design target" },
-  { value: "Design target", label: "Azure Container Apps deployment" },
+  { value: "120", label: "Synthetic work orders" },
+  { value: "24", label: "Scenario families" },
+  { value: "154/156", label: "Recorded intake-agent evaluation (~99%)" },
+  { value: "75", label: "Automated tests passing" },
+  { value: "Deployed", label: "Azure Container Apps" },
 ];
 
 const CAPABILITIES: { icon: typeof Users; title: string; detail: string }[] = [
@@ -44,7 +45,7 @@ const CAPABILITIES: { icon: typeof Users; title: string; detail: string }[] = [
   { icon: ShieldCheck, title: "Controlled autonomy", detail: "A deterministic Python control plane holds workflow authority, not the model." },
   { icon: FileCode2, title: "Immutable corrections", detail: "Proposes corrections without modifying original source records." },
   { icon: Users, title: "Human-in-the-loop", detail: "Safe escalation for cases with unresolved material conflicts." },
-  { icon: Cloud, title: "Deployment target", detail: "Designed for Azure Container Apps, with CI/CD via GitHub Actions." },
+  { icon: Cloud, title: "Deployed on Azure", detail: "Runs on Azure Container Apps, deployed by GitHub Actions with OIDC." },
 ];
 
 const ARCHITECTURE = [
@@ -93,7 +94,7 @@ const ARCHITECTURE = [
     rows: [
       { icon: LayoutGrid, label: "Next.js", sublabel: "Operations console" },
       { icon: Boxes, label: "Docker", sublabel: "Containerized deployment" },
-      { icon: Cloud, label: "Azure Container Apps", sublabel: "Target hosting" },
+      { icon: Cloud, label: "Azure Container Apps", sublabel: "Hosting" },
       { icon: RefreshCw, label: "GitHub Actions", sublabel: "OIDC-based CI/CD" },
     ],
   },
@@ -106,11 +107,11 @@ const SCENARIOS: { index: number; title: string; id: string; steps: string[]; hu
 ];
 
 const PERFORMANCE: { value: string; label: string }[] = [
-  { value: "154/156 (~99%)", label: "Correct evaluations — target" },
-  { value: "100%", label: "Tool selection accuracy — target" },
-  { value: "15.1s", label: "P50 latency — target" },
-  { value: "18.8s", label: "P95 latency — target" },
-  { value: "83%", label: "Tool output utilization — target" },
+  { value: "154/156 (~99%)", label: "Correct evaluations" },
+  { value: "100%", label: "Tool selection accuracy" },
+  { value: "15.1s", label: "P50 latency" },
+  { value: "18.8s", label: "P95 latency" },
+  { value: "83%", label: "Tool output utilization" },
   { value: "120 / 24", label: "Work orders / scenario families" },
 ];
 
@@ -200,8 +201,18 @@ export function MultiAgentShowcase({
           ))}
         </Reveal>
         <p className="mt-6 max-w-2xl text-xs leading-5 text-[var(--faint)]">
-          These figures describe design targets for this architecture and its evaluation harness. They are not measured results from a deployed system.
+          Recorded on the synthetic evaluation dataset (v2.1, seed 42). The ~99% figure is the intake-agent evaluation baseline, not a whole-system or real-usage accuracy claim.
         </p>
+
+        <section id="ma-film" className="mt-20 scroll-mt-24">
+          <ProjectFilm
+            src="/media/multi-agent/wo-intelligence-film-1080p.mp4"
+            poster="/media/multi-agent/wo-intelligence-film-poster.jpg"
+            eyebrow="Project film · 2.5 min"
+            title="AI proposes. Software validates. Rules control. Humans review."
+            description="Evidence provenance, specialist agents, the deterministic state machine, correction overlays, bounded retries, the three golden paths, evaluation, and the cross-cloud deployment. Music only, with no narration; all work orders are synthetic."
+          />
+        </section>
 
         <div className="mt-20 grid gap-12 lg:grid-cols-[1fr_1.3fr]">
           <Reveal>
@@ -290,15 +301,15 @@ export function MultiAgentShowcase({
           <section id="ma-performance" className="mt-24 scroll-mt-24 grid gap-10 lg:grid-cols-3">
             <div>
               <p className="eyebrow">Performance &amp; evaluation</p>
-              <h3 className="mt-2 text-lg font-semibold tracking-tight">Illustrative evaluation targets</h3>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight">Recorded intake-agent evaluation</h3>
               <div className="mt-5 grid grid-cols-2 gap-5">
                 {PERFORMANCE.map((row) => (
                   <StatTile key={row.label} value={row.value} label={row.label} />
                 ))}
               </div>
               <p className="mt-5 text-xs leading-5 text-[var(--faint)]">
-                These figures describe design targets for this architecture&apos;s evaluation harness. They are not
-                measured results from a deployed system.
+                Recorded on 120 synthetic work orders across 24 scenario families. Synthetic evaluation only; these
+                are not results from real customer workloads.
               </p>
             </div>
             <div>
@@ -329,9 +340,9 @@ export function MultiAgentShowcase({
             <p className="eyebrow">Assumptions &amp; limitations</p>
             <ol className="mt-4 grid gap-4 text-sm leading-6 text-[var(--muted)] sm:grid-cols-2">
               <li>The deployed application runs on synthetic work-order data. It demonstrates the architecture end to end; it is not serving real customer workloads under production monitoring.</li>
-              <li>Every number on this page is a design target for the evaluation harness this architecture is designed to reach, not a measured result from real usage.</li>
+              <li>Evaluation figures come from the synthetic dataset and cover the intake agent. They are not measured results from real usage.</li>
               <li>The repository link points to this project&apos;s own directory and documentation inside the shared portfolio repository.</li>
-              <li>Implementation-level specifics not published here — exact agent prompts, evaluation datasets, latency under real load — are the next evidence to publish.</li>
+              <li>Execution state is held in memory, so the backend runs as a single replica; durable shared state is future work.</li>
             </ol>
           </section>
         </Reveal>

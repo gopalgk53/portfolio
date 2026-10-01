@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { spring } from "../lib/motion";
+import { ProjectFilm } from "./project-film";
 import { Reveal } from "./reveal";
 import { DocLinkRow, FlowColumn, IconBadge, PillTag, StatTile, SurfaceCard } from "./ui-primitives";
 
@@ -208,6 +209,16 @@ export function NtoCopilotShowcase({
           <p className="mt-6 max-w-3xl text-xs leading-5 text-[var(--faint)]">
             These counts describe the implemented synthetic dataset and interface. They are not accuracy, time-saving, or real-usage figures.
           </p>
+
+          <section id="nto-film" className="mt-20 scroll-mt-24">
+            <ProjectFilm
+              src="/media/nto-operations-copilot/nto-copilot-film-1080p.mp4"
+              poster="/media/nto-operations-copilot/nto-copilot-film-poster.jpg"
+              eyebrow="Project film · 2 min"
+              title="A coach, not an autopilot."
+              description="The six research stages, the request queue, the read-only tool boundary, two-pass answers, the GC-conflict path, notice selection, and the cross-cloud architecture. Music only, with no narration; all work orders are synthetic."
+            />
+          </section>
 
           <div className="mt-20 grid gap-12 lg:grid-cols-[1fr_1.3fr]">
             <Reveal>
