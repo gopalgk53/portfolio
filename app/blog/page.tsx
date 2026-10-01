@@ -18,7 +18,7 @@ export default function BlogIndex() {
         <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Writing · {posts.length} {(posts.length as number) === 1 ? "post" : "posts"}</span>
       </nav>
-      <header className="px-5 pt-20 sm:px-10 sm:pt-28">
+      <header className="mx-auto max-w-[92rem] px-5 pt-20 sm:px-10 sm:pt-28">
         <p className="eyebrow">Writing · 2026</p>
         <h1 className="mt-4 max-w-2xl text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[.95] tracking-tight">
           Notes on <span className="text-gradient-accent">system design.</span>
@@ -27,16 +27,21 @@ export default function BlogIndex() {
           Agentic architecture, governed AI, and production ML, written from the systems I build.
         </p>
       </header>
-      <section className="mx-auto mt-16 max-w-3xl border-t border-[var(--border)] px-5 pb-32 sm:px-10">
-        {posts.map((post) => (
-          <Reveal key={post.slug}>
-            <Link href={`/blog/${post.slug}`} className="glow-card flex flex-col gap-2 border-b border-[var(--border)] py-8">
-              <span className="text-[13px] text-[var(--faint)]">{formatDate(post.date)} · {post.readingTime}</span>
-              <span className="text-xl font-semibold leading-snug tracking-tight">{post.title}</span>
-              <span className="text-sm leading-6 text-[var(--muted)]">{post.description}</span>
-            </Link>
-          </Reveal>
-        ))}
+      <section className="mx-auto mt-16 max-w-[92rem] px-5 pb-32 sm:px-10">
+        <div className="border-t border-[var(--border-strong)]">
+          {posts.map((post, i) => (
+            <Reveal key={post.slug}>
+              <Link href={`/blog/${post.slug}`} className="group grid gap-3 border-b border-[var(--border)] py-9 md:grid-cols-[12rem_minmax(0,1fr)_2rem] md:gap-10">
+                <span className="font-mono text-[12px] uppercase tracking-[.1em] text-[var(--faint)]">{String(posts.length - i).padStart(2, "0")} | {formatDate(post.date)}<span className="block md:mt-1">{post.readingTime}</span></span>
+                <span>
+                  <span className="block text-2xl font-semibold leading-snug tracking-tight transition-colors group-hover:text-[var(--accent)] md:text-[1.9rem]">{post.title}</span>
+                  <span className="mt-3 block max-w-4xl text-[1rem] leading-7 text-[var(--muted)]">{post.description}</span>
+                </span>
+                <span aria-hidden="true" className="hidden text-xl text-[var(--accent)] transition-transform group-hover:translate-x-1 md:block">→</span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
       </section>
       <footer className="case-footer">
         <p>End of writing</p>

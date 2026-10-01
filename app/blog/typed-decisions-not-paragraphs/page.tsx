@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ArticleShell, sectionId } from "../../../components/article-shell";
 import { posts } from "../../../lib/posts";
 
 const post = posts.find((item) => item.slug === "typed-decisions-not-paragraphs")!;
@@ -48,12 +49,12 @@ def route(decision: Decision) -> str:
         return "request_missing_evidence"
     return "continue_research"`;
 
-function H2({ children }: { children: ReactNode }) {
-  return <h2 className="!mt-16 text-2xl font-semibold tracking-tight sm:text-[1.75rem]">{children}</h2>;
+function H2({ children }: { children: string }) {
+  return <h2 id={sectionId(children)} className="!mt-16 scroll-mt-24 text-2xl font-semibold tracking-tight sm:text-[2rem]">{children}</h2>;
 }
 
 function P({ children }: { children: ReactNode }) {
-  return <p className="mt-5 text-[1.02rem] leading-8 text-[var(--muted)]">{children}</p>;
+  return <p className="mt-5 text-[1.08rem] leading-8 text-[var(--muted)]">{children}</p>;
 }
 
 function List({ items }: { items: [string, string][] }) {
@@ -83,10 +84,10 @@ export default function TypedDecisionsPost() {
         <span>{post.readingTime}</span>
       </nav>
 
-      <article className="mx-auto max-w-[44rem] px-5 pb-28 pt-20 sm:px-8 sm:pt-28">
+      <ArticleShell meta={[date, post.readingTime, "Gemini 4 Argon", "Agentic system design"]} sections={["What Jev actually is", "Why decision tasks need structure", "Where this meets work I've already shipped", "A blueprint for putting a decision model into an agent pipeline", "A sketch of the decision boundary", "Where this fits on this site", "Let's talk"]}>
         <header>
           <p className="eyebrow">Agentic system design · {date}</p>
-          <h1 className="mt-4 text-[clamp(2.2rem,5.5vw,3.6rem)] font-semibold leading-[1.02] tracking-tight">
+          <h1 className="mt-4 text-[clamp(2.4rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-tight">
             Typed decisions, <span className="text-gradient-accent">not paragraphs.</span>
           </h1>
           <p className="mt-5 text-lg leading-8 text-[var(--muted)]">What Jev gets right about agentic systems.</p>
@@ -229,7 +230,7 @@ export default function TypedDecisionsPost() {
           Source: TypeSafe AI, <a href={SOURCE_URL} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-[var(--accent)]">Introducing System One models and Jev</a> (28 September 2026).
           Performance figures are TypeSafe&apos;s own early-access claims. I have not used Jev in the projects linked above.
         </footer>
-      </article>
+      </ArticleShell>
     </main>
   );
 }
