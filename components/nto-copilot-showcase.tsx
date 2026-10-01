@@ -26,11 +26,11 @@ import { ProjectFilm } from "./project-film";
 import { Reveal } from "./reveal";
 import { DocLinkRow, FlowColumn, IconBadge, PillTag, StatTile, SurfaceCard } from "./ui-primitives";
 
-const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite/tree/feat/nto-operations-copilot/nto-operations-copilot";
+const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite/tree/main/nto-operations-copilot";
 const LIVE_APP_URL = "https://nto-copilot-web-gopalg53.azurewebsites.net";
 // Individual documents live under blob/, not tree/ — linking the file view
 // directly avoids a GitHub redirect and keeps the reader on the document.
-const DOC_BASE = "https://github.com/gopalgk53/construction-legal-ai-suite/blob/feat/nto-operations-copilot/nto-operations-copilot/docs";
+const DOC_BASE = "https://github.com/gopalgk53/construction-legal-ai-suite/blob/main/nto-operations-copilot/docs";
 
 const STATS: { value: string; label: string }[] = [
   { value: "220", label: "Synthetic work orders" },

@@ -1,511 +1,373 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { ArrowUpRight, Award, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play, ShieldCheck } from "lucide-react";
-
-// lucide-react@1.31.0 (pinned in package.json) doesn't ship brand marks, so
-// GitHub/LinkedIn reuse the closest neutral technical glyphs — same
-// workaround the pre-redesign code used (Code2 for GitHub).
-const Github = Code2;
-const Linkedin = Link2;
-import { FormEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+import { ArrowUpRight, Mail } from "lucide-react";
+import { FormEvent, ReactNode, useState } from "react";
 import Link from "next/link";
-import { certifications, credlyBadges, projects, skills } from "../lib/data";
+import { certifications, credlyBadges, projects } from "../lib/data";
 import { posts } from "../lib/posts";
-import { spring, staggerChild } from "../lib/motion";
-import { useGlowPointer } from "../lib/use-glow-pointer";
 import { Reveal } from "./reveal";
-import { MobileDisclosure, MobileExpandable } from "./mobile-expandable";
-import { MobileContactCta } from "./mobile-contact-cta";
-import { RevealText } from "./motion/reveal-text";
-import { Magnetic } from "./motion/magnetic";
-import { RagFlow } from "./visualizations/rag-flow";
-import { AgentFlow } from "./visualizations/agent-flow";
-import { HiringEvidence } from "./hiring-evidence";
-import { AudienceHighlight } from "./audience-toggle";
-import { GithubActivity } from "./github-activity";
-import { SiteSearch } from "./site-search";
-import { ProjectShowcase } from "./project-showcase";
-
-const LabLoading = () => <div className="px-8 py-16 text-[11px] font-semibold text-[var(--faint)]">Loading technical module…</div>;
-// ssr: false is deliberate — matches the exact pattern already used for
-// ThreeCanvas/AIAssistant in client-extras.tsx. Without it, these three
-// (browser-only, interactive-only) components would depend on Next's RSC
-// streaming to swap their real content in after SSR, and that hand-off was
-// silently failing: the LabLoading fallback stayed on screen forever while
-// the real component sat rendered-but-detached in the DOM (visible via a
-// stray <div id="S:..."> streaming boundary that never resolved). Rendering
-// them purely client-side sidesteps that failure mode entirely.
-const PromptPlayground = dynamic(() => import("./prompt-playground").then(module => module.PromptPlayground), { loading: LabLoading, ssr: false });
-const InfrastructureDashboard = dynamic(() => import("./infrastructure-dashboard").then(module => module.InfrastructureDashboard), { loading: LabLoading, ssr: false });
-const PipelineDeepDive = dynamic(() => import("./pipeline-deep-dive").then(module => module.PipelineDeepDive), { loading: LabLoading, ssr: false });
-
-type Project = (typeof projects)[number];
-type SceneId = "identity" | "retrieval" | "agents" | "infra" | "capabilities" | "close";
 
 const REPO_ROOT = "https://github.com/gopalgk53/construction-legal-ai-suite";
-// Only projects with their own directory in the repo get a deep link; the
-// rest fall back to the repository root rather than a guessed path.
-const PROJECT_REPO: Record<string, string> = {
-  "payment-risk": `${REPO_ROOT}/tree/main/payment-delay-predictor`,
-  "multi-agent": `${REPO_ROOT}/tree/main/wo-agent-orchestrator`,
-  "nto-operations-copilot": `${REPO_ROOT}/tree/feat/nto-operations-copilot/nto-operations-copilot`,
+const LINKEDIN = "https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b";
+const EMAIL = "gopalgk53@yahoo.com";
+
+type Link_ = { label: string; href: string };
+type Featured = {
+  id: string;
+  poster: string;
+  summary: string;
+  evidence: [string, string][];
+  links: Link_[];
 };
-const repoFor = (id: string) => PROJECT_REPO[id] ?? REPO_ROOT;
 
-const AGENT_DOMAINS = ["Compliance", "Risk", "Communication"];
+// The three projects with public code, a deployment and a film. Everything
+// in `evidence` is checkable from the case study or the repository; the
+// second item is a label (BUILT / DEPLOYED / SYNTHETIC / TARGET) so a reader
+// can tell measured work from demonstration data at a glance.
+const FEATURED: Featured[] = [
+  {
+    id: "multi-agent",
+    poster: "/media/multi-agent/wo-intelligence-film-poster.jpg",
+    summary:
+      "Specialist agents on Microsoft Foundry handle intake, research, evidence and discrepancy checks for construction work orders. A deterministic Python router decides the next step, and anything complex goes to a person.",
+    evidence: [
+      ["Running on Azure Container Apps, deployed by GitHub Actions with OIDC", "Deployed"],
+      ["Evaluated on 120 work orders across 24 scenario families", "Synthetic"],
+      ["pytest suite runs in CI", "Built"],
+    ],
+    links: [
+      { label: "Case study", href: "/projects/multi-agent" },
+      { label: "Live app", href: "https://wo-intelligence-web.victoriousmoss-788bd572.southeastasia.azurecontainerapps.io/" },
+      { label: "Code", href: `${REPO_ROOT}/tree/main/wo-agent-orchestrator` },
+    ],
+  },
+  {
+    id: "nto-operations-copilot",
+    poster: "/media/nto-operations-copilot/nto-copilot-film-poster.jpg",
+    summary:
+      "A research coach for new Notice to Owner researchers. It walks them through six stages, pulls work-order evidence through one allowlisted, read-only MCP tool and suggests the next approved action. A person still verifies every notice.",
+    evidence: [
+      ["Pilot running on Azure App Service", "Deployed"],
+      ["Read-only tool boundary: the model can look things up, not change them", "Built"],
+      ["Work orders in the demo are generated, not customer data", "Synthetic"],
+    ],
+    links: [
+      { label: "Case study", href: "/projects/nto-operations-copilot" },
+      { label: "Live app", href: "https://nto-copilot-web-gopalg53.azurewebsites.net" },
+      { label: "Code", href: `${REPO_ROOT}/tree/main/nto-operations-copilot` },
+    ],
+  },
+  {
+    id: "payment-risk",
+    poster: "/media/payment-risk/payment-risk-film-poster.jpg",
+    summary:
+      "A model that ranks payment-protection work by the risk of a delayed payment, so the team looks at the riskiest jobs first. Every score comes with a SHAP explanation a reviewer can check before acting.",
+    evidence: [
+      ["Benchmarked against DataRobot AutoML, results in the case study", "Built"],
+      ["Risk dashboard you can open", "Deployed"],
+      ["Trained and validated on generated payment records", "Synthetic"],
+    ],
+    links: [
+      { label: "Case study", href: "/projects/payment-risk" },
+      { label: "Dashboard", href: "https://payment-risk.gopalakrishnagenai.in/" },
+      { label: "Code", href: `${REPO_ROOT}/tree/main/payment-delay-predictor` },
+    ],
+  },
+];
 
-// The same retrieval-vs-agentic split used for the 3D scene's network
-// colors (components/3d/three-canvas.tsx's GROUP_COLOR) — generative/agentic
-// categories tint violet, the more traditional ML/data categories stay
-// blue. One consistent color language across the whole site, not a
-// separate rule invented per component.
-function categoryColor(category: string): string {
-  return category === "Generative AI" || category === "Agentic AI" ? "var(--accent-2)" : "var(--accent)";
+const STACK: [string, string, string][] = [
+  ["Data and cloud", "Getting data in, cleaned and queryable", "Python, SQL, PySpark, AWS S3, Glue, Athena, Redshift, Lambda, API Gateway, IAM, Power BI"],
+  ["Modelling", "Training, explaining and checking models", "scikit-learn, XGBoost, DataRobot AutoML, SHAP, PyTorch, Hugging Face, LoRA / QLoRA, Amazon SageMaker"],
+  ["Retrieval and agents", "Grounding answers and coordinating tools", "Microsoft Foundry, MCP, LangChain, LangGraph, LlamaIndex, CrewAI, AutoGen, AWS Bedrock, FAISS, Qdrant, Pinecone, Milvus, Chroma, reranking"],
+  ["Documents", "Turning PDFs into structured records", "Amazon Textract, PaddleOCR, spaCy, PostgreSQL"],
+  ["Serving and operations", "Running it, watching it, shipping changes", "FastAPI, Docker, Redis, Amazon ECS, CloudWatch, Azure Container Apps, Azure App Service, GitHub Actions, pytest"],
+  ["Interfaces", "The screens people actually use", "Next.js, React, TypeScript, Tailwind CSS"],
+];
+
+const TIMELINE: { when: string; role: string; org: string; points: string[] }[] = [
+  {
+    when: "Oct 2021 – now",
+    role: "Data Scientist",
+    org: "Sunray Construction Solutions",
+    points: [
+      "Design and ship machine-learning and OCR systems for document-heavy legal workflows.",
+      "Build the dashboards the operations team uses to track work-order volume, processing time and throughput.",
+      "Since 2024, most of my work has been generative AI for the same workflows: retrieval, agents and the evaluation around them.",
+    ],
+  },
+  {
+    when: "Jan 2021",
+    role: "Post Graduate Program in AI and Machine Learning",
+    org: "McCombs School of Business, UT Austin (via Great Learning)",
+    points: ["The formal grounding in statistics, ML and deep learning I'd been learning piecemeal on the job."],
+  },
+  {
+    when: "2019 – 2021",
+    role: "Research Analyst",
+    org: "Sunray Construction Solutions",
+    points: [
+      "Analysed operational and customer data to support business and product decisions.",
+      "Learned the domain: notices, deadlines, liens and the documents behind them. That knowledge shapes everything I build now.",
+    ],
+  },
+];
+
+const LABEL_STYLE: Record<string, string> = {
+  Built: "text-[var(--text)] border-[var(--border-strong)]",
+  Deployed: "text-[var(--accent)] border-[var(--accent)]",
+  Synthetic: "text-[#92400e] border-[#d97706]",
+  Target: "text-[var(--muted)] border-[var(--border-strong)] border-dashed",
+  Blueprint: "text-[var(--muted)] border-[var(--border-strong)] border-dashed",
+};
+
+function Label({ children }: { children: string }) {
+  return (
+    <span className={`inline-block shrink-0 rounded-[var(--radius-xs)] border px-1.5 py-0.5 font-mono text-[10.5px] uppercase leading-4 tracking-[.08em] ${LABEL_STYLE[children] ?? LABEL_STYLE.Built}`}>
+      {children}
+    </span>
+  );
 }
 
-const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; description?: string }> = {
-  about: { eyebrow: "01 / Profile", title: "I build AI systems that move from prototype → production.", description: "Seven years across construction operations and data science inform a workflow-first approach to Generative AI, RAG, and autonomous agents." },
-  projects: { eyebrow: "02 / Selected work", title: <>Selected AI <span className="text-gradient-accent">systems.</span></>, description: "Ten AI systems with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
-  skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
-  playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
-  experience: { eyebrow: "05 / Experience", title: "From operations to data and AI." },
-  badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
-  certifications: { eyebrow: "07 / Credentials", title: "Formal training behind the practice." },
-  writing: { eyebrow: "08 / Writing", title: "Notes on system design.", description: "Agentic architecture, governed AI, and production ML, written from the systems I build." },
-  contact: { eyebrow: "09 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
-};
-
-// Each section "arrives" with a slow scale/opacity settle as it scrolls
-// into view — the scene-to-scene morph the brief asks for, rather than a
-// hard cut between stacked blocks. The eyebrow label drifts at a slightly
-// different rate than the rest of the header for a touch of spatial depth.
-function Section({ id, scene, children }: { id: string; scene: SceneId; children: ReactNode }) {
-  const copy = naturalCopy[id];
-  const ref = useRef<HTMLElement>(null);
-  const reducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.92", "start 0.4"] });
-  // Sections used to just barely scale/fade into place (0.965->1, easy to
-  // miss). Widened so scrolling to a new section is unmistakably a real
-  // camera move, not a subtle opacity tweak — added a y-rise on top since
-  // scale alone still read as static.
-  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [56, 0]);
-  // Floor is 0.75, not 0.35: below-fold sections sit at this value until
-  // scrolled to, and at 0.35 the composited text dropped to ~1.9:1 — a real
-  // WCAG failure that automated audits catch and that shows for an instant
-  // before the section animates in. At 0.75 the lightest body text stays at
-  // 4.8:1, and the scale + slide still carry the "arrive" motion.
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.75, 1]);
-  const eyebrowY = useTransform(scrollYProgress, [0, 1], [18, 0]);
-
+function Section({ id, label, title, intro, children }: { id: string; label: string; title: ReactNode; intro?: ReactNode; children: ReactNode }) {
   return (
-    <motion.section
-      ref={ref}
-      id={id}
-      data-scene={scene}
-      style={reducedMotion ? undefined : { scale, y, opacity }}
-      className="chapter relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-28 sm:px-8 sm:py-44"
-    >
-      <div className="mx-auto max-w-[1600px]">
-        <header className="typography-shield mb-16 grid gap-7 lg:grid-cols-[10rem_1fr_.65fr] lg:items-start">
-          <motion.p style={reducedMotion ? undefined : { y: eyebrowY }} className="eyebrow pt-2">
-            {copy.eyebrow}
-          </motion.p>
-          <h2 className="max-w-5xl overflow-hidden text-[clamp(2.8rem,6.5vw,7rem)] font-semibold leading-[.92] tracking-[-.055em]">
-            <RevealText as="span">{copy.title}</RevealText>
-          </h2>
-          {copy.description && <p className="max-w-xl leading-7 text-[var(--muted)]">{copy.description}</p>}
-        </header>
+    <section id={id} className="chapter scroll-mt-16 border-t border-[var(--border)] px-5 py-20 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-[1280px]">
+        <Reveal>
+          <header className="mb-12 sm:mb-16">
+            <p className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)]">{label}</p>
+            <h2 className="!mt-4 max-w-[24ch] text-[clamp(2.25rem,4vw,3rem)] font-semibold leading-[1.08] tracking-[-.02em]">{title}</h2>
+            {intro && <p className="!mt-5 max-w-[66ch] text-[17px] leading-[1.65] text-[var(--muted)]">{intro}</p>}
+          </header>
+        </Reveal>
         {children}
-      </div>
-    </motion.section>
-  );
-}
-
-function About() {
-  return (
-    <Section id="about" scene="identity">
-      <div className="grid gap-10 lg:grid-cols-[.72fr_1.28fr]">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.35 }} transition={spring} className="relative">
-          <div className="card-elevated aspect-[4/5] overflow-hidden bg-[var(--surface)]">
-            <img src="/gopalakrishna.jpg" alt="Gopalakrishna, Generative AI Engineer" loading="lazy" className="h-full w-full object-cover" />
-          </div>
-          <div className="mt-4 flex justify-between border-t border-[var(--border-strong)] pt-3 text-xs">
-            <span>Gopalakrishna</span>
-            <span className="text-[var(--muted)]">India · Available</span>
-          </div>
-        </motion.div>
-        <div>
-          <p className="quote-panel max-w-3xl text-[clamp(1.45rem,2.7vw,2.55rem)] leading-[1.35] tracking-[-.03em] text-[var(--text)]">
-            I focus on prompt engineering, advanced RAG topologies, autonomous multi-agent workflows, and the evaluation systems required to make
-            them reliable — spanning Data Science, Generative AI, LLM applications, Machine Learning, and AWS.
-          </p>
-          <AudienceHighlight />
-          <div className="mt-14 grid border-y border-[var(--border-strong)] sm:grid-cols-3">
-            {[["7+", "Years domain experience"], [String(projects.length), "Blueprint systems"], [String(certifications.length), "Credentials retained"]].map(([n, l]) => (
-              <div key={l} className="border-b border-[var(--border)] py-6 sm:border-b-0 sm:border-r sm:px-6 first:pl-0 last:border-r-0">
-                <b className="text-4xl font-medium tracking-[-.03em]">{n}</b>
-                <p className="mt-2 text-xs text-[var(--faint)]">{l}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mb-2 mt-12 text-[11px] font-semibold text-[var(--faint)]">Current focus</p>
-          {["Evaluation-led RAG", "Stateful agent orchestration", "Low-latency model serving"].map((x) => (
-            <motion.div key={x} whileHover={{ x: 5 }} transition={spring} className="flex items-center gap-3 border-b border-[var(--border)] py-5">
-              <CheckCircle2 className="h-4 w-4 text-[var(--accent)]" />
-              {x}
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </Section>
-  );
-}
-
-function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const [tab, setTab] = useState<"overview" | "architecture">("overview");
-  const glowRef = useGlowPointer<HTMLElement>();
-  const [tiltEnabled, setTiltEnabled] = useState(false);
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const springRotateX = useSpring(rotateX, { stiffness: 220, damping: 22 });
-  const springRotateY = useSpring(rotateY, { stiffness: 220, damping: 22 });
-
-  useEffect(() => {
-    setTiltEnabled(window.matchMedia("(hover: hover) and (pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
-
-  // A subtle 3D tilt tied to pointer position within the card — on top of
-  // the glow-card's own cursor-tracked light and the existing lift-on-hover,
-  // not a replacement for either. Desktop fine-pointer only, off under
-  // prefers-reduced-motion, same gating pattern as useGlowPointer.
-  function onCardPointerMove(event: ReactPointerEvent<HTMLElement>) {
-    if (!tiltEnabled) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const px = (event.clientX - rect.left) / rect.width - 0.5;
-    const py = (event.clientY - rect.top) / rect.height - 0.5;
-    rotateY.set(px * 6);
-    rotateX.set(-py * 6);
-  }
-  function onCardPointerLeave() {
-    rotateX.set(0);
-    rotateY.set(0);
-  }
-
-  return (
-    <motion.article
-      ref={glowRef}
-      layout
-      whileHover={{ y: -6 }}
-      transition={spring}
-      onPointerMove={onCardPointerMove}
-      onPointerLeave={onCardPointerLeave}
-      style={tiltEnabled ? { rotateX: springRotateX, rotateY: springRotateY, transformPerspective: 1000 } : undefined}
-      className="card-elevated glow-card group relative grid min-h-[360px] overflow-hidden px-6 py-10 md:grid-cols-[7rem_1fr_1fr] md:gap-10 md:px-8 md:py-14"
-    >
-      <div className="text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</div>
-      <div className="relative z-10">
-      <p className="text-[11px] font-semibold" style={{ color: categoryColor(project.category) }}>{project.category}</p>
-      <h3 className="mt-5 max-w-2xl text-[clamp(1.8rem,4vw,4.5rem)] font-medium leading-[.98] tracking-[-.045em]">{project.title}</h3>
-      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.impact}</p>
-      <div className="mt-7 flex gap-6 border-b border-[var(--border)] md:hidden">
-        {(["overview", "architecture"] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)} className={`relative pb-3 text-xs capitalize ${tab === t ? "text-[var(--text)]" : "text-[var(--faint)]"}`}>
-            {tab === t && <motion.span layoutId={`tab-${project.id}`} transition={spring} className="absolute inset-x-0 bottom-[-1px] h-px bg-[var(--accent)]" />}
-            {t}
-          </button>
-        ))}
-      </div>
-      <AnimatePresence mode="wait">
-        <motion.div key={tab} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={spring} className="mt-5 min-h-28">
-          {tab === "overview" ? (
-            <p className="text-sm leading-7 text-[var(--muted)]">{project.goal}</p>
-          ) : (
-            <div className="flex flex-wrap items-center gap-2">
-              {project.flow.split(" → ").map((node, i, arr) => (
-                <span key={node} className="contents">
-                  <span className="relative group/node">
-                    <span className="absolute inset-0 rounded bg-gradient-to-r from-[var(--accent)] to-white/20 opacity-0 group-hover/node:opacity-20 blur transition-opacity"></span>
-                    <span className="relative border border-[var(--accent)] border-opacity-30 px-2.5 py-2 font-mono text-[9px] text-[var(--accent)] backdrop-blur-sm bg-[var(--accent)] bg-opacity-5 rounded transition-all group-hover/node:border-opacity-50 group-hover/node:bg-opacity-10">
-                      {node}
-                    </span>
-                  </span>
-                  {i < arr.length - 1 && <span className="text-[var(--faint)]">→</span>}
-                </span>
-              ))}
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="mt-auto flex flex-wrap gap-x-4 gap-y-2 pt-10">
-        {project.stack.map((x) => (
-          <span key={x} className="font-mono text-[9px] text-[var(--faint)]">
-            {x}
-          </span>
-        ))}
-      </div></div>
-      <div className="relative z-10 mt-8 flex flex-col justify-between border-t border-[var(--border)] pt-8 md:mt-0 md:border-l md:border-t-0 md:pl-6 md:pt-0">
-        <div><p className="text-[11px] font-semibold text-[var(--faint)]">System flow</p><p className="mt-4 text-sm leading-7 text-[var(--muted)]">{project.flow}</p></div>
-        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-[var(--border)] pt-5 text-xs">
-          <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
-            Read case study <ArrowUpRight className="h-3 w-3" />
-          </a>
-          <a href={repoFor(project.id)} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[var(--muted)]">
-            Inspect code <Code2 className="h-3 w-3" />
-          </a>
-          <a href="#playground" className="flex items-center gap-1 text-[var(--faint)]">
-            Live simulator <Play className="h-3 w-3" />
-          </a>
-        </div></div>
-    </motion.article>
-  );
-}
-
-// The two flagship systems (the RAG and multi-agent projects) get a full
-// cinematic treatment of their own — Problem → Architecture → Engineering →
-// Impact — instead of living inside the same card grid as the rest, per the
-// brief's "each flagship project receives its own cinematic section."
-function FlagshipProject({ project, index, scene, viz }: { project: Project; index: number; scene: "retrieval" | "agents"; viz: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.95", "start 0.3"] });
-  const numberX = useTransform(scrollYProgress, [0, 1], [40, 0]);
-  const numberOpacity = useTransform(scrollYProgress, [0, 1], [0, 0.16]);
-
-  return (
-    <div ref={ref} data-scene={scene} className="flagship-chapter relative min-h-[130svh] border-t border-[var(--border-strong)] py-20 sm:py-28">
-      <motion.span
-        aria-hidden="true"
-        style={reducedMotion ? { opacity: 0.16 } : { x: numberX, opacity: numberOpacity }}
-        className="pointer-events-none absolute -top-4 right-0 text-[clamp(6rem,16vw,13rem)] font-semibold leading-none tracking-[-.04em] text-[var(--text)]"
-      >
-        {String(index + 1).padStart(2, "0")}
-      </motion.span>
-
-      <div className="sticky top-24">
-      <p className="eyebrow relative">Flagship system · Case {String(index + 1).padStart(2, "0")}</p>
-      <h3 className="relative mt-5 max-w-5xl text-[clamp(3rem,7vw,8rem)] font-medium leading-[.9] tracking-[-.055em]">{project.title}</h3>
-
-      <div className="relative mt-10 grid gap-8 border-y border-[var(--border)] py-8 sm:grid-cols-3">
-        <div>
-          <p className="text-[11px] font-semibold text-[var(--faint)]">Problem</p>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.goal}</p>
-        </div>
-        <div>
-          <p className="text-[11px] font-semibold text-[var(--faint)]">Engineering</p>
-          <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm leading-6 text-[var(--muted)]">{project.stack.join(" · ")}</p>
-        </div>
-        <div>
-          <p className="text-[11px] font-semibold text-[var(--faint)]">Impact</p>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.impact}</p>
-        </div>
-      </div></div>
-
-      <div className="relative mt-10">{viz}</div>
-
-      <div className="relative mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs">
-        <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
-          Read case study <ArrowUpRight className="h-3 w-3" />
-        </a>
-        <a href={repoFor(project.id)} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[var(--muted)]">
-          Inspect code <Code2 className="h-3 w-3" />
-        </a>
-        <a href="#playground" className="flex items-center gap-1 text-[var(--faint)]">
-          Live simulator <Play className="h-3 w-3" />
-        </a>
-      </div>
-    </div>
-  );
-}
-
-function Projects() {
-  const flagshipIds = new Set(["legal-rag", "multi-agent"]);
-  const rest = projects.filter((p) => !flagshipIds.has(p.id));
-  const legalRag = projects.find((p) => p.id === "legal-rag")!;
-  const multiAgent = projects.find((p) => p.id === "multi-agent")!;
-  const legalRagIndex = projects.findIndex((p) => p.id === "legal-rag");
-  const multiAgentIndex = projects.findIndex((p) => p.id === "multi-agent");
-
-  return (
-    <Section id="projects" scene="retrieval">
-      <div className="mb-10 grid border-y border-[var(--border)] py-4 text-xs text-[var(--muted)] sm:grid-cols-3">
-        <span>TTFT target · &lt;150ms</span>
-        <span>Orchestration · LangGraph</span>
-        <span>Vector stores · Qdrant / FAISS</span>
-      </div>
-
-      <SiteSearch />
-
-      <FlagshipProject project={multiAgent} index={multiAgentIndex} scene="agents" viz={<AgentFlow flow={multiAgent.flow} domains={AGENT_DOMAINS} />} />
-      <FlagshipProject project={legalRag} index={legalRagIndex} scene="retrieval" viz={<RagFlow flow={legalRag.flow} />} />
-
-      <MobileExpandable limit={3} noun="projects" className="mt-24 flex flex-col gap-6">
-        {rest.map((p) => (
-          <ProjectCard key={p.id} project={p} index={projects.indexOf(p)} />
-        ))}
-      </MobileExpandable>
-      <div className="mt-16 flex justify-end border-t border-[var(--border-strong)] pt-8">
-        <a href="/projects" className="group flex items-center gap-4 text-sm text-[var(--muted)]">
-          Explore all ten case studies
-          <ArrowUpRight className="h-4 w-4 text-[var(--accent)] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-        </a>
-      </div>
-    </Section>
-  );
-}
-
-function SkillCard({ group, items, index }: { group: string; items: string[]; index: number }) {
-  const glowRef = useGlowPointer<HTMLDivElement>();
-  return (
-    <motion.div
-      ref={glowRef}
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={staggerChild(index)}
-      className="glass-panel glow-card grid gap-5 p-7 md:grid-cols-[2rem_17rem_1fr] md:items-center"
-    >
-      <span className="font-mono text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
-      <h3 className="text-[17px] font-semibold text-[var(--text)]">{group}</h3>
-      <div className="flex flex-wrap gap-2">
-        {items.map((x) => (
-          <span key={x} className="tech-chip">{x}</span>
-        ))}
-      </div>
-    </motion.div>
-  );
-}
-
-function Skills() {
-  return (
-    <Section id="skills" scene="capabilities">
-      <div className="grid gap-5">
-        {skills.map((s, i) => (
-          <SkillCard key={s.group} group={s.group} items={s.items} index={i} />
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-function Playground() {
-  return (
-    <div className="model-lab" data-scene="infra">
-      <Section id="playground" scene="infra">
-        <div className="mb-16 grid gap-6 border-y border-black/20 py-5 text-[11px] font-semibold md:grid-cols-3">
-          <span>Outputs · live model</span><span>Timing · measured server-side</span><span>Purpose · interaction study</span>
-        </div>
-        <MobileDisclosure label="Open the live playground">
-          <PromptPlayground />
-        </MobileDisclosure>
-      </Section>
-    </div>
-  );
-}
-
-function Manifesto() {
-  return (
-    <section data-scene="agents" className="manifesto relative z-10 flex min-h-svh items-center overflow-hidden px-5 py-28 sm:px-8">
-      <div className="mx-auto w-full max-w-[1600px]">
-        <p className="eyebrow mb-10">System principle / 01</p>
-        <p className="text-[clamp(3.4rem,10vw,10rem)] font-medium uppercase leading-[.82] tracking-[-.065em]">I build systems that think with <span className="text-gradient-accent">context.</span></p>
-        <div className="mt-12 h-px w-full bg-white/15" />
       </div>
     </section>
   );
 }
 
-function Experience() {
-  const rows: Array<[string, string, string]> = [
-    ["2024 — Now", "Generative AI systems", "RAG · agents · evaluation · LLMOps"],
-    ["Data practice", "Data science", "Predictive ML · explainability · document intelligence"],
-    ["Domain foundation", "Construction research & operations", "Domain workflows · compliance · business analysis"],
-  ];
+function ExtLink({ href, children, className = "" }: { href: string; children: ReactNode; className?: string }) {
+  const external = href.startsWith("http");
   return (
-    <Section id="experience" scene="identity">
-      <div className="border-t border-[var(--border-strong)]">
-        {rows.map(([period, title, copy]) => (
-          <div key={period} className="grid gap-3 border-b border-[var(--border-strong)] py-8 sm:grid-cols-[12rem_1fr]">
-            <span className="text-xs text-[var(--faint)]">{period}</span>
-            <div>
-              <h3 className="text-xl font-medium">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{copy}</p>
-            </div>
-          </div>
+    <a href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} className={`inline-flex items-center gap-1 font-medium underline-offset-4 hover:underline ${className}`}>
+      {children}
+      {external && <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />}
+    </a>
+  );
+}
+
+function FeaturedProject({ item }: { item: Featured }) {
+  const project = projects.find((p) => p.id === item.id)!;
+  return (
+    <article className="surface-card grid overflow-hidden lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+      <a href={`/projects/${item.id}`} className="block border-b border-[var(--border)] bg-[var(--navy)] lg:border-b-0 lg:border-r" aria-label={`${project.title} case study`}>
+        <img src={item.poster} alt="" loading="lazy" className="aspect-video h-full w-full object-cover" />
+      </a>
+      <div className="p-6 sm:p-8">
+        <p className="font-mono text-[12px] uppercase tracking-[.1em] text-[var(--muted)]">{project.category} · {project.stack.slice(0, 3).join(" · ")}</p>
+        <h3 className="!mt-3 text-[clamp(1.5rem,2.4vw,1.875rem)] font-semibold leading-tight tracking-[-.015em]">{project.title}</h3>
+        <p className="!mt-4 max-w-[62ch] text-[16px] leading-[1.65] text-[var(--muted)]">{item.summary}</p>
+        <ul className="!mt-6 space-y-2.5 border-t border-[var(--border)] pt-5">
+          {item.evidence.map(([text, label]) => (
+            <li key={text} className="flex items-start gap-3 text-[15px] leading-6">
+              <Label>{label}</Label>
+              <span>{text}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="!mt-7 flex flex-wrap gap-x-6 gap-y-2 text-[15px]">
+          {item.links.map((link, i) => (
+            <ExtLink key={link.href} href={link.href} className={i === 0 ? "text-[var(--accent)]" : "text-[var(--text)]"}>{link.label}{i === 0 && " →"}</ExtLink>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function Work() {
+  const featuredIds = new Set(FEATURED.map((f) => f.id));
+  const blueprints = projects.filter((p) => !featuredIds.has(p.id));
+  return (
+    <Section
+      id="projects"
+      label="Work"
+      title="Three systems with code, a deployment and a demo."
+      intro="These are the projects I can show end to end. Each one runs on generated data rather than customer records, and the case studies say exactly what was measured and what wasn't."
+    >
+      <div className="grid gap-6">
+        {FEATURED.map((item) => (
+          <Reveal key={item.id}><FeaturedProject item={item} /></Reveal>
         ))}
       </div>
-    </Section>
-  );
-}
 
-function Badges() {
-  return (
-    <Section id="badges" scene="identity">
-      <MobileExpandable limit={4} noun="badges" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {credlyBadges.map((badge, index) => {
-          const emblem = (
-            <span className="badge-emblem" data-kind={badge.kind} aria-hidden="true">
-              <Award className="h-5 w-5" />
-            </span>
-          );
-          const body = <>
-            {emblem}
-            <span className="min-w-0">
-              <strong className="block text-sm font-semibold leading-snug text-[var(--text)]">{badge.name}</strong>
-              <span className="mt-1 block text-xs text-[var(--muted)]">{badge.issuer}</span>
-              <span className="mt-2 flex items-center gap-1.5 text-[11px] text-[var(--faint)]">
-                <ShieldCheck className="h-3.5 w-3.5 text-[var(--accent)]" />
-                Issued {badge.issued}
-              </span>
-            </span>
-            {badge.url && <ExternalLink className="ml-auto h-4 w-4 shrink-0 text-[var(--accent)]" />}
-          </>;
-          const className = "surface-card flex h-full items-start gap-3 p-4";
-          return (
-            <Reveal key={badge.name} delay={Math.min(index, 5) * 0.05}>
-              {badge.url ? (
-                <motion.a href={badge.url} target="_blank" rel="noreferrer" whileHover={{ y: -4, transition: spring }} className={className}>{body}</motion.a>
-              ) : (
-                <div className={className}>{body}</div>
-              )}
-            </Reveal>
-          );
-        })}
-      </MobileExpandable>
-    </Section>
-  );
-}
-
-function Certifications() {
-  const [all, setAll] = useState(false);
-  const visible = all ? certifications : certifications.slice(0, 6);
-  return (
-    <Section id="certifications" scene="identity">
-      <div className="border-t border-[var(--border-strong)]">
-        {visible.map(([name, meta, url], index) => {
-          const unavailable = url.includes("leapsdata.analyttica.com");
-          const content = <>
-            <span className="text-[11px] font-semibold" style={{ color: index === 0 ? "var(--accent)" : "var(--faint)" }}>{index === 0 ? "Primary · UT Austin / Great Learning" : `Credential ${String(index + 1).padStart(2, "0")}`}</span>
-            <div>
-              <h3 className={index === 0 ? "text-xl font-semibold" : "text-sm font-medium"}>{name}</h3>
-              <p className="mt-1 text-xs text-[var(--faint)]">{meta}</p>
-            </div>
-            {unavailable ? <span className="text-[11px] text-[var(--faint)]">Verification host unavailable</span> : <ExternalLink className="h-4 w-4 shrink-0 text-[var(--accent)]" />}
-          </>;
-          const reveal = { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: staggerChild(index % 6) };
-          return unavailable ? (
-            <motion.div key={name} {...reveal} className="grid items-center gap-3 border-b border-[var(--border-strong)] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.div>
-          ) : (
-            <motion.a key={name} href={url} target="_blank" rel="noreferrer" {...reveal} whileHover={{ x: 5, transition: spring }} className="grid items-center gap-3 border-b border-[var(--border-strong)] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.a>
-          );
-        })}
+      <div className="mt-20 grid gap-8 lg:grid-cols-[18rem_1fr]">
+        <div>
+          <h3 className="text-[22px] font-semibold tracking-[-.01em]">Blueprints</h3>
+          <p className="!mt-3 text-[15px] leading-6 text-[var(--muted)]">
+            Architecture write-ups. Some draw on work I&apos;ve done at Sunray, but none has public code yet, so any figure in them is a target, not a result.
+          </p>
+        </div>
+        <ul className="border-t border-[var(--border-strong)]">
+          {blueprints.map((p) => (
+            <li key={p.id}>
+              <a href={`/projects/${p.id}`} className="group grid gap-x-6 gap-y-1 border-b border-[var(--border)] py-5 sm:grid-cols-[minmax(0,1fr)_auto]">
+                <span>
+                  <span className="flex flex-wrap items-center gap-3">
+                    <span className="text-[17px] font-semibold group-hover:text-[var(--accent)]">{p.title}</span>
+                    <Label>Blueprint</Label>
+                  </span>
+                  <span className="mt-1 block max-w-[68ch] text-[15px] leading-6 text-[var(--muted)]">{p.goal}</span>
+                </span>
+                <span className="font-mono text-[12px] leading-6 text-[var(--faint)] sm:max-w-[22rem] sm:text-right">{p.flow}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
-      <motion.button onClick={() => setAll(!all)} whileTap={{ scale: 0.97 }} transition={spring} className="btn-pill btn-pill--outline mt-7">
-        {all ? "Show featured" : `View all ${certifications.length} credentials`}
-      </motion.button>
+    </Section>
+  );
+}
+
+function About() {
+  return (
+    <Section id="about" label="About" title="Construction operations first, then data, then AI.">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
+        <figure>
+          <img src="/gopalakrishna.jpg" alt="Gopalakrishna Maddipalli" loading="lazy" className="aspect-[4/5] w-full rounded-[var(--radius-md)] border border-[var(--border)] object-cover" />
+          <figcaption className="mt-3 font-mono text-[12px] uppercase tracking-[.1em] text-[var(--muted)]">India</figcaption>
+        </figure>
+        <div className="max-w-[66ch] space-y-5 text-[17px] leading-[1.7] text-[var(--muted)]">
+          <p>
+            <span className="text-[var(--text)]">I joined Sunray Construction Solutions in 2019 as a research analyst.</span> The job was the
+            unglamorous side of construction payment protection: notices, deadlines, liens and the stacks of documents behind them.
+          </p>
+          <p>
+            In 2021 I finished the AI/ML program at UT Austin and moved into data science at the same company. I built OCR and machine-learning
+            systems for legal documents, and the dashboards the operations team uses to track work orders.
+          </p>
+          <p>
+            Since 2024 most of my work has been generative AI: retrieval, agents and the evaluation around them. The domain years matter
+            more than the tools. I know where a work order stalls, which mistakes cost money and where a person has to stay in the loop.
+          </p>
+          <dl className="!mt-10 grid gap-6 border-t border-[var(--border)] pt-8 sm:grid-cols-3">
+            {[
+              ["Workflow first", "I map the real process before choosing a model."],
+              ["Evaluation is the product", "Tests, review queues and failure handling ship with the feature."],
+              ["Plain code decides", "Models propose. Deterministic code and people make the call."],
+            ].map(([title, copy]) => (
+              <div key={title}>
+                <dt className="text-[15px] font-semibold text-[var(--text)]">{title}</dt>
+                <dd className="mt-1.5 text-[15px] leading-6">{copy}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function Experience() {
+  return (
+    <Section id="experience" label="Experience" title="Seven years in one domain.">
+      <ol className="relative max-w-[60rem] border-l border-[var(--border-strong)] pl-8 sm:pl-10">
+        {TIMELINE.map((item) => (
+          <li key={item.when + item.role} className="relative pb-12 last:pb-0">
+            <span aria-hidden="true" className="absolute -left-[37px] top-1.5 h-[9px] w-[9px] rounded-full border-2 border-[var(--accent)] bg-[var(--bg)] sm:-left-[45px]" />
+            <p className="font-mono text-[12px] uppercase tracking-[.1em] text-[var(--muted)]">{item.when}</p>
+            <h3 className="!mt-2 text-[22px] font-semibold tracking-[-.01em]">{item.role}</h3>
+            <p className="text-[15px] text-[var(--muted)]">{item.org}</p>
+            <ul className="!mt-4 max-w-[66ch] list-disc space-y-1.5 pl-5 text-[16px] leading-[1.6] text-[var(--muted)] marker:text-[var(--faint)]">
+              {item.points.map((point) => <li key={point}>{point}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </Section>
+  );
+}
+
+function Stack() {
+  return (
+    <Section id="skills" label="Stack" title="Tools, grouped by the job they do.">
+      <dl className="border-t border-[var(--border-strong)]">
+        {STACK.map(([group, job, items]) => (
+          <div key={group} className="grid gap-x-10 gap-y-2 border-b border-[var(--border)] py-6 md:grid-cols-[16rem_minmax(0,1fr)]">
+            <dt>
+              <span className="block text-[17px] font-semibold">{group}</span>
+              <span className="block text-[14px] text-[var(--muted)]">{job}</span>
+            </dt>
+            <dd className="max-w-[70ch] text-[16px] leading-[1.7]">{items}</dd>
+          </div>
+        ))}
+      </dl>
+    </Section>
+  );
+}
+
+function Credentials() {
+  const [primary, ...rest] = certifications;
+  const topBadges = credlyBadges.slice(0, 5);
+  const moreBadges = credlyBadges.slice(5);
+  return (
+    <Section id="certifications" label="Credentials" title="Training, with links you can check.">
+      <div className="grid gap-10 lg:grid-cols-2">
+        <div>
+          <h3 className="text-[15px] font-semibold uppercase tracking-[.06em] text-[var(--muted)]">Education</h3>
+          <a href={primary[2]} target="_blank" rel="noreferrer" className="surface-card !mt-4 block p-6">
+            <span className="block text-[19px] font-semibold leading-snug">{primary[0]}</span>
+            <span className="mt-2 block text-[15px] text-[var(--muted)]">{primary[1]}</span>
+            <span className="mt-4 inline-flex items-center gap-1 text-[14px] font-medium text-[var(--accent)]">Verify <ArrowUpRight className="h-3.5 w-3.5" /></span>
+          </a>
+        </div>
+        <div>
+          <h3 className="text-[15px] font-semibold uppercase tracking-[.06em] text-[var(--muted)]">Verified badges</h3>
+          <ul className="!mt-4 border-t border-[var(--border)]">
+            {topBadges.map((badge) => (
+              <li key={badge.name} className="border-b border-[var(--border)]">
+                {badge.url ? (
+                  <a href={badge.url} target="_blank" rel="noreferrer" className="group flex items-baseline justify-between gap-4 py-3.5">
+                    <span><span className="text-[16px] font-medium group-hover:text-[var(--accent)]">{badge.name}</span> <span className="text-[14px] text-[var(--muted)]">· {badge.issuer} · {badge.issued}</span></span>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-[var(--faint)]" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <span className="block py-3.5"><span className="text-[16px] font-medium">{badge.name}</span> <span className="text-[14px] text-[var(--muted)]">· {badge.issuer} · {badge.issued}</span></span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <details className="group mt-10 border-t border-[var(--border-strong)]">
+        <summary className="flex cursor-pointer list-none items-center justify-between py-5 text-[16px] font-semibold">
+          {moreBadges.length} more badges and {rest.length} course certificates
+          <span aria-hidden="true" className="font-mono text-[18px] text-[var(--muted)] group-open:hidden">+</span>
+          <span aria-hidden="true" className="hidden font-mono text-[18px] text-[var(--muted)] group-open:inline">−</span>
+        </summary>
+        <ul className="grid gap-x-10 md:grid-cols-2">
+          {moreBadges.map((badge) => (
+            <li key={badge.name} className="border-t border-[var(--border)] py-3.5">
+              {badge.url ? (
+                <a href={badge.url} target="_blank" rel="noreferrer" className="group block"><span className="text-[15px] font-medium group-hover:text-[var(--accent)]">{badge.name}</span><span className="block text-[13px] text-[var(--muted)]">{badge.issuer} · {badge.issued} · Credly badge</span></a>
+              ) : (
+                <span className="block"><span className="text-[15px] font-medium">{badge.name}</span><span className="block text-[13px] text-[var(--muted)]">{badge.issuer} · {badge.issued}</span></span>
+              )}
+            </li>
+          ))}
+          {rest.map(([name, meta, url]) => {
+            const unavailable = url.includes("leapsdata.analyttica.com");
+            return (
+              <li key={name} className="border-t border-[var(--border)] py-3.5">
+                {unavailable ? (
+                  <span className="block"><span className="text-[15px] font-medium">{name}</span><span className="block text-[13px] text-[var(--muted)]">{meta} · issuer&apos;s verification page is offline</span></span>
+                ) : (
+                  <a href={url} target="_blank" rel="noreferrer" className="group block"><span className="text-[15px] font-medium group-hover:text-[var(--accent)]">{name}</span><span className="block text-[13px] text-[var(--muted)]">{meta}</span></a>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </details>
     </Section>
   );
 }
@@ -513,25 +375,21 @@ function Certifications() {
 function Writing() {
   const formatDate = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
   return (
-    <Section id="writing" scene="identity">
-      <div className="border-t border-[var(--border-strong)]">
+    <Section id="writing" label="Writing" title="Notes from building these systems.">
+      <ul className="border-t border-[var(--border-strong)]">
         {posts.map((post) => (
-          <Link key={post.slug} href={`/blog/${post.slug}`} className="group grid gap-3 border-b border-[var(--border-strong)] py-8 sm:grid-cols-[12rem_1fr_auto] sm:items-start">
-            <span className="text-xs text-[var(--faint)]">{formatDate(post.date)} · {post.readingTime}</span>
-            <div>
-              <h3 className="text-xl font-medium transition-colors group-hover:text-[var(--accent)]">{post.title}</h3>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">{post.description}</p>
-            </div>
-            <ArrowUpRight className="hidden h-4 w-4 text-[var(--accent)] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 sm:block" aria-hidden="true" />
-          </Link>
+          <li key={post.slug}>
+            <Link href={`/blog/${post.slug}`} className="group grid gap-2 border-b border-[var(--border)] py-6 sm:grid-cols-[11rem_minmax(0,1fr)]">
+              <span className="font-mono text-[12px] uppercase leading-7 tracking-[.08em] text-[var(--muted)]">{formatDate(post.date)}</span>
+              <span>
+                <span className="block text-[20px] font-semibold leading-snug group-hover:text-[var(--accent)]">{post.title}</span>
+                <span className="mt-1.5 block max-w-[68ch] text-[16px] leading-[1.6] text-[var(--muted)]">{post.description}</span>
+              </span>
+            </Link>
+          </li>
         ))}
-      </div>
-      <div className="mt-10 flex justify-end">
-        <Link href="/blog" className="group flex items-center gap-4 text-sm text-[var(--muted)]">
-          All writing
-          <ArrowUpRight className="h-4 w-4 text-[var(--accent)] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-        </Link>
-      </div>
+      </ul>
+      <Link href="/blog" className="mt-8 inline-flex items-center gap-1 text-[15px] font-medium text-[var(--accent)] underline-offset-4 hover:underline">All writing →</Link>
     </Section>
   );
 }
@@ -549,7 +407,7 @@ function Contact() {
     const message = String(d.get("message") || "");
     const company = String(d.get("company") || "");
     if (!name.trim() || !/^\S+@\S+\.\S+$/.test(email) || message.trim().length < 10) {
-      setStatus("Check name, email, and message (10+ characters).");
+      setStatus("Check your name, email and message (at least 10 characters).");
       return;
     }
     setSending(true);
@@ -559,74 +417,51 @@ function Contact() {
       const result = (await response.json()) as { success?: boolean; error?: string };
       if (!response.ok || !result.success) throw new Error(result.error || "Message delivery failed.");
       form.reset();
-      setStatus("Message delivered. Gopalakrishna has been alerted.");
+      setStatus("Sent. I'll reply by email.");
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Message delivery failed. Please email directly.");
+      setStatus(error instanceof Error ? `${error.message} You can also email me directly.` : "That didn't go through. Please email me directly.");
     } finally {
       setSending(false);
     }
   }
   return (
-    <Section id="contact" scene="close">
-      <div className="grid gap-5 lg:grid-cols-[.8fr_1.2fr]">
-        <div className="glass-panel p-7 sm:p-10">
-          <p className="max-w-sm text-lg leading-8 text-[var(--text)]">Open to thoughtful conversations about GenAI engineering, AI architecture, and applied research.</p>
-          <div className="mt-12">
-            {[
-              ["GitHub", "https://github.com/gopalgk53", Github],
-              ["LinkedIn", "https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b", Linkedin],
-              ["gopalgk53@yahoo.com", "mailto:gopalgk53@yahoo.com", Mail],
-            ].map(([label, url, Icon], contactIndex) => {
-              const IconComp = Icon as typeof Github;
-              const badgeColor = contactIndex % 2 === 0 ? "var(--accent)" : "var(--accent-2)";
-              return (
-                <Magnetic key={label as string} className="block w-full">
-                  <a href={url as string} target={String(url).startsWith("http") ? "_blank" : undefined} rel={String(url).startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between border-b border-[var(--border)] py-4 text-sm text-[var(--muted)]">
-                    <span className="flex flex-wrap items-center gap-2 break-all">
-                      <motion.span
-                        initial={{ opacity: 0, scale: 0.4, rotate: -35 }}
-                        whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                        viewport={{ once: true, amount: 0.6 }}
-                        transition={{ type: "spring", stiffness: 320, damping: 18, delay: contactIndex * 0.06 }}
-                        className="icon-badge grid h-7 w-7 shrink-0 place-items-center rounded-[var(--radius-sm)]"
-                      >
-                        <IconComp className="h-3.5 w-3.5" style={{ color: badgeColor }} />
-                      </motion.span>
-                      {label as string}
-                      {label === "GitHub" && <GithubActivity />}
-                    </span>
-                    <ArrowUpRight className="h-4 w-4 shrink-0" />
-                  </a>
-                </Magnetic>
-              );
-            })}
-          </div>
-          <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--outline mt-7">
-            Download résumé
+    <Section
+      id="contact"
+      label="Contact"
+      title="Hiring for applied AI, or building software for construction?"
+      intro="I'd like to hear about it. Email is the fastest way to reach me."
+    >
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-16">
+        <div>
+          <a href={`mailto:${EMAIL}`} className="inline-flex items-center gap-3 text-[clamp(1.25rem,2.2vw,1.625rem)] font-semibold text-[var(--accent)] underline-offset-4 hover:underline">
+            <Mail className="h-5 w-5" aria-hidden="true" /> {EMAIL}
           </a>
+          <ul className="!mt-8 border-t border-[var(--border)] text-[16px]">
+            {[["LinkedIn", LINKEDIN], ["GitHub", "https://github.com/gopalgk53"], ["Résumé (PDF)", "/Gopalakrishna_Maddipalli_CV.pdf"]].map(([label, href]) => (
+              <li key={label} className="border-b border-[var(--border)]">
+                <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined} className="flex items-center justify-between py-4 font-medium hover:text-[var(--accent)]">
+                  {label} <ArrowUpRight className="h-4 w-4 text-[var(--faint)]" aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
-        <form onSubmit={submit} aria-describedby="contact-form-description" className="glass-panel p-7 sm:p-10">
-          <p id="contact-form-description" className="mb-8 text-sm text-[var(--muted)]">Send a message directly to Gopalakrishna.</p>
+        <form onSubmit={submit} aria-describedby="contact-form-description" className="surface-card p-6 sm:p-8">
+          <p id="contact-form-description" className="text-[15px] text-[var(--muted)]">Or leave a message here and it lands in my inbox.</p>
           <div className="hidden" aria-hidden="true">
             <label>
               Company
               <input name="company" tabIndex={-1} autoComplete="off" />
             </label>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
-            <label className="text-[11px] font-semibold text-[var(--muted)]">Name<input name="name" autoComplete="name" placeholder="Your name" maxLength={80} required className="field mt-2" /></label>
-            <label className="text-[11px] font-semibold text-[var(--muted)]">Email<input name="email" type="email" autoComplete="email" placeholder="Email address" maxLength={254} required className="field mt-2" /></label>
+          <div className="!mt-6 grid gap-5 sm:grid-cols-2">
+            <label className="text-[14px] font-medium">Name<input name="name" autoComplete="name" maxLength={80} required className="field mt-2" /></label>
+            <label className="text-[14px] font-medium">Email<input name="email" type="email" autoComplete="email" maxLength={254} required className="field mt-2" /></label>
           </div>
-          <label className="mt-5 block text-[11px] font-semibold text-[var(--muted)]">Message<textarea name="message" placeholder="Tell me about your project or role" rows={5} minLength={10} maxLength={3000} required className="field mt-2 resize-none" /></label>
-          <div className="mt-7 flex flex-wrap items-center gap-4">
-            <Magnetic>
-              <motion.button whileTap={sending ? undefined : { scale: 0.97 }} transition={spring} disabled={sending} className="btn-pill btn-pill--solid">
-                {sending ? "Sending…" : "Send message"}
-              </motion.button>
-            </Magnetic>
-            <span role="status" aria-live="polite" className="text-xs text-[var(--faint)]">
-              {status}
-            </span>
+          <label className="!mt-5 block text-[14px] font-medium">Message<textarea name="message" placeholder="What are you working on?" rows={5} minLength={10} maxLength={3000} required className="field mt-2 resize-y" /></label>
+          <div className="!mt-6 flex flex-wrap items-center gap-4">
+            <button disabled={sending} className="btn-pill btn-pill--solid">{sending ? "Sending…" : "Send message"}</button>
+            <span role="status" aria-live="polite" className="text-[14px] text-[var(--muted)]">{status}</span>
           </div>
         </form>
       </div>
@@ -637,40 +472,23 @@ function Contact() {
 export function Portfolio() {
   return (
     <>
+      <Work />
       <About />
-      <Manifesto />
-      <ProjectShowcase />
-      <Projects />
-      <Playground />
-      <div className="lab-band">
-        <details className="lab-disclosure">
-          <summary>Technical lab · Infrastructure observability</summary>
-          <InfrastructureDashboard />
-        </details>
-        <details className="lab-disclosure">
-          <summary>Technical lab · Production RAG pipeline</summary>
-          <PipelineDeepDive />
-        </details>
-      </div>
       <Experience />
-      <Skills />
-      <Badges />
-      <Certifications />
-      <HiringEvidence />
+      <Stack />
       <Writing />
+      <Credentials />
       <Contact />
-      <MobileContactCta />
-      <footer className="relative z-10 border-t border-[var(--border)] px-5 py-10 sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 text-xs text-[var(--faint)] sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 Gopalakrishna · Generative AI Engineer</p>
-          <nav aria-label="Site meta links" className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-semibold">
+      <footer className="border-t border-[var(--border)] px-5 py-10 sm:px-8">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-3 text-[13px] text-[var(--muted)] sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2026 Gopalakrishna Maddipalli</p>
+          <nav aria-label="Site meta links" className="flex flex-wrap gap-x-5 gap-y-1">
             <Link href="/blog" className="hover:text-[var(--accent)]">Writing</Link>
             <Link href="/changelog" className="hover:text-[var(--accent)]">Changelog</Link>
             <Link href="/api-docs" className="hover:text-[var(--accent)]">API</Link>
             <Link href="/security" className="hover:text-[var(--accent)]">Security</Link>
             <a href="/llms.txt" className="hover:text-[var(--accent)]">llms.txt</a>
           </nav>
-          <p>India · gopalakrishnagenai.in</p>
         </div>
       </footer>
     </>
