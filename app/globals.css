@@ -48,23 +48,9 @@
   --border-strong: rgba(15, 23, 42, .2);
   --glass: rgba(255, 255, 255, .38);
   --glow: rgba(37, 99, 235, .18);
-  /* Three surface levels: page, elevated (cards/sections), interactive
-     (hover/selected). Opaque by default — transparency only where it
-     does a job (the sticky nav). */
-  --surface-1: #f8fafc;
-  --surface-2: #ffffff;
-  --surface-3: #f1f5f9;
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
+  --radius-sm: 10px;
+  --radius-md: 20px;
   --radius-pill: 999px;
-  /* Motion: short, eased, no bounce. Movement explains state or flow;
-     nothing animates just to look alive. */
-  --dur-micro: 160ms;
-  --dur-ui: 260ms;
-  --dur-reveal: 480ms;
-  --ease-out: cubic-bezier(.2,.7,.2,1);
-  --accent-hover: #1d4ed8;
 
   /* Dark-navy band tokens — used only for the hero and footer (and the
      homepage's cinematic project reel), which stay intentionally dark
@@ -89,26 +75,28 @@
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--bg)}
-body{margin:0;color:var(--text);background:var(--bg);font-family:"Inter",ui-sans-serif,system-ui,sans-serif;font-weight:500;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;color:var(--text);background:radial-gradient(circle at 12% 8%,rgba(37,99,235,.05),transparent 32%),radial-gradient(circle at 90% 28%,rgba(37,99,235,.045),transparent 38%),radial-gradient(circle at 30% 92%,rgba(37,99,235,.04),transparent 34%),radial-gradient(circle at 75% 82%,rgba(37,99,235,.035),transparent 30%),var(--bg);background-attachment:fixed;font-family:"Inter",ui-sans-serif,system-ui,sans-serif;font-weight:500;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 button,a{-webkit-tap-highlight-color:transparent}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
-a{transition:color var(--dur-micro) ease,border-color var(--dur-micro) ease,opacity var(--dur-micro) ease}
+a{transition:color .25s ease,border-color .25s ease,opacity .25s ease}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 .skip-link{position:fixed;left:1rem;top:1rem;z-index:300;transform:translateY(-200%);background:var(--accent);padding:.8rem 1rem;color:#fff;font:600 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em}
 .skip-link:focus{transform:translateY(0);color:#fff}
 ::selection{color:#fff;background:var(--accent)}
 h1,h2,h3{margin:0;text-wrap:balance}
-.text-gradient-accent{color:var(--accent)}
+.text-gradient-accent{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
 /* Credly badge emblem — a rendered mark rather than the issuer's own
    artwork: the CSP allows images from 'self' only, and hotlinking the
    badge PNGs would put a third-party host in the critical render path.
    Specializations get the filled treatment, single courses the outline. */
 .badge-emblem{display:grid;width:2.75rem;height:2.75rem;flex-shrink:0;place-items:center;border-radius:50%;border:1px solid var(--border-strong);background:var(--surface);color:var(--accent)}
-.badge-emblem[data-kind="specialization"]{border-color:transparent;background:var(--accent);color:#fff}
+.badge-emblem[data-kind="specialization"]{border-color:transparent;background:var(--gradient-accent);color:#fff}
 
-.icon-badge{background:var(--surface);border:1px solid var(--border);transition:border-color var(--dur-micro) ease}
-.quote-panel{position:relative;border-left:2px solid var(--accent);padding-left:1.5rem}
+.icon-badge{background:var(--surface);border:1px solid var(--border-strong);transition:transform .35s cubic-bezier(.4,0,.2,1),border-color .3s ease}
+.icon-badge:hover{transform:rotate(8deg) scale(1.06);border-color:var(--accent)}
+.quote-panel{position:relative;border-left:3px solid transparent;border-image:var(--gradient-accent);border-image-slice:1;padding-left:1.5rem}
+.quote-panel::before{content:"›";position:absolute;left:-.05em;top:-.05em;font-size:1.6em;line-height:1;font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--accent-2);opacity:.7}
 @supports not (background-clip:text){.text-gradient-accent{color:var(--accent);background:none}}
 p{text-wrap:pretty}
 .font-mono,code,pre{font-family:"JetBrains Mono",ui-monospace,monospace}
@@ -121,9 +109,10 @@ p{text-wrap:pretty}
 /* Glass, not flat white — a translucent surface over the page's own
    faint blue wash (.premium-wash) rather than a solid card, plus a
    hover lift that responds to the cursor instead of an idle animation. */
-.surface-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);transition:border-color var(--dur-ui) var(--ease-out),background-color var(--dur-ui) var(--ease-out)}
-.surface-card:hover{border-color:var(--border-strong)}
-.premium-wash{background:var(--bg)}
+.surface-card{background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.75);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.06),0 20px 45px -22px rgba(37,99,235,.2);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
+.surface-card:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.28);box-shadow:0 1px 2px rgba(15,23,42,.05),0 30px 60px -22px rgba(37,99,235,.26)}
+@media(prefers-reduced-motion:reduce){.surface-card{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
+.premium-wash{background:radial-gradient(circle at 12% 15%,rgba(37,99,235,.06),transparent 35%),radial-gradient(circle at 88% 55%,rgba(37,99,235,.05),transparent 40%),radial-gradient(circle at 45% 92%,rgba(37,99,235,.045),transparent 35%),rgba(248,250,252,.76)}
 /* Number, thin colored rule, label — the same editorial treatment the
    site's own About stats already use (a plain <b>/<p> pair with a
    divider), not a circular icon-chip above a number. That icon+number
@@ -131,7 +120,7 @@ p{text-wrap:pretty}
 .stat-tile{display:flex;flex-direction:column;gap:.6rem;padding-top:.9rem;border-top:2px solid var(--border-strong)}
 .stat-tile strong{font-size:clamp(1.7rem,2.8vw,2.3rem);font-weight:600;letter-spacing:-.025em;color:var(--text)}
 .stat-tile span{font-size:.78rem;color:var(--muted);line-height:1.4}
-.pill-tag{display:inline-flex;align-items:center;gap:.4rem;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface);padding:.35rem .85rem;font-size:.75rem;color:var(--muted)}
+.pill-tag{display:inline-flex;align-items:center;gap:.4rem;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--surface);padding:.35rem .85rem;font-size:.75rem;color:var(--muted)}
 .pill-tag--status-good{border-color:var(--border-strong);background:var(--surface);color:var(--text);font-weight:600}
 .pill-tag--status-bad{border-color:transparent;background:var(--accent);color:#fff;font-weight:600}
 .flow-diagram{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.5rem}
@@ -165,6 +154,9 @@ p{text-wrap:pretty}
    stays dark by design (see .band-navy comment above). */
 #main-content{position:relative;z-index:10;width:100%;min-height:100vh;overflow-x:clip;outline:none}
 .three-stage{position:fixed;inset:0;z-index:1;width:100vw;height:100vh;pointer-events:none;overflow:hidden;isolation:isolate}
+.three-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 65% 55% at var(--cursor-x, 62%) var(--cursor-y, 42%),rgba(37,99,235,.20),transparent 68%);animation:ambient-breathe 6s ease-in-out infinite}
+.three-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 460px at var(--cursor-x, 50%) var(--cursor-y, 50%),rgba(37,99,235,.14),transparent 72%);animation:ambient-breathe 4.2s ease-in-out infinite reverse}
+.ambient-drift{position:absolute;inset:-20%;pointer-events:none;background:radial-gradient(circle 34vw at 30% 30%,rgba(37,99,235,.16),transparent 60%),radial-gradient(circle 26vw at 75% 70%,rgba(37,99,235,.11),transparent 62%);animation:ambient-drift 22s ease-in-out infinite;will-change:transform}
 @keyframes ambient-breathe{0%,100%{opacity:.55}50%{opacity:1.3}}
 @keyframes ambient-drift{0%{transform:translate(0,0) scale(1)}25%{transform:translate(4%,-6%) scale(1.08)}50%{transform:translate(-3%,4%) scale(0.96)}75%{transform:translate(-5%,-3%) scale(1.05)}100%{transform:translate(0,0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.three-stage::before,.three-stage::after,.ambient-drift{animation:none}}
@@ -193,8 +185,8 @@ p{text-wrap:pretty}
    every section. Kept opaque enough that text contrast is unaffected —
    an overlay this light only dims the ambient dots slightly, it does
    not require boosting their own opacity to compensate. */
-.chapter{background:var(--bg)}
-.manifesto{background:var(--bg)}
+.chapter{background:rgba(255,255,255,.76)}
+.manifesto{background:rgba(255,255,255,.76)}
 .manifesto::before{content:"";position:absolute;left:55%;top:50%;width:60vw;height:60vw;border:1px solid rgba(37,99,235,.14);transform:translate(-50%,-50%) rotate(25deg);pointer-events:none}
 
 /* ProjectShowcase's cinematic per-project reel — kept intentionally dark
@@ -227,27 +219,34 @@ p{text-wrap:pretty}
 .field::placeholder{color:var(--faint)}
 .field:focus{border-color:var(--accent);background:var(--surface)}
 
-.btn-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:var(--radius-sm);padding:.85rem 1.6rem;font:600 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em;white-space:nowrap;transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s cubic-bezier(.4,0,.2,1),background-color .3s ease,background-position .5s ease,color .3s ease,border-color .3s ease}
+.btn-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:var(--radius-pill);padding:.85rem 1.6rem;font:600 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em;white-space:nowrap;transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s cubic-bezier(.4,0,.2,1),background-color .3s ease,background-position .5s ease,color .3s ease,border-color .3s ease}
 /* White text on the gradient: both ends now clear WCAG AA (5.17:1 /
    5.63:1) with the darker blue/violet chosen for the light theme. */
-.btn-pill--solid{border:1px solid transparent;background:var(--accent);color:#fff}
-.btn-pill--solid:hover{background:var(--accent-hover)}
-.btn-pill--outline{border:1px solid var(--border-strong);color:var(--text);background:var(--surface-2)}
-.btn-pill--outline:hover{border-color:var(--text);background:var(--surface-3)}
+.btn-pill--solid{border:1px solid transparent;background:var(--gradient-accent);background-size:160% 160%;background-position:0% 50%;color:#fff;box-shadow:0 10px 28px -12px var(--glow)}
+.btn-pill--solid:hover{background-position:100% 50%;box-shadow:0 16px 36px -10px var(--glow);transform:translateY(-2px)}
+.btn-pill--solid:active{transform:translateY(0) scale(.97)}
+.btn-pill--outline{border:1px solid var(--border-strong);color:var(--text);background:var(--surface)}
+.btn-pill--outline:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 10px 28px -10px var(--glow);transform:translateY(-2px)}
+.btn-pill--outline:active{transform:translateY(0) scale(.97)}
 .btn-pill:disabled{cursor:wait;opacity:.55;transform:none!important;box-shadow:none!important}
 
-.card-elevated{border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface-2);transition:border-color var(--dur-ui) var(--ease-out)}
-.card-elevated:hover{border-color:var(--border-strong)}
+.card-elevated{border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);box-shadow:0 1px 2px rgba(15,23,42,.04),0 30px 70px -32px rgba(15,23,42,.16);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s ease,border-color .35s ease}
+.card-elevated:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.28);box-shadow:0 34px 80px -28px var(--glow),0 30px 70px -32px rgba(15,23,42,.16)}
+@media(prefers-reduced-motion:reduce){.card-elevated{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 
 /* Matched to .surface-card so the pages still using this older class
    (security, api-docs, the search and palette overlays) carry the same
    glass as the rest of the site instead of a flatter earlier version.
    Kept as its own class because several consumers set their own padding
    and hover behaviour on top of it. */
-.glass-panel{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md)}
+.glass-panel{background:rgba(255,255,255,.72);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(15,23,42,.04),0 20px 45px -22px rgba(37,99,235,.16)}
+@media(prefers-reduced-motion:reduce){.glass-panel{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}
 
 .glow-card{position:relative;overflow:hidden}
+.glow-card::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .4s ease;background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),var(--glow),transparent 70%)}
+.glow-card:hover::before{opacity:1}
 .glow-card>*{position:relative;z-index:1}
+@media(prefers-reduced-motion:reduce),(hover:none){.glow-card::before{opacity:.6;background:radial-gradient(60% 50% at 50% 0%,var(--glow),transparent 75%)}}
 
 .lab-disclosure{position:relative;z-index:10;margin:0 auto;max-width:80rem;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);box-shadow:0 1px 2px rgba(15,23,42,.04),0 18px 40px -26px rgba(37,99,235,.22);transition:border-color .3s ease,box-shadow .3s ease}.lab-disclosure:hover{border-color:rgba(37,99,235,.3)}.lab-disclosure+.lab-disclosure{margin-top:.75rem}
 .lab-disclosure>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.15rem 1.5rem;font:600 14px "Inter",ui-sans-serif,sans-serif;color:var(--text)}
@@ -258,9 +257,9 @@ p{text-wrap:pretty}
 /* Holds the two technical-lab disclosures. Without it the gap between them
    showed the ambient network at full strength, the only place on the page
    it wasn't sitting behind a section. */
-.lab-band{position:relative;z-index:10;padding:clamp(2.5rem,5vw,4rem) 1.25rem;background:var(--bg);border-top:1px solid var(--border)}
+.lab-band{position:relative;z-index:10;padding:clamp(2.5rem,5vw,4rem) 1.25rem;background:rgba(255,255,255,.76);border-top:1px solid var(--border)}
 /* Technology chips in the capabilities list */
-.tech-chip{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--surface-2);padding:.3rem .75rem;font:500 12.5px "Inter",ui-sans-serif,sans-serif;color:var(--muted);transition:border-color .25s ease,color .25s ease,background-color .25s ease}.tech-chip:hover{border-color:rgba(37,99,235,.4);color:var(--accent);background:var(--accent-soft)}
+.tech-chip{display:inline-flex;align-items:center;border:1px solid var(--border-strong);border-radius:var(--radius-pill);background:rgba(255,255,255,.85);padding:.3rem .75rem;font:500 12.5px "Inter",ui-sans-serif,sans-serif;color:var(--muted);transition:border-color .25s ease,color .25s ease,background-color .25s ease}.tech-chip:hover{border-color:rgba(37,99,235,.4);color:var(--accent);background:var(--accent-soft)}
 
 .scroll-cue{position:relative;display:inline-block;width:13px;height:20px;flex-shrink:0;border:1px solid var(--navy-border);border-radius:var(--radius-pill)}
 .scroll-cue::before{content:"";position:absolute;left:50%;top:3px;width:3px;height:5px;border-radius:2px;background:#fff;transform:translateX(-50%);animation:scroll-cue-move 1.8s ease-in-out infinite}
@@ -282,7 +281,7 @@ p{text-wrap:pretty}
 .case-nav{display:flex;align-items:center;justify-content:space-between;min-height:72px;padding:0 clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);font:500 13px "Inter",ui-sans-serif,sans-serif;letter-spacing:-.01em;color:var(--muted)}
 .case-nav a{font-weight:600;color:var(--text)}
 .case-index-hero{min-height:82svh;padding:clamp(8rem,16vw,13rem) clamp(1.25rem,4vw,4rem) 5rem}
-.case-index-hero h1{max-width:11ch;margin-top:2rem;font-size:clamp(4.5rem,12vw,12rem);font-weight:700;line-height:.75;letter-spacing:-.045em;text-transform:uppercase}.case-index-hero h1 span{color:var(--accent)}
+.case-index-hero h1{max-width:11ch;margin-top:2rem;font-size:clamp(4.5rem,12vw,12rem);font-weight:700;line-height:.75;letter-spacing:-.045em;text-transform:uppercase}.case-index-hero h1 span{background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
 .case-index-intro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem;max-width:54rem;margin:clamp(3rem,8vw,7rem) 0 0 auto;color:var(--muted);font-size:clamp(.95rem,1.4vw,1.15rem);line-height:1.7}
 .case-index-list{border-top:1px solid var(--border)}
 .case-index-row{display:grid;grid-template-columns:5rem minmax(0,1.5fr) minmax(10rem,.75fr) 2rem;align-items:center;gap:2rem;min-height:11rem;padding:2rem clamp(1.25rem,4vw,4rem);border-bottom:1px solid var(--border);color:inherit}
@@ -298,7 +297,7 @@ p{text-wrap:pretty}
 .case-study-meta{font:600 12px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--muted)}.case-study-meta p+p{margin-top:.6rem;color:var(--faint)}
 .case-study-hero h1{align-self:center;max-width:12ch;font-size:clamp(4rem,9.5vw,10rem);font-weight:700;line-height:.82;letter-spacing:-.04em}.case-study-goal{grid-column:2;max-width:42rem;margin-top:3rem;font-size:clamp(1.1rem,2vw,1.6rem);line-height:1.55;color:var(--muted)}.case-repository{border:1px solid var(--accent);border-radius:var(--radius-pill);padding:.65rem 1.3rem;font:600 12px "Inter",ui-sans-serif,sans-serif;letter-spacing:.01em;color:var(--accent);transition:background-color .3s ease,color .3s ease,box-shadow .3s ease}.case-repository:hover{background:var(--gradient-accent);color:#fff;box-shadow:0 10px 28px -10px var(--glow)}
 .case-repository-row{grid-column:2;justify-self:start;margin-top:3rem;display:flex;flex-wrap:wrap;gap:1rem}
-.case-signal{display:grid;grid-template-columns:minmax(10rem,1fr) minmax(18rem,3fr);gap:clamp(2rem,7vw,8rem);padding:4rem clamp(1.25rem,4vw,4rem);background:var(--navy);color:#fff}.case-signal .eyebrow{color:rgba(255,255,255,.75)}.case-signal>p:last-child{max-width:56rem;font-size:clamp(1.15rem,2.3vw,2rem);line-height:1.45}
+.case-signal{display:grid;grid-template-columns:minmax(10rem,1fr) minmax(18rem,3fr);gap:clamp(2rem,7vw,8rem);padding:4rem clamp(1.25rem,4vw,4rem);background:var(--gradient-accent);color:#fff}.case-signal .eyebrow{color:rgba(255,255,255,.75)}.case-signal>p:last-child{max-width:56rem;font-size:clamp(1.15rem,2.3vw,2rem);line-height:1.45}
 .case-architecture,.case-engineering{display:grid;grid-template-columns:minmax(15rem,1fr) minmax(18rem,2fr);gap:clamp(3rem,8vw,10rem);padding:clamp(7rem,12vw,12rem) clamp(1.25rem,4vw,4rem)}
 .case-section-heading h2,.case-engineering h2{margin-top:1.5rem;font-size:clamp(2.5rem,5vw,5.5rem);font-weight:600;line-height:.95;letter-spacing:-.03em}.case-flow{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.case-flow li{display:grid;grid-template-columns:4rem 1fr;align-items:center;min-height:6.5rem;border-bottom:1px solid var(--border)}.case-flow span,.case-engineering li span{font:10px "JetBrains Mono",monospace;color:var(--faint)}.case-flow strong{font-size:clamp(1.15rem,2vw,1.65rem);font-weight:600}
 .case-outcome{min-height:70svh;padding:clamp(7rem,14vw,14rem) clamp(1.25rem,4vw,4rem);background:var(--bg);color:var(--text);border-top:1px solid var(--border)}.case-outcome .eyebrow{color:var(--muted)}.case-outcome>p:last-child{max-width:14ch;margin-top:3rem;font-size:clamp(4rem,10vw,10rem);font-weight:700;line-height:.84;letter-spacing:-.04em;text-transform:uppercase;background:var(--gradient-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -339,6 +338,9 @@ p{text-wrap:pretty}
   .case-study-hero{display:block;min-height:auto;padding-top:6rem;padding-bottom:6rem}.case-study-hero h1{margin-top:4rem}.case-study-goal,.case-repository-row{margin-top:2.5rem}.case-signal,.case-architecture,.case-engineering{grid-template-columns:1fr}.case-architecture,.case-engineering{gap:4rem}.case-outcome{min-height:55svh}.case-evidence ol{grid-template-columns:1fr;margin-top:3rem}.benchmark-heading,.benchmark-decision,.benchmark-explainability,.datarobot-evidence-heading{grid-template-columns:1fr}.benchmark-validation{grid-template-columns:repeat(2,minmax(0,1fr))}.benchmark-explainability small{grid-column:1}.benchmark-bars li{grid-template-columns:1.5rem minmax(7rem,9rem) 1fr 3.5rem;gap:.6rem}.benchmark-panel{padding:1.25rem}.benchmark-panel-intro{display:block}.benchmark-panel-intro span{display:block;margin-top:.5rem}.datarobot-evidence-layout{grid-template-columns:1fr}.datarobot-evidence-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.datarobot-evidence-nav button{grid-template-columns:1.5rem 1fr}.datarobot-evidence-layout figure{padding:.75rem}.datarobot-evidence-layout figcaption{display:block}.datarobot-evidence-layout figcaption span{display:block;margin-top:.5rem}
 }
 
+html[data-effects="low"] #webgl-canvas{opacity:.45}
+html[data-effects="balanced"] #webgl-canvas{opacity:.85}
+html[data-effects="immersive"] #webgl-canvas{opacity:1}
 
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}

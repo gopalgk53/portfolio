@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { spring } from "../lib/motion";
 
 // A shared scroll-triggered fade/rise wrapper — a Client Component so it
 // can be imported straight into Server Component pages (the case-study
@@ -41,9 +42,9 @@ export function Reveal({ children, className, delay = 0 }: { children: ReactNode
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 28 }}
       animate={shown ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.48, ease: [0.2, 0.7, 0.2, 1], delay }}
+      transition={{ ...spring, delay }}
       className={className}
     >
       {children}
