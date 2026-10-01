@@ -81,9 +81,9 @@ export function Hero() {
           I build AI systems for construction operations.
         </h1>
         <p className="mt-7 max-w-[62ch] text-[17px] leading-[1.65] text-[var(--navy-text)] opacity-85 sm:text-[18px]">
-          Seven years at a construction payment-protection company, first as a research analyst and now as a data
-          scientist. I build the data pipelines, models and agents for that work, with evaluation and human review
-          wherever a wrong answer costs money.
+          I spent seven years in construction operations and data work before moving into machine learning. Now I
+          build the retrieval pipelines, models and agents for that work, with evaluation and human review wherever a
+          wrong answer costs money.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
           <a href="#projects" className="btn-pill btn-pill--solid">View projects <ArrowRight className="h-4 w-4" /></a>
@@ -91,7 +91,7 @@ export function Hero() {
           <a href={RESUME} className="btn-pill hero-secondary">Résumé <ArrowUpRight className="h-4 w-4" /></a>
         </div>
         <p className="mt-16 border-t border-[var(--navy-border)] pt-5 font-mono text-[12px] tracking-[.06em] text-[var(--muted)]">
-          Python <span className="text-[var(--navy-border)]">|</span> AWS <span className="text-[var(--navy-border)]">|</span> Microsoft Foundry <span className="text-[var(--navy-border)]">|</span> MCP <span className="text-[var(--navy-border)]">|</span> Evaluation
+          Python <span className="text-[var(--navy-border)]">|</span> AWS <span className="text-[var(--navy-border)]">|</span> LangGraph <span className="text-[var(--navy-border)]">|</span> RAG <span className="text-[var(--navy-border)]">|</span> Evaluation
         </p>
       </section>
     </div>
