@@ -1,36 +1,25 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ArrowUpRight, Brain, Database, Menu, Workflow, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { SoundToggle } from "./sound-toggle";
-import { HeroAgentTrace } from "./hero-agent-trace";
+import { AnimatePresence, motion, useReducedMotion, useScroll } from "framer-motion";
+import { ArrowRight, ArrowUpRight, BrainCircuit, BriefcaseBusiness, Building2, Check, Code2, Copy, FileText, Link2, Mail, Menu, Radio, Share2, Sparkles, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { projects, skills } from "../lib/data";
 import { nav } from "../lib/nav";
+import { HeroAgentTrace } from "./hero-agent-trace";
+import { SoundToggle } from "./sound-toggle";
 
-// Three real pillars of the actual stack (matches the tagline right below
-// them: "LLMs, RAG, agents") — not decoration for its own sake. Colors
-// alternate accent/accent-2, same retrieval-vs-agentic split used in the 3D
-// scene and the project category labels, so it reads as one consistent
-// system rather than a one-off flourish.
-const heroBadges = [
-  { Icon: Brain, label: "LLMs & fine-tuning", color: "var(--accent)" },
-  { Icon: Database, label: "RAG & vector search", color: "var(--accent)" },
-  { Icon: Workflow, label: "Agent orchestration", color: "var(--accent)" },
-];
+const featuredProject = projects.find((project) => project.id === "multi-agent") ?? projects[0];
+const toolkit = ["Python", "FastAPI", "LangGraph", "MCP", "AWS", "Next.js"];
+const Github = Code2;
+const Linkedin = Link2;
 
 export function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeId, setActiveId] = useState("top");
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useState(false);
   const reducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
-  const { scrollYProgress: pageProgress } = useScroll();
-  const badgeRotate = useTransform(pageProgress, [0, 1], [0, 20]);
-  const titleY = useTransform(scrollYProgress, [0, 1], [0, -180]);
-  const titleScale = useTransform(scrollYProgress, [0, .72], [1, .72]);
-  const titleOpacity = useTransform(scrollYProgress, [0, .72, 1], [1, .8, 0]);
-  const metaY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     let frame = 0;
@@ -62,9 +51,7 @@ export function Hero() {
     if (!menuOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
-    };
+    const closeOnEscape = (event: KeyboardEvent) => event.key === "Escape" && setMenuOpen(false);
     window.addEventListener("keydown", closeOnEscape);
     return () => {
       document.body.style.overflow = previousOverflow;
@@ -72,108 +59,64 @@ export function Hero() {
     };
   }, [menuOpen]);
 
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  };
+
+  const share = async () => {
+    if (navigator.share) return navigator.share({ title: "Gopalakrishna · AI Systems", url: window.location.href });
+    await copyLink();
+  };
+
+  const reveal = (delay: number) => reducedMotion ? false : { opacity: 0, y: 18, scale: 0.985, transition: { delay } };
+
   return (
-    <div ref={sectionRef} data-scene="identity" className="cinematic-hero relative min-h-[145svh] overflow-clip">
+    <div data-scene="identity" className="cinematic-hero hero-bento-shell relative min-h-svh overflow-hidden">
       <nav className="site-nav" data-scrolled={scrolled} aria-label="Primary navigation">
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between px-5 sm:px-8">
-          <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className={`text-[13px] font-semibold tracking-tight ${activeId === "top" ? "text-[var(--accent)]" : ""}`}>Gopalakrishna · AI Systems</a>
-          <div className="hidden items-center gap-7 text-[13.5px] font-medium text-[var(--muted)] md:flex">
+          <a href="#top" aria-current={activeId === "top" ? "location" : undefined} className="flex items-center gap-3 text-[13px] font-semibold tracking-tight">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[var(--text)] text-[11px] text-white">GK</span><span>Gopalakrishna · AI Systems</span>
+          </a>
+          <div className="hidden items-center gap-6 text-[13px] font-medium text-[var(--muted)] lg:flex">
             {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} className={`transition-colors hover:text-[var(--text)] ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}</a>)}
             <SoundToggle className="text-[var(--muted)]" />
-            <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--solid">Résumé <ArrowUpRight className="h-3 w-3" /></a>
+            <button type="button" onClick={copyLink} className="hero-nav-action">{copied ? <Check /> : <Copy />}{copied ? "Copied" : "Copy link"}</button>
+            <button type="button" onClick={share} className="hero-nav-icon" aria-label="Share portfolio"><Share2 /></button>
           </div>
-          <div className="flex items-center gap-3 md:hidden">
+          <div className="flex items-center gap-3 lg:hidden">
             <SoundToggle className="text-[var(--muted)]" />
-            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center rounded-full border border-[var(--border-strong)]">
-              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-            </button>
+            <button onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"} className="grid h-10 w-10 place-items-center rounded-full border border-[var(--border-strong)]">{menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}</button>
           </div>
         </div>
-        <AnimatePresence>{menuOpen && (
-          <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-[var(--border)] bg-[var(--bg)] px-5 py-5 md:hidden">
-            {nav.map(([label, id]) => <a key={id} href={`#${id}`} aria-current={activeId === id ? "location" : undefined} onClick={() => setMenuOpen(false)} className={`flex items-center justify-between border-b border-[var(--border)] py-4 text-[15px] font-medium ${activeId === id ? "text-[var(--accent)]" : ""}`}>{label}{activeId === id && <span aria-hidden="true">●</span>}</a>)}
-            <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
-          </motion.div>
-        )}</AnimatePresence>
-        <motion.div aria-hidden="true" style={{ scaleX: pageProgress, background: "var(--gradient-accent)" }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left" />
+        <AnimatePresence>{menuOpen && <motion.div id="mobile-navigation" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} className="border-t border-[var(--border)] bg-[var(--bg)] px-5 py-5 lg:hidden">
+          {nav.map(([label, id]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)} className="flex items-center justify-between border-b border-[var(--border)] py-4 text-[15px] font-medium">{label}</a>)}
+          <a href="/Gopalakrishna_Maddipalli_CV.pdf" onClick={() => setMenuOpen(false)} className="btn-pill btn-pill--solid mt-5 w-full">Résumé <ArrowUpRight className="h-4 w-4" /></a>
+        </motion.div>}</AnimatePresence>
+        <motion.div aria-hidden="true" style={{ scaleX: scrollYProgress, background: "var(--gradient-accent)" }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left" />
       </nav>
 
-      <section id="top" className="sticky top-0 flex min-h-svh items-center overflow-hidden px-5 pt-20 sm:px-8">
-        <motion.div style={reducedMotion ? undefined : { y: metaY }} className="absolute left-5 top-28 z-20 sm:left-8">
-          <p className="hero-name text-white">Gopalakrishna Maddipalli</p>
-          <p className="mt-2 text-[13px] font-medium leading-5 text-[var(--muted)]">AI Engineer</p>
-          <p className="text-[13px] font-medium leading-5 text-[var(--muted)]">India · 2026</p>
-        </motion.div>
-        <motion.div style={reducedMotion ? undefined : { y: titleY, scale: titleScale, opacity: titleOpacity }} className="relative z-10 mx-auto w-full max-w-[1600px] origin-center pt-20">
-          <p className="mb-4 text-right text-[12px] font-semibold text-[var(--accent-2)] lg:text-left">Systems that reason with context</p>
-          <h1 className="hero-title" aria-label="Generative intelligence">
-            <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Generative</motion.span>
-            <motion.span initial={reducedMotion ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: .1, ease: [0.16, 1, 0.3, 1] }} className="text-gradient-accent block text-right">Intelligence</motion.span>
-          </h1>
-          <div className="mt-6 flex items-center gap-3" aria-hidden="true">
-            {heroBadges.map(({ Icon, label, color }, i) => (
-              <motion.div
-                key={label}
-                initial={reducedMotion ? false : { opacity: 0, scale: 0.4, rotate: -35 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.6 + i * 0.1 }}
-              >
-                {/* Three layers, each answering to something different: the
-                    wrapper above pops the badge in, this one floats it
-                    continuously, and the inner one rotates with scroll
-                    position (the same pageProgress driving the nav
-                    underline). Durations are deliberately mismatched and
-                    offset per badge so the three never sync into a single
-                    bouncing row. */}
-                <motion.div
-                  animate={reducedMotion ? undefined : { y: [0, -8, 0] }}
-                  transition={{ duration: 3.1 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
-                >
-                  <motion.div
-                    title={label}
-                    style={reducedMotion ? undefined : { rotate: badgeRotate }}
-                    className="icon-badge grid h-11 w-11 place-items-center rounded-[var(--radius-sm)]"
-                  >
-                    <Icon className="h-5 w-5" style={{ color }} />
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-          <div className="mt-8 grid gap-8 border-t border-white/15 pt-5 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
-            <p className="max-w-md text-sm leading-6 text-[var(--muted)]">Building production-grade AI systems with LLMs, RAG, agents, Python &amp; AWS.</p>
-            <p className="max-w-sm text-sm leading-6 text-[var(--muted)]">Prompt engineering, retrieval architectures, agent orchestration, evaluation, and model serving.</p>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-              <a href="#projects" className="flex items-center gap-3 text-[13px] font-semibold">Enter systems <ArrowDown className="h-4 w-4" /></a>
+      <section id="top" className="hero-bento-section relative z-10 mx-auto w-full max-w-[1180px] px-4 pb-5 pt-24 sm:px-6">
+        <div className="hero-bento-grid">
+          <motion.article initial={false} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-profile-card lg:col-span-2 lg:row-span-2">
+            <div className="flex items-start justify-between gap-5"><img src="/gopalakrishna.jpg" alt="Gopalakrishna Maddipalli" className="h-[76px] w-[76px] rounded-full border-4 border-white/20 object-cover shadow-xl" /><span className="hero-status"><i />Available for select roles</span></div>
+            <div className="mt-5"><p className="hero-card-kicker">AI ENGINEER · INDIA</p><h1 className="mt-2 text-[clamp(2rem,4vw,3.2rem)] font-semibold leading-[.94] tracking-[-.05em] text-white">Gopalakrishna<br />Maddipalli</h1><p className="mt-4 max-w-md text-[14px] leading-6 text-white/65">I build production-grade AI systems across RAG, multi-agent workflows, model evaluation, and cloud deployment.</p></div>
+            <div className="mt-auto pt-5">
+              <div className="hero-profile-actions"><a href="#projects" className="hero-profile-projects">View projects <ArrowRight /></a><a href="/Gopalakrishna_Maddipalli_CV.pdf" className="hero-profile-resume">Résumé <ArrowUpRight /></a></div>
+              <div className="mt-3 flex items-center gap-2"><a href="https://github.com/gopalgk53" target="_blank" rel="noreferrer" className="hero-social" aria-label="GitHub profile"><Github /></a><a href="https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b" target="_blank" rel="noreferrer" className="hero-social" aria-label="LinkedIn profile"><Linkedin /></a><a href="mailto:gopalgk53@yahoo.com" className="hero-social" aria-label="Email Gopalakrishna"><Mail /></a></div>
             </div>
-          </div>
-        </motion.div>
-        <motion.div
-          aria-hidden="true"
-          initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          style={reducedMotion ? undefined : { y: metaY }}
-          className="hero-console absolute right-5 top-28 z-20 hidden w-[19rem] px-5 py-4 sm:right-8 lg:block"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-[var(--muted)]">Agent status</span>
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--accent)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-              Online
-            </span>
-          </div>
-          <HeroAgentTrace />
-          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 text-[11px] font-semibold text-[var(--faint)]">
-            <span>Stack · RAG + Agents</span>
-            <span>Mode · Grounded</span>
-          </div>
-        </motion.div>
-        <div className="absolute bottom-20 left-5 hidden items-center gap-2.5 text-[11px] font-semibold text-[var(--faint)] sm:left-8 sm:flex">
-          <span className="scroll-cue" aria-hidden="true" />
-          Scroll / camera enabled
+          </motion.article>
+
+          <motion.article initial={reveal(.1)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-focus-card lg:col-span-2"><div className="relative z-10 max-w-xl"><p className="hero-card-kicker text-[var(--accent-2)]">CURRENT FOCUS</p><h2 className="mt-2 text-[clamp(1.55rem,3.2vw,2.7rem)] font-semibold leading-none tracking-[-.045em] text-white">Systems that reason<br />with context.</h2><div className="mt-4 flex flex-wrap gap-2 text-[11px] font-semibold text-white/70"><span>Evaluation-led RAG</span><span>Stateful agents</span><span>Low-latency serving</span></div></div><BrainCircuit className="hero-focus-icon" aria-hidden="true" /></motion.article>
+          <motion.article initial={reveal(.15)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-trace-card"><div className="flex items-center justify-between"><span className="hero-card-kicker text-[var(--accent)]"><Radio /> LIVE PIPELINE</span><span className="hero-live-dot">Online</span></div><HeroAgentTrace /></motion.article>
+          <motion.article initial={reveal(.2)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-stat-card"><div className="flex items-start justify-between"><Sparkles /><span>Verified portfolio</span></div><div><strong>{projects.length}</strong><p>documented AI systems</p></div></motion.article>
+          <motion.a href={`/projects/${featuredProject.id}`} initial={reveal(.25)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-project-card lg:col-span-2"><div className="hero-project-icon"><BriefcaseBusiness /></div><div className="min-w-0 flex-1"><p className="hero-card-kicker">FEATURED SYSTEM</p><h2>{featuredProject.title}</h2><div className="mt-2 flex flex-wrap gap-1.5">{featuredProject.stack.slice(0, 3).map((item) => <span key={item}>{item}</span>)}</div></div><div className="hero-arrow"><ArrowUpRight /></div></motion.a>
+          <motion.a href="#experience" initial={reveal(.3)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-experience-card"><div className="flex items-center justify-between"><span className="hero-card-kicker">EXPERIENCE</span><Building2 /></div><div><strong>7+</strong><h2>Years across operations, data &amp; AI</h2><p>Venusgeo Solutions · Tirupati Area, India</p></div></motion.a>
+          <motion.a href="/blog" initial={reveal(.35)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-writing-card"><div className="flex items-center justify-between"><span className="hero-card-kicker">WRITING</span><FileText /></div><div><h2>Engineering notes</h2><p>Typed decisions, production failures, and reliable AI systems.</p></div></motion.a>
+          <motion.article initial={reveal(.4)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-toolkit-card lg:col-span-2"><p className="hero-card-kicker">CORE TOOLKIT</p><div className="mt-3 flex flex-wrap gap-2">{toolkit.filter((item) => skills.some((group) => group.items.includes(item))).map((item) => <span key={item}>{item}</span>)}</div></motion.article>
+          <motion.a href="#contact" initial={reveal(.45)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-contact-card lg:col-span-2"><div><p className="hero-card-kicker text-white/45">COLLABORATE</p><h2>Let&apos;s build something reliable.</h2><p>Open to select Generative AI engineering and architecture roles.</p></div><span>Say hello <ArrowRight /></span></motion.a>
         </div>
-        <div className="absolute bottom-20 right-5 hidden text-[11px] font-semibold text-[var(--faint)] sm:right-8 sm:block">LLMs · RAG · Agents · AWS</div>
       </section>
     </div>
   );

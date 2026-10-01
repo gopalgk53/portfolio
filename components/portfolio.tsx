@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { ArrowUpRight, Award, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, Award, BriefcaseBusiness, Building2, CheckCircle2, Code2, ExternalLink, GraduationCap, Link2, Mail, Play, ShieldCheck } from "lucide-react";
 
 // lucide-react@1.31.0 (pinned in package.json) doesn't ship brand marks, so
 // GitHub/LinkedIn reuse the closest neutral technical glyphs — same
@@ -70,11 +70,23 @@ const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; descripti
   projects: { eyebrow: "02 / Selected work", title: <>Selected AI <span className="text-gradient-accent">systems.</span></>, description: "Ten AI systems with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
   skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
   playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
-  experience: { eyebrow: "05 / Experience", title: "From operations to data and AI." },
+  experience: { eyebrow: "05 / Experience", title: "Domain depth, translated into AI systems.", description: "A career progression from construction research and operations into applied data science and production-minded Generative AI." },
   badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
   certifications: { eyebrow: "07 / Credentials", title: "Formal training behind the practice." },
   writing: { eyebrow: "08 / Writing", title: "Notes on system design.", description: "Agentic architecture, governed AI, and production ML, written from the systems I build." },
   contact: { eyebrow: "09 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
+};
+
+const sectionEntrance: Record<string, "top" | "bottom" | "left" | "right" | "center"> = {
+  about: "left",
+  projects: "right",
+  skills: "bottom",
+  playground: "top",
+  experience: "left",
+  badges: "center",
+  certifications: "right",
+  writing: "bottom",
+  contact: "center",
 };
 
 // Each section "arrives" with a slow scale/opacity settle as it scrolls
@@ -90,8 +102,13 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
   // miss). Widened so scrolling to a new section is unmistakably a real
   // camera move, not a subtle opacity tweak — added a y-rise on top since
   // scale alone still read as static.
-  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [56, 0]);
+  const entrance = sectionEntrance[id] ?? "bottom";
+  const startX = entrance === "left" ? -88 : entrance === "right" ? 88 : 0;
+  const startY = entrance === "top" ? -72 : entrance === "bottom" ? 72 : 0;
+  const startScale = entrance === "center" ? 0.86 : 0.94;
+  const scale = useTransform(scrollYProgress, [0, 1], [startScale, 1]);
+  const x = useTransform(scrollYProgress, [0, 1], [startX, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [startY, 0]);
   // Floor is 0.75, not 0.35: below-fold sections sit at this value until
   // scrolled to, and at 0.35 the composited text dropped to ~1.9:1 — a real
   // WCAG failure that automated audits catch and that shows for an instant
@@ -105,11 +122,12 @@ function Section({ id, scene, children }: { id: string; scene: SceneId; children
       ref={ref}
       id={id}
       data-scene={scene}
-      style={reducedMotion ? undefined : { scale, y, opacity }}
+      style={reducedMotion ? undefined : { scale, x, y, opacity }}
+      data-entrance={entrance}
       className="chapter relative z-10 scroll-mt-20 border-t border-[var(--border)] px-5 py-28 sm:px-8 sm:py-44"
     >
       <div className="mx-auto max-w-[1600px]">
-        <header className="typography-shield mb-16 grid gap-7 lg:grid-cols-[10rem_1fr_.65fr] lg:items-start">
+        <header className="section-bento-header typography-shield mb-16 grid gap-7 lg:grid-cols-[10rem_1fr_.65fr] lg:items-start">
           <motion.p style={reducedMotion ? undefined : { y: eyebrowY }} className="eyebrow pt-2">
             {copy.eyebrow}
           </motion.p>
@@ -249,7 +267,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </div></div>
       <div className="relative z-10 mt-8 flex flex-col justify-between border-t border-[var(--border)] pt-8 md:mt-0 md:border-l md:border-t-0 md:pl-6 md:pt-0">
         <div><p className="text-[11px] font-semibold text-[var(--faint)]">System flow</p><p className="mt-4 text-sm leading-7 text-[var(--muted)]">{project.flow}</p></div>
-        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-[var(--border)] pt-5 text-xs">
+        <div className="project-actions mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-[var(--border)] pt-5 text-xs">
           <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
             Read case study <ArrowUpRight className="h-3 w-3" />
           </a>
@@ -306,7 +324,7 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
 
       <div className="relative mt-10">{viz}</div>
 
-      <div className="relative mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs">
+      <div className="project-actions relative mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs">
         <a href={`/projects/${project.id}`} className="flex items-center gap-1 text-[var(--accent)]">
           Read case study <ArrowUpRight className="h-3 w-3" />
         </a>
@@ -419,24 +437,51 @@ function Manifesto() {
 }
 
 function Experience() {
-  const rows: Array<[string, string, string]> = [
-    ["2024 — Now", "Generative AI systems", "RAG · agents · evaluation · LLMOps"],
-    ["Data practice", "Data science", "Predictive ML · explainability · document intelligence"],
-    ["Domain foundation", "Construction research & operations", "Domain workflows · compliance · business analysis"],
-  ];
+  const rows = [
+    {
+      period: "2021 — Now",
+      title: "Applied data science & AI systems",
+      company: "Venusgeo Solutions",
+      location: "Tirupati Area, India",
+      copy: "Designing machine-learning, OCR, retrieval, and agentic systems for document-heavy construction and legal workflows, with operational dashboards and human review built into delivery.",
+      Icon: BriefcaseBusiness,
+      accent: "blue",
+    },
+    {
+      period: "2019 — 2021",
+      title: "Construction research & operations",
+      company: "Venusgeo Solutions",
+      location: "Tirupati Area, India",
+      copy: "Analyzed operational and customer information, developed construction-domain process knowledge, and built the research foundation that now informs applied AI system design.",
+      Icon: Building2,
+      accent: "violet",
+    },
+    {
+      period: "2014 — 2018",
+      title: "Mechanical Engineering",
+      company: "YSR Engineering College of YVU",
+      location: "Andhra Pradesh, India",
+      copy: "Engineering education that established the systems-thinking, analytical, and design foundations behind the later transition into data science and AI.",
+      Icon: GraduationCap,
+      accent: "amber",
+    },
+  ] as const;
   return (
     <Section id="experience" scene="identity">
-      <div className="border-t border-[var(--border-strong)]">
-        {rows.map(([period, title, copy]) => (
-          <div key={period} className="grid gap-3 border-b border-[var(--border-strong)] py-8 sm:grid-cols-[12rem_1fr]">
-            <span className="text-xs text-[var(--faint)]">{period}</span>
-            <div>
-              <h3 className="text-xl font-medium">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{copy}</p>
+      <div className="experience-bento-grid">
+        {rows.map(({ period, title, company, location, copy, Icon, accent }, index) => (
+          <motion.article key={period} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .3 }} transition={staggerChild(index)} className="experience-bento-card" data-accent={accent}>
+            <div className="experience-bento-top"><span>{period}</span><span className="experience-bento-icon"><Icon /></span></div>
+            <div className="mt-auto">
+              <p className="experience-company">{company}</p>
+              <h3>{title}</h3>
+              <p className="experience-location">{location}</p>
+              <p className="experience-copy">{copy}</p>
             </div>
-          </div>
+          </motion.article>
         ))}
       </div>
+      <div className="mt-8 flex justify-end"><a href="https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b" target="_blank" rel="noreferrer" className="btn-pill btn-pill--outline">Verify on LinkedIn <ArrowUpRight className="h-3.5 w-3.5" /></a></div>
     </Section>
   );
 }
@@ -497,9 +542,9 @@ function Certifications() {
           </>;
           const reveal = { initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: staggerChild(index % 6) };
           return unavailable ? (
-            <motion.div key={name} {...reveal} className="grid items-center gap-3 border-b border-[var(--border-strong)] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.div>
+            <motion.div key={name} {...reveal} className="portfolio-list-card grid items-center gap-3 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.div>
           ) : (
-            <motion.a key={name} href={url} target="_blank" rel="noreferrer" {...reveal} whileHover={{ x: 5, transition: spring }} className="grid items-center gap-3 border-b border-[var(--border-strong)] py-6 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.a>
+            <motion.a key={name} href={url} target="_blank" rel="noreferrer" {...reveal} whileHover={{ y: -4, transition: spring }} className="portfolio-list-card grid items-center gap-3 sm:grid-cols-[10rem_1fr_auto]">{content}</motion.a>
           );
         })}
       </div>
@@ -514,9 +559,9 @@ function Writing() {
   const formatDate = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
   return (
     <Section id="writing" scene="identity">
-      <div className="border-t border-[var(--border-strong)]">
+      <div className="grid gap-4">
         {posts.map((post) => (
-          <Link key={post.slug} href={`/blog/${post.slug}`} className="group grid gap-3 border-b border-[var(--border-strong)] py-8 sm:grid-cols-[12rem_1fr_auto] sm:items-start">
+          <Link key={post.slug} href={`/blog/${post.slug}`} className="portfolio-list-card group grid gap-3 sm:grid-cols-[12rem_1fr_auto] sm:items-start">
             <span className="text-xs text-[var(--faint)]">{formatDate(post.date)} · {post.readingTime}</span>
             <div>
               <h3 className="text-xl font-medium transition-colors group-hover:text-[var(--accent)]">{post.title}</h3>
