@@ -16,7 +16,7 @@ export default function BlogIndex() {
     <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/80 text-[var(--text)]">
       <nav className="case-nav" aria-label="Writing navigation">
         <Link href="/">Gopalakrishna · AI Systems</Link>
-        <span>Writing · {posts.length} {posts.length === 1 ? "post" : "posts"}</span>
+        <span>Writing · {posts.length} {(posts.length as number) === 1 ? "post" : "posts"}</span>
       </nav>
       <header className="px-5 pt-20 sm:px-10 sm:pt-28">
         <p className="eyebrow">Writing · 2026</p>
