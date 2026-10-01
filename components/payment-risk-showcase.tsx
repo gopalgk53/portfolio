@@ -26,6 +26,7 @@ import { Reveal } from "./reveal";
 import { DocLinkRow, FlowColumn, IconBadge, PillTag, StatTile, SurfaceCard } from "./ui-primitives";
 import { PaymentRiskStory } from "./payment-risk-story";
 import { PaymentRiskBenchmark } from "./payment-risk-benchmark";
+import { ProjectFilm } from "./project-film";
 
 const REPO_URL = "https://github.com/gopalgk53/construction-legal-ai-suite/tree/main/payment-delay-predictor";
 const DASHBOARD_URL = "https://payment-risk.gopalakrishnagenai.in/";
@@ -196,31 +197,13 @@ export function PaymentRiskShowcase({
 
       <section id="pr-film" className="scroll-mt-24 px-5 pb-16 sm:px-8">
         <div className="mx-auto max-w-[1400px]">
-          <Reveal>
-            <p className="eyebrow">Project film · 2 min</p>
-            <h2 className="mt-3 max-w-2xl text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              From data to human decision, in one walkthrough.
-            </h2>
-          </Reveal>
-          <Reveal delay={0.05}>
-            {/* preload="none" keeps the 8 MB file off the network until the
-                visitor presses play. The film is music-only; every idea is
-                carried by on-screen text, so it works muted too. */}
-            <video
-              className="mt-8 aspect-video w-full rounded-[var(--radius-md)] border border-[var(--border)] bg-[#0F172A] shadow-[0_30px_70px_-32px_rgba(15,23,42,.45)]"
-              controls
-              preload="none"
-              playsInline
-              poster={FILM.poster}
-            >
-              <source src={FILM.src} type="video/mp4" />
-              Your browser can&apos;t play this video. <a href={FILM.src}>Download the MP4</a>.
-            </video>
-            <p className="mt-4 max-w-3xl text-sm leading-6 text-[var(--muted)]">
-              Business problem, temporal validation, model selection, explainability, AWS serving, monitoring, and the
-              human-review boundary. Music only, with no narration; all work-order examples are synthetic.
-            </p>
-          </Reveal>
+          <ProjectFilm
+            src={FILM.src}
+            poster={FILM.poster}
+            eyebrow="Project film · 2 min"
+            title="From data to human decision, in one walkthrough."
+            description="Business problem, temporal validation, model selection, explainability, AWS serving, monitoring, and the human-review boundary. Music only, with no narration; all work-order examples are synthetic."
+          />
         </div>
       </section>
 
