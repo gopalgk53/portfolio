@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ArticleShell, sectionId } from "../../../components/article-shell";
 import { posts } from "../../../lib/posts";
 
 const post = posts.find((item) => item.slug === "production-failures-regression-tests")!;
@@ -17,12 +18,12 @@ export const metadata: Metadata = {
   openGraph: { type: "article", title: post.title, description: post.description, publishedTime: post.date, images: ["/media/blog/production-failures/poster.jpg"] },
 };
 
-function H2({ children }: { children: ReactNode }) {
-  return <h2 className="!mt-16 text-2xl font-semibold tracking-tight sm:text-[1.75rem]">{children}</h2>;
+function H2({ children }: { children: string }) {
+  return <h2 id={sectionId(children)} className="!mt-16 scroll-mt-24 text-2xl font-semibold tracking-tight sm:text-[2rem]">{children}</h2>;
 }
 
 function P({ children }: { children: ReactNode }) {
-  return <p className="mt-5 text-[1.02rem] leading-8 text-[var(--muted)]">{children}</p>;
+  return <p className="mt-5 text-[1.08rem] leading-8 text-[var(--muted)]">{children}</p>;
 }
 
 function Flow({ steps }: { steps: string[] }) {
@@ -70,12 +71,12 @@ export default function ProductionFailuresPost() {
         <span>{post.readingTime}</span>
       </nav>
 
-      <article className="mx-auto max-w-[44rem] px-5 pb-28 pt-20 sm:px-8 sm:pt-28">
+      <ArticleShell meta={[date, post.readingTime, "CoreWeave Forge", "Agent engineering"]} sections={["What CoreWeave shipped", "Every failure type maps to an eval", "Evaluate the layers, not just the answer", "Software already solved the shape of this", "Keep the loop controlled"]}>
         <header>
           <p className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)]">
             CoreWeave Forge <span className="text-[var(--faint)]">|</span> {date} <span className="text-[var(--faint)]">|</span> Agent engineering
           </p>
-          <h1 className="mt-5 text-[clamp(2.2rem,5.5vw,3.6rem)] font-semibold leading-[1.02] tracking-tight">
+          <h1 className="mt-5 text-[clamp(2.4rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-tight">
             Your agent&apos;s most valuable dataset is its <span className="text-[var(--accent)]">production failures.</span>
           </h1>
           <p className="mt-6 text-[13px] text-[var(--faint)]">Maddipalli Gopalakrishna · AI / ML Engineer</p>
@@ -189,7 +190,7 @@ export default function ProductionFailuresPost() {
           </ul>
           <p className="mt-3">Quotes are from CoreWeave. The failure-to-eval mapping, eval stack and controls are my own engineering interpretation and apply with any tooling.</p>
         </footer>
-      </article>
+      </ArticleShell>
     </main>
   );
 }
