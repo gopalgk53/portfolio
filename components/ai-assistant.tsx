@@ -347,7 +347,7 @@ export function AIAssistant() {
             onClick={() => setOpen(true)}
             className="absolute bottom-2 right-16 w-64 rounded-[var(--radius-md)] border border-[var(--border)] bg-white p-3 text-left text-[13px] leading-5 text-[var(--muted)] shadow-[0_1px_2px_rgba(15,23,42,.04),0_30px_70px_-32px_rgba(15,23,42,.16)]"
           >
-            System online. Ask me about Gopal&apos;s AI stack…
+            Questions about these projects? The site assistant answers from my case studies.
           </motion.button>
         )}
       </AnimatePresence>
