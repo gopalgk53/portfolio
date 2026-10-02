@@ -55,6 +55,17 @@ const PROJECT_REPO: Record<string, string> = {
 const repoFor = (id: string) => PROJECT_REPO[id] ?? REPO_ROOT;
 
 const AGENT_DOMAINS = ["Compliance", "Risk", "Communication"];
+const publishedEvidenceIds = new Set(projects.slice(0, 3).map((project) => project.id));
+
+function EvidenceLabel({ project }: { project: Project }) {
+  const published = publishedEvidenceIds.has(project.id);
+  return (
+    <span className="project-evidence-label" data-status={published ? "published" : "developing"}>
+      <ShieldCheck aria-hidden="true" />
+      {published ? "Evidence published" : "In development"}
+    </span>
+  );
+}
 
 // The same retrieval-vs-agentic split used for the 3D scene's network
 // colors (components/3d/three-canvas.tsx's GROUP_COLOR) — generative/agentic
@@ -68,9 +79,9 @@ function categoryColor(category: string): string {
 const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; description?: string }> = {
   about: { eyebrow: "01 / Profile", title: "I build AI systems that move from prototype → production.", description: "Seven years across construction operations and data science inform a workflow-first approach to Generative AI, RAG, and autonomous agents." },
   projects: { eyebrow: "02 / Selected work", title: <>Selected AI <span className="text-gradient-accent">systems.</span></>, description: "Ten AI systems with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
-  skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
-  playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
-  experience: { eyebrow: "05 / Experience", title: "Construction knowledge, developed into applied AI.", description: "A verified progression from CAD and construction research through data science to AI/ML engineering at SunRay Construction Solutions." },
+  playground: { eyebrow: "03 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
+  experience: { eyebrow: "04 / Experience", title: "Construction knowledge, developed into applied AI.", description: "A verified progression from CAD and construction research through data science to AI/ML engineering at SunRay Construction Solutions." },
+  skills: { eyebrow: "05 / Capabilities", title: "The execution stack." },
   badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
   certifications: { eyebrow: "07 / Credentials", title: "Formal training behind the practice." },
   writing: { eyebrow: "08 / Writing", title: "Notes on system design.", description: "Agentic architecture, governed AI, and production ML, written from the systems I build." },
@@ -226,6 +237,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <div className="text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</div>
       <div className="relative z-10">
       <p className="text-[11px] font-semibold" style={{ color: categoryColor(project.category) }}>{project.category}</p>
+      <EvidenceLabel project={project} />
       <h3 className="mt-5 max-w-2xl text-[clamp(1.8rem,4vw,4.5rem)] font-medium leading-[.98] tracking-[-.045em]">{project.title}</h3>
       <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{project.impact}</p>
       <div className="mt-7 flex gap-6 border-b border-[var(--border)] md:hidden">
@@ -304,7 +316,7 @@ function FlagshipProject({ project, index, scene, viz }: { project: Project; ind
       </motion.span>
 
       <div className="sticky top-24">
-      <p className="eyebrow relative">Flagship system · Case {String(index + 1).padStart(2, "0")}</p>
+      <div className="relative flex flex-wrap items-center gap-3"><p className="eyebrow">Flagship system · Case {String(index + 1).padStart(2, "0")}</p><EvidenceLabel project={project} /></div>
       <h3 className="relative mt-5 max-w-5xl text-[clamp(3rem,7vw,8rem)] font-medium leading-[.9] tracking-[-.055em]">{project.title}</h3>
 
       <div className="relative mt-10 grid gap-8 border-y border-[var(--border)] py-8 sm:grid-cols-3">
@@ -375,36 +387,29 @@ function Projects() {
   );
 }
 
-type EvidenceFilter = "all" | "published" | "developing";
-
 function EvidenceIndex() {
-  const [filter, setFilter] = useState<EvidenceFilter>("all");
-  const entries = projects.map((project, index) => ({ project, status: index < 3 ? "published" as const : "developing" as const }));
-  const visible = filter === "all" ? entries : entries.filter((entry) => entry.status === filter);
+  const published = projects.filter((project) => publishedEvidenceIds.has(project.id));
+  const developingCount = projects.length - published.length;
 
   return (
     <section className="evidence-index" aria-labelledby="evidence-index-title">
       <div className="evidence-index-heading">
         <div>
           <p className="eyebrow">Evidence index</p>
-          <h2 id="evidence-index-title">What is published now—and what is still developing.</h2>
-          <p>Evidence is available for the first three projects. Remaining systems stay clearly marked until implementation evidence is ready to publish.</p>
+          <h2 id="evidence-index-title">Published proof, without repeated project browsing.</h2>
+          <p>Open the three projects with published evidence here. The remaining {developingCount} systems are labelled in development within Selected Work.</p>
         </div>
-        <div className="evidence-filters" role="group" aria-label="Filter projects by evidence status">
-          {(["all", "published", "developing"] as const).map((value) => (
-            <button key={value} type="button" aria-pressed={filter === value} onClick={() => setFilter(value)}>
-              {value === "all" ? "All systems" : value === "published" ? "Evidence published" : "In development"}
-            </button>
-          ))}
+        <div className="evidence-summary" aria-label="Evidence status summary">
+          <strong>{published.length}</strong><span>published</span><i aria-hidden="true" /><strong>{developingCount}</strong><span>in development</span>
         </div>
       </div>
       <div className="evidence-index-list">
-        {visible.map(({ project, status }, index) => (
-          <motion.article key={project.id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={staggerChild(index % 4)} className="evidence-index-row" data-status={status}>
+        {published.map((project, index) => (
+          <motion.article key={project.id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={staggerChild(index)} className="evidence-index-row" data-status="published">
             <span>{String(projects.indexOf(project) + 1).padStart(2, "0")}</span>
             <div><p>{project.category}</p><h3>{project.title}</h3></div>
-            <div className="evidence-status"><b>{status === "published" ? "Published evidence" : "Evidence forthcoming"}</b><small>{status === "published" ? "Case study and available artifacts" : "System is in development"}</small></div>
-            <Link href={`/projects/${project.id}`} aria-label={`Open ${project.title} case study`}>{status === "published" ? "Inspect" : "View scope"}<ArrowUpRight /></Link>
+            <div className="evidence-status"><b>Published evidence</b><small>Case study and available artifacts</small></div>
+            <Link href={`/projects/${project.id}`} aria-label={`Open ${project.title} case study`}>Inspect<ArrowUpRight /></Link>
           </motion.article>
         ))}
       </div>

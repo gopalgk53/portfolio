@@ -15,6 +15,7 @@ const modes: Array<{ id: EffectsMode; label: string; icon: typeof Gauge }> = [
 export function SiteEnhancements() {
   const [mode, setMode] = useState<EffectsMode>("balanced");
   const [open, setOpen] = useState(false);
+  const [heroVisible, setHeroVisible] = useState(true);
   const controlRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -41,6 +42,14 @@ export function SiteEnhancements() {
       cancelAnimationFrame(announceInitial);
       document.removeEventListener("click", track);
     };
+  }, []);
+
+  useEffect(() => {
+    const hero = document.getElementById("top");
+    if (!hero) return;
+    const observer = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting), { threshold: 0.08 });
+    observer.observe(hero);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -75,7 +84,7 @@ export function SiteEnhancements() {
   const active = modes.find(item => item.id === mode) || modes[1];
   const ActiveIcon = active.icon;
 
-  return <div ref={controlRef} className="fixed bottom-5 left-4 z-[90] sm:left-6">
+  return <div ref={controlRef} data-hero-visible={heroVisible} className="effects-control fixed bottom-5 left-4 z-[90] sm:left-6">
     {open && <div id="effects-intensity-menu" role="menu" aria-label="3D intensity" className="mb-2 w-40 rounded-[var(--radius-md)] border border-[var(--border)] bg-white p-1.5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_30px_70px_-32px_rgba(15,23,42,.16)]">
       {modes.map(item => {
         const Icon = item.icon;

@@ -129,6 +129,7 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<Mode>("chat");
+  const [heroVisible, setHeroVisible] = useState(true);
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [listening, setListening] = useState(false);
   const [speakEnabled, setSpeakEnabled] = useState(false);
@@ -143,6 +144,14 @@ export function AIAssistant() {
     setOpen(false);
     if (restoreFocus) window.setTimeout(() => triggerRef.current?.focus(), 500);
   }
+
+  useEffect(() => {
+    const hero = document.getElementById("top");
+    if (!hero) return;
+    const observer = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting), { threshold: 0.08 });
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     try {
@@ -336,7 +345,7 @@ export function AIAssistant() {
   const quickPrompts = mode === "consult" ? consultQuick : quick;
 
   return (
-    <div className="no-print fixed bottom-4 right-4 z-[100] sm:bottom-6 sm:right-6" ref={panel}>
+    <div data-hero-visible={heroVisible && !open} className="assistant-control no-print fixed bottom-4 right-4 z-[100] sm:bottom-6 sm:right-6" ref={panel}>
       <AnimatePresence>
         {tooltip && !open && (
           <motion.button
