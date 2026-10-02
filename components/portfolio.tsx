@@ -404,7 +404,7 @@ function EvidenceIndex() {
   const developingCount = projects.length - published.length;
 
   return (
-    <section className="evidence-index" aria-labelledby="evidence-index-title">
+    <section id="evidence-index" className="evidence-index scroll-mt-32" aria-labelledby="evidence-index-title">
       <div className="evidence-index-heading">
         <div>
           <p className="eyebrow">Evidence index</p>
