@@ -1,5 +1,12 @@
 export const posts = [
   {
+    slug: "eval-platform",
+    title: "Your AI Eval Suite Can Become Technical Debt",
+    description: "Turning every production failure into a permanent eval eventually makes the suite the bottleneck. Triage first: deduplicate the known, protect the novel, tier what runs where, and evaluate the triage too.",
+    date: "2026-10-03",
+    readingTime: "7 min read",
+  },
+  {
     slug: "agent-runtime-security",
     title: "A System Prompt Is Not a Security Boundary",
     description: "Agents can now query databases, call APIs and run code. What limits them should live in identity, policy, sandboxing and tool authorization, not in an instruction to the model.",
