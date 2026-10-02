@@ -193,6 +193,18 @@ function About() {
   );
 }
 
+function RecruiterProofPath() {
+  return (
+    <nav className="recruiter-proof-path" aria-label="Recruiter proof path">
+      <span>Review path</span>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Published work</a>
+      <a href="/Gopalakrishna_Maddipalli_CV.pdf">Résumé</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  );
+}
+
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [tab, setTab] = useState<"overview" | "architecture">("overview");
   const glowRef = useGlowPointer<HTMLElement>();
@@ -563,10 +575,20 @@ function Badges() {
 }
 
 function Certifications() {
-  const [all, setAll] = useState(false);
-  const visible = all ? certifications : certifications.slice(0, 6);
+  type CredentialGroup = "featured" | "genai" | "ml" | "data" | "all";
+  const [group, setGroup] = useState<CredentialGroup>("featured");
+  const groups: Array<[CredentialGroup, string]> = [["featured", "Featured"], ["genai", "Agentic & GenAI"], ["ml", "ML & MLOps"], ["data", "Data & foundations"], ["all", "All"]];
+  const credentialGroup = (name: string): Exclude<CredentialGroup, "featured" | "all"> => {
+    if (/(agent|generative|prompt|dialogflow|conversational|artificial intelligence)/i.test(name)) return "genai";
+    if (/(machine learning|neural|reinforcement|explainable|predictive model)/i.test(name)) return "ml";
+    return "data";
+  };
+  const visible = group === "featured" ? certifications.slice(0, 6) : group === "all" ? certifications : certifications.filter(([name]) => credentialGroup(name) === group);
   return (
     <Section id="certifications" scene="identity">
+      <div className="credential-filters" role="group" aria-label="Filter credentials by topic">
+        {groups.map(([value, label]) => <button key={value} type="button" aria-pressed={group === value} onClick={() => setGroup(value)}>{label}</button>)}
+      </div>
       <div className="border-t border-[var(--border-strong)]">
         {visible.map(([name, meta, url], index) => {
           const unavailable = url.includes("leapsdata.analyttica.com");
@@ -586,9 +608,7 @@ function Certifications() {
           );
         })}
       </div>
-      <motion.button onClick={() => setAll(!all)} whileTap={{ scale: 0.97 }} transition={spring} className="btn-pill btn-pill--outline mt-7">
-        {all ? "Show featured" : `View all ${certifications.length} credentials`}
-      </motion.button>
+      {group !== "all" && <motion.button onClick={() => setGroup("all")} whileTap={{ scale: 0.97 }} transition={spring} className="btn-pill btn-pill--outline mt-7">View all {certifications.length} credentials</motion.button>}
     </Section>
   );
 }
@@ -621,6 +641,7 @@ function Writing() {
 
 function Contact() {
   const [status, setStatus] = useState("");
+  const [statusKind, setStatusKind] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [sending, setSending] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -633,18 +654,22 @@ function Contact() {
     const company = String(d.get("company") || "");
     if (!name.trim() || !/^\S+@\S+\.\S+$/.test(email) || message.trim().length < 10) {
       setStatus("Check name, email, and message (10+ characters).");
+      setStatusKind("error");
       return;
     }
     setSending(true);
     setStatus("Sending…");
+    setStatusKind("sending");
     try {
       const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, email, message, company }) });
       const result = (await response.json()) as { success?: boolean; error?: string };
       if (!response.ok || !result.success) throw new Error(result.error || "Message delivery failed.");
       form.reset();
       setStatus("Message delivered. Gopalakrishna has been alerted.");
+      setStatusKind("success");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Message delivery failed. Please email directly.");
+      setStatusKind("error");
     } finally {
       setSending(false);
     }
@@ -709,9 +734,7 @@ function Contact() {
                 {sending ? "Sending…" : "Send message"}
               </motion.button>
             </Magnetic>
-            <span role="status" aria-live="polite" className="text-xs text-[var(--faint)]">
-              {status}
-            </span>
+            {status && <span role={statusKind === "error" ? "alert" : "status"} aria-live="polite" className="contact-status" data-state={statusKind}>{statusKind === "success" && <CheckCircle2 aria-hidden="true" />}{status}</span>}
           </div>
         </form>
       </div>
@@ -722,6 +745,7 @@ function Contact() {
 export function Portfolio() {
   return (
     <>
+      <RecruiterProofPath />
       <About />
       <Manifesto />
       <ProjectShowcase />

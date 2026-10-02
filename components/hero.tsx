@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion, useScroll } from "framer-motion";
-import { ArrowRight, ArrowUpRight, BrainCircuit, BriefcaseBusiness, Building2, Check, Code2, Copy, FileText, Link2, Mail, Menu, Radio, Share2, Sparkles, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BrainCircuit, BriefcaseBusiness, Building2, Check, ChevronDown, Code2, Copy, FileText, Link2, Mail, Menu, Radio, Share2, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { projects, skills } from "../lib/data";
 import { nav } from "../lib/nav";
@@ -18,6 +18,7 @@ export function Hero() {
   const [scrolled, setScrolled] = useState(false);
   const [activeId, setActiveId] = useState("top");
   const [copied, setCopied] = useState(false);
+  const [secondaryOpen, setSecondaryOpen] = useState(false);
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
 
@@ -99,7 +100,7 @@ export function Hero() {
       </nav>
 
       <section id="top" className="hero-bento-section relative z-10 mx-auto w-full max-w-[1180px] px-4 pb-5 pt-24 sm:px-6">
-        <div className="hero-bento-grid">
+        <div className="hero-bento-grid" data-secondary-open={secondaryOpen}>
           <motion.article initial={false} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-profile-card lg:col-span-2 lg:row-span-2">
             <div className="flex items-start justify-between gap-5"><img src="/gopalakrishna.jpg" alt="Gopalakrishna Maddipalli" className="h-[76px] w-[76px] rounded-full border-4 border-white/20 object-cover shadow-xl" /><span className="hero-status"><i />Available for select roles</span></div>
             <div className="mt-5"><p className="hero-card-kicker">AI ENGINEER · INDIA</p><h1 className="mt-2 text-[clamp(2rem,4vw,3.2rem)] font-semibold leading-[.94] tracking-[-.05em] text-white">Gopalakrishna<br />Maddipalli</h1><p className="mt-4 max-w-md text-[14px] leading-6 text-white/65">I build production-grade AI systems across RAG, multi-agent workflows, model evaluation, and cloud deployment.</p></div>
@@ -112,11 +113,12 @@ export function Hero() {
           <motion.article initial={reveal(.1)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-focus-card lg:col-span-2"><div className="relative z-10 max-w-xl"><p className="hero-card-kicker text-[var(--accent-2)]">CURRENT FOCUS</p><h2 className="mt-2 text-[clamp(1.55rem,3.2vw,2.7rem)] font-semibold leading-none tracking-[-.045em] text-white">Systems that reason<br />with context.</h2><div className="mt-4 flex flex-wrap gap-2 text-[11px] font-semibold text-white/70"><span>Evaluation-led RAG</span><span>Stateful agents</span><span>Low-latency serving</span></div></div><BrainCircuit className="hero-focus-icon" aria-hidden="true" /></motion.article>
           <motion.article initial={reveal(.15)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-trace-card"><div className="flex items-center justify-between"><span className="hero-card-kicker text-[var(--accent)]"><Radio /> LIVE PIPELINE</span><span className="hero-live-dot">Online</span></div><HeroAgentTrace /></motion.article>
           <motion.article initial={reveal(.2)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-stat-card"><div className="flex items-start justify-between"><Sparkles /><span>Evidence-aware portfolio</span></div><div><strong>{projects.length}</strong><p>documented systems · targets labelled</p></div></motion.article>
-          <motion.a href={`/projects/${featuredProject.id}`} initial={reveal(.25)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-project-card lg:col-span-2"><div className="hero-project-icon"><BriefcaseBusiness /></div><div className="min-w-0 flex-1"><p className="hero-card-kicker">FEATURED SYSTEM</p><h2>{featuredProject.title}</h2><div className="mt-2 flex flex-wrap gap-1.5">{featuredProject.stack.slice(0, 3).map((item) => <span key={item}>{item}</span>)}</div></div><div className="hero-arrow"><ArrowUpRight /></div></motion.a>
-          <motion.a href="#experience" initial={reveal(.3)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-experience-card"><div className="flex items-center justify-between"><span className="hero-card-kicker">EXPERIENCE</span><Building2 /></div><div><strong>7+</strong><h2>Years across construction, data &amp; AI</h2><p>SunRay Construction Solutions · Hyderabad, India</p></div></motion.a>
-          <motion.a href="/blog" initial={reveal(.35)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-writing-card"><div className="flex items-center justify-between"><span className="hero-card-kicker">WRITING</span><FileText /></div><div><h2>Engineering notes</h2><p>Typed decisions, production failures, and reliable AI systems.</p></div></motion.a>
-          <motion.article initial={reveal(.4)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-toolkit-card lg:col-span-2"><p className="hero-card-kicker">CORE TOOLKIT</p><div className="mt-3 flex flex-wrap gap-2">{toolkit.filter((item) => skills.some((group) => group.items.includes(item))).map((item) => <span key={item}>{item}</span>)}</div></motion.article>
-          <motion.a href="#contact" initial={reveal(.45)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-bento-card hero-contact-card lg:col-span-2"><div><p className="hero-card-kicker text-white/45">COLLABORATE</p><h2>Let&apos;s build something reliable.</h2><p>Open to select Generative AI engineering and architecture roles.</p></div><span>Say hello <ArrowRight /></span></motion.a>
+          <button type="button" aria-expanded={secondaryOpen} onClick={() => setSecondaryOpen((value) => !value)} className="hero-more-toggle">{secondaryOpen ? "Show focused introduction" : "Explore experience, work and writing"}<ChevronDown aria-hidden="true" /></button>
+          <motion.a href={`/projects/${featuredProject.id}`} initial={reveal(.25)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-secondary-card hero-bento-card hero-project-card lg:col-span-2"><div className="hero-project-icon"><BriefcaseBusiness /></div><div className="min-w-0 flex-1"><p className="hero-card-kicker">FEATURED SYSTEM</p><h2>{featuredProject.title}</h2><div className="mt-2 flex flex-wrap gap-1.5">{featuredProject.stack.slice(0, 3).map((item) => <span key={item}>{item}</span>)}</div></div><div className="hero-arrow"><ArrowUpRight /></div></motion.a>
+          <motion.a href="#experience" initial={reveal(.3)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-secondary-card hero-bento-card hero-experience-card"><div className="flex items-center justify-between"><span className="hero-card-kicker">EXPERIENCE</span><Building2 /></div><div><strong>7+</strong><h2>Years across construction, data &amp; AI</h2><p>SunRay Construction Solutions · Hyderabad, India</p></div></motion.a>
+          <motion.a href="/blog" initial={reveal(.35)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-secondary-card hero-bento-card hero-writing-card"><div className="flex items-center justify-between"><span className="hero-card-kicker">WRITING</span><FileText /></div><div><h2>Engineering notes</h2><p>Typed decisions, production failures, and reliable AI systems.</p></div></motion.a>
+          <motion.article initial={reveal(.4)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-secondary-card hero-bento-card hero-toolkit-card lg:col-span-2"><p className="hero-card-kicker">CORE TOOLKIT</p><div className="mt-3 flex flex-wrap gap-2">{toolkit.filter((item) => skills.some((group) => group.items.includes(item))).map((item) => <span key={item}>{item}</span>)}</div></motion.article>
+          <motion.a href="#contact" initial={reveal(.45)} animate={{ opacity: 1, y: 0, scale: 1 }} className="hero-secondary-card hero-bento-card hero-contact-card lg:col-span-2"><div><p className="hero-card-kicker text-white/45">COLLABORATE</p><h2>Let&apos;s build something reliable.</h2><p>Open to select Generative AI engineering and architecture roles.</p></div><span>Say hello <ArrowRight /></span></motion.a>
         </div>
       </section>
     </div>

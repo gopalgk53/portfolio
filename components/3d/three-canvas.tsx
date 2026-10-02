@@ -366,9 +366,13 @@ export function ThreeCanvas() {
       renderer.setPixelRatio(basePixelRatio * qualityScale);
       renderer.setSize(width, height, false);
     };
-    const onVisibilityChange = () => {
+    let pageActive = !document.hidden && document.hasFocus();
+    const resume = () => {
+      pageActive = true;
       previous = performance.now();
     };
+    const pause = () => { pageActive = false; };
+    const onVisibilityChange = () => document.hidden ? pause() : resume();
     const onContextLost = (event: Event) => {
       event.preventDefault();
       contextLost = true;
@@ -390,6 +394,8 @@ export function ThreeCanvas() {
     window.addEventListener("gopal-effects", onEffects);
     window.addEventListener("resize", resize, { passive: true });
     document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("focus", resume);
+    window.addEventListener("blur", pause);
     canvas.addEventListener("webglcontextlost", onContextLost);
     canvas.addEventListener("webglcontextrestored", onContextRestored);
     resize();
@@ -412,8 +418,8 @@ export function ThreeCanvas() {
 
     const animate = (now: number) => {
       animationFrame = requestAnimationFrame(animate);
-      if (document.hidden || contextLost) return;
-      const minimumFrameInterval = reduceMotion ? 250 : frameIntervalByMode[effectsMode];
+      if (!pageActive || contextLost) return;
+      const minimumFrameInterval = reduceMotion ? 250 : mobile && activeRef.current === "close" ? 125 : frameIntervalByMode[effectsMode];
       if (now - lastRendered < minimumFrameInterval - 1) return;
       lastRendered = now;
       const delta = Math.min((now - previous) / 1000, 0.05);
@@ -622,6 +628,8 @@ export function ThreeCanvas() {
       window.removeEventListener("gopal-effects", onEffects);
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("focus", resume);
+      window.removeEventListener("blur", pause);
       canvas.removeEventListener("webglcontextlost", onContextLost);
       canvas.removeEventListener("webglcontextrestored", onContextRestored);
       texture.dispose();
