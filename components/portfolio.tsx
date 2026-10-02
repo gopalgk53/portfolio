@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { ArrowUpRight, Award, BriefcaseBusiness, Building2, CheckCircle2, Code2, ExternalLink, GraduationCap, Link2, Mail, Play, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, Award, BriefcaseBusiness, Building2, CheckCircle2, Code2, ExternalLink, Link2, Mail, Play, ShieldCheck } from "lucide-react";
 
 // lucide-react@1.31.0 (pinned in package.json) doesn't ship brand marks, so
 // GitHub/LinkedIn reuse the closest neutral technical glyphs — same
@@ -70,7 +70,7 @@ const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; descripti
   projects: { eyebrow: "02 / Selected work", title: <>Selected AI <span className="text-gradient-accent">systems.</span></>, description: "Ten AI systems with explicit goals, implementation stacks, and system flows. Figures marked as targets are project targets — not unverified production claims." },
   skills: { eyebrow: "03 / Capabilities", title: "The execution stack." },
   playground: { eyebrow: "04 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
-  experience: { eyebrow: "05 / Experience", title: "Domain depth, translated into AI systems.", description: "A career progression from construction research and operations into applied data science and production-minded Generative AI." },
+  experience: { eyebrow: "05 / Experience", title: "Construction knowledge, developed into applied AI.", description: "A verified progression from CAD and construction research through data science to AI/ML engineering at SunRay Construction Solutions." },
   badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
   certifications: { eyebrow: "07 / Credentials", title: "Formal training behind the practice." },
   writing: { eyebrow: "08 / Writing", title: "Notes on system design.", description: "Agentic architecture, governed AI, and production ML, written from the systems I build." },
@@ -375,6 +375,43 @@ function Projects() {
   );
 }
 
+type EvidenceFilter = "all" | "published" | "developing";
+
+function EvidenceIndex() {
+  const [filter, setFilter] = useState<EvidenceFilter>("all");
+  const entries = projects.map((project, index) => ({ project, status: index < 3 ? "published" as const : "developing" as const }));
+  const visible = filter === "all" ? entries : entries.filter((entry) => entry.status === filter);
+
+  return (
+    <section className="evidence-index" aria-labelledby="evidence-index-title">
+      <div className="evidence-index-heading">
+        <div>
+          <p className="eyebrow">Evidence index</p>
+          <h2 id="evidence-index-title">What is published now—and what is still developing.</h2>
+          <p>Evidence is available for the first three projects. Remaining systems stay clearly marked until implementation evidence is ready to publish.</p>
+        </div>
+        <div className="evidence-filters" role="group" aria-label="Filter projects by evidence status">
+          {(["all", "published", "developing"] as const).map((value) => (
+            <button key={value} type="button" aria-pressed={filter === value} onClick={() => setFilter(value)}>
+              {value === "all" ? "All systems" : value === "published" ? "Evidence published" : "In development"}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="evidence-index-list">
+        {visible.map(({ project, status }, index) => (
+          <motion.article key={project.id} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={staggerChild(index % 4)} className="evidence-index-row" data-status={status}>
+            <span>{String(projects.indexOf(project) + 1).padStart(2, "0")}</span>
+            <div><p>{project.category}</p><h3>{project.title}</h3></div>
+            <div className="evidence-status"><b>{status === "published" ? "Published evidence" : "Evidence forthcoming"}</b><small>{status === "published" ? "Case study and available artifacts" : "System is in development"}</small></div>
+            <Link href={`/projects/${project.id}`} aria-label={`Open ${project.title} case study`}>{status === "published" ? "Inspect" : "View scope"}<ArrowUpRight /></Link>
+          </motion.article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function SkillCard({ group, items, index }: { group: string; items: string[]; index: number }) {
   const glowRef = useGlowPointer<HTMLDivElement>();
   return (
@@ -437,49 +474,45 @@ function Manifesto() {
 }
 
 function Experience() {
-  const rows = [
+  const sunRayRoles: Array<{ period: string; title: string; copy: string; links: Array<[string, string]> }> = [
     {
-      period: "2021 — Now",
-      title: "Applied data science & AI systems",
-      company: "Venusgeo Solutions",
-      location: "Tirupati Area, India",
-      copy: "Designing machine-learning, OCR, retrieval, and agentic systems for document-heavy construction and legal workflows, with operational dashboards and human review built into delivery.",
-      Icon: BriefcaseBusiness,
-      accent: "blue",
+      period: "SEP 2024 — PRESENT",
+      title: "AI/ML Engineer",
+      copy: "Build and implement AI-powered applications for construction legal operations, research, and compliance workflows.",
+      links: [["Multi-agent systems", "/projects/multi-agent"], ["NTO copilot", "/projects/nto-operations-copilot"]],
+    },
+    {
+      period: "2021 — 2024",
+      title: "Data Scientist",
+      copy: "Applied data science and machine learning to construction operations, research, and payment-protection workflows following completion of postgraduate study in AI and machine learning.",
+      links: [["Payment risk", "/projects/payment-risk"], ["Explainable risk", "/projects/explainable-risk"]],
     },
     {
       period: "2019 — 2021",
-      title: "Construction research & operations",
-      company: "Venusgeo Solutions",
-      location: "Tirupati Area, India",
-      copy: "Analyzed operational and customer information, developed construction-domain process knowledge, and built the research foundation that now informs applied AI system design.",
-      Icon: Building2,
-      accent: "violet",
+      title: "Research Analyst",
+      copy: "Supported construction legal research and operational work-order processing with emphasis on accurate source verification and documented decision-making.",
+      links: [["Legal RAG", "/projects/legal-rag"], ["Document intelligence", "/projects/document-ai"]],
     },
-    {
-      period: "2014 — 2018",
-      title: "Mechanical Engineering",
-      company: "YSR Engineering College of YVU",
-      location: "Andhra Pradesh, India",
-      copy: "Engineering education that established the systems-thinking, analytical, and design foundations behind the later transition into data science and AI.",
-      Icon: GraduationCap,
-      accent: "amber",
-    },
-  ] as const;
+  ];
   return (
     <Section id="experience" scene="identity">
-      <div className="experience-bento-grid">
-        {rows.map(({ period, title, company, location, copy, Icon, accent }, index) => (
-          <motion.article key={period} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .3 }} transition={staggerChild(index)} className="experience-bento-card" data-accent={accent}>
-            <div className="experience-bento-top"><span>{period}</span><span className="experience-bento-icon"><Icon /></span></div>
-            <div className="mt-auto">
-              <p className="experience-company">{company}</p>
-              <h3>{title}</h3>
-              <p className="experience-location">{location}</p>
-              <p className="experience-copy">{copy}</p>
-            </div>
-          </motion.article>
-        ))}
+      <div className="experience-journey-grid">
+        <motion.article initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .2 }} transition={staggerChild(0)} className="experience-company-card experience-company-card--primary">
+          <div className="experience-company-heading">
+            <div><p className="experience-company">SunRay Construction Solutions</p><h3>One company. Three chapters of increasing technical responsibility.</h3><p className="experience-location">Hyderabad, Telangana, India · Full-time</p></div>
+            <span className="experience-bento-icon"><Building2 /></span>
+          </div>
+          <ol className="experience-role-list">
+            {sunRayRoles.map(({ period, title, copy, links }, index) => <li key={period} className="experience-role">
+              <span className="experience-role-marker" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <div><div className="experience-role-meta"><span>{period}</span><span>{index === 0 ? "CURRENT ROLE" : "CAREER PROGRESSION"}</span></div><h4>{title}</h4><p>{copy}</p><div className="experience-role-links">{links.map(([label, href]) => <Link key={href} href={href}>{label}<ArrowUpRight /></Link>)}</div></div>
+            </li>)}
+          </ol>
+        </motion.article>
+        <motion.article initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .25 }} transition={staggerChild(1)} className="experience-company-card experience-company-card--foundation">
+          <div className="experience-bento-top"><span>MAY 2019 — SEP 2019</span><span className="experience-bento-icon"><BriefcaseBusiness /></span></div>
+          <div className="mt-auto"><p className="experience-company">Venusgeo Solutions</p><p className="experience-foundation-label">Foundation role</p><h3>Junior CAD Engineer</h3><p className="experience-location">India · 5 months</p><p className="experience-copy">Contributed to a UK county-council asset-management project by producing accurate building and school-facility information.</p></div>
+        </motion.article>
       </div>
       <div className="mt-8 flex justify-end"><a href="https://www.linkedin.com/in/maddipalli-gopalakrishna-b3598718b" target="_blank" rel="noreferrer" className="btn-pill btn-pill--outline">Verify on LinkedIn <ArrowUpRight className="h-3.5 w-3.5" /></a></div>
     </Section>
@@ -615,7 +648,9 @@ function Contact() {
     <Section id="contact" scene="close">
       <div className="grid gap-5 lg:grid-cols-[.8fr_1.2fr]">
         <div className="glass-panel p-7 sm:p-10">
-          <p className="max-w-sm text-lg leading-8 text-[var(--text)]">Open to thoughtful conversations about GenAI engineering, AI architecture, and applied research.</p>
+          <p className="eyebrow">Best-fit collaborations</p>
+          <p className="mt-4 max-w-md text-[clamp(1.35rem,2.2vw,2rem)] font-medium leading-tight tracking-[-.025em] text-[var(--text)]">Evidence-grounded RAG, agentic workflows, construction-domain AI, and production evaluation.</p>
+          <p className="mt-5 max-w-sm text-sm leading-6 text-[var(--muted)]">Open to thoughtful conversations about Generative AI engineering, AI architecture, and applied research.</p>
           <div className="mt-12">
             {[
               ["GitHub", "https://github.com/gopalgk53", Github],
@@ -686,6 +721,7 @@ export function Portfolio() {
       <Manifesto />
       <ProjectShowcase />
       <Projects />
+      <EvidenceIndex />
       <Playground />
       <div className="lab-band">
         <details className="lab-disclosure">

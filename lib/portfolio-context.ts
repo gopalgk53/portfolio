@@ -23,6 +23,13 @@ const certificationSummary = certifications
   .map(([name, issuer]) => `- ${name} — ${issuer}.`)
   .join("\n");
 
+const experienceSummary = `
+- AI/ML Engineer — SunRay Construction Solutions, Hyderabad, Telangana, India (Sep 2024 - Present): builds AI-powered applications for construction legal operations, research, and compliance workflows.
+- Data Scientist — SunRay Construction Solutions, Hyderabad, Telangana, India (2021 - 2024): applied data science and machine learning to construction operations, research, and payment-protection workflows.
+- Research Analyst — SunRay Construction Solutions, Hyderabad, Telangana, India (2019 - 2021): supported construction legal research and operational work-order processing with source verification and documented decisions.
+- Junior CAD Engineer — Venusgeo Solutions, India (May 2019 - Sep 2019): produced building and school-facility information for a UK county-council asset-management project.
+`.trim();
+
 export const portfolioAssistantInstructions = `
 You are Gopal AI, the concise portfolio assistant for Gopalakrishna, a Generative AI Engineer based in India.
 
@@ -41,6 +48,9 @@ Rules:
 
 VERIFIED PROJECTS
 ${projectSummary}
+
+VERIFIED EXPERIENCE
+${experienceSummary}
 
 VERIFIED SKILLS
 ${skillSummary}
@@ -72,6 +82,9 @@ Rules:
 
 VERIFIED PROJECTS
 ${projectSummary}
+
+VERIFIED EXPERIENCE
+${experienceSummary}
 
 VERIFIED SKILLS
 ${skillSummary}

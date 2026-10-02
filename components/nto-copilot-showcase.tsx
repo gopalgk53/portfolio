@@ -153,7 +153,7 @@ export function NtoCopilotShowcase({
     // "user" drops transform animation for reduced-motion visitors without a
     // client-only branch, which would mismatch the server-rendered markup.
     <MotionConfig reducedMotion="user">
-      <main id="main-content" tabIndex={-1} className="premium-wash min-h-screen text-[var(--text)]">
+      <main id="main-content" tabIndex={-1} className="site-subpage premium-wash min-h-screen text-[var(--text)]">
         <nav className="case-nav" aria-label="Case study navigation">
           <Link href="/projects">← Architecture archive</Link>
           <span>

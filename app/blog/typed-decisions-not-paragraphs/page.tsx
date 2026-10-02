@@ -78,7 +78,7 @@ export default function TypedDecisionsPost() {
   const date = new Date(`${post.date}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/80 text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="site-subpage article-subpage min-h-screen text-[var(--text)]">
       <nav className="case-nav" aria-label="Article navigation">
         <Link href="/blog">← Writing</Link>
         <span>{post.readingTime}</span>

@@ -45,11 +45,14 @@ export function AudienceHighlight() {
       </div>
 
       {audience === "recruiter" ? (
-        <div className="mt-5">
+        <div className="audience-panel mt-5" data-audience="recruiter">
           <p className="text-sm leading-6 text-[var(--muted)]">
             Available for Generative AI Engineering and AI Architecture roles, based in India — 7+ years domain
             experience, {projects.length} blueprint systems, {certifications.length} credentials retained.
           </p>
+          <div className="audience-proof-grid">
+            <span><b>Current</b>AI/ML Engineer · SunRay</span><span><b>Domain</b>Construction legal operations</span><span><b>Evidence</b>Résumé · LinkedIn · credentials</span>
+          </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <a href="/Gopalakrishna_Maddipalli_CV.pdf" className="btn-pill btn-pill--solid">
               Download résumé
@@ -61,11 +64,14 @@ export function AudienceHighlight() {
           </div>
         </div>
       ) : (
-        <div className="mt-5">
+        <div className="audience-panel mt-5" data-audience="engineer">
           <p className="text-sm leading-6 text-[var(--muted)]">
             Llama 3 · LangGraph · vLLM · Qdrant · FastAPI · AWS — ten AI systems and architecture blueprints spanning RAG,
             multi-agent orchestration, document intelligence, and predictive ML, each with its own system flow.
           </p>
+          <div className="audience-proof-grid">
+            <span><b>Architecture</b>RAG · agents · human review</span><span><b>Quality</b>Evaluation · failure handling</span><span><b>Delivery</b>FastAPI · AWS · Azure</span>
+          </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <a href="/projects" className="btn-pill btn-pill--solid">
               Explore case studies

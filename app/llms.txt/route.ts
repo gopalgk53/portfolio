@@ -17,7 +17,7 @@ function build() {
 
   return `# Gopalakrishna Maddipalli — Generative AI Engineer
 
-> Portfolio of a Generative AI Engineer based in India, focused on production-grade RAG systems, multi-agent orchestration, and applied LLM engineering. Seven years of prior construction operations and data science experience inform a workflow-first approach to Generative AI.
+> Portfolio of a Generative AI Engineer based in India, focused on production-grade RAG systems, multi-agent orchestration, and applied LLM engineering. His progression spans Junior CAD Engineer at Venusgeo Solutions and Research Analyst, Data Scientist, and AI/ML Engineer at SunRay Construction Solutions.
 
 Figures on this site labelled "target" are project targets, not verified production results — see each case study for details.
 

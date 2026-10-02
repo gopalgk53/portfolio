@@ -13,7 +13,7 @@ const formatDate = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateStr
 
 export default function BlogIndex() {
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--bg)]/80 text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="site-subpage min-h-screen text-[var(--text)]">
       <nav className="case-nav" aria-label="Writing navigation">
         <Link href="/">Gopalakrishna · AI Systems</Link>
         <span>Writing · {posts.length} {(posts.length as number) === 1 ? "post" : "posts"}</span>

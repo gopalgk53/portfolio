@@ -146,7 +146,7 @@ export function MultiAgentShowcase({
   nextProjectTitle: string;
 }) {
   return (
-    <main id="main-content" tabIndex={-1} className="premium-wash min-h-screen text-[var(--text)]">
+    <main id="main-content" tabIndex={-1} className="site-subpage premium-wash min-h-screen text-[var(--text)]">
       <nav className="case-nav" aria-label="Case study navigation">
         <Link href="/projects">← Architecture archive</Link>
         <span>
