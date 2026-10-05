@@ -1,5 +1,12 @@
 export const posts = [
   {
+    slug: "flops-to-outcomes",
+    title: "From FLOPS to Outcomes: What Should Production AI Optimize?",
+    description: "FLOPS, tokens per second and tokens per watt each measure a different layer. Agents add cost per task and, ultimately, how many tasks succeed for the compute spent.",
+    date: "2026-10-05",
+    readingTime: "6 min read",
+  },
+  {
     slug: "eval-platform",
     title: "Your AI Eval Suite Can Become Technical Debt",
     description: "Turning every production failure into a permanent eval eventually makes the suite the bottleneck. Triage first: deduplicate the known, protect the novel, tier what runs where, and evaluate the triage too.",
