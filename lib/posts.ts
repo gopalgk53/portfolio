@@ -1,5 +1,12 @@
 export const posts = [
   {
+    slug: "signal-not-a-verdict",
+    title: "A Signal Is Not a Verdict: What an AI Text Watermark Actually Proves",
+    description: "OpenAI's textGrain watermark is one signal answering one question, provenance. Treat detection as evidence in a policy and review pipeline, and evaluate the detector like any other system.",
+    date: "2026-10-07",
+    readingTime: "7 min read",
+  },
+  {
     slug: "flops-to-outcomes",
     title: "From FLOPS to Outcomes: What Should Production AI Optimize?",
     description: "FLOPS, tokens per second and tokens per watt each measure a different layer. Agents add cost per task and, ultimately, how many tasks succeed for the compute spent.",
