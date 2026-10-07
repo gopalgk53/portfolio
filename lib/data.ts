@@ -17,15 +17,16 @@ export const skills = [
   { group: "Orchestration & Agents", items: ["LangChain", "LangGraph", "AutoGen", "CrewAI", "LlamaIndex", "DSPy", "Microsoft Foundry", "MCP"] },
   { group: "Vector Databases & RAG", items: ["Qdrant", "Pinecone", "Milvus", "Chroma", "Hybrid Search", "RRF"] },
   { group: "Engineering & Infrastructure", items: ["PyTorch", "Python", "FastAPI", "Docker", "Ray", "Triton", "CUDA", "AWS / GCP", "AWS S3", "AWS Glue", "Amazon Athena", "AWS IAM", "Amazon SageMaker", "Amazon ECS", "Amazon CloudWatch", "AWS Lambda", "API Gateway"] },
-  // New: neither project's stack had a home in the five groups above —
-  // Next.js/React/TypeScript/Tailwind are the operations-console frontend
-  // for both case studies, and the rest is how they actually ship.
-  { group: "Frontend & Deployment", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Azure Container Apps", "GitHub Actions", "OIDC", "pytest"] },
+  // Where the agents run and how they ship: Google Cloud items come from the
+  // Google Cloud AI Agents Professional Certificate (Gemini Enterprise,
+  // Vertex AI Agent Engine, Cloud Run, GKE, Memory Bank); the Azure and AWS
+  // items are what the case studies actually deploy on.
+  { group: "Deployment", items: ["Gemini Enterprise", "Google ADK", "Vertex AI Agent Engine", "Cloud Run", "GKE", "Memory Bank", "Azure", "Azure Container Apps", "Azure App Service", "Microsoft Foundry", "AWS Bedrock", "GitHub Actions", "OIDC", "pytest"] },
 ];
 
 export const certifications = [
   ["Post Graduate Program in Artificial Intelligence and Machine Learning", "McCombs School of Business, The University of Texas at Austin · Great Learning · Jan 2021", "https://www.mygreatlearning.com/certificate/YKRZCXMO"],
-  ["Google Cloud AI Agents: From Foundations to Enterprise Scale", "Google Cloud · Coursera Professional Certificate · 12 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/professional-cert/M8HVFHKWT63O"],
+  ["Google Cloud AI Agents: From Foundations to Enterprise Scale", "Google Cloud · Coursera Professional Certificate · 12 courses · Oct 2026", "https://coursera.org/share/a66ec1aecf8f5811f889820c3c77f272"],
   ["Agent Architect", "Founderz AI & Business School · Certificate of Completion · Sep 2026", "https://learn.founderz.com/certificate/agent-architect/5b79855a-a697-486b-8efb-36d560bad6f3"],
   ["Agent Explorer", "Founderz AI & Business School · Certificate of Completion · 2026", "https://learn.founderz.com/certificate/agent-explorer/5b79855a-a697-486b-8efb-36d560bad6f3"],
   ["Generative AI for Data Scientists", "IBM · Coursera Specialization · Sep 2026", "https://coursera.org/share/d608cb41bfbdd55f85b280772f6ebff9"],
