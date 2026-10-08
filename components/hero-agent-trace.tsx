@@ -36,7 +36,7 @@ export function HeroAgentTrace() {
 
   return (
     <div ref={rootRef}>
-      <div className="mt-3 font-mono text-[11px] leading-6">
+      <div className="mt-3 text-[12px] leading-6">
         {STEPS.map((step, i) => {
           if (i > active) return null;
           const isCurrent = i === active;

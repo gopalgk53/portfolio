@@ -64,7 +64,7 @@ export function AgentFlow({ flow, domains }: { flow: string; domains: string[] }
                 className="group relative flex shrink-0 flex-col items-center gap-2 px-1"
               >
                 {active === i && <motion.span layoutId="agent-active" transition={spring} className="absolute -inset-x-2 -inset-y-2 border border-[var(--accent)]" />}
-                <span className="relative font-mono text-[9px] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
+                <span className="relative text-[11px] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
                 <span className={`relative whitespace-nowrap text-[12px] font-semibold ${active === i ? "text-[var(--text)]" : "text-[var(--muted)]"}`}>{stage}</span>
               </button>
               {i < stages.length - 1 && <span className="mx-3 h-px w-8 shrink-0 bg-[var(--border-strong)] sm:w-10" />}

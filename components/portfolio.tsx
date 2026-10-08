@@ -270,7 +270,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 <span key={node} className="contents">
                   <span className="relative group/node">
                     <span className="absolute inset-0 rounded bg-gradient-to-r from-[var(--accent)] to-white/20 opacity-0 group-hover/node:opacity-20 blur transition-opacity"></span>
-                    <span className="relative border border-[var(--accent)] border-opacity-30 px-2.5 py-2 font-mono text-[9px] text-[var(--accent)] backdrop-blur-sm bg-[var(--accent)] bg-opacity-5 rounded transition-all group-hover/node:border-opacity-50 group-hover/node:bg-opacity-10">
+                    <span className="relative border border-[var(--accent)] border-opacity-30 px-2.5 py-2 text-[11px] text-[var(--accent)] backdrop-blur-sm bg-[var(--accent)] bg-opacity-5 rounded transition-all group-hover/node:border-opacity-50 group-hover/node:bg-opacity-10">
                       {node}
                     </span>
                   </span>
@@ -284,7 +284,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
       <div className="mt-auto flex flex-wrap gap-x-4 gap-y-2 pt-10">
         {project.stack.map((x) => (
-          <span key={x} className="font-mono text-[9px] text-[var(--faint)]">
+          <span key={x} className="text-[11px] text-[var(--faint)]">
             {x}
           </span>
         ))}
@@ -440,7 +440,7 @@ function SkillCard({ group, items, index }: { group: string; items: string[]; in
       transition={staggerChild(index)}
       className="glass-panel glow-card grid gap-5 p-7 md:grid-cols-[2rem_17rem_1fr] md:items-center"
     >
-      <span className="font-mono text-[11px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
+      <span className="text-[12px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
       <h3 className="text-[17px] font-semibold text-[var(--text)]">{group}</h3>
       <div className="flex flex-wrap gap-2">
         {items.map((x) => (
@@ -483,7 +483,7 @@ function Manifesto() {
     <section data-scene="agents" className="manifesto relative z-10 flex min-h-svh items-center overflow-hidden px-5 py-28 sm:px-8">
       <div className="mx-auto w-full max-w-[1600px]">
         <p className="eyebrow mb-10">System principle / 01</p>
-        <p className="text-[clamp(3.4rem,10vw,10rem)] font-medium uppercase leading-[.82] tracking-[-.065em]">I build systems that think with <span className="text-gradient-accent">context.</span></p>
+        <p className="text-[clamp(3.4rem,10vw,10rem)] font-medium leading-[.82] tracking-[-.065em]">I build systems that think with <span className="text-gradient-accent">context.</span></p>
         <div className="mt-12 h-px w-full bg-white/15" />
       </div>
     </section>
@@ -493,19 +493,19 @@ function Manifesto() {
 function Experience() {
   const sunRayRoles: Array<{ period: string; title: string; copy: string; links: Array<[string, string]> }> = [
     {
-      period: "SEP 2024 — PRESENT",
+      period: "Sep 2024 – present",
       title: "AI/ML Engineer",
       copy: "Build and implement AI-powered applications for construction legal operations, research, and compliance workflows.",
       links: [["Multi-agent systems", "/projects/multi-agent"], ["NTO copilot", "/projects/nto-operations-copilot"]],
     },
     {
-      period: "2021 — 2024",
+      period: "2021 – 2024",
       title: "Data Scientist",
       copy: "Applied data science and machine learning to construction operations, research, and payment-protection workflows following completion of postgraduate study in AI and machine learning.",
       links: [["Payment risk", "/projects/payment-risk"], ["Explainable risk", "/projects/explainable-risk"]],
     },
     {
-      period: "2019 — 2021",
+      period: "2019 – 2021",
       title: "Research Analyst",
       copy: "Supported construction legal research and operational work-order processing with emphasis on accurate source verification and documented decision-making.",
       links: [["Legal RAG", "/projects/legal-rag"], ["Document intelligence", "/projects/document-ai"]],
@@ -522,7 +522,7 @@ function Experience() {
           <ol className="experience-role-list">
             {sunRayRoles.map(({ period, title, copy, links }, index) => <li key={period} className="experience-role">
               <span className="experience-role-marker" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-              <div><div className="experience-role-meta"><span>{period}</span><span>{index === 0 ? "CURRENT ROLE" : "CAREER PROGRESSION"}</span></div><h4>{title}</h4><p>{copy}</p><div className="experience-role-links">{links.map(([label, href]) => <Link key={href} href={href}>{label}<ArrowUpRight /></Link>)}</div></div>
+              <div><div className="experience-role-meta"><span>{period}</span><span>{index === 0 ? "Current role" : "Career progression"}</span></div><h4>{title}</h4><p>{copy}</p><div className="experience-role-links">{links.map(([label, href]) => <Link key={href} href={href}>{label}<ArrowUpRight /></Link>)}</div></div>
             </li>)}
           </ol>
         </motion.article>

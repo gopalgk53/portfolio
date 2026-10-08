@@ -45,7 +45,7 @@ function getSpeechRecognitionConstructor(): SpeechRecognitionConstructor | null 
 function StageList({ stage }: { stage: NonNullable<Stage> }) {
   const activeIndex = STAGE_ORDER.indexOf(stage);
   return (
-    <div className="mb-3 flex flex-col gap-1.5 font-mono text-[10px]">
+    <div className="mb-3 flex flex-col gap-1.5 text-[12px]">
       {STAGE_ORDER.map((s, i) => {
         const done = i < activeIndex;
         const active = i === activeIndex;
@@ -391,10 +391,10 @@ export function AIAssistant() {
             <header className={`shrink-0 border-b px-4 pb-3 pt-3 ${warning ? "border-[#c9a25a]/35" : "border-[var(--border)]"}`}>
               <div className="flex h-10 items-center justify-between">
                 <div>
-                  <h2 id="gopal-assistant-title" className="font-mono text-xs text-[var(--text)]">
+                  <h2 id="gopal-assistant-title" className="text-xs text-[var(--text)]">
                     Gopal-Bot v1.0 <span className="text-[#8fae90]">[online]</span>
                   </h2>
-                  <p id="gopal-assistant-description" className="mt-1 font-mono text-[9px] text-[var(--faint)]">Portfolio context assistant · streaming live</p>
+                  <p id="gopal-assistant-description" className="mt-1 text-[11px] text-[var(--faint)]">Portfolio context assistant · streaming live</p>
                 </div>
                 <div className="flex items-center gap-1">
                   {speechSupported && (
@@ -461,7 +461,7 @@ export function AIAssistant() {
                       </div>
                     )}
                     {message.warning && (
-                      <button onClick={reset} className="mt-3 flex items-center gap-2 rounded-full border border-[#c9a25a]/30 px-3 py-2 font-mono text-[10px] text-[#c9a25a]">
+                      <button onClick={reset} className="mt-3 flex items-center gap-2 rounded-full border border-[#c9a25a]/30 px-3 py-2 text-[12px] text-[#c9a25a]">
                         <RotateCcw className="h-3 w-3" />
                         Reset session
                       </button>
@@ -472,7 +472,7 @@ export function AIAssistant() {
               {messages.length <= 1 && !thinking && (
                 <div className="flex flex-wrap gap-2">
                   {quickPrompts.map((item) => (
-                    <button key={item} onClick={() => respond(item)} className="rounded-full border border-[var(--border-strong)] px-3 py-2 font-mono text-[10px] text-[var(--muted)] hover:border-[var(--accent)]">
+                    <button key={item} onClick={() => respond(item)} className="rounded-full border border-[var(--border-strong)] px-3 py-2 text-[12px] text-[var(--muted)] hover:border-[var(--accent)]">
                       {item}
                     </button>
                   ))}
@@ -487,7 +487,7 @@ export function AIAssistant() {
                 disabled={thinking}
                 aria-label={mode === "consult" ? "Describe a problem" : "Ask Gopal AI assistant"}
                 placeholder={thinking ? "Generating grounded answer…" : mode === "consult" ? "Describe a real problem you're solving…" : "Ask about stack, projects, or experience…"}
-                className="min-w-0 flex-1 rounded-[var(--radius-pill)] border border-[var(--border-strong)] bg-[var(--surface)] px-4 py-3 font-mono text-[11px] text-[var(--text)] outline-none focus:border-[var(--accent)]"
+                className="min-w-0 flex-1 rounded-[var(--radius-pill)] border border-[var(--border-strong)] bg-[var(--surface)] px-4 py-3 text-[12px] text-[var(--text)] outline-none focus:border-[var(--accent)]"
               />
               {voiceSupported && (
                 <button

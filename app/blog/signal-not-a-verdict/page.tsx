@@ -29,7 +29,7 @@ function Rows({ head, rows }: { head: [string, string]; rows: [string, string][]
   return (
     <table className="mt-6 w-full border-collapse text-left">
       <thead>
-        <tr className="border-b border-[var(--border-strong)] font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">
+        <tr className="border-b border-[var(--border-strong)] text-[12px] text-[var(--faint)]">
           <th className="py-3 pr-4 font-normal">{head[0]}</th>
           <th className="py-3 font-normal">{head[1]}</th>
         </tr>
@@ -80,8 +80,8 @@ export default function SignalNotAVerdictPost() {
 
       <ArticleShell meta={[date, post.readingTime, "AI systems • 004", "Provenance"]} sections={["What OpenAI announced", "Four different questions", "The dangerous shortcut", "Detection as evidence", "Evaluate the detector"]}>
         <header>
-          <p className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)]">
-            AI systems • 004 <span className="text-[var(--faint)]">|</span> {date} <span className="text-[var(--faint)]">|</span> Provenance
+          <p className="text-[12px] text-[var(--muted)]">
+            AI systems • 004 <span className="text-[var(--faint)]">·</span> {date} <span className="text-[var(--faint)]">·</span> Provenance
           </p>
           <h1 className="mt-5 text-[clamp(2.4rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-tight">
             A signal is not <span className="text-[var(--accent)]">a verdict.</span>
@@ -94,7 +94,7 @@ export default function SignalNotAVerdictPost() {
           <source src="/media/blog/signal-not-a-verdict/signal-not-a-verdict.mp4" type="video/mp4" />
           Your browser can&apos;t play this video. <a href="/media/blog/signal-not-a-verdict/signal-not-a-verdict.mp4">Download the MP4</a>.
         </video>
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">45 seconds · music only · examples on screen are illustrative</p>
+        <p className="mt-3 text-[12px] text-[var(--faint)]">45 seconds · music only · examples on screen are illustrative</p>
 
         <P>AI-generated text is getting invisible watermarks. But a watermark is not a truth detector.</P>
 
@@ -148,7 +148,7 @@ no watermark        →  human`}</code>
         </P>
         <figure className="mt-8">
           <img src="/media/blog/signal-not-a-verdict/pipeline.jpg" alt="Content is ingested, then a watermark detector, metadata analysis and signature or credential check feed an evidence store and a provenance engine. Low-risk cases go to automation, high-impact or uncertain cases to human review, and everything lands in an audit log." loading="lazy" className="w-full border border-[var(--border)]" />
-          <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">Conceptual architecture · not a product design</figcaption>
+          <figcaption className="mt-3 text-[12px] text-[var(--faint)]">Conceptual architecture · not a product design</figcaption>
         </figure>
         <P>Store the context around a detection, not just its outcome. A conceptual record might hold:</P>
         <pre className="mt-5 overflow-x-auto border border-[var(--navy-border)] bg-[var(--navy)] p-5 text-[13px] leading-6 text-[var(--navy-text)]">
@@ -185,7 +185,7 @@ policy_version, decision, review_status`}</code>
         </div>
 
         <footer className="mt-16 border-t border-[var(--border)] pt-6 text-[13px] leading-6 text-[var(--faint)]">
-          <p className="font-mono text-[11px] uppercase tracking-[.1em]">Sources</p>
+          <p className="text-[12px]">Sources</p>
           <ul className="mt-2 space-y-1">
             {SOURCES.map(([label, href]) => (
               <li key={href}><a href={href} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-[var(--accent)]">{label}</a></li>

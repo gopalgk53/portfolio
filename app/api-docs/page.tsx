@@ -62,7 +62,7 @@ export default function ApiDocsPage() {
           <Reveal key={endpoint.path} delay={Math.min(index, 5) * 0.06}>
           <article className="glass-panel p-5 sm:p-6">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="rounded-full border border-[var(--accent)]/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[.1em] text-[var(--accent)]">
+              <span className="rounded-full border border-[var(--accent)]/40 px-2.5 py-1 text-[11px] text-[var(--accent)]">
                 {endpoint.method}
               </span>
               <code className="font-mono text-sm text-[var(--text)]">{endpoint.path}</code>

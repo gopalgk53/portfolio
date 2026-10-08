@@ -32,7 +32,7 @@ export function PipelineDeepDive() {
                     className="relative h-28 w-32 shrink-0 rounded-[var(--radius-sm)] border bg-[var(--surface)] p-3 text-left"
                     style={{ borderColor: selected === i ? "var(--accent)" : "var(--border-strong)" }}
                   >
-                    <span className="font-mono text-[8px] text-[var(--faint)]">STAGE_0{i + 1}</span>
+                    <span className="text-[11px] text-[var(--faint)]">Stage {i + 1}</span>
                     <b className="mt-3 block text-xs text-[var(--text)]">{stage.name}</b>
                   </motion.button>
                   {i < stages.length - 1 && (
@@ -45,13 +45,13 @@ export function PipelineDeepDive() {
             </div>
           </div>
           <aside className="surface-card p-6">
-            <p className="font-mono text-[9px] text-[var(--muted)]">ACTIVE_COORDINATE / 0{selected + 1}</p>
+            <p className="text-[11px] text-[var(--muted)]">Selected stage {selected + 1}</p>
             <h3 className="mt-5 text-2xl font-semibold text-[var(--text)]">{stages[selected].name}</h3>
             <p className="mt-4 text-sm leading-7 text-[var(--muted)]">{stages[selected].detail}</p>
-            <div className="mt-7 space-y-3 font-mono text-[9px] text-[var(--faint)]">
-              <p>TOPOLOGY: {selected === 3 ? "HYBRID + RRF" : "CONFIGURABLE"}</p>
-              <p>OBSERVABILITY: TRACE ENABLED</p>
-              <p>HUMAN REVIEW: REQUIRED</p>
+            <div className="mt-7 space-y-3 text-[11px] text-[var(--faint)]">
+              <p>Topology: {selected === 3 ? "hybrid + RRF" : "configurable"}</p>
+              <p>Observability: tracing on</p>
+              <p>Human review: required</p>
               <p className="text-[var(--faint)]">Example architecture configuration—not a production benchmark.</p>
             </div>
           </aside>

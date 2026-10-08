@@ -10,7 +10,7 @@ function EvidenceCard({ n, title, copy }: { n: string; title: string; copy: stri
   const glowRef = useGlowPointer<HTMLDivElement>();
   return (
     <div ref={glowRef} className="glass-panel glow-card p-6">
-      <span className="font-mono text-xs text-[var(--faint)]">{n}</span>
+      <span className="text-xs text-[var(--faint)]">{n}</span>
       <h3 className="mt-5 text-xl font-semibold text-[var(--text)]">{title}</h3>
       <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{copy}</p>
     </div>

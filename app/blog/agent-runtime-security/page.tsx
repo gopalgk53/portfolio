@@ -28,8 +28,8 @@ function P({ children }: { children: ReactNode }) {
 function Flow({ label, steps }: { label: string; steps: string[] }) {
   return (
     <div className="mt-5">
-      <p className="font-mono text-[11px] uppercase tracking-[.12em] text-[var(--faint)]">{label}</p>
-      <ol className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[12.5px] tracking-wide text-[var(--text)]">
+      <p className="text-[12px] text-[var(--faint)]">{label}</p>
+      <ol className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-2 text-[12.5px] text-[var(--text)]">
         {steps.map((step, i) => (
           <li key={step} className="flex items-center gap-2">
             <span className="border border-[var(--border-strong)] px-2.5 py-1.5">{step}</span>
@@ -53,9 +53,9 @@ const CONTROLS: [string, string][] = [
 ];
 
 const DECISIONS: [string, string, string][] = [
-  ["READ DATABASE", "✓ Allow", "text-[var(--accent)]"],
-  ["DELETE DATABASE", "✕ Deny", "text-[#b91c1c]"],
-  ["UPDATE VERIFIED DATA", "⚠ Human approval", "text-[#b45309]"],
+  ["Read database", "✓ Allow", "text-[var(--accent)]"],
+  ["Delete database", "✕ Deny", "text-[#b91c1c]"],
+  ["Update verified data", "⚠ Human approval", "text-[#b45309]"],
 ];
 
 export default function AgentRuntimeSecurityPost() {
@@ -70,8 +70,8 @@ export default function AgentRuntimeSecurityPost() {
 
       <ArticleShell meta={[date, post.readingTime, "Agent runtime security", "Agent engineering"]} sections={["Guidance is not enforcement", "How the architecture changed", "The layers that enforce limits", "Policy decides, one action at a time", "The industry is moving here", "Bounded consequences"]}>
         <header>
-          <p className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)]">
-            Agent runtime security <span className="text-[var(--faint)]">|</span> {date} <span className="text-[var(--faint)]">|</span> Agent engineering
+          <p className="text-[12px] text-[var(--muted)]">
+            Agent runtime security <span className="text-[var(--faint)]">·</span> {date} <span className="text-[var(--faint)]">·</span> Agent engineering
           </p>
           <h1 className="mt-5 text-[clamp(2.4rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-tight">
             A system prompt is not a <span className="text-[var(--accent)]">security boundary.</span>
@@ -85,7 +85,7 @@ export default function AgentRuntimeSecurityPost() {
               <source src="/media/blog/agent-runtime-security/agent-runtime-security.mp4" type="video/mp4" />
               Your browser can&apos;t play this video. <a href="/media/blog/agent-runtime-security/agent-runtime-security.mp4">Download the MP4</a>.
             </video>
-            <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">30 seconds · music only</figcaption>
+            <figcaption className="mt-3 text-[12px] text-[var(--faint)]">30 seconds · music only</figcaption>
           </figure>
           <div>
             <p className="text-[1.08rem] leading-8 text-[var(--muted)]">
@@ -135,7 +135,7 @@ export default function AgentRuntimeSecurityPost() {
         <P>The same agent, with the same prompt, gets three different answers depending on what it is trying to do:</P>
         <table className="mt-6 w-full border-collapse text-left">
           <thead>
-            <tr className="border-b border-[var(--border-strong)] font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">
+            <tr className="border-b border-[var(--border-strong)] text-[12px] text-[var(--faint)]">
               <th className="py-3 pr-4 font-normal">Requested action</th>
               <th className="py-3 font-normal">Policy result</th>
             </tr>
@@ -143,7 +143,7 @@ export default function AgentRuntimeSecurityPost() {
           <tbody>
             {DECISIONS.map(([action, result, color]) => (
               <tr key={action} className="border-b border-[var(--border)]">
-                <td className="py-4 pr-4 font-mono text-[13px]">{action}</td>
+                <td className="py-4 pr-4 text-[13px]">{action}</td>
                 <td className={`py-4 font-semibold ${color}`}>{result}</td>
               </tr>
             ))}
@@ -185,7 +185,7 @@ export default function AgentRuntimeSecurityPost() {
         </div>
 
         <footer className="mt-16 border-t border-[var(--border)] pt-6 text-[13px] leading-6 text-[var(--faint)]">
-          <p className="font-mono text-[11px] uppercase tracking-[.1em]">Sources</p>
+          <p className="text-[12px]">Sources</p>
           <ul className="mt-2 space-y-1">
             {SOURCES.map(([label, href]) => (
               <li key={href}><a href={href} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-[var(--accent)]">{label}</a></li>
