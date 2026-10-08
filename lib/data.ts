@@ -19,13 +19,16 @@ export const skills = [
   { group: "Engineering & Infrastructure", items: ["PyTorch", "Python", "FastAPI", "Docker", "Ray", "Triton", "CUDA", "AWS / GCP", "AWS S3", "AWS Glue", "Amazon Athena", "AWS IAM", "Amazon SageMaker", "Amazon ECS", "Amazon CloudWatch", "AWS Lambda", "API Gateway"] },
   // Where the agents run and how they ship: Google Cloud items come from the
   // Google Cloud AI Agents Professional Certificate (Gemini Enterprise,
-  // Vertex AI Agent Engine, Cloud Run, GKE, Memory Bank); the Azure and AWS
-  // items are what the case studies actually deploy on.
-  { group: "Deployment", items: ["Gemini Enterprise", "Google ADK", "Vertex AI Agent Engine", "Cloud Run", "GKE", "Memory Bank", "Azure", "Azure Container Apps", "Azure App Service", "Microsoft Foundry", "AWS Bedrock", "GitHub Actions", "OIDC", "pytest"] },
+  // Vertex AI Agent Engine, Cloud Run, GKE, Memory Bank); Azure OpenAI, Azure
+  // Functions and Azure Logic Apps come from the Microsoft Generative and
+  // Agentic AI Basics specialization; the other Azure and AWS items are what
+  // the case studies actually deploy on.
+  { group: "Deployment", items: ["Gemini Enterprise", "Google ADK", "Vertex AI Agent Engine", "Cloud Run", "GKE", "Memory Bank", "Azure", "Azure OpenAI", "Azure Functions", "Azure Logic Apps", "Azure Container Apps", "Azure App Service", "Microsoft Foundry", "AWS Bedrock", "GitHub Actions", "OIDC", "pytest"] },
 ];
 
 export const certifications = [
   ["Post Graduate Program in Artificial Intelligence and Machine Learning", "McCombs School of Business, The University of Texas at Austin · Great Learning · Jan 2021", "https://www.mygreatlearning.com/certificate/YKRZCXMO"],
+  ["Microsoft Generative and Agentic AI Basics", "Microsoft · Coursera Specialization · 4 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/specialization/HP31RN6BMHGI"],
   ["Google Cloud AI Agents: From Foundations to Enterprise Scale", "Google Cloud · Coursera Professional Certificate · 12 courses · Oct 2026", "https://coursera.org/share/a66ec1aecf8f5811f889820c3c77f272"],
   ["Agent Architect", "Founderz AI & Business School · Certificate of Completion · Sep 2026", "https://learn.founderz.com/certificate/agent-architect/5b79855a-a697-486b-8efb-36d560bad6f3"],
   ["Agent Explorer", "Founderz AI & Business School · Certificate of Completion · 2026", "https://learn.founderz.com/certificate/agent-explorer/5b79855a-a697-486b-8efb-36d560bad6f3"],
