@@ -1,5 +1,12 @@
 export const posts = [
   {
+    slug: "local-or-cloud",
+    title: "Local or Cloud? Inference Routing Is the Next AI Architecture Decision",
+    description: "Microsoft and GitHub announced GitHub Copilot will route work between on-device and cloud models. Where a model runs is now an architecture decision: policy first, measured quality second, and a router that is evaluated like any other component.",
+    date: "2026-10-08",
+    readingTime: "7 min read",
+  },
+  {
     slug: "signal-not-a-verdict",
     title: "A Signal Is Not a Verdict: What an AI Text Watermark Actually Proves",
     description: "OpenAI's textGrain watermark is one signal answering one question, provenance. Treat detection as evidence in a policy and review pipeline, and evaluate the detector like any other system.",
