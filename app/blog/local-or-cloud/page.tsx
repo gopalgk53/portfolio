@@ -30,7 +30,7 @@ function Rows({ head, rows }: { head: [string, string]; rows: [string, string][]
   return (
     <table className="mt-6 w-full border-collapse text-left">
       <thead>
-        <tr className="border-b border-[var(--border-strong)] font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">
+        <tr className="border-b border-[var(--border-strong)] text-[12px] text-[var(--faint)]">
           <th className="py-3 pr-4 font-normal">{head[0]}</th>
           <th className="py-3 font-normal">{head[1]}</th>
         </tr>
@@ -90,8 +90,8 @@ export default function LocalOrCloudPost() {
 
       <ArticleShell meta={[date, post.readingTime, "AI architecture • 005", "Inference routing"]} sections={["What Microsoft and GitHub announced", "From one route to a decision", "Five routing dimensions", "Policy before routing", "The router needs evals too"]}>
         <header>
-          <p className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)]">
-            AI architecture • 005 <span className="text-[var(--faint)]">|</span> {date} <span className="text-[var(--faint)]">|</span> Inference routing
+          <p className="text-[12px] text-[var(--muted)]">
+            AI architecture • 005 <span className="text-[var(--faint)]">·</span> {date} <span className="text-[var(--faint)]">·</span> Inference routing
           </p>
           <h1 className="mt-5 text-[clamp(2.4rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-tight">
             Local or <span className="text-[var(--accent)]">cloud?</span>
@@ -104,7 +104,7 @@ export default function LocalOrCloudPost() {
           <source src="/media/blog/local-or-cloud/local-or-cloud.mp4" type="video/mp4" />
           Your browser can&apos;t play this video. <a href="/media/blog/local-or-cloud/local-or-cloud.mp4">Download the MP4</a>.
         </video>
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">45 seconds · music only · routed requests on screen are illustrative</p>
+        <p className="mt-3 text-[12px] text-[var(--faint)]">45 seconds · music only · routed requests on screen are illustrative</p>
 
         <P>Not every AI request needs to travel to the cloud. And not every AI request should run locally.</P>
 
@@ -178,7 +178,7 @@ log(route, inputs, model_version, policy_version)`}</Code>
         <Rows head={["Request", "Route"]} rows={ROUTES} />
         <figure className="mt-8">
           <img src="/media/blog/local-or-cloud/router-architecture.jpg" alt="A client application sends requests through a request classifier and a data policy engine. Allowed requests reach an inference router informed by a model capability registry, which gets measured quality from an AI eval framework. The router sends work to a local inference runtime or, only if policy authorizes it, a cloud inference gateway; both feed an output validator. Denied requests go to reject, defer or human review, and an audit log. Telemetry flows into an observability pipeline, which feeds production signals back into eval sets." loading="lazy" className="w-full border border-[var(--border)]" />
-          <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">Reference architecture · conceptual · not Microsoft or GitHub internal design</figcaption>
+          <figcaption className="mt-3 text-[12px] text-[var(--faint)]">Reference architecture · conceptual · not Microsoft or GitHub internal design</figcaption>
         </figure>
 
         <H2>The router needs evals too</H2>
@@ -203,7 +203,7 @@ log(route, inputs, model_version, policy_version)`}</Code>
         </div>
 
         <footer className="mt-16 border-t border-[var(--border)] pt-6 text-[13px] leading-6 text-[var(--faint)]">
-          <p className="font-mono text-[11px] uppercase tracking-[.1em]">Sources</p>
+          <p className="text-[12px]">Sources</p>
           <ul className="mt-2 space-y-1">
             {SOURCES.map(([label, href]) => (
               <li key={href}><a href={href} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-[var(--accent)]">{label}</a></li>

@@ -306,7 +306,7 @@ function DecisionGateVisual({ isActive, paused, reducedMotion }: ChapterVisualPr
         <ul className="m-0 list-none border-t border-[var(--border)] p-0">
           {DECISION_REASONS.map((reason, index) => (
             <li key={reason} className="grid grid-cols-[2.5rem_1fr] gap-3 border-b border-[var(--border)] py-3 text-xs leading-5 text-[var(--muted)]">
-              <span className="font-mono text-[10px] text-[var(--accent)]">{String(index + 1).padStart(2, "0")}</span>
+              <span className="text-[12px] text-[var(--accent)]">{String(index + 1).padStart(2, "0")}</span>
               {reason}
             </li>
           ))}
@@ -342,7 +342,7 @@ function BenchmarkVisual({ isActive, reducedMotion }: ChapterVisualProps) {
       <ol className="m-0 mt-6 list-none p-0">
         {BENCHMARK_MODELS.map((model, index) => (
           <li key={model.name} className="grid grid-cols-[2rem_minmax(9rem,12rem)_1fr_4rem] items-center gap-3 border-t border-[var(--border)] py-3">
-            <span className="font-mono text-[10px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
+            <span className="text-[12px] text-[var(--faint)]">{String(index + 1).padStart(2, "0")}</span>
             <span className="text-sm text-[var(--muted)]">{model.name}</span>
             <span className="h-2 overflow-hidden rounded-full bg-[var(--border)]" aria-hidden="true">
               <motion.span
@@ -353,7 +353,7 @@ function BenchmarkVisual({ isActive, reducedMotion }: ChapterVisualProps) {
                 transition={reducedMotion ? { duration: 0 } : { duration: 0.9, delay: index * 0.06, ease: "easeOut" }}
               />
             </span>
-            <strong className="text-right font-mono text-xs text-[var(--text)]">{model.auc.toFixed(4)}</strong>
+            <strong className="text-right text-xs text-[var(--text)]">{model.auc.toFixed(4)}</strong>
           </li>
         ))}
       </ol>
@@ -505,7 +505,7 @@ export function PaymentRiskStory() {
                 title={chapter.eyebrow}
                 aria-current={active === chapter.id ? "true" : undefined}
                 onClick={() => goTo(chapter.id)}
-                className={`grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] border font-mono text-[11px] transition-colors ${
+                className={`grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] border text-[12px] font-semibold transition-colors ${
                   active === chapter.id ? "border-transparent text-[var(--bg)]" : "border-[var(--border-strong)] text-[var(--faint)] hover:text-[var(--muted)]"
                 }`}
                 style={active === chapter.id ? { background: "var(--gradient-accent)" } : undefined}

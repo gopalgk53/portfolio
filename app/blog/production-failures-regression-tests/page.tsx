@@ -28,7 +28,7 @@ function P({ children }: { children: ReactNode }) {
 
 function Flow({ steps }: { steps: string[] }) {
   return (
-    <ol className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[12.5px] tracking-wide text-[var(--text)]">
+    <ol className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 text-[12.5px] text-[var(--text)]">
       {steps.map((step, i) => (
         <li key={step} className="flex items-center gap-2">
           <span className="border border-[var(--border-strong)] px-2.5 py-1.5">{step}</span>
@@ -73,8 +73,8 @@ export default function ProductionFailuresPost() {
 
       <ArticleShell meta={[date, post.readingTime, "CoreWeave Forge", "Agent engineering"]} sections={["What CoreWeave shipped", "Every failure type maps to an eval", "Evaluate the layers, not just the answer", "Software already solved the shape of this", "Keep the loop controlled"]}>
         <header>
-          <p className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)]">
-            CoreWeave Forge <span className="text-[var(--faint)]">|</span> {date} <span className="text-[var(--faint)]">|</span> Agent engineering
+          <p className="text-[12px] text-[var(--muted)]">
+            CoreWeave Forge <span className="text-[var(--faint)]">·</span> {date} <span className="text-[var(--faint)]">·</span> Agent engineering
           </p>
           <h1 className="mt-5 text-[clamp(2.4rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-tight">
             Your agent&apos;s most valuable dataset is its <span className="text-[var(--accent)]">production failures.</span>
@@ -92,7 +92,7 @@ export default function ProductionFailuresPost() {
           <source src="/media/blog/production-failures/production-failures-loop.mp4" type="video/mp4" />
           Your browser can&apos;t play this video. <a href="/media/blog/production-failures/production-failures-loop.mp4">Download the MP4</a>.
         </video>
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">65 seconds · music only</p>
+        <p className="mt-3 text-[12px] text-[var(--faint)]">65 seconds · music only</p>
 
         <P>
           A failure that ends in a monitoring dashboard teaches the next version nothing. Most agent teams still run the
@@ -125,7 +125,7 @@ export default function ProductionFailuresPost() {
         <P>The useful move is to name the failure precisely enough that it becomes testable.</P>
         <table className="mt-6 w-full border-collapse text-left text-[0.98rem]">
           <thead>
-            <tr className="border-b border-[var(--border-strong)] font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">
+            <tr className="border-b border-[var(--border-strong)] text-[12px] text-[var(--faint)]">
               <th className="py-3 pr-4 font-normal">Failure</th>
               <th className="py-3 font-normal">Becomes</th>
             </tr>
@@ -150,7 +150,7 @@ export default function ProductionFailuresPost() {
         <dl className="mt-6 border-t border-[var(--border-strong)]">
           {STACK.map(([level, name, items]) => (
             <div key={level} className="grid grid-cols-[3rem_1fr] gap-x-4 border-b border-[var(--border)] py-4 sm:grid-cols-[3rem_10rem_1fr]">
-              <dt className="font-mono text-[13px] text-[var(--accent)]">{level}</dt>
+              <dt className="text-[13px] text-[var(--accent)]">{level}</dt>
               <dd className="font-semibold">{name}</dd>
               <dd className="col-start-2 text-[0.95rem] leading-7 text-[var(--muted)] sm:col-start-3">{items}</dd>
             </div>
@@ -182,7 +182,7 @@ export default function ProductionFailuresPost() {
         </div>
 
         <footer className="mt-16 border-t border-[var(--border)] pt-6 text-[13px] leading-6 text-[var(--faint)]">
-          <p className="font-mono text-[11px] uppercase tracking-[.1em]">Sources</p>
+          <p className="text-[12px]">Sources</p>
           <ul className="mt-2 space-y-1">
             {SOURCES.map(([label, href]) => (
               <li key={href}><a href={href} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-[var(--accent)]">{label}</a></li>

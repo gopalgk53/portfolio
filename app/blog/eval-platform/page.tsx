@@ -23,7 +23,7 @@ function P({ children }: { children: ReactNode }) {
 
 function Flow({ steps }: { steps: string[] }) {
   return (
-    <ol className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[12.5px] tracking-wide text-[var(--text)]">
+    <ol className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 text-[12.5px] text-[var(--text)]">
       {steps.map((step, i) => (
         <li key={step} className="flex items-center gap-2">
           <span className="border border-[var(--border-strong)] px-2.5 py-1.5">{step}</span>
@@ -38,7 +38,7 @@ function Rows({ head, rows }: { head: [string, string]; rows: [string, string][]
   return (
     <table className="mt-6 w-full border-collapse text-left">
       <thead>
-        <tr className="border-b border-[var(--border-strong)] font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">
+        <tr className="border-b border-[var(--border-strong)] text-[12px] text-[var(--faint)]">
           <th className="py-3 pr-4 font-normal">{head[0]}</th>
           <th className="py-3 font-normal">{head[1]}</th>
         </tr>
@@ -90,8 +90,8 @@ export default function EvalPlatformPost() {
 
       <ArticleShell meta={[date, post.readingTime, "AI evals", "LLMOps"]} sections={["Failure to eval cannot be automatic", "Deduplication has a blind spot", "Who triages", "The triage needs evals too", "Tier the suite", "Evals need a lifecycle", "Build a platform, not a pile"]}>
         <header>
-          <p className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)]">
-            AI evals <span className="text-[var(--faint)]">|</span> {date} <span className="text-[var(--faint)]">|</span> LLMOps
+          <p className="text-[12px] text-[var(--muted)]">
+            AI evals <span className="text-[var(--faint)]">·</span> {date} <span className="text-[var(--faint)]">·</span> LLMOps
           </p>
           <h1 className="mt-5 text-[clamp(2.4rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-tight">
             Your AI eval suite can become <span className="text-[var(--accent)]">technical debt.</span>
@@ -103,7 +103,7 @@ export default function EvalPlatformPost() {
           <source src="/media/blog/eval-platform/eval-platform.mp4" type="video/mp4" />
           Your browser can&apos;t play this video. <a href="/media/blog/eval-platform/eval-platform.mp4">Download the MP4</a>.
         </video>
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">60 seconds · music only</p>
+        <p className="mt-3 text-[12px] text-[var(--faint)]">60 seconds · music only</p>
 
         <P>
           In <Link href="/blog/production-failures-regression-tests" className="font-semibold text-[var(--text)] underline decoration-[var(--accent)] underline-offset-4">yesterday&apos;s post</Link> I
@@ -175,7 +175,7 @@ export default function EvalPlatformPost() {
         <H2>Build a platform, not a pile</H2>
         <figure className="mt-6">
           <img src="/media/blog/eval-platform/infographic.jpg" alt="Four-layer eval governance platform: production observability, failure intelligence, eval governance and evaluation execution, with security, cost, observability, governance and auditability rails." loading="lazy" className="w-full max-w-[40rem] border border-[var(--border)]" />
-          <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">Conceptual reference architecture · not a product or standard</figcaption>
+          <figcaption className="mt-3 text-[12px] text-[var(--faint)]">Conceptual reference architecture · not a product or standard</figcaption>
         </figure>
         <P>
           Evals start to look like any other test platform: lifecycle, versioning, ownership, observability, cost controls and

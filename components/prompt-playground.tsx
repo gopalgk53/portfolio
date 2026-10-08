@@ -121,7 +121,7 @@ export function PromptPlayground() {
             <span className={status === "error" ? "text-[#c96a6a]" : "text-[var(--faint)]"}>{status === "error" ? "Add a prompt" : prompt ? "Ready" : "Empty"}</span>
           </header>
           <div className="relative mt-5">
-            <span className="absolute left-3 top-3 font-mono text-sm text-[var(--accent)]">›</span>
+            <span className="absolute left-3 top-3 text-sm text-[var(--accent)]">›</span>
             <textarea
               aria-label="Prompt playground input"
               value={prompt}
@@ -134,18 +134,18 @@ export function PromptPlayground() {
               className="w-full resize-none rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] py-3 pl-8 pr-3 font-mono text-xs leading-6 text-[var(--muted)] outline-none focus:border-[var(--accent)]"
             />
           </div>
-          <div className="mt-2 flex gap-4 font-mono text-[9px] text-[var(--faint)]">
-            <span>CHARS: {prompt.length}</span>
+          <div className="mt-2 flex gap-4 text-[11px] text-[var(--faint)]">
+            <span>Characters: {prompt.length}</span>
             <span>TOKENS_EST: {Math.ceil(prompt.length / 4)}</span>
-            <span>GROUNDING: ON</span>
+            <span>Grounding: on</span>
           </div>
           <div className="mt-6 space-y-5">
-            <label className="block font-mono text-[10px] text-[var(--muted)]">
-              TEMPERATURE <b className="float-right text-[var(--text)]">{temperature.toFixed(1)}</b>
+            <label className="block text-[12px] text-[var(--muted)]">
+              Temperature <b className="float-right text-[var(--text)]">{temperature.toFixed(1)}</b>
               <input type="range" min="0" max="1.5" step=".1" value={temperature} disabled={status === "computing" || status === "streaming"} onChange={(e) => setTemperature(Number(e.target.value))} className="mt-3 w-full accent-[var(--accent)]" />
             </label>
-            <label className="block font-mono text-[10px] text-[var(--muted)]">
-              TOP-P <b className="float-right text-[var(--text)]">{topP.toFixed(1)}</b>
+            <label className="block text-[12px] text-[var(--muted)]">
+              Top-p <b className="float-right text-[var(--text)]">{topP.toFixed(1)}</b>
               <input type="range" min=".1" max="1" step=".1" value={topP} disabled={status === "computing" || status === "streaming"} onChange={(e) => setTopP(Number(e.target.value))} className="mt-3 w-full accent-[var(--accent)]" />
             </label>
           </div>
@@ -160,29 +160,29 @@ export function PromptPlayground() {
             <span className="text-[var(--faint)]">Basic ↔ structured</span>
           </header>
           <div className="relative mt-5 h-[390px] overflow-hidden rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)]">
-            <div className="absolute inset-0 p-5 font-mono text-[10px] leading-6 text-[var(--faint)]">
-              <b className="text-[var(--muted)]">NAIVE PROMPT</b>
+            <div className="absolute inset-0 p-5 text-[12px] leading-6 text-[var(--faint)]">
+              <b className="text-[var(--muted)]">Naive prompt</b>
               <p className="mt-5">Answer my question about this document. Make the answer useful.</p>
-              <p className="mt-8 text-[#c96a6a]">RISK: HIGH AMBIGUITY</p>
+              <p className="mt-8 text-[#c96a6a]">Risk: high ambiguity</p>
             </div>
-            <div style={{ clipPath: `inset(0 0 0 ${divider}%)` }} className="absolute inset-0 bg-[var(--surface)] p-5 font-mono text-[10px] leading-6 text-[var(--muted)]">
-              <b className="text-[var(--text)]">OPTIMIZED SYSTEM PROMPT</b>
+            <div style={{ clipPath: `inset(0 0 0 ${divider}%)` }} className="absolute inset-0 bg-[var(--surface)] p-5 text-[12px] leading-6 text-[var(--muted)]">
+              <b className="text-[var(--text)]">Optimized system prompt</b>
               <p className="mt-5">
                 <span className="text-[var(--accent)]">ROLE:</span> Evidence-grounded legal assistant
                 <br />
-                <span className="text-[var(--accent)]">CONTEXT:</span> Retrieved source chunks only
+                <span className="text-[var(--accent)]">Context:</span> Retrieved source chunks only
                 <br />
-                <span className="text-[var(--accent)]">GUARDRAIL:</span> Refuse unsupported claims
+                <span className="text-[var(--accent)]">Guardrail:</span> Refuse unsupported claims
                 <br />
-                <span className="text-[var(--accent)]">FORMAT:</span> Answer, evidence, confidence
+                <span className="text-[var(--accent)]">Format:</span> Answer, evidence, confidence
                 <br />
-                <span className="text-[var(--accent)]">EVALUATE:</span> Cite every material statement
+                <span className="text-[var(--accent)]">Evaluate:</span> Cite every material statement
               </p>
-              <p className="mt-8 text-[#8fae90]">RISK: CONTROLLED</p>
+              <p className="mt-8 text-[#8fae90]">Risk: controlled</p>
             </div>
             <div style={{ left: `${divider}%` }} className="pointer-events-none absolute inset-y-0 w-px bg-[var(--accent)]" />
             <input aria-label="Compare naive and optimized prompt" type="range" min="5" max="95" value={divider} onChange={(e) => setDivider(Number(e.target.value))} className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0" />
-            <div style={{ left: `calc(${divider}% - 18px)` }} className="pointer-events-none absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[var(--border-strong)] bg-[var(--surface)] font-mono text-[9px] text-[var(--muted)]">
+            <div style={{ left: `calc(${divider}% - 18px)` }} className="pointer-events-none absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-[var(--border-strong)] bg-[var(--surface)] text-[11px] text-[var(--muted)]">
               ↔
             </div>
           </div>
@@ -193,7 +193,7 @@ export function PromptPlayground() {
             <span className="font-medium text-[var(--muted)]">Example output</span>
             <span className="text-[var(--muted)]">{status === "idle" || status === "ready" || status === "error" ? "Waiting" : status}</span>
           </header>
-          <div ref={outputRef} className="relative mt-5 flex-1 overflow-y-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] p-5 font-mono text-xs leading-7 text-[var(--muted)]">
+          <div ref={outputRef} className="relative mt-5 flex-1 overflow-y-auto rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] p-5 text-xs leading-7 text-[var(--muted)]">
             {(status === "idle" || status === "ready" || status === "error") && <p className="text-[var(--faint)]">Awaiting execution. Enter a prompt and run it.</p>}
             {status === "computing" && (
               <div className="grid h-full place-items-center text-center text-[var(--muted)]">
@@ -211,16 +211,16 @@ export function PromptPlayground() {
             )}
           </div>
           {errorMessage && (status === "streaming" || status === "complete") && (
-            <p className="mt-2 font-mono text-[9px] text-[#c96a6a]">{errorMessage} Showing a static example instead.</p>
+            <p className="mt-2 text-[11px] text-[#c96a6a]">{errorMessage} Showing a static example instead.</p>
           )}
           <footer className="mt-4 border-t border-[var(--border)] pt-3">
             <p className="mb-2 text-[11px] font-semibold text-[var(--faint)]">{errorMessage ? "Fallback example" : "Live model telemetry"}</p>
-            <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 font-mono text-[9px]">
+            <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[11px]">
               <span className="text-[var(--muted)]">LATENCY: {latency > 0 ? `${latency.toFixed(0)}ms` : "—"}</span>
               <span className="text-[var(--muted)]">TOKENS: {tokens > 0 ? tokens : "—"}</span>
               <span className="text-[var(--muted)]">COST: {tokens > 0 && !errorMessage ? "$0.00 (free-tier model)" : "—"}</span>
             </div>
-            {tokens > 0 && !errorMessage && <p className="mt-2 font-mono text-[8px] text-[var(--faint)]">Model: nvidia/nemotron-3-super-120b-a12b:free via OpenRouter</p>}
+            {tokens > 0 && !errorMessage && <p className="mt-2 text-[11px] text-[var(--faint)]">Model: nvidia/nemotron-3-super-120b-a12b:free via OpenRouter</p>}
           </footer>
         </motion.article>
       </div>

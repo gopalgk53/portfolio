@@ -18,7 +18,7 @@ export function ArticleShell({
   return (
     <div className="mx-auto grid max-w-[92rem] gap-10 px-5 pb-28 pt-16 sm:px-10 sm:pt-24 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-16 xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-24">
       <aside className="hidden lg:block">
-        <div className="sticky top-24 border-t border-[var(--border-strong)] pt-5 font-mono text-[11px] uppercase leading-6 tracking-[.12em] text-[var(--muted)]">
+        <div className="sticky top-24 border-t border-[var(--border-strong)] pt-5 text-[12px] leading-6 text-[var(--muted)]">
           {meta.map((item) => (
             <p key={item}>{item}</p>
           ))}
@@ -26,7 +26,7 @@ export function ArticleShell({
           <ol className="mt-2 space-y-2 normal-case tracking-normal">
             {sections.map((title, i) => (
               <li key={title} className="flex gap-3 font-sans text-[13px] leading-5">
-                <span className="font-mono text-[11px] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-[12px] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
                 <a href={`#${sectionId(title)}`} className="text-[var(--muted)] hover:text-[var(--accent)]">{title}</a>
               </li>
             ))}

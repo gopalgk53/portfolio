@@ -32,7 +32,7 @@ export default function BlogIndex() {
           {posts.map((post, i) => (
             <Reveal key={post.slug}>
               <Link href={`/blog/${post.slug}`} className="group grid gap-3 border-b border-[var(--border)] py-9 md:grid-cols-[12rem_minmax(0,1fr)_2rem] md:gap-10">
-                <span className="font-mono text-[12px] uppercase tracking-[.1em] text-[var(--faint)]">{String(posts.length - i).padStart(2, "0")} | {formatDate(post.date)}<span className="block md:mt-1">{post.readingTime}</span></span>
+                <span className="text-[12px] text-[var(--faint)]">{String(posts.length - i).padStart(2, "0")} | {formatDate(post.date)}<span className="block md:mt-1">{post.readingTime}</span></span>
                 <span>
                   <span className="block text-2xl font-semibold leading-snug tracking-tight transition-colors group-hover:text-[var(--accent)] md:text-[1.9rem]">{post.title}</span>
                   <span className="mt-3 block max-w-4xl text-[1rem] leading-7 text-[var(--muted)]">{post.description}</span>

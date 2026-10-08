@@ -48,11 +48,11 @@ export function InfrastructureDashboard() {
         </header>
         <div className="grid gap-5 lg:grid-cols-2">
           <article className={`${panel} min-h-[350px]`}>
-            <div className="flex justify-between font-mono text-[9px]">
-              <span className="text-[var(--muted)]">NODE_01 / RUNTIME</span>
+            <div className="flex justify-between text-[11px]">
+              <span className="text-[var(--muted)]">Runtime</span>
               <span className="text-[#15803d]">● ACTIVE</span>
             </div>
-            <div className="mt-6 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] p-4 font-mono text-[10px] leading-7">
+            <div className="mt-6 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] p-4 text-[12px] leading-7">
               {logs.map((x, i) => (
                 <motion.p key={x} animate={{ opacity: resetting ? 0 : 0.35 + i * 0.18, x: resetting ? -8 : 0 }} transition={spring} className="text-[var(--muted)]">
                   [{String(tick + i).padStart(4, "0")}] {x}...
@@ -61,15 +61,15 @@ export function InfrastructureDashboard() {
             </div>
             <div className="mt-6 flex gap-2 overflow-x-auto">
               {models.map((x) => (
-                <button key={x} onClick={() => setModel(x)} className={`whitespace-nowrap rounded-full border px-3 py-2 font-mono text-[9px] transition-colors ${model === x ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--text)]" : "border-[var(--border)] text-[var(--faint)]"}`}>
+                <button key={x} onClick={() => setModel(x)} className={`whitespace-nowrap rounded-full border px-3 py-2 text-[11px] transition-colors ${model === x ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--text)]" : "border-[var(--border)] text-[var(--faint)]"}`}>
                   {x}
                 </button>
               ))}
             </div>
           </article>
           <article className={`${panel} min-h-[350px]`}>
-            <div className="flex justify-between font-mono text-[9px]">
-              <span className="text-[var(--muted)]">NODE_02 / TOKEN_THROUGHPUT</span>
+            <div className="flex justify-between text-[11px]">
+              <span className="text-[var(--muted)]">Token throughput</span>
               <b className="text-[var(--text)]">{resetting ? 0 : Math.round(data.at(-1) || 0)} TPS</b>
             </div>
             <svg viewBox="0 0 100 60" className="mt-8 h-56 w-full" role="img" aria-label="Simulated tokens per second sparkline">
@@ -85,12 +85,12 @@ export function InfrastructureDashboard() {
               <polygon points={`0,60 ${resetting ? "0,54 100,54" : points} 100,60`} fill="url(#spark)" />
               <polyline points={resetting ? "0,54 100,54" : points} fill="none" stroke="var(--accent)" strokeWidth=".65" vectorEffect="non-scaling-stroke" />
             </svg>
-            <p className="font-mono text-[9px] text-[var(--faint)]">MODEL: {model} · POLL: 1.5s</p>
+            <p className="text-[11px] text-[var(--faint)]">Model: {model} · polls every 1.5 s</p>
           </article>
           <article className={`${panel} min-h-[330px]`}>
-            <div className="flex justify-between font-mono text-[9px]">
-              <span className="text-[var(--muted)]">NODE_03 / LATENCY</span>
-              <span className="text-[var(--faint)]">SIMULATED</span>
+            <div className="flex justify-between text-[11px]">
+              <span className="text-[var(--muted)]">Latency</span>
+              <span className="text-[var(--faint)]">Simulated</span>
             </div>
             <div className="mt-8 space-y-7">
               {[
@@ -99,7 +99,7 @@ export function InfrastructureDashboard() {
                 ["LLM Completion Stream", 280, 82],
               ].map(([label, ms, width]) => (
                 <div key={label as string}>
-                  <div className="mb-2 flex justify-between font-mono text-[10px]">
+                  <div className="mb-2 flex justify-between text-[12px]">
                     <span className="text-[var(--muted)]">{label}</span>
                     <span className="text-[var(--text)]">{resetting ? 0 : ms}ms</span>
                   </div>
@@ -111,18 +111,18 @@ export function InfrastructureDashboard() {
             </div>
           </article>
           <article className={`${panel} min-h-[330px]`}>
-            <div className="flex justify-between font-mono text-[9px]">
-              <span className="text-[var(--muted)]">NODE_04 / SUMMARY</span>
-              <span className="text-[var(--faint)]">DEMO DATA</span>
+            <div className="flex justify-between text-[11px]">
+              <span className="text-[var(--muted)]">Summary</span>
+              <span className="text-[var(--faint)]">Demo data</span>
             </div>
             <div className="mt-7 grid gap-5">
               {[
-                ["TOTAL_REQUESTS_MANAGED", "142,830"],
-                ["CONTEXT_PRECISION_RATIO", "99.4%"],
-                ["COMPUTE_EFFICIENCY_INDEX", "87.2"],
+                ["Requests handled", "142,830"],
+                ["Context precision", "99.4%"],
+                ["Compute efficiency index", "87.2"],
               ].map(([label, value]) => (
                 <div key={label}>
-                  <p className="font-mono text-[9px] text-[var(--faint)]">{label}</p>
+                  <p className="text-[11px] text-[var(--faint)]">{label}</p>
                   <motion.b animate={{ opacity: resetting ? 0.2 : 1 }} className="mt-1 block text-3xl tabular-nums text-[var(--text)]">
                     {resetting ? "0" : value}
                   </motion.b>

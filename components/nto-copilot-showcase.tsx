@@ -127,9 +127,9 @@ function CoachPreview() {
       <div className="space-y-4 p-5 sm:p-6">
         <div className="ml-auto max-w-[85%] rounded-2xl bg-slate-100 px-4 py-3 text-xs leading-5 sm:max-w-[78%]">The customer says Horizon Builders is the GC, but the NOC shows Summit Construction. Which GC should I use?</div>
         <div className="space-y-3 rounded-2xl border border-[var(--border)] p-4">
-          <div><span className="text-[10px] font-semibold uppercase tracking-[.1em] text-blue-600">Answer</span><div className="mt-1 text-xs leading-5 text-slate-600">Don&apos;t choose one yet. Preserve both names with their sources.</div></div>
-          <div><span className="text-[10px] font-semibold uppercase tracking-[.1em] text-blue-600">Why</span><div className="mt-1 text-xs leading-5 text-slate-600">The customer claim is unverified intake; the recorded NOC is documented evidence. They conflict.</div></div>
-          <div className="border-l-2 border-blue-600 pl-3"><span className="text-[10px] font-semibold uppercase tracking-[.1em] text-blue-600">Next step</span><div className="mt-1 text-xs leading-5 text-slate-600">Follow the CC-first confirmation path and escalate if the conflict remains unresolved.</div></div>
+          <div><span className="text-[12px] font-semibold text-blue-600">Answer</span><div className="mt-1 text-xs leading-5 text-slate-600">Don&apos;t choose one yet. Preserve both names with their sources.</div></div>
+          <div><span className="text-[12px] font-semibold text-blue-600">Why</span><div className="mt-1 text-xs leading-5 text-slate-600">The customer claim is unverified intake; the recorded NOC is documented evidence. They conflict.</div></div>
+          <div className="border-l-2 border-blue-600 pl-3"><span className="text-[12px] font-semibold text-blue-600">Next step</span><div className="mt-1 text-xs leading-5 text-slate-600">Follow the CC-first confirmation path and escalate if the conflict remains unresolved.</div></div>
         </div>
       </div>
     </div>
@@ -305,7 +305,7 @@ export function NtoCopilotShowcase({
             </Reveal>
             <Reveal delay={0.1} className="mt-8 grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-stretch">
               <SurfaceCard className="p-6">
-                <p className="text-[11px] font-semibold uppercase tracking-[.1em] text-[var(--accent)]">Customer claim</p>
+                <p className="text-[12px] font-semibold text-[var(--accent)]">Customer claim</p>
                 <p className="mt-3 text-xl font-semibold tracking-tight">Horizon Builders</p>
                 <p className="mt-2 text-xs leading-5 text-[var(--faint)]">General contractor as provided on intake. Unverified.</p>
               </SurfaceCard>
@@ -313,7 +313,7 @@ export function NtoCopilotShowcase({
                 <GitCompareArrows className="h-5 w-5" />
               </div>
               <SurfaceCard className="p-6">
-                <p className="text-[11px] font-semibold uppercase tracking-[.1em] text-[var(--accent)]">Recorded NOC evidence</p>
+                <p className="text-[12px] font-semibold text-[var(--accent)]">Recorded NOC evidence</p>
                 <p className="mt-3 text-xl font-semibold tracking-tight">Summit Construction</p>
                 <p className="mt-2 text-xs leading-5 text-[var(--faint)]">General contractor named on the recorded Notice of Commencement.</p>
               </SurfaceCard>

@@ -27,7 +27,7 @@ function P({ children }: { children: ReactNode }) {
 
 function Flow({ steps }: { steps: string[] }) {
   return (
-    <ol className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[12.5px] tracking-wide text-[var(--text)]">
+    <ol className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 text-[12.5px] text-[var(--text)]">
       {steps.map((step, i) => (
         <li key={step + i} className="flex items-center gap-2">
           <span className="border border-[var(--border-strong)] px-2.5 py-1.5">{step}</span>
@@ -67,8 +67,8 @@ export default function FlopsToOutcomesPost() {
 
       <ArticleShell meta={[date, post.readingTime, "AI infrastructure • 001", "Inference"]} sections={["The metric ladder", "Why agents change the equation", "Not every decision needs the biggest model", "Optimize the system for the outcome"]}>
         <header>
-          <p className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)]">
-            AI infrastructure • 001 <span className="text-[var(--faint)]">|</span> {date} <span className="text-[var(--faint)]">|</span> Inference
+          <p className="text-[12px] text-[var(--muted)]">
+            AI infrastructure • 001 <span className="text-[var(--faint)]">·</span> {date} <span className="text-[var(--faint)]">·</span> Inference
           </p>
           <h1 className="mt-5 text-[clamp(2.4rem,5.2vw,4.4rem)] font-semibold leading-[1.02] tracking-tight">
             From FLOPS to <span className="text-[var(--accent)]">outcomes.</span>
@@ -81,7 +81,7 @@ export default function FlopsToOutcomesPost() {
           <source src="/media/blog/flops-to-outcomes/flops-to-outcomes.mp4" type="video/mp4" />
           Your browser can&apos;t play this video. <a href="/media/blog/flops-to-outcomes/flops-to-outcomes.mp4">Download the MP4</a>.
         </video>
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">45 seconds · music only · numbers on screen are illustrative</p>
+        <p className="mt-3 text-[12px] text-[var(--faint)]">45 seconds · music only · numbers on screen are illustrative</p>
 
         <P>
           We spend a lot of time talking about how powerful AI hardware is. Production AI raises a different question: how
@@ -100,7 +100,7 @@ export default function FlopsToOutcomesPost() {
           {LADDER.map(([metric, layer, copy], i) => (
             <div key={metric} className="grid gap-x-6 gap-y-1 border-b border-[var(--border)] py-5 sm:grid-cols-[14rem_1fr]">
               <dt>
-                <span className="block font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">Level {i + 1} · {layer}</span>
+                <span className="block text-[12px] text-[var(--faint)]">Level {i + 1} · {layer}</span>
                 <span className="mt-1 block font-semibold">{metric}</span>
               </dt>
               <dd className="text-[0.98rem] leading-7 text-[var(--muted)]">{copy}</dd>
@@ -123,7 +123,7 @@ export default function FlopsToOutcomesPost() {
         <P>A system that produces fewer tokens is not worse, and a frontier model is not the right tool for every step. Route each decision to the cheapest component that can do it correctly:</P>
         <table className="mt-6 w-full border-collapse text-left">
           <thead>
-            <tr className="border-b border-[var(--border-strong)] font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">
+            <tr className="border-b border-[var(--border-strong)] text-[12px] text-[var(--faint)]">
               <th className="py-3 pr-4 font-normal">Kind of step</th>
               <th className="py-3 font-normal">Better handled by</th>
             </tr>
@@ -139,7 +139,7 @@ export default function FlopsToOutcomesPost() {
         </table>
         <figure className="mt-8">
           <img src="/media/blog/flops-to-outcomes/router.jpg" alt="A request goes to a router, which sends complex reasoning to a capable model, classification to a small model, knowledge lookups to retrieval, repeated requests to a cache, strict rules to deterministic code and high-impact uncertainty to human review." loading="lazy" className="w-full border border-[var(--border)]" />
-          <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[.1em] text-[var(--faint)]">These are design choices, not universal rules: they depend on the task, the risk and measured quality</figcaption>
+          <figcaption className="mt-3 text-[12px] text-[var(--faint)]">These are design choices, not universal rules: they depend on the task, the risk and measured quality</figcaption>
         </figure>
 
         <H2>Optimize the system for the outcome</H2>
@@ -158,7 +158,7 @@ export default function FlopsToOutcomesPost() {
         </div>
 
         <footer className="mt-16 border-t border-[var(--border)] pt-6 text-[13px] leading-6 text-[var(--faint)]">
-          <p className="font-mono text-[11px] uppercase tracking-[.1em]">Sources</p>
+          <p className="text-[12px]">Sources</p>
           <ul className="mt-2 space-y-1">
             {SOURCES.map(([label, href]) => (
               <li key={href}><a href={href} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-[var(--accent)]">{label}</a></li>
