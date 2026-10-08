@@ -19,9 +19,11 @@ export const skills = [
   { group: "Engineering & Infrastructure", items: ["PyTorch", "Python", "FastAPI", "Docker", "Ray", "Triton", "CUDA", "AWS / GCP", "AWS S3", "AWS Glue", "Amazon Athena", "AWS IAM", "Amazon SageMaker", "Amazon ECS", "Amazon CloudWatch", "AWS Lambda", "API Gateway"] },
   // Where the agents run and how they ship: Google Cloud items come from the
   // Google Cloud AI Agents Professional Certificate (Gemini Enterprise,
-  // Vertex AI Agent Engine, Cloud Run, GKE, Memory Bank); the Azure and AWS
-  // items are what the case studies actually deploy on.
-  { group: "Deployment", items: ["Gemini Enterprise", "Google ADK", "Vertex AI Agent Engine", "Cloud Run", "GKE", "Memory Bank", "Azure", "Azure Container Apps", "Azure App Service", "Microsoft Foundry", "AWS Bedrock", "GitHub Actions", "OIDC", "pytest"] },
+  // Vertex AI Agent Engine, Cloud Run, GKE, Memory Bank); Azure OpenAI, Azure
+  // Functions and Azure Logic Apps come from the Microsoft Generative and
+  // Agentic AI Basics specialization; the other Azure and AWS items are what
+  // the case studies actually deploy on.
+  { group: "Deployment", items: ["Gemini Enterprise", "Google ADK", "Vertex AI Agent Engine", "Cloud Run", "GKE", "Memory Bank", "Azure", "Azure OpenAI", "Azure Functions", "Azure Logic Apps", "Azure Container Apps", "Azure App Service", "Microsoft Foundry", "AWS Bedrock", "GitHub Actions", "OIDC", "pytest"] },
 ];
 
 export const certifications = [
