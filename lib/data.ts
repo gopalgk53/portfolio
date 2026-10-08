@@ -26,6 +26,7 @@ export const skills = [
 
 export const certifications = [
   ["Post Graduate Program in Artificial Intelligence and Machine Learning", "McCombs School of Business, The University of Texas at Austin · Great Learning · Jan 2021", "https://www.mygreatlearning.com/certificate/YKRZCXMO"],
+  ["Microsoft Generative and Agentic AI Basics", "Microsoft · Coursera Specialization · 4 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/specialization/HP31RN6BMHGI"],
   ["Google Cloud AI Agents: From Foundations to Enterprise Scale", "Google Cloud · Coursera Professional Certificate · 12 courses · Oct 2026", "https://coursera.org/share/a66ec1aecf8f5811f889820c3c77f272"],
   ["Agent Architect", "Founderz AI & Business School · Certificate of Completion · Sep 2026", "https://learn.founderz.com/certificate/agent-architect/5b79855a-a697-486b-8efb-36d560bad6f3"],
   ["Agent Explorer", "Founderz AI & Business School · Certificate of Completion · 2026", "https://learn.founderz.com/certificate/agent-explorer/5b79855a-a697-486b-8efb-36d560bad6f3"],
