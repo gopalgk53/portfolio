@@ -1,5 +1,12 @@
 export const posts = [
   {
+    slug: "retrieval-not-truth",
+    title: "Retrieval ≠ Truth: Why Your RAG System Needs an Evidence Sufficiency Gate",
+    description: "A document can be highly relevant and still not contain the fact the question needs. Separate relevance, sufficiency, faithfulness and correctness, check sufficiency before generating, abstain when the evidence isn't there, and evaluate the gate itself.",
+    date: "2026-10-10",
+    readingTime: "8 min read",
+  },
+  {
     slug: "local-or-cloud",
     title: "Local or Cloud? Inference Routing Is the Next AI Architecture Decision",
     description: "Microsoft and GitHub announced GitHub Copilot will route work between on-device and cloud models. Where a model runs is now an architecture decision: policy first, measured quality second, and a router that is evaluated like any other component.",
