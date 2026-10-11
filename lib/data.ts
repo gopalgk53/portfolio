@@ -74,6 +74,16 @@ export type CredlyBadge = { name: string; issuer: string; issued: string; kind: 
 
 const credlyBadgeUrl = (id: string) => `https://www.credly.com/badges/${id}/public_url`;
 
+// Microsoft Learn public profile. Counts and topics were read from the live
+// profile on 12 Oct 2026; all items were completed 23–27 Jun 2021.
+export const microsoftLearn = {
+  title: "Microsoft Learn achievements",
+  url: "https://learn.microsoft.com/en-us/users/gopalakrishnashepherd-9861/achievements",
+  summary: "51 module badges · 13 learning-path trophies · Level 8",
+  topics: "Azure AI Fundamentals, Azure AI Vision, Language and Speech, Azure Machine Learning designer and AutoML, Azure IoT Edge with MLOps, Power BI",
+  completed: "Jun 2021",
+};
+
 export const credlyBadges: CredlyBadge[] = [
   { name: "Generative AI for Data Scientists Specialization", issuer: "IBM · Coursera", issued: "Sep 22, 2026", kind: "specialization", url: credlyBadgeUrl("9b56c51e-7942-4d6c-bd32-1f3a2cacdf34") },
   { name: "Generative AI for Data Analysts Specialization", issuer: "IBM · Coursera", issued: "Sep 16, 2026", kind: "specialization", url: credlyBadgeUrl("324b128c-1df0-4be7-9994-7be3a632f214") },

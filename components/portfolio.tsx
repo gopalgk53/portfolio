@@ -11,7 +11,7 @@ const Linkedin = Link2;
 import { FormEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { certifications, credlyBadges, projects, skills } from "../lib/data";
+import { certifications, credlyBadges, microsoftLearn, projects, skills } from "../lib/data";
 import { posts } from "../lib/posts";
 import { spring, staggerChild } from "../lib/motion";
 import { useGlowPointer } from "../lib/use-glow-pointer";
@@ -82,7 +82,7 @@ const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; descripti
   playground: { eyebrow: "03 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
   experience: { eyebrow: "04 / Experience", title: "Construction knowledge, developed into applied AI.", description: "A verified progression from CAD and construction research through data science to AI/ML engineering at SunRay Construction Solutions." },
   skills: { eyebrow: "05 / Capabilities", title: "The execution stack." },
-  badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
+  badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly, plus my Microsoft Learn record. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
   certifications: { eyebrow: "07 / Credentials", title: "Formal training behind the practice." },
   writing: { eyebrow: "08 / Writing", title: "Notes on system design.", description: "Agentic architecture, governed AI, and production ML, written from the systems I build." },
   contact: { eyebrow: "09 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
@@ -570,6 +570,21 @@ function Badges() {
           );
         })}
       </MobileExpandable>
+      <Reveal delay={0.1}>
+        <motion.a href={microsoftLearn.url} target="_blank" rel="noreferrer" whileHover={{ y: -4, transition: spring }} className="surface-card mt-4 flex items-start gap-3 p-4">
+          <span className="badge-emblem" data-kind="specialization" aria-hidden="true"><Award className="h-5 w-5" /></span>
+          <span className="min-w-0">
+            <strong className="block text-sm font-semibold leading-snug text-[var(--text)]">{microsoftLearn.title}</strong>
+            <span className="mt-1 block text-xs text-[var(--muted)]">Microsoft · {microsoftLearn.summary}</span>
+            <span className="mt-1 block text-xs leading-relaxed text-[var(--faint)]">{microsoftLearn.topics}</span>
+            <span className="mt-2 flex items-center gap-1.5 text-[11px] text-[var(--faint)]">
+              <ShieldCheck className="h-3.5 w-3.5 text-[var(--accent)]" />
+              Completed {microsoftLearn.completed} · public Microsoft Learn profile
+            </span>
+          </span>
+          <ExternalLink className="ml-auto h-4 w-4 shrink-0 text-[var(--accent)]" />
+        </motion.a>
+      </Reveal>
     </Section>
   );
 }
