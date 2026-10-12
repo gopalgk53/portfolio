@@ -11,7 +11,7 @@ const Linkedin = Link2;
 import { FormEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { certifications, credlyBadges, microsoftLearn, projects, skills } from "../lib/data";
+import { certifications, credly, microsoftLearn, projects, skills } from "../lib/data";
 import { posts } from "../lib/posts";
 import { spring, staggerChild } from "../lib/motion";
 import { useGlowPointer } from "../lib/use-glow-pointer";
@@ -82,7 +82,7 @@ const naturalCopy: Record<string, { eyebrow: string; title: ReactNode; descripti
   playground: { eyebrow: "03 / Interactive lab", title: "See how prompt structure changes an answer.", description: "A live playground calling a real model through this site's own API — adjust temperature and top-p and inspect the actual response. Falls back to a static example if the live model is unavailable." },
   experience: { eyebrow: "04 / Experience", title: "Construction knowledge, developed into applied AI.", description: "A verified progression from CAD and construction research through data science to AI/ML engineering at SunRay Construction Solutions." },
   skills: { eyebrow: "05 / Capabilities", title: "The execution stack." },
-  badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "Digital badges issued through Credly, plus my Microsoft Learn record. Each one is tied to the issuer's own record, so the claim can be verified independently of this site." },
+  badges: { eyebrow: "06 / Verified badges", title: "Credentials you can check, not take on trust.", description: "My Credly badge wallet and Microsoft Learn record. Both are kept by the issuer, so every badge can be checked independently of this site." },
   certifications: { eyebrow: "07 / Credentials", title: "Formal training behind the practice." },
   writing: { eyebrow: "08 / Writing", title: "Notes on system design.", description: "Agentic architecture, governed AI, and production ML, written from the systems I build." },
   contact: { eyebrow: "09 / Contact", title: <>Let&apos;s build <span className="text-gradient-accent">intelligent systems.</span></> },
@@ -536,55 +536,37 @@ function Experience() {
   );
 }
 
+function ProfileCard({ href, title, summary, topics, footnote }: { href: string; title: string; summary: string; topics: string; footnote: string }) {
+  return (
+    <motion.a href={href} target="_blank" rel="noreferrer" whileHover={{ y: -4, transition: spring }} className="surface-card flex h-full items-start gap-3 p-5">
+      <span className="badge-emblem" data-kind="specialization" aria-hidden="true"><Award className="h-5 w-5" /></span>
+      <span className="min-w-0">
+        <strong className="block text-base font-semibold leading-snug text-[var(--text)]">{title}</strong>
+        <span className="mt-1 block text-xs text-[var(--muted)]">{summary}</span>
+        <span className="mt-2 block text-xs leading-relaxed text-[var(--faint)]">{topics}</span>
+        <span className="mt-3 flex items-center gap-1.5 text-[11px] text-[var(--faint)]">
+          <ShieldCheck className="h-3.5 w-3.5 text-[var(--accent)]" />
+          {footnote}
+        </span>
+      </span>
+      <ExternalLink className="ml-auto h-4 w-4 shrink-0 text-[var(--accent)]" />
+    </motion.a>
+  );
+}
+
 function Badges() {
   return (
     <Section id="badges" scene="identity">
-      <MobileExpandable limit={4} noun="badges" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {credlyBadges.map((badge, index) => {
-          const emblem = (
-            <span className="badge-emblem" data-kind={badge.kind} aria-hidden="true">
-              <Award className="h-5 w-5" />
-            </span>
-          );
-          const body = <>
-            {emblem}
-            <span className="min-w-0">
-              <strong className="block text-sm font-semibold leading-snug text-[var(--text)]">{badge.name}</strong>
-              <span className="mt-1 block text-xs text-[var(--muted)]">{badge.issuer}</span>
-              <span className="mt-2 flex items-center gap-1.5 text-[11px] text-[var(--faint)]">
-                <ShieldCheck className="h-3.5 w-3.5 text-[var(--accent)]" />
-                Issued {badge.issued}
-              </span>
-            </span>
-            {badge.url && <ExternalLink className="ml-auto h-4 w-4 shrink-0 text-[var(--accent)]" />}
-          </>;
-          const className = "surface-card flex h-full items-start gap-3 p-4";
-          return (
-            <Reveal key={badge.name} delay={Math.min(index, 5) * 0.05}>
-              {badge.url ? (
-                <motion.a href={badge.url} target="_blank" rel="noreferrer" whileHover={{ y: -4, transition: spring }} className={className}>{body}</motion.a>
-              ) : (
-                <div className={className}>{body}</div>
-              )}
-            </Reveal>
-          );
-        })}
-      </MobileExpandable>
-      <Reveal delay={0.1}>
-        <motion.a href={microsoftLearn.url} target="_blank" rel="noreferrer" whileHover={{ y: -4, transition: spring }} className="surface-card mt-4 flex items-start gap-3 p-4">
-          <span className="badge-emblem" data-kind="specialization" aria-hidden="true"><Award className="h-5 w-5" /></span>
-          <span className="min-w-0">
-            <strong className="block text-sm font-semibold leading-snug text-[var(--text)]">{microsoftLearn.title}</strong>
-            <span className="mt-1 block text-xs text-[var(--muted)]">Microsoft · {microsoftLearn.summary}</span>
-            <span className="mt-1 block text-xs leading-relaxed text-[var(--faint)]">{microsoftLearn.topics}</span>
-            <span className="mt-2 flex items-center gap-1.5 text-[11px] text-[var(--faint)]">
-              <ShieldCheck className="h-3.5 w-3.5 text-[var(--accent)]" />
-              Completed {microsoftLearn.completed} · public Microsoft Learn profile
-            </span>
-          </span>
-          <ExternalLink className="ml-auto h-4 w-4 shrink-0 text-[var(--accent)]" />
-        </motion.a>
-      </Reveal>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Reveal>
+          <h3 className="mb-3 text-sm font-semibold text-[var(--muted)]">Credly skill badges</h3>
+          <ProfileCard href={credly.url} title={credly.title} summary={credly.summary} topics={credly.topics} footnote={`Latest ${credly.latest} · public Credly profile`} />
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h3 className="mb-3 text-sm font-semibold text-[var(--muted)]">Microsoft Learn badges and trophies</h3>
+          <ProfileCard href={microsoftLearn.url} title={microsoftLearn.title} summary={`Microsoft · ${microsoftLearn.summary}`} topics={microsoftLearn.topics} footnote={`Completed ${microsoftLearn.completed} · public Microsoft Learn profile`} />
+        </Reveal>
+      </div>
     </Section>
   );
 }
