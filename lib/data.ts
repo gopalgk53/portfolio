@@ -23,7 +23,7 @@ export const skills = [
   // Functions and Azure Logic Apps come from the Microsoft Generative and
   // Agentic AI Basics specialization; the Microsoft AI Agents Professional
   // Certificate adds Semantic Kernel and Bot Framework to the agent group
-  // above; the Microsoft Generative AI Engineering specialization adds Azure
+  // above; the Microsoft Generative AI Engineering Professional Certificate adds Azure
   // Machine Learning (MLOps) and Azure AI Vision (multimodal), plus diffusion
   // models and GANs in the models group. The other Azure and AWS items are
   // what the case studies deploy on.
@@ -32,7 +32,7 @@ export const skills = [
 
 export const certifications = [
   ["Post Graduate Program in Artificial Intelligence and Machine Learning", "McCombs School of Business, The University of Texas at Austin · Great Learning · Jan 2021", "https://vrfy.digital/WXBBc"],
-  ["Microsoft Generative AI Engineering", "Microsoft · Coursera Specialization · 5 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/specialization/0OI8PE2T30K2"],
+  ["Microsoft Generative AI Engineering", "Microsoft · Coursera Professional Certificate · 5 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/specialization/0OI8PE2T30K2"],
   ["Microsoft AI Agents: From Foundations to Applications", "Microsoft · Coursera Professional Certificate · 4 courses · Oct 2026", "https://coursera.org/share/43e0a2494bf64ce635c4270aec839fa3"],
   ["Microsoft Generative and Agentic AI Basics", "Microsoft · Coursera Specialization · 4 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/specialization/HP31RN6BMHGI"],
   ["Google Cloud AI Agents: From Foundations to Enterprise Scale", "Google Cloud · Coursera Professional Certificate · 12 courses · Oct 2026", "https://coursera.org/share/a66ec1aecf8f5811f889820c3c77f272"],
@@ -40,7 +40,7 @@ export const certifications = [
   ["Agent Explorer", "Founderz AI & Business School · Certificate of Completion · 2026", "https://learn.founderz.com/certificate/agent-explorer/5b79855a-a697-486b-8efb-36d560bad6f3"],
   ["Generative AI for Data Scientists", "IBM · Coursera Specialization · Sep 2026", "https://coursera.org/share/d608cb41bfbdd55f85b280772f6ebff9"],
   ["Generative AI for Data Analysts", "IBM · Coursera Specialization · Sep 2026", "https://coursera.org/share/e453902c46df4de213d408ab7f725a56"],
-  ["Generative AI for Software Developers", "IBM · Coursera Specialization · 3 courses · Sep 2026", "https://www.coursera.org/account/accomplishments/specialization/JR2NY416P2MU"],
+  ["Generative AI for Software Developers", "IBM · Coursera Specialization · 3 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/specialization/JR2NY416P2MU"],
   ["Statistical Methods for Decision Making", "Great Learning · May 2020", "https://olympus1.greatlearning.in/course_certificate/GWSUYGPZ"],
   ["Machine Learning Engineering for Production (MLOps) Specialization", "Coursera · Nov 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/JM8WZRKMAZJW"],
   ["Practical Data Science Specialization", "Coursera · Sep 2021", "https://www.coursera.org/account/accomplishments/specialization/certificate/7HAFEBY7E6S6"],
