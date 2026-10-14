@@ -12,7 +12,7 @@ export const projects = [
 ];
 
 export const skills = [
-  { group: "Models & Fine-Tuning", items: ["Llama 3", "Qwen", "DeepSeek", "LoRA / QLoRA", "Axolotl", "Unsloth", "Hugging Face", "GPT-5-mini", "DataRobot AutoML", "SHAP", "scikit-learn"] },
+  { group: "Models & Fine-Tuning", items: ["Llama 3", "Qwen", "DeepSeek", "LoRA / QLoRA", "Axolotl", "Unsloth", "Hugging Face", "GPT-5-mini", "Diffusion models", "GANs", "DataRobot AutoML", "SHAP", "scikit-learn"] },
   { group: "Inference & Optimization", items: ["vLLM", "TensorRT-LLM", "Ollama", "AWQ", "GGUF", "GPTQ", "FlashAttention"] },
   { group: "Orchestration & Agents", items: ["LangChain", "LangGraph", "AutoGen", "Semantic Kernel", "Bot Framework", "CrewAI", "LlamaIndex", "DSPy", "Microsoft Foundry", "MCP"] },
   { group: "Vector Databases & RAG", items: ["Qdrant", "Pinecone", "Milvus", "Chroma", "Hybrid Search", "RRF"] },
@@ -23,12 +23,16 @@ export const skills = [
   // Functions and Azure Logic Apps come from the Microsoft Generative and
   // Agentic AI Basics specialization; the Microsoft AI Agents Professional
   // Certificate adds Semantic Kernel and Bot Framework to the agent group
-  // above. The other Azure and AWS items are what the case studies deploy on.
-  { group: "Deployment", items: ["Gemini Enterprise", "Google ADK", "Vertex AI Agent Engine", "Cloud Run", "GKE", "Memory Bank", "Azure", "Azure OpenAI", "Azure Functions", "Azure Logic Apps", "Azure Container Apps", "Azure App Service", "Microsoft Foundry", "AWS Bedrock", "GitHub Actions", "OIDC", "pytest"] },
+  // above; the Microsoft Generative AI Engineering specialization adds Azure
+  // Machine Learning (MLOps) and Azure AI Vision (multimodal), plus diffusion
+  // models and GANs in the models group. The other Azure and AWS items are
+  // what the case studies deploy on.
+  { group: "Deployment", items: ["Gemini Enterprise", "Google ADK", "Vertex AI Agent Engine", "Cloud Run", "GKE", "Memory Bank", "Azure", "Azure OpenAI", "Azure Functions", "Azure Logic Apps", "Azure Machine Learning", "Azure AI Vision", "Azure Container Apps", "Azure App Service", "Microsoft Foundry", "AWS Bedrock", "GitHub Actions", "OIDC", "pytest"] },
 ];
 
 export const certifications = [
   ["Post Graduate Program in Artificial Intelligence and Machine Learning", "McCombs School of Business, The University of Texas at Austin · Great Learning · Jan 2021", "https://vrfy.digital/WXBBc"],
+  ["Microsoft Generative AI Engineering", "Microsoft · Coursera Specialization · 5 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/specialization/0OI8PE2T30K2"],
   ["Microsoft AI Agents: From Foundations to Applications", "Microsoft · Coursera Professional Certificate · 4 courses · Oct 2026", "https://coursera.org/share/43e0a2494bf64ce635c4270aec839fa3"],
   ["Microsoft Generative and Agentic AI Basics", "Microsoft · Coursera Specialization · 4 courses · Oct 2026", "https://www.coursera.org/account/accomplishments/specialization/HP31RN6BMHGI"],
   ["Google Cloud AI Agents: From Foundations to Enterprise Scale", "Google Cloud · Coursera Professional Certificate · 12 courses · Oct 2026", "https://coursera.org/share/a66ec1aecf8f5811f889820c3c77f272"],
